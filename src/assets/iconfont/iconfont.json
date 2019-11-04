@@ -1,0 +1,93 @@
+{
+  "id": "1331900",
+  "name": "嘉华化工",
+  "font_family": "iconfont",
+  "css_prefix_text": "iconfont-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "1066003",
+      "name": "next page",
+      "font_class": "nextpage",
+      "unicode": "e668",
+      "unicode_decimal": 58984
+    },
+    {
+      "icon_id": "1174686",
+      "name": "首页",
+      "font_class": "shouye",
+      "unicode": "e63f",
+      "unicode_decimal": 58943
+    },
+    {
+      "icon_id": "3566364",
+      "name": "温度计",
+      "font_class": "thermometer",
+      "unicode": "e67a",
+      "unicode_decimal": 59002
+    },
+    {
+      "icon_id": "4168970",
+      "name": "下载",
+      "font_class": "ziyuan",
+      "unicode": "e641",
+      "unicode_decimal": 58945
+    },
+    {
+      "icon_id": "7349763",
+      "name": "信息查询",
+      "font_class": "xinxichaxun",
+      "unicode": "eb65",
+      "unicode_decimal": 60261
+    },
+    {
+      "icon_id": "7361912",
+      "name": "业务",
+      "font_class": "yewu",
+      "unicode": "e600",
+      "unicode_decimal": 58880
+    },
+    {
+      "icon_id": "9322038",
+      "name": "数据监控",
+      "font_class": "jiankong",
+      "unicode": "e62c",
+      "unicode_decimal": 58924
+    },
+    {
+      "icon_id": "9353840",
+      "name": "教育培训",
+      "font_class": "jiaoyupeixun",
+      "unicode": "e627",
+      "unicode_decimal": 58919
+    },
+    {
+      "icon_id": "9710453",
+      "name": "警告",
+      "font_class": "jinggao",
+      "unicode": "e603",
+      "unicode_decimal": 58883
+    },
+    {
+      "icon_id": "10170967",
+      "name": "next page",
+      "font_class": "lastpage",
+      "unicode": "e669",
+      "unicode_decimal": 58985
+    },
+    {
+      "icon_id": "11478735",
+      "name": "添加设备标签",
+      "font_class": "add_device",
+      "unicode": "e60b",
+      "unicode_decimal": 58891
+    },
+    {
+      "icon_id": "11478740",
+      "name": "已添加设备标签",
+      "font_class": "is_add_device",
+      "unicode": "e60c",
+      "unicode_decimal": 58892
+    }
+  ]
+}

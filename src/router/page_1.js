@@ -1,0 +1,80 @@
+const routes = {
+  path: "/page_1",
+  name: "page_1",
+  component: () => import("../views/pages/page_1/Home.vue"),
+  meta: {
+    keepAlive: true //此组件需要被缓存
+  },
+  redirect: "/page_1/index",
+  children: [
+    {
+      path: "/page_1/index",
+      name: "index",
+      component: () => import("../views/pages/page_1/Index/Index.vue"),
+      meta: {
+        name: "首页",
+        keepAlive: true, //此组件需要被缓存
+        showTabBar: true, //是否显示tabBar
+        tabBar: 0
+      }
+    },
+    {
+      path: "/page_1/dongli",
+      name: "dongli",
+      component: () => import("../views/pages/page_1/DongLi/Index.vue"),
+      meta: {
+        name: "首页-动力中心"
+      }
+    },
+    {
+      path: "/page_1/shaojian",
+      name: "shaojian",
+      component: () => import("../views/pages/page_1/ShaoJian/Index.vue"),
+      meta: {
+        name: "首页-烧碱"
+      }
+    },
+    {
+      path: "/page_1/gongyi",
+      name: "gongyi",
+      component: () => import("../views/pages/page_1/GongYi/Index.vue"),
+      meta: {
+        name: "首页-工艺卡片"
+      }
+    },
+    {
+      path: "/page_1/liusuan",
+      name: "liusuan",
+      component: () => import("../views/pages/page_1/LiuSuan/Index.vue"),
+      meta: {
+        name: "首页-硫酸"
+      }
+    },
+    {
+      path: "/page_1/zhifangchun",
+      name: "zhifangchun",
+      component: () => import("../views/pages/page_1/ZhiFangChun/Index.vue"),
+      meta: {
+        name: "首页-脂肪醇"
+      }
+    },
+    {
+      path: "/page_1/error",
+      name: "error",
+      component: () => import("../views/pages/page_1/Error/Index.vue"),
+      meta: {
+        name: "首页-异常报警"
+      }
+    },
+    {
+      path: "/page_1/shebei",
+      name: "shebei",
+      component: () => import("../views/pages/page_1/SheBei/Index.vue"),
+      meta: {
+        name: "首页-设备分类"
+      }
+    }
+  ]
+};
+
+export default routes;
