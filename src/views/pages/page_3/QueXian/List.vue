@@ -4,7 +4,7 @@
     <van-nav-bar
       title="缺陷列表"
       left-text="返回"
-      right-text="新建违章"
+      right-text="新增"
       left-arrow
       @click-left="pageBack"
       @click-right="onClickRight"
@@ -13,6 +13,14 @@
 
     <div class="list-card-area">
       <div class="app">
+        <div class="list-title">
+          <ul>
+            <li>设备编号</li>
+            <li>设备名称</li>
+            <li>缺陷类型</li>
+            <li>缺陷状态</li>
+          </ul>
+        </div>
         <van-skeleton
           title
           :row="3"
@@ -24,19 +32,15 @@
         <label v-for="(item, index) in listData" :key="index">
           <!-- 此处在做完AJAX后需要判断是否为最后行 - class存在判断 -->
           <div class="donghuo-list-card donghuo-list-card-nolast">
-            <div class="left">
-              <div class="left-line left-line-notlast">动火地点及内容：{{item.siteContent}}</div>
-              <div class="left-line left-line-notlast">动火级别：{{item.dhLevel}}</div>
-              <div class="left-line left-line-notlast">申请部门：{{item.applyDept}}</div>
-              <div class="left-line left-line-notlast">申请人：{{item.applyRen}}</div>
-              <div class="left-line left-line-notlast">动火开始时间：{{item.dhStarttime}}</div>
-              <div class="left-line">动火结束时间：{{item.dhEndtime}}</div>
+            <div class="top">
+              <div class="top-item">03040898</div>
+              <div class="top-item">安全阀</div>
+              <div class="top-item">设备渗漏</div>
+              <div class="top-item">缺陷验收</div>
             </div>
-            <div class="right" v-if="item.htStatus == 1">编辑</div>
-            <div class="right" v-if="item.htStatus == 2">初审</div>
-            <div class="right" v-if="item.htStatus == 3">有效</div>
-            <div class="right" v-if="item.htStatus == 4">已验票</div>
-            <div class="right" v-if="item.htStatus == 5">已终结</div>
+            <div class="bottom">
+              <div class="bottom-item">缺陷描述缺陷描述缺陷描述缺陷描述缺陷描述缺陷描述缺陷描述</div>
+            </div>
           </div>
         </label>
       </div>
@@ -66,15 +70,15 @@ export default {
       this.showPopup = true;
     },
     listSelect() {
-      this.$api.page_3
-        .htCbsBreakrulesmanageListData({
-          __sid: localStorage.getItem("JiaHuaSessionId")
-        })
-        .then(res => {
-          this.listData = res.list;
-          this.isLoading = false
-          console.log(this.listData)
-        });
+      // this.$api.page_3
+      //   .htCbsBreakrulesmanageListData({
+      //     __sid: localStorage.getItem("JiaHuaSessionId")
+      //   })
+      //   .then(res => {
+      //     this.listData = res.list;
+      //     this.isLoading = false
+      //     console.log(this.listData)
+      //   });
     }
   },
   created() {
@@ -100,4 +104,80 @@ export default {
 .popup {
   padding: 20px 30px;
 }
+
+.donghuo-list-card {
+  // display: flex;
+  // justify-content: space-between;
+  width: 100%;
+  background-color: #6096f8;
+  padding: 22px 31px 15px 34px;
+  color: #ffffff;
+  border-radius: 10px;
+}
+
+.donghuo-list-card-nolast {
+  margin-bottom: 20px;
+}
+
+.left-line-notlast {
+  margin-bottom: 15px;
+}
+
+.left {
+  font-size: 0.8rem;
+  font-family: PingFangSC-Regular, PingFang SC;
+}
+
+.right {
+  line-height: 120 * 2px;
+  font-size: 34px;
+  width: 112px;
+  text-align: center;
+  // color: red;
+}
+
+.skeleton {
+  margin-bottom: 10px
+}
+
+.left-line-hor {
+  display: inline;
+}
+
+.left-line-hor-2 {
+  margin-left: 50px;
+}
+
+.list-title {
+  margin-bottom: 10px;
+  font-size: 28px;
+  ul {
+    display: flex;
+    justify-content: space-around;
+    li {
+      width: 25%;
+      text-align: center;
+    }
+  }
+}
+
+.top {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 5px;
+}
+
+.top-item {
+  width: 25%;
+  text-align: center;
+}
+
+.bottom-item {
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap
+}
 </style>
+
+

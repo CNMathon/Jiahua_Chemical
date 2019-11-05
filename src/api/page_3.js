@@ -119,14 +119,14 @@ const article = {
       qs.stringify(params)
     );
   },
-  // 违章管理查询
+  // 隐患管理查询
   dangerRectificationListData(params) {
     return axios.post(
       `${base.sq}dangerrectification/dangerRectification/listData.json`,
       qs.stringify(params)
     );
   },
-  // 隐患管理查询
+  // 违章管理查询
   htCbsBreakrulesmanageListData(params) {
     return axios.post(
       `${base.sq}breakrulemanage/htCbsBreakrulesmanage/listData.json`,

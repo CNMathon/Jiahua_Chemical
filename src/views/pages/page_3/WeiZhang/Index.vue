@@ -1,8 +1,9 @@
 <template>
   <div class="weizhang">
     <van-nav-bar
-      title="缺陷"
+      title="新建违章"
       left-text="返回"
+      right-text="操作"
       left-arrow
       @click-left="pageBack"
     />
