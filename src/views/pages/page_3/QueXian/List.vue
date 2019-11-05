@@ -2,7 +2,7 @@
 <template>
   <div class="home">
     <van-nav-bar
-      title="违章列表"
+      title="缺陷列表"
       left-text="返回"
       right-text="新建违章"
       left-arrow
