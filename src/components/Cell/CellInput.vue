@@ -19,10 +19,6 @@
 <script>
 export default {
   name: "cell_input",
-  model: {
-    prop: "value",
-    event: "input"
-  },
   props: {
     title: String,
     inputType: {
@@ -33,7 +29,7 @@ export default {
       type: Boolean,
       default: false
     },
-    value: String,
+    value: String || Number,
     placeholder: String
   }
 };

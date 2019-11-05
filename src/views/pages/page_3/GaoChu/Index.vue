@@ -1,11 +1,15 @@
 <template>
   <div class="mangban">
-    <van-nav-bar
-      title="高处安全"
-      left-text="返回"
-      left-arrow
-      @click-left="pageBack"
-    />
+    <van-sticky>
+      <van-nav-bar
+        title="高处安全"
+        left-text="返回"
+        right-text="操作"
+        left-arrow
+        @click-left="pageBack"
+        @click-right="showPicker = true"
+      />
+    </van-sticky>
     <div class="cell_group">
       <!-- 申请部门 -->
       <cell-value
@@ -102,7 +106,11 @@
         v-model="sendData.worker"
       ></cell-select-user>
     </div>
-    <div class="next" @click="Next">下一步</div>
+    <van-action-sheet
+      v-model="showPicker"
+      :actions="actions"
+      @select="onSelect"
+    />
   </div>
 </template>
 <script>
@@ -147,6 +155,12 @@ export default {
         "机械伤害",
         "高处坠落",
         "其他"
+      ],
+      showPicker: false,
+      actions: [
+        { name: "保存", index: 0 },
+        { name: "工作流提交", index: 1 },
+        { name: "取消", index: 2 }
       ]
     };
   },
@@ -157,10 +171,37 @@ export default {
     workDeptLeader: state => state.gaochu.workDeptLeader,
     worker: state => state.gaochu.worker
   }),
+  created() {
+    console.log(this.$route.query);
+    // 获取显示List序列
+    this.id = this.$route.query.id || "";
+    // 设置显示List
+    this.status = this.$route.query.status || 0;
+    console.log("this.id: ", this.id);
+    if (this.id) {
+      this.getData();
+    }
+  },
   beforeDestroy() {
     this.$store.dispatch("gaochu/cleanState");
   },
   methods: {
+    /**
+     * 获取工作票内容
+     */
+    getData() {
+      console.log("获取工作票内容");
+      let sendData = {};
+      sendData.id = this.id;
+      sendData.__sid = this.$userInfo.sessionId;
+      this.$api.page_3
+        .htHseUpworkticketListData(sendData)
+        .then(res => {
+          console.log("res: ", res);
+          this.pageList = res.list;
+        })
+        .catch(() => {});
+    },
     pageBack() {
       this.$router.back();
     },
@@ -191,6 +232,12 @@ export default {
           });
         })
         .catch(() => {});
+    },
+    onSelect(item) {
+      this.showPicker = false;
+      if (item.index === 0) {
+        this.Next();
+      }
     }
   },
   watch: {

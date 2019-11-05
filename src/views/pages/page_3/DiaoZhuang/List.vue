@@ -3,7 +3,7 @@
   <van-list class="home">
     <van-sticky>
       <van-nav-bar
-        title="承包商人员信息"
+        title="吊装安全"
         left-text="返回"
         right-text="发起"
         left-arrow
@@ -62,7 +62,11 @@
                   </div>
                   <div class="left-line">作业结束时间：{{ item.zyjsDate }}</div>
                 </div>
-                <div class="right">状态</div>
+                <div class="right" v-if="item.htStatus == 1">编辑</div>
+                <div class="right" v-if="item.htStatus == 2">初审</div>
+                <div class="right" v-if="item.htStatus == 3">有效</div>
+                <div class="right" v-if="item.htStatus == 4">已验票</div>
+                <div class="right" v-if="item.htStatus == 5">已终结</div>
               </div>
             </div>
           </div>
