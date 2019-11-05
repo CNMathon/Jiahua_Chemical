@@ -40,7 +40,7 @@ export default {
       this.$router.push({
         path: "../donghuo"
       });
-    }
+    },
     onClickMenu() {
       this.showPopup = true
     }
