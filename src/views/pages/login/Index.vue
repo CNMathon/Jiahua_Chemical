@@ -1,5 +1,10 @@
 <template>
-  <div class="login">
+  <div 
+    class="login" 
+    :style="{
+      height:screenHeight
+    }"
+  >
     <div class="title">
       <div class="title-1">浙江嘉化能源安全生产</div>
       <div class="title-2">运营管理系统移动端</div>
@@ -14,7 +19,7 @@
           placeholder="请输入用户名"
         />
         <van-field
-          class="field"
+          class="field password"
           v-model="password"
           type="password"
           label="密码"
@@ -28,6 +33,8 @@
           loading-text="正在登录..."
           @click="tapLogin"
           size="large"
+          color="#6096F8"
+          class="aaa"
           >登录</van-button
         >
       </div>
@@ -39,11 +46,12 @@ export default {
   name: "login",
   data() {
     return {
-      username: "董建飞",
-      password: "123456",
-      // username: "system",
-      // password: "admin123",
-      loading: false
+      // username: "董建飞",
+      // password: "123456",
+      username: "system",
+      password: "admin123",
+      loading: false,
+      screenHeight: 0,
     };
   },
   methods: {
@@ -62,14 +70,17 @@ export default {
         localStorage.setItem("JiaHuaUserName", res.user.userName);
         localStorage.setItem("JiaHuaRefCode", res.user.refCode);
         localStorage.setItem("JiaHuaUserCode", res.user.userCode);
-        localStorage.setItem(
-          "JiaHuaOfficeCode",
-          res.user.refObj.office.officeCode
-        );
-        localStorage.setItem(
-          "JiaHuaOfficeName",
-          res.user.refObj.office.officeName
-        );
+        // system账号不做此项
+        if (this.username != "system") {
+          localStorage.setItem(
+            "JiaHuaOfficeCode",
+            res.user.refObj.office.officeCode
+          );
+          localStorage.setItem(
+            "JiaHuaOfficeName",
+            res.user.refObj.office.officeName
+          );
+        }
         this.loading = false;
         this.$toast.success({
           duration: 1000,
@@ -82,20 +93,26 @@ export default {
         });
       });
     }
+  },
+  created() {
+    this.screenHeight = `${document.documentElement.clientHeight}px`;
+    console.log(this.screenHeight)
   }
 };
 </script>
 <style lang="scss" scoped>
 .login {
-  width: 100vw;
-  height: 100vh;
-  background: #f4f4f4;
+  width: 100%;
+  // height: 100%;
+  background: #f4f4f4 url('../../../assets/images/login_1.png');
+  background-size: contain;
   position: relative;
   .content {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
+    margin-top: 11.16%;
+    // position: absolute;
+    // left: 50%;
+    // top: 50%;
+    // transform: translate(-50%, -50%);
     .cell-box {
       width: 70vw;
       height: auto;
@@ -104,23 +121,28 @@ export default {
         margin-bottom: 30px;
         box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
       }
+      .password {
+        margin-top: 2.24%;
+      }
     }
     .action {
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-top: 200px;
+      width: 70%;
+      padding-top: 8.84%;
+      margin: 0 auto;
     }
   }
 }
 
 .title {
   text-align: center;
-  font-size: 50px;
-  padding-top: 30%;
+  font-size: 46px;
+  padding-top: 14.31%;
 }
 
 .title-2 {
-  margin-top: 2%;
+  margin-top: 0.5%;
 }
 </style>

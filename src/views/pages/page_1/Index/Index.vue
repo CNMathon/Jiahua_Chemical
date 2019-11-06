@@ -1,6 +1,10 @@
 <template>
   <div class="home">
-    <van-nav-bar title="首页">
+    <van-nav-bar 
+      title="首页"
+      fixed="true"
+      class="navbar"
+    >
       <div slot="left" class="sign-out" @click="signOut">退出</div>
       <van-icon
         slot="right"
@@ -11,7 +15,7 @@
         @click="toPage('./error')"
       />
     </van-nav-bar>
-    <div class="content">
+    <div class="content fixed-first">
       <div class="content-title">生产运行</div>
       <van-row>
         <van-col span="6" v-for="(item, index) in nav" :key="index">
@@ -226,5 +230,13 @@ export default {
       }
     }
   }
+}
+
+.fixed-first {
+  margin-top: 46px;
+}
+
+.navbar {
+  z-index: 99 !important;
 }
 </style>

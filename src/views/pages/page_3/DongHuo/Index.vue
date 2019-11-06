@@ -1,6 +1,12 @@
 <template>
   <div class="donghuo">
-    <van-nav-bar title="动火安全" left-text="返回" left-arrow @click-left="pageBack" />
+    <van-nav-bar
+      title="动火安全"
+      left-text="返回"
+      left-arrow
+      @click-left="pageBack"
+      fixed
+    />
     <div class="cell_group">
       <!-- 申请部门 -->
       <cell-value title="申请部门" required :value="$userInfo.officeName" class="readonly"></cell-value>

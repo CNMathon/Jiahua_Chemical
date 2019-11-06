@@ -5,6 +5,7 @@
       left-text="返回"
       left-arrow
       @click-left="pageBack"
+      fixed="true"
     />
     <label 
       v-for="(item, index) in initData"
