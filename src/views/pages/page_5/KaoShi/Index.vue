@@ -1,24 +1,10 @@
 <template>
   <div class="kao-shi">
     <van-sticky>
-      <van-nav-bar
-        title="考试"
-        left-text="返回"
-        left-arrow
-        @click-left="pageBack"
-      />
-      <van-search
-        v-model="searchValue"
-        placeholder="搜索"
-        shape="round"
-        @search="getPageData(true)"
-      ></van-search>
+      <van-nav-bar title="考试" left-text="返回" left-arrow @click-left="pageBack" />
+      <van-search v-model="searchValue" placeholder="搜索" shape="round" @search="getPageData(true)"></van-search>
     </van-sticky>
-    <van-pull-refresh
-      v-model="isLoading"
-      @refresh="getPageData()"
-      class="refresh"
-    >
+    <van-pull-refresh v-model="isLoading" @refresh="getPageData()" class="refresh">
       <div class="content">
         <van-tabs
           v-model="tabActive"
@@ -65,18 +51,18 @@ export default {
     };
   },
   mounted() {
-    // 获取学习数据
+    // 获取考试数据
     this.getPageData();
   },
   methods: {
-    // 获取学习数据
+    // 获取考试数据
     getPageData() {
       let sendData = {
         courseName: this.searchValue,
         __sid: this.$userInfo.sessionId
       };
       this.$api.page_5
-        .getMyStudy(sendData)
+        .getMyTestHistory(sendData)
         .then(res => {
           // 加载状态结束
           this.isLoading = false;

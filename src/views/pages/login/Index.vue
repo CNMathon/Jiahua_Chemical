@@ -1,5 +1,9 @@
 <template>
   <div class="login">
+    <div class="title">
+      <div class="title-1">浙江嘉化能源安全生产</div>
+      <div class="title-2">运营管理系统移动端</div>
+    </div>
     <div class="content">
       <div class="cell-box">
         <van-field
@@ -23,6 +27,7 @@
           :loading="loading"
           loading-text="正在登录..."
           @click="tapLogin"
+          size="large"
           >登录</van-button
         >
       </div>
@@ -34,10 +39,10 @@ export default {
   name: "login",
   data() {
     return {
-      // username: "董建飞",
-      // password: "123456",
-      username: "system",
-      password: "admin123",
+      username: "董建飞",
+      password: "123456",
+      // username: "system",
+      // password: "admin123",
       loading: false
     };
   },
@@ -57,14 +62,14 @@ export default {
         localStorage.setItem("JiaHuaUserName", res.user.userName);
         localStorage.setItem("JiaHuaRefCode", res.user.refCode);
         localStorage.setItem("JiaHuaUserCode", res.user.userCode);
-        // localStorage.setItem(
-        //   "JiaHuaOfficeCode",
-        //   res.user.refObj.office.officeCode
-        // );
-        // localStorage.setItem(
-        //   "JiaHuaOfficeName",
-        //   res.user.refObj.office.officeName
-        // );
+        localStorage.setItem(
+          "JiaHuaOfficeCode",
+          res.user.refObj.office.officeCode
+        );
+        localStorage.setItem(
+          "JiaHuaOfficeName",
+          res.user.refObj.office.officeName
+        );
         this.loading = false;
         this.$toast.success({
           duration: 1000,
@@ -107,5 +112,15 @@ export default {
       margin-top: 200px;
     }
   }
+}
+
+.title {
+  text-align: center;
+  font-size: 50px;
+  padding-top: 30%;
+}
+
+.title-2 {
+  margin-top: 2%;
 }
 </style>

@@ -85,7 +85,7 @@ export default {
 .right {
   line-height: 80 * 2px;
   font-size: 34px;
-  width: 112px;
+  width: 150px;
   text-align: center;
   // color: red;
 }

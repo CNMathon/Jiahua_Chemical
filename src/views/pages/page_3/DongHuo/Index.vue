@@ -1,38 +1,31 @@
 <template>
   <div class="donghuo">
-    <van-nav-bar
-      title="动火安全"
-      left-text="返回"
-      left-arrow
-      @click-left="pageBack"
-    />
+    <van-nav-bar title="动火安全" left-text="返回" left-arrow @click-left="pageBack" />
     <div class="cell_group">
       <!-- 申请部门 -->
-      <cell-value
-        title="申请部门"
-        required
-        :value="$userInfo.officeName"
-      ></cell-value>
+      <cell-value title="申请部门" required :value="$userInfo.officeName" class="readonly"></cell-value>
       <!-- 申请人 -->
+      <cell-value title="申请人" required :value="$userInfo.userName" class="readonly"></cell-value>
+      <!-- 作业票编号 -->
       <cell-value
-        title="申请人"
+        title="作业票编号"
         required
+        v-if="initData.dhzypCode"
+        :value="$userInfo.dhzypCode"
+        class="readonly"
+      ></cell-value>
+      <!-- 作业票状态 -->
+      <cell-value
+        title="作业票状态"
+        required
+        v-if="initData.htStatus"
         :value="$userInfo.userName"
+        class="readonly"
       ></cell-value>
       <!-- 动火地点及内容 -->
-      <cell-textarea
-        title="动火地点及内容"
-        required
-        v-model="sendData.siteContent"
-        placeholder="请输入作业内容"
-      ></cell-textarea>
+      <cell-textarea title="动火地点及内容" required v-model="sendData.siteContent" placeholder="请输入作业内容"></cell-textarea>
       <!-- 动火级别 -->
-      <cell-picker
-        title="动火级别"
-        required
-        v-model="sendData.dhLevel"
-        :columns="dhLevelColumns"
-      ></cell-picker>
+      <cell-picker title="动火级别" required v-model="sendData.dhLevel" :columns="dhLevelColumns"></cell-picker>
       <!-- 动火方式 -->
       <cell-select-tag
         required
@@ -45,7 +38,7 @@
       <!-- 涉及其他作业 -->
       <cell-select-tag
         required
-        title="涉及其他作业"
+        title="涉及其他特殊作业"
         storeKey="otherSpecial"
         :tagList="otherSpecial"
         :showList="list_2"
@@ -61,17 +54,9 @@
         :storeModule="storeModule"
       ></cell-select-tag>
       <!-- 动火开始时间 -->
-      <cell-time
-        v-model="sendData.startTime"
-        title="动火开始时间"
-        required
-      ></cell-time>
+      <cell-time v-model="sendData.startTime" title="动火开始时间" required></cell-time>
       <!-- 动火结束时间 -->
-      <cell-time
-        v-model="sendData.endTime"
-        title="动火结束时间"
-        required
-      ></cell-time>
+      <cell-time v-model="sendData.endTime" title="动火结束时间" required></cell-time>
       <!-- 动火作业负责人 -->
       <cell-select-user
         title="动火作业负责人"
@@ -128,9 +113,9 @@
             <div class="cell_other_add_peoples">+</div>
           </div>
         </div>
-      </div> -->
+      </div>-->
     </div>
-    <div class="next" @click="Next">下一步</div>
+    <div class="next" @click="postData">下一步</div>
   </div>
 </template>
 <script>
@@ -149,7 +134,7 @@ export default {
         startTime: "", //动火开始时间
         endTime: "", //动火结束时间
         dhWay: [], //动火方式
-        otherSpecial: [], //涉及其他作业
+        otherSpecial: [], //涉及其他特殊作业
         hazardSb: [], //危害辨识
         dhzyPrincipal: [], //动火作业负责人
         dhzyRen: [] //动火人
@@ -181,7 +166,8 @@ export default {
         "机械伤害",
         "触电",
         "高处坠落"
-      ]
+      ],
+      initData: []
     };
   },
   computed: mapState({
@@ -195,8 +181,82 @@ export default {
     this.$store.dispatch("donghuo/cleanState");
   },
   methods: {
+
+    // 清除所有数据
+    clearData() {
+      this.sendData.siteContent = "", //动火地点及内容
+      this.sendData.dhLevel = null, //动火级别
+      this.sendData.startTime = "", //动火开始时间
+      this.sendData.endTime = "", //动火结束时间
+      this.sendData.dhWay = [], //动火方式
+      this.sendData.otherSpecial = [], //涉及其他特殊作业
+      this.sendData.hazardSb = [], //危害辨识
+      this.sendData.dhzyPrincipal = [], //动火作业负责人
+      this.sendData.dhzyRen = [] //动火人
+    },
+
+    // 判断数据输入的完整性
+      // true => 输入完整
+      // false => 有问题的输入
+    isDataEdit() {
+      // 动火地点和内容
+      if (this.sendData.siteContent == false) {
+        this.$notify('请输入动火地点和内容');
+        return false
+      }
+      // 动火级别
+      if (this.sendData.dhLevel == null) {
+        this.$notify('请选择动火级别');
+        return false
+      }
+      // 动火方式
+      if (this.sendData.dhWay == false) {
+        this.$notify('请选择动火方式');
+        return false
+      }
+      // 涉及其他作业
+      if (this.sendData.otherSpecial == false) {
+        this.$notify('请选择涉及的其他特殊作业');
+        return false
+      }
+      // 危害辨识
+      if (this.sendData.hazardSb == false) {
+        this.$notify('请选择危害辨识');
+        return false
+      }
+      // 动火开始时间
+      if (this.sendData.startTime == false) {
+        this.$notify('请选择动火开始时间');
+        return false
+      }
+      // 动火结束时间
+      if (this.sendData.endTime == false) {
+        this.$notify('请选择动火结束时间');
+        return false
+      }
+      // 动火作业负责人
+      if (this.sendData.dhzyPrincipal == false) {
+        this.$notify('请选择动火作业负责人');
+        return false
+      }
+      // 危害辨识
+      if (this.sendData.hazardSb == false) {
+        this.$notify('请选择危害辨识');
+        return false
+      }
+      // 危害辨识
+      if (this.sendData.hazardSb == false) {
+        this.$notify('请选择危害辨识');
+        return false
+      }
+      return true
+    },
+
     // 发送数据
     postData() {
+      // 检测到输入不完整直接退出函数
+      if ( !this.isDataEdit() ) { return }
+
       const that = this;
       let sendData = JSON.parse(JSON.stringify(this.sendData));
       sendData.dhWay = this.stringData("dhWay", "list_1");
@@ -213,10 +273,12 @@ export default {
       this.$api.page_3
         .htHseDhzypSave(sendData)
         .then(res => {
+          
           console.log("res: ", res);
           this.$Toast.success({
             message: "提交成功",
             onClose() {
+              that.clearData();
               that.pageBack();
             }
           });
@@ -225,10 +287,10 @@ export default {
     },
     pageBack() {
       this.$router.back();
+    },
+    Next() {
+      console.log(this.sendData)
     }
-    // Next() {
-    //   console.log(123456)
-    // }
   },
   watch: {
     dhWay(res) {
@@ -267,5 +329,9 @@ export default {
     background: rgba(96, 150, 248, 1);
     box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.5);
   }
+}
+
+.readonly {
+  background-color: #eee !important;
 }
 </style>

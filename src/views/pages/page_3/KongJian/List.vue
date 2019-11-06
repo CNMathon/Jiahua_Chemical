@@ -33,7 +33,7 @@ export default {
   methods: {
     onClickRight() {
       this.$router.push({
-        path: "../donghuo"
+        path: "../kongjian"
       });
     }
   },

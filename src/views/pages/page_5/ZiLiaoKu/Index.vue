@@ -1,24 +1,10 @@
 <template>
   <div class="zi-liao-ku">
     <van-sticky>
-      <van-nav-bar
-        title="资料库"
-        left-text="返回"
-        left-arrow
-        @click-left="pageBack"
-      />
-      <van-search
-        v-model="searchValue"
-        placeholder="搜索"
-        shape="round"
-        @search="getPageData(true)"
-      ></van-search>
+      <van-nav-bar title="资料库" left-text="返回" left-arrow @click-left="pageBack" />
+      <van-search v-model="searchValue" placeholder="搜索" shape="round" @search="getPageData(true)"></van-search>
     </van-sticky>
-    <van-pull-refresh
-      v-model="isLoading"
-      @refresh="getPageData(true)"
-      class="refresh"
-    >
+    <van-pull-refresh v-model="isLoading" @refresh="getPageData(true)" class="refresh">
       <div class="content">
         <van-list
           v-model="loading"
@@ -34,9 +20,7 @@
                 <div class="title">{{ item.fileName }}</div>
                 <div class="sub-title-father">
                   <div class="sub-title">{{ item.createByname }}</div>
-                  <div class="sub-title time">
-                    上传时间：{{ item.createDate }}
-                  </div>
+                  <div class="sub-title time">上传时间：{{ item.createDate }}</div>
                 </div>
                 <div class="sub-title">备注：消防手册</div>
               </div>
@@ -49,10 +33,7 @@
         </van-list>
       </div>
     </van-pull-refresh>
-    <van-image-preview
-      v-model="showPreview"
-      :images="images"
-    ></van-image-preview>
+    <van-image-preview v-model="showPreview" :images="images"></van-image-preview>
   </div>
 </template>
 <script>
@@ -124,6 +105,8 @@ export default {
         console.log(1);
         this.showPreview = true;
         this.images.push(info);
+      } else {
+        this.$Notify({ type: "warning", message: "格式不支持预览" });
       }
     }
   }

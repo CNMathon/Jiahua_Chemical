@@ -79,7 +79,8 @@ export default {
 
 .left {
   font-size: 0.8rem;
-  font-family: PingFangSC-Regular, PingFang SC;
+  // font-family: PingFangSC-Regular, PingFang SC;
+  width: 70%;
 }
 
 .right {

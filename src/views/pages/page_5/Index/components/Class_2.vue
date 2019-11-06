@@ -18,7 +18,7 @@
           <div class="time">考试时长：60分钟</div>
         </div>
         <div class="action" v-if="isEnd">查看试卷</div>
-        <div class="action" v-else>开始考试</div>
+        <div class="action" v-else @click="toAnswer()">开始考试</div>
       </div>
     </div>
   </div>
@@ -35,6 +35,14 @@ export default {
   },
   created() {
     console.log(this.info);
+  },
+  methods: {
+    toAnswer() {
+      this.$router.push({
+        name: "./kao_shi_answer",
+        query: { id: this.info.courseManageId }
+      });
+    }
   }
 };
 </script>

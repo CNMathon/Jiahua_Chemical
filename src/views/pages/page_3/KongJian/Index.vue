@@ -12,12 +12,30 @@
         title="申请部门"
         required
         :value="$userInfo.officeName"
+        class="readonly"
       ></cell-value>
       <!-- 申请人 -->
       <cell-value
         title="申请人"
         required
         :value="$userInfo.userName"
+        class="readonly"
+      ></cell-value>
+      <!-- 作业票编号 -->
+      <cell-value
+        title="作业票编号"
+        required
+        v-if="initData.dhzypCode"
+        :value="$userInfo.dhzypCode"
+        class="readonly"
+      ></cell-value>
+      <!-- 作业票状态 -->
+      <cell-value
+        title="作业票状态"
+        required
+        v-if="initData.htStatus"
+        :value="$userInfo.userName"
+        class="readonly"
       ></cell-value>
       <!-- 受限空间所属空间 -->
       <div class="cell">
@@ -251,6 +269,7 @@ export default {
   mixins: [business],
   data() {
     return {
+      initData: {},
       storeModule: "kongjian",
       sendData: {
         zyContent: "", //作业内容
@@ -362,5 +381,9 @@ export default {
     background: rgba(96, 150, 248, 1);
     box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.5);
   }
+}
+
+.readonly {
+  background-color: #eee !important;
 }
 </style>

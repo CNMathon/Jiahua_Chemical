@@ -21,9 +21,7 @@
               <div class="nav-list">
                 <label v-for="(items, indexs) in item.list" :key="indexs">
                   <div class="nav">
-                    <div class="nav-title" :class="`err_${indexs}`">
-                      {{ items.value }}
-                    </div>
+                    <div class="nav-title" :class="`err_${indexs}`">{{ items.value }}</div>
                     <div class="nav-sub-title">{{ items.label }}</div>
                   </div>
                 </label>
@@ -42,18 +40,9 @@
       </div>
     </div>
     <div class="nav-content">
-      <div
-        class="nav-item"
-        v-for="(item, index) in nav"
-        :key="index"
-        @click="toPage(item.router)"
-      >
+      <div class="nav-item" v-for="(item, index) in nav" :key="index" @click="toPage(item.router)">
         <div class="img">
-          <img
-            :src="require(`@/assets/images/study_${index + 1}.svg`)"
-            alt
-            srcset
-          />
+          <img :src="require(`@/assets/images/study_${index + 1}.svg`)" alt srcset />
         </div>
         <div class="title">{{ item.text }}</div>
       </div>
@@ -84,10 +73,7 @@
           </van-tab>
           <van-tab title="我的学习历史">
             <div class="tab-content">
-              <label
-                v-for="(item, index) in studyData.historyTask"
-                :key="index"
-              >
+              <label v-for="(item, index) in studyData.historyTask" :key="index">
                 <class-1 :info="item" v-if="index < 3" isStart></class-1>
               </label>
             </div>
@@ -114,20 +100,14 @@
         >
           <van-tab title="我的考试任务">
             <div class="tab-content">
-              <label
-                v-for="(item, index) in studyData.testHistory"
-                :key="index"
-              >
+              <label v-for="(item, index) in testHistory" :key="index">
                 <class-2 :info="item" v-if="index < 3" isEnd></class-2>
               </label>
             </div>
           </van-tab>
           <van-tab title="我的考试历史">
             <div class="tab-content">
-              <label
-                v-for="(item, index) in studyData.testHistory"
-                :key="index"
-              >
+              <label v-for="(item, index) in testHistory" :key="index">
                 <class-2 :info="item" v-if="index < 3" isEnd></class-2>
               </label>
             </div>
@@ -187,7 +167,6 @@ export default {
     this.getMyTestHistory();
     this.getMyStudy();
     this.getUserName();
-    // this.getTestTask();
   },
   methods: {
     // 获取首页数据
@@ -230,17 +209,6 @@ export default {
       };
       this.$api.page_5
         .getMyTestHistory(sendData)
-        .then(res => {
-          this.testHistory = res.list;
-        })
-        .catch(() => {});
-    },
-    // 获得考试任务
-    getTestTask() {
-      this.$api.page_5
-        .getMyTestHistory({
-          testTask: 1
-        })
         .then(res => {
           this.testHistory = res.list;
         })

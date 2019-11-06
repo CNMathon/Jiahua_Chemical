@@ -196,10 +196,13 @@ export default {
 .left {
   font-size: 0.8rem;
   font-family: PingFangSC-Regular, PingFang SC;
+  width: 70%;
 }
 
 .right {
   line-height: 118.3 * 2px;
   font-size: 1.1rem;
+  width: 20%;
+  text-align: center;
 }
 </style>

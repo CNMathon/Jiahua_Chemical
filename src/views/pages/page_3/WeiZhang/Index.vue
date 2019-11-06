@@ -14,9 +14,15 @@
           <span>项目名称</span>
           <span class="required">*</span>
         </div>
-        <div class="cell_value">
+        <div class="cell_value" @click="onClickProjectName">
           <div class="cell_input">
-            <input type="text" placeholder="项目名称" />
+            <input
+              type="text"
+              placeholder="项目名称"
+              v-model="sendData.xmmc"
+              class="clickInput"
+              disabled
+            />
           </div>
           <span class="cell_value_arrow">
             <van-icon name="search" />
@@ -37,7 +43,7 @@
         </div>
         <div class="cell_value">
           <div class="cell_input">
-            <input type="text" placeholder="违章单位" />
+            <input type="text" placeholder="违章单位" v-model="sendData.wzmc" />
           </div>
           <span class="cell_value_arrow">
             <van-icon name="search" />
@@ -60,7 +66,7 @@
       <!-- 检查人员 -->
       <div class="cell">
         <div class="cell_title">
-          <span>检查人员</span>
+          <span>检察人员</span>
           <span class="required">*</span>
         </div>
         <div class="cell_value">
@@ -134,7 +140,7 @@
         </div>
       </div>
       <!-- 处罚金额 -->
-      <cell-input
+      <!-- <cell-input
         v-model="sendData.cfje"
         title="处罚金额"
         inputType="number"
@@ -142,9 +148,9 @@
         placeholder="输入金额"
       >
         <div slot="right">元</div>
-      </cell-input>
+      </cell-input> -->
       <!-- 处罚金额 -->
-      <div class="cell">
+      <!-- <div class="cell">
         <div class="cell_title">
           <span>处罚金额</span>
           <span class="required">*</span>
@@ -152,7 +158,7 @@
         <div class="cell_title">
           <span>自动获取</span>
         </div>
-      </div>
+      </div> -->
       <!-- 事件描述 -->
       <cell-textarea
         title="事件描述"
@@ -167,9 +173,6 @@
         </div>
         <div class="cell_other">
           <div class="upload">
-            <div class="upload_icon">
-              <van-icon name="photo-o" />
-            </div>
             <div class="upload_box">
               <van-uploader
                 :after-read="afterRead"
@@ -181,39 +184,6 @@
           </div>
         </div>
       </div>
-    </div>
-    <div class="cell_group">
-      <div class="cell_group_title">培训记录</div>
-      <!-- 培训时间 -->
-      <cell-time v-model="sendData.pxsj" title="培训时间" required></cell-time>
-      <!-- 培训负责人 -->
-      <div class="cell">
-        <div class="cell_title">
-          <span>培训负责人</span>
-          <span class="required">*</span>
-        </div>
-        <div class="cell_value">
-          <div class="cell_input">
-            <input type="text" placeholder="负责人" />
-          </div>
-          <span class="cell_value_arrow">
-            <van-icon name="search" />
-          </span>
-        </div>
-      </div>
-      <!-- 培训意见 -->
-      <cell-textarea
-        title="培训意见"
-        required
-        v-model="sendData.pxyj"
-        placeholder="输入内容"
-      ></cell-textarea>
-    </div>
-    <div class="confirm_action">
-      <div class="confirm_actions signature" @click="signatureShow = true">
-        签字
-      </div>
-      <div class="confirm_actions confirm" @click="Next">提交</div>
     </div>
     <!-- 时间选择 -->
     <van-popup v-model="timeShow" position="bottom">
@@ -241,14 +211,22 @@ export default {
   data() {
     return {
       sendData: {
-        wzmc: "", //违章名称
+        xmmc: "", //项目名称
+        wzmc: "", //违章名称,
+        wzdw: "", // 违章单位
         startTime: "", //发生时间
         fsdd: "", //发生地点
+        jcry: "", // 检察人员
+        wzry: "", // 违章人员
+        wzkhbz: "", // 违章考核标准
+        wzxm: "", // 违章项目
         wzlx: "", //违章类型
-        cfje: "", //处罚金额
-        sjms: "", //事件描述
-        pxsj: "", //培训时间
-        pxyj: "" //培训意见
+        cfbz: "", // 处罚标准
+        sjms: "", //事件描述,
+        wztp: [], // 违章图片
+        // cfje: "", //处罚金额
+        // pxsj: "", //培训时间
+        // pxyj: "" //培训意见
       },
       wzlxColumns: [1, 2, 3],
       timeShow: false,
@@ -286,6 +264,11 @@ export default {
     },
     cancelCanvas() {
       this.signatureShow = false;
+    },
+    onClickProjectName() {
+      this.$router.push({
+        path: "/Component/CasSelect/Project"
+      });
     }
   }
 };
@@ -323,5 +306,9 @@ export default {
   .popup {
     height: 568px;
   }
+}
+
+.clickInput {
+  background-color: white;
 }
 </style>

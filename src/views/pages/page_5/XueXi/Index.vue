@@ -1,18 +1,8 @@
 <template>
   <div class="xue-xi">
     <van-sticky>
-      <van-nav-bar
-        title="学习"
-        left-text="返回"
-        left-arrow
-        @click-left="pageBack"
-      />
-      <van-search
-        v-model="searchValue"
-        placeholder="搜索"
-        shape="round"
-        @search="getPageData(true)"
-      ></van-search>
+      <van-nav-bar title="学习" left-text="返回" left-arrow @click-left="pageBack" />
+      <van-search v-model="searchValue" placeholder="搜索" shape="round" @search="getPageData(true)"></van-search>
     </van-sticky>
     <van-pull-refresh v-model="isLoading" @refresh="getPageData()">
       <div class="content">

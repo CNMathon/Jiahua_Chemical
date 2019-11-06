@@ -157,7 +157,7 @@ export default {
     position: absolute;
     left: 0;
     bottom: 0;
-    width: 750px;
+    width: 100vw;
     height: 97px;
     font-size: 32px;
     text-align: center;

@@ -38,7 +38,10 @@ export default {
   },
   methods: {
     toStudyDetail() {
-      this.$router.push({ path: `./xue_xi_detail` });
+      this.$router.push({
+        path: `./xue_xi_detail`,
+        query: { id: this.info.courseManageId }
+      });
     }
   }
 };
