@@ -11,10 +11,10 @@
     />
     <j-filter-bar v-model="searchValue" @search="getPageData('refresh')" @tap="showFilter = true"></j-filter-bar>
     <j-filter v-model="showFilter" @confirm="confirmFilter">
-      <j-filter-search
+      <!-- <j-filter-search
         v-model="searchValues"
         @search="filterSearch"
-      ></j-filter-search>
+      ></j-filter-search> -->
       <j-filter-item
         title="作业票状态"
         :actions="zypztList"
