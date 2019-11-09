@@ -1,18 +1,8 @@
 <template>
   <div class="yuan-liao">
-    <van-nav-bar
-      title="原料"
-      left-text="返回"
-      left-arrow
-      @click-left="pageBack"
-    />
+    <van-nav-bar title="原料" left-text="返回" left-arrow @click-left="pageBack" />
     <div class="content">
-      <div
-        class="nav"
-        v-for="(items, indexs) in list"
-        :key="indexs"
-        @click="toPage(items.url)"
-      >
+      <div class="nav" v-for="(items, indexs) in list" :key="indexs" @click="toPage(items.url)">
         <div class="nav-image">
           <img :src="require(`@/assets/images/msg_1.svg`)" alt />
         </div>
@@ -32,32 +22,32 @@ export default {
         {
           name: "硫磺（硫酸厂）",
           url:
-            "http://192.168.2.91:8080/webroot/decision/view/report?viewlet=mobile_apps%252FLH.cpt&ref_t=design&op=write&ref_c=eb939190-331f-45fe-aaba-90cd2968d07d"
+            "http://mes1.jhec.com.cn:8080/webroot/decision/view/report?viewlet=mobile_apps%252FLH.cpt&ref_t=design&op=write&ref_c=eb939190-331f-45fe-aaba-90cd2968d07d"
         },
         {
           name: "棕榈仁油（脂肪醇厂）",
           url:
-            "http://192.168.2.91:8080/webroot/decision/view/report?viewlet=mobile_apps%252FZLRY.cpt&ref_t=design&op=write&ref_c=eb939190-331f-45fe-aaba-90cd2968d07d"
+            "http://mes1.jhec.com.cn:8080/webroot/decision/view/report?viewlet=mobile_apps%252FZLRY.cpt&ref_t=design&op=write&ref_c=eb939190-331f-45fe-aaba-90cd2968d07d"
         },
         {
           name: "工业盐（烧碱厂）",
           url:
-            "http://192.168.2.91:8080/webroot/decision/view/report?viewlet=mobile_apps%252FGYY.cpt&ref_t=design&op=write&ref_c=eb939190-331f-45fe-aaba-90cd2968d07d"
+            "http://mes1.jhec.com.cn:8080/webroot/decision/view/report?viewlet=mobile_apps%252FGYY.cpt&ref_t=design&op=write&ref_c=eb939190-331f-45fe-aaba-90cd2968d07d"
         },
         {
           name: "硝酸（新材料厂）",
           url:
-            "http://192.168.2.91:8080/webroot/decision/view/report?viewlet=mobile_apps%252FXS.cpt&ref_t=design&op=write&ref_c=eb939190-331f-45fe-aaba-90cd2968d07d"
+            "http://mes1.jhec.com.cn:8080/webroot/decision/view/report?viewlet=mobile_apps%252FXS.cpt&ref_t=design&op=write&ref_c=eb939190-331f-45fe-aaba-90cd2968d07d"
         },
         {
           name: "甲苯（新材料厂）",
           url:
-            "http://192.168.2.91:8080/webroot/decision/view/report?viewlet=mobile_apps%252FXS.cpt&ref_t=design&op=write&ref_c=eb939190-331f-45fe-aaba-90cd2968d07d"
+            "http://mes1.jhec.com.cn:8080/webroot/decision/view/report?viewlet=mobile_apps%252FXS.cpt&ref_t=design&op=write&ref_c=eb939190-331f-45fe-aaba-90cd2968d07d"
         },
         {
           name: "工业二氯甲烷（新材料厂）",
           url:
-            "http://192.168.2.91:8080/webroot/decision/view/report?viewlet=mobile_apps%252FELJW.cpt&ref_t=design&op=write&ref_c=eb939190-331f-45fe-aaba-90cd2968d07d"
+            "http://mes1.jhec.com.cn:8080/webroot/decision/view/report?viewlet=mobile_apps%252FELJW.cpt&ref_t=design&op=write&ref_c=eb939190-331f-45fe-aaba-90cd2968d07d"
         }
       ]
     };

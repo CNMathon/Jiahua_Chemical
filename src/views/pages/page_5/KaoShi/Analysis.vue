@@ -1,23 +1,20 @@
 <template>
   <div class="answer">
     <van-sticky>
-      <van-nav-bar title="科目名" left-text="返回" left-arrow @click-left="pageBack">
-        <div slot="right" style="color:rgba(56,117,229,1);" @click="tapSend()">交卷</div>
-      </van-nav-bar>
+      <van-nav-bar title="科目名" left-text="返回" left-arrow @click-left="pageBack"></van-nav-bar>
     </van-sticky>
     <van-skeleton title :row="13" :loading="isLoading" style="margin-top:30px;">
       <div class="contenter">
         <div class="header">
           <div>总题数：{{answerData.length}}</div>
-          <div>考试时间：2小时</div>
-          <div>剩余时间：1小时</div>
+          <div>得分：60</div>
         </div>
         <div v-for="(item,index) in answerData" :key="index">
           <!-- 单选题 -->
           <div class="radio" v-if="item.questionType == 1">
             <div class="header-title">单选题</div>
             <div class="title" v-html="item.questionStem"></div>
-            <van-radio-group v-model="item.myAnswer">
+            <van-radio-group v-model="item.myAnswer" disabled>
               <div v-for="(items,indexs) in item.children" :key="indexs">
                 <van-radio
                   :name="items.itemCode"
@@ -25,11 +22,25 @@
                 >{{items.itemCode}}.{{items.itemContent}}</van-radio>
               </div>
             </van-radio-group>
+            <div class="analysis">
+              <div class="analysis__item">
+                <div class="analysis__item_title">解题分析：</div>
+                <div class="analysis__item_text" v-html="item.questionAnalize"></div>
+              </div>
+              <div class="analysis__item">
+                <div class="analysis__item_title">正确答案：</div>
+                <div class="analysis__item_text">{{item.questionAnswer}}</div>
+              </div>
+              <div class="analysis__item">
+                <div class="analysis__item_title">考生答案：</div>
+                <div class="analysis__item_text">{{item.myAnswer}}</div>
+              </div>
+            </div>
           </div>
           <!-- 多选题 -->
           <div class="checkbox" v-if="item.questionType == 2">
             <div class="title" v-html="item.questionStem"></div>
-            <van-checkbox-group v-model="item.myAnswer">
+            <van-checkbox-group v-model="item.myAnswer" disabled>
               <div v-for="(items,indexs) in item.children" :key="indexs">
                 <van-checkbox
                   :name="items.itemCode"
@@ -37,6 +48,20 @@
                 >{{items.itemCode}}.{{items.itemContent}}</van-checkbox>
               </div>
             </van-checkbox-group>
+            <div class="analysis">
+              <div class="analysis__item">
+                <div class="analysis__item_title">解题分析：</div>
+                <div class="analysis__item_text" v-html="item.questionAnalize"></div>
+              </div>
+              <div class="analysis__item">
+                <div class="analysis__item_title">正确答案：</div>
+                <div class="analysis__item_text">{{item.questionAnswer}}</div>
+              </div>
+              <div class="analysis__item">
+                <div class="analysis__item_title">考生答案：</div>
+                <div class="analysis__item_text">{{item.myAnswer}}</div>
+              </div>
+            </div>
           </div>
           <!-- 判断题 -->
           <div class="checkbox" v-if="item.questionType == 3">
@@ -44,16 +69,22 @@
             <div class="judge">
               <div class="title" v-html="item.questionStem"></div>
               <div class="judge-list">
-                <div
-                  class="judge-item"
-                  :class="active(item.myAnswer === 'N')"
-                  @click="item.myAnswer = 'N'"
-                >错误</div>
-                <div
-                  class="judge-item"
-                  :class="active(item.myAnswer === 'Y')"
-                  @click="item.myAnswer = 'Y'"
-                >正确</div>
+                <div class="judge-item">错误</div>
+                <div class="judge-item">正确</div>
+              </div>
+            </div>
+            <div class="analysis">
+              <div class="analysis__item">
+                <div class="analysis__item_title">解题分析：</div>
+                <div class="analysis__item_text" v-html="item.questionAnalize"></div>
+              </div>
+              <div class="analysis__item">
+                <div class="analysis__item_title">正确答案：</div>
+                <div class="analysis__item_text">{{item.questionAnswer === 'Y' ? '正确' : '错误'}}</div>
+              </div>
+              <div class="analysis__item">
+                <div class="analysis__item_title">考生答案：</div>
+                <div class="analysis__item_text">{{item.myAnswer === 'Y' ? '正确' : '错误'}}</div>
               </div>
             </div>
           </div>
@@ -65,7 +96,7 @@
 <script>
 import { mixin } from "@/mixin/mixin";
 export default {
-  name: "answer",
+  name: "Analysis",
   mixins: [mixin],
   data() {
     return {
@@ -84,7 +115,7 @@ export default {
     getPageData() {
       let sendData = {
         id: this.$route.query.id,
-        showRes: "no",
+        showRes: "yes",
         __sid: this.$userInfo.sessionId
       };
       this.$api.page_5
@@ -129,6 +160,12 @@ export default {
 .answer {
   padding-bottom: 30px;
   box-sizing: border-box;
+  /deep/ .van-radio__label--disabled {
+    color: #333333;
+  }
+  /deep/ .van-checkbox__label--disabled {
+    color: #333333;
+  }
 }
 .header {
   display: flex;
@@ -199,6 +236,19 @@ export default {
       color: rgba(255, 255, 255, 1);
       background: rgba(56, 117, 229, 1);
       border: 1px solid rgba(56, 117, 229, 1);
+    }
+  }
+}
+.analysis {
+  font-size: 28px;
+  color: rgba(51, 51, 51, 1);
+  line-height: 40px;
+  &__item {
+    margin-bottom: 20px;
+    display: flex;
+    align-items: flex-start;
+    &_title {
+      width: 180px;
     }
   }
 }

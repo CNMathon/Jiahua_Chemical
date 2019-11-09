@@ -1,19 +1,13 @@
 <template>
   <div class="donghuo_select">
-    <van-nav-bar
-      title="请选择"
-      left-text="返回"
-      left-arrow
-      @click-left="pageBack"
-    />
+    <van-nav-bar title="请选择" left-text="返回" left-arrow @click-left="pageBack" />
     <div class="check_box">
       <van-checkbox
         class="checkbox"
         checked-color="#1FC41D"
         v-model="checkAll"
         @click="setCheckAll"
-        >全选</van-checkbox
-      >
+      >全选</van-checkbox>
       <van-checkbox-group v-model="result">
         <van-checkbox
           class="checkbox"
@@ -21,8 +15,7 @@
           v-for="item in showList"
           :key="item"
           :name="item"
-          >{{ item }}</van-checkbox
-        >
+        >{{ item }}</van-checkbox>
       </van-checkbox-group>
       <!-- <van-checkbox
         class="checkbox"
@@ -36,11 +29,9 @@
           v-model="inputValue"
           :disabled="!checkInput"
         />
-      </van-checkbox> -->
+      </van-checkbox>-->
     </div>
-    <div class="confirm" @click="confirm">
-      确认({{ chaeckNumber }}/{{ AllChaeckNumber }})
-    </div>
+    <div class="confirm" @click="confirm">确认({{ chaeckNumber }}/{{ AllChaeckNumber }})</div>
   </div>
 </template>
 <script>
@@ -101,11 +92,9 @@ export default {
     },
     // 确认选择
     confirm() {
-      if (this.checkInput) {
-        if (this.inputValue === "") {
-          this.$notify("请输入自定义文字");
-          return false;
-        }
+      if (this.chaeckNumber === 0) {
+        this.$notify("请至少选择一项内容");
+        return false;
       }
       this.pageBack();
     }

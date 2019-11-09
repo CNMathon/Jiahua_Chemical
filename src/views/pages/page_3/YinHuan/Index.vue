@@ -1,19 +1,9 @@
 <template>
   <div class="yinhuan">
-    <van-nav-bar
-      title="隐患整改通知"
-      left-text="返回"
-      left-arrow
-      @click-left="pageBack"
-    />
+    <van-nav-bar title="隐患整改通知" left-text="返回" left-arrow @click-left="pageBack" />
     <div class="cell_group">
       <!-- 整改单名称 -->
-      <cell-input
-        v-model="sendData.zgd"
-        title="整改单名称"
-        required
-        placeholder="输入整改单名称"
-      ></cell-input>
+      <cell-input v-model="sendData.rectificationName" title="整改单名称" required placeholder="输入整改单名称"></cell-input>
       <!-- 整改公司 -->
       <div class="cell">
         <div class="cell_title">
@@ -47,86 +37,37 @@
         </div>
       </div>
       <!-- 整改负责人 -->
-      <div class="cell">
-        <div class="cell_title">
-          <span>整改负责人</span>
-        </div>
-        <div class="cell_other">
-          <div class="cell_other_people">
-            <div
-              class="cell_other_peoples"
-              v-for="(item, index) in 5"
-              :key="index"
-            >
-              <div class="cell_other_peoples_header">
-                <van-image
-                  round
-                  width="100%"
-                  height="100%"
-                  src="https://img.yzcdn.cn/vant/cat.jpeg"
-                />
-                <span class="delete">
-                  <van-icon name="cross" color="#ffffff" />
-                </span>
-              </div>
-              <div class="cell_other_peoples_name">王安石</div>
-              <div
-                class="cell_other_peoples_arrow"
-                v-if="index % 4 !== 0 || index === 0"
-              >
-                <img
-                  src="./../../../../assets/images/arrow-right.svg"
-                  alt
-                  srcset
-                />
-              </div>
-            </div>
-            <div class="cell_other_add_peoples">+</div>
-          </div>
-        </div>
-      </div>
-      <!-- 地点 -->
-      <cell-input
-        v-model="sendData.dd"
-        title="地点"
+      <cell-select-users
+        title="整改负责人"
         required
-        placeholder="输入地点"
-      ></cell-input>
+        :storeModule="storeModule"
+        storeKey="rectificationCharge"
+        v-model="sendData.rectificationCharge"
+      ></cell-select-users>
+      <!-- 地点 -->
+      <cell-input v-model="sendData.location" title="地点" required placeholder="输入地点"></cell-input>
       <!-- 隐患等级 -->
       <cell-picker
         title="隐患等级"
         required
-        v-model="sendData.yhdj"
-        :columns="yhdjColumns"
+        v-model="sendData.dangerLevel"
+        :columns="dangerLevelColumns"
       ></cell-picker>
       <!-- 隐患类型 -->
-      <cell-picker
-        title="隐患类型"
-        required
-        v-model="sendData.yhlx"
-        :columns="yhlxColumns"
-      ></cell-picker>
+      <cell-picker title="隐患类型" required v-model="sendData.dangerType" :columns="dangerTypeColumns"></cell-picker>
       <!-- 隐患来源 -->
-      <div class="cell">
-        <div class="cell_title">
-          <span>隐患来源</span>
-        </div>
-        <div class="cell_value">
-          <div class="cell_input">
-            <input type="text" placeholder="自动带入" />
-          </div>
-        </div>
-      </div>
-      <!-- 是否处罚 -->
       <cell-picker
-        title="是否处罚"
+        title="隐患来源"
         required
-        v-model="sendData.cf"
-        :columns="cfColumns"
+        v-model="sendData.dangerSource"
+        :columns="dangerSourceColumns"
+        keyType="text"
       ></cell-picker>
+      <!-- 是否处罚 -->
+      <cell-picker title="是否处罚" required v-model="sendData.isPunish" :columns="isPunishColumns"></cell-picker>
       <!-- 处罚金额 -->
       <cell-input
-        v-model="sendData.cfje"
+        v-model="sendData.punishMoney"
         title="处罚金额"
         inputType="number"
         required
@@ -135,19 +76,9 @@
         <div slot="right">元</div>
       </cell-input>
       <!-- 是否处挂起 -->
-      <cell-picker
-        title="是否处挂起"
-        required
-        v-model="sendData.wg"
-        :columns="wgColumns"
-      ></cell-picker>
+      <cell-value title="是否处挂起" :value="isSuspendedColumns[sendData.isSuspended]" required></cell-value>
       <!-- 隐患描述 -->
-      <cell-textarea
-        title="隐患描述"
-        required
-        v-model="sendData.yhms"
-        placeholder="输入内容"
-      ></cell-textarea>
+      <cell-textarea title="隐患描述" required v-model="sendData.dangerDesc" placeholder="输入内容"></cell-textarea>
       <!-- 上传图片 -->
       <div class="cell">
         <div class="cell_title">
@@ -171,49 +102,19 @@
         </div>
       </div>
       <!-- 验收负责人 -->
-      <div class="cell">
-        <div class="cell_title">
-          <span>验收负责人</span>
-        </div>
-        <div class="cell_other">
-          <div class="cell_other_people">
-            <div
-              class="cell_other_peoples"
-              v-for="(item, index) in 5"
-              :key="index"
-            >
-              <div class="cell_other_peoples_header">
-                <van-image
-                  round
-                  width="100%"
-                  height="100%"
-                  src="https://img.yzcdn.cn/vant/cat.jpeg"
-                />
-                <span class="delete">
-                  <van-icon name="cross" color="#ffffff" />
-                </span>
-              </div>
-              <div class="cell_other_peoples_name">王安石</div>
-              <div
-                class="cell_other_peoples_arrow"
-                v-if="index % 4 !== 0 || index === 0"
-              >
-                <img
-                  src="./../../../../assets/images/arrow-right.svg"
-                  alt
-                  srcset
-                />
-              </div>
-            </div>
-            <div class="cell_other_add_peoples">+</div>
-          </div>
-        </div>
-      </div>
+      <cell-select-users
+        title="验收负责人"
+        required
+        :storeModule="storeModule"
+        storeKey="acceptanceCharge"
+        v-model="sendData.acceptanceCharge"
+      ></cell-select-users>
     </div>
     <div class="next" @click="Next">提交</div>
   </div>
 </template>
 <script>
+import { mapState } from "vuex";
 import { business } from "@/mixin/business";
 import { uploadFile } from "@/mixin/uploadFile";
 export default {
@@ -221,33 +122,112 @@ export default {
   mixins: [business, uploadFile],
   data() {
     return {
+      storeModule: "yinhuan",
       sendData: {
-        zgd: "", //整改单
-        dd: "", //地点
-        cf: "", //是否处罚
-        wg: "", //是否处挂起
-        yhdj: "", //隐患等级
-        yhlx: "", //隐患类型
-        cfge: "", //处罚金额
-        yhms: "" //隐患描述
+        rectificationName: "", //整改单
+        location: "", //地点
+        isPunish: "", //是否处罚
+        isSuspended: 0, //是否处挂起
+        dangerLevel: "", //隐患等级
+        dangerType: "", //隐患类型
+        dangerSource: "", //隐患来源
+        acceptanceCharge: [], //验收负责人
+        rectificationCharge: [], //整改负责人
+        punishMoney: "", //处罚金额
+        dangerDesc: "" //隐患描述
       },
-      cfColumns: ["是", "否"],
-      wgColumns: ["是", "否"],
-      yhdjColumns: ["1", "2"],
-      yhlxColumns: ["1", "2"]
+      isPunishColumns: ["是", "否"],
+      isSuspendedColumns: ["否", "是"],
+      dangerSourceColumns: [
+        {
+          text: "行为观察卡",
+          key: "XWGCK"
+        },
+        {
+          text: "风险/隐患识别卡",
+          key: "YHSBK"
+        },
+        {
+          text: "安全检查记录",
+          key: "AQJCJL"
+        },
+        {
+          text: "承包商约谈",
+          key: "CBSYT"
+        }
+      ], //隐患来源
+      dangerLevelColumns: ["一般", "较大", "重大"], //隐患等级
+      dangerTypeColumns: [
+        "作业票",
+        "喷溅/泄露",
+        "狭小空间/阻碍",
+        "个人防护设备",
+        "电气",
+        "燃烧/火灾",
+        "工具使用不当",
+        "作业设备/工具缺陷",
+        "标签标示",
+        "敲击/打击",
+        "能量隔离",
+        "环保",
+        "跌落/绊倒",
+        "卫生",
+        "机械完整性",
+        "交通",
+        "中毒/窒息"
+      ] //隐患类型
     };
   },
-  created() {},
+  computed: mapState({
+    acceptanceCharge: state => state.yinhuan.acceptanceCharge,
+    rectificationCharge: state => state.yinhuan.rectificationCharge
+  }),
+  beforeDestroy() {
+    this.$store.dispatch("yinhuan/cleanState");
+  },
+  watch: {
+    // 验收负责人
+    acceptanceCharge(val) {
+      this.sendData.acceptanceCharge = val;
+    },
+    // 验收负责人
+    rectificationCharge(val) {
+      this.sendData.rectificationCharge = val;
+    },
+    //隐患等级
+    "sendData.dangerLevel"(val) {
+      if (val === 3) {
+        this.sendData.isSuspended = 1;
+      } else {
+        this.sendData.isSuspended = 0;
+      }
+    }
+  },
   methods: {
+    // 发送数据
     postData() {
-      this.pageBack();
-    },
-    pageBack() {
-      this.$router.back();
-    },
-    afterRead(file) {
-      // 此时可以自行将文件上传至服务器
-      console.log(file);
+      const that = this;
+      let sendData = JSON.parse(JSON.stringify(this.sendData));
+      sendData.acceptanceCharge = this.userString(
+        sendData.acceptanceCharge,
+        "userCode"
+      );
+      sendData.rectificationCharge = this.userString(
+        sendData.rectificationCharge,
+        "userCode"
+      );
+      sendData.__sid = this.$userInfo.sessionId;
+      this.$api.page_3
+        .dangerRectificationSave(sendData)
+        .then(res => {
+          this.$Toast.success({
+            message: "提交成功",
+            onClose() {
+              that.pageBack();
+            }
+          });
+        })
+        .catch(() => {});
     }
   }
 };

@@ -106,22 +106,167 @@
         v-model="sendData.worker"
       ></cell-select-user>
     </div>
-    <van-action-sheet
-      v-model="showPicker"
-      :actions="actions"
-      @select="onSelect"
-    />
+    
+      <!-- 操作Popup -->
+      <van-popup
+        v-model="showPicker"
+        position="bottom"
+        class="action"
+      >
+        <button @click="postData">保存</button>
+        <button>工作流提交</button>
+        <button @click="closeAction">取消</button>
+      </van-popup>
+
+    <div class="confirm">
+        <div class="head">
+          <div class="head_1">安全措施</div>
+          <div class="head_2">确认</div>
+          <div class="head_3">确认人</div>
+        </div>
+        <div class="confirm_list">
+          <Signature
+            :checked="checked[0] ? checked[0].checked : false"
+            :img="checked[0] ? checked[0].img : ''"
+            @checked="showSignature(0)"
+            @cancel="signatureCancel(0)"
+          >
+            <span slot>作业人员身体条件符合要求。</span>
+          </Signature>
+          <Signature
+            :checked="checked[1] ? checked[1].checked : false"
+            :img="checked[1] ? checked[1].img : ''"
+            @checked="showSignature(1)"
+            @cancel="signatureCancel(1)"
+          >
+            <span slot>作业人员着装符合工作要求</span>
+          </Signature>
+          <Signature
+            :checked="checked[2] ? checked[2].checked : false"
+            :img="checked[2] ? checked[2].img : ''"
+            @checked="showSignature(2)"
+            @cancel="signatureCancel(2)"
+          >
+            <span slot>作业人员佩戴合格的安全帽</span>
+          </Signature>
+          <Signature
+            :checked="checked[3] ? checked[3].checked : false"
+            :img="checked[3] ? checked[3].img : ''"
+            @checked="showSignature(3)"
+            @cancel="signatureCancel(3)"
+          >
+            <span slot>作业人员佩戴安全带，安全带高挂抵用</span>
+          </Signature>
+          <Signature
+            :checked="checked[4] ? checked[4].checked : false"
+            :img="checked[4] ? checked[4].img : ''"
+            @checked="showSignature(4)"
+            @cancel="signatureCancel(4)"
+          >
+            <span slot>作业人员携带有工具袋及安全绳</span>
+          </Signature>
+          <Signature
+            :checked="checked[5] ? checked[5].checked : false"
+            :img="checked[5] ? checked[5].img : ''"
+            @checked="showSignature(5)"
+            @cancel="signatureCancel(5)"
+          >
+              <span>
+                作业人员佩戴:
+                <span :class="mask[0] == 1 ? 'seclct_tag is_select':'seclct_tag'" @click="changeMask(0)">过滤式防毒面具或口罩</span>
+                <span :class="mask[1] == 1 ? 'seclct_tag is_select':'seclct_tag'" @click="changeMask(1)">空气呼吸器</span>
+              </span>
+          </Signature>
+          <Signature
+            :checked="checked[6] ? checked[6].checked : false"
+            :img="checked[6] ? checked[5].img : ''"
+            @checked="showSignature(6)"
+            @cancel="signatureCancel(6)"
+          >
+            <span slot>现场搭设的脚手架、防护网、围栏符合安全规定</span>
+          </Signature>
+          <Signature
+            :checked="checked[7] ? checked[7].checked : false"
+            :img="checked[7] ? checked[7].img : ''"
+            @checked="showSignature(7)"
+            @cancel="signatureCancel(7)"
+          >
+            <span slot>垂直分层作业中间有隔离设施</span>
+          </Signature>
+          <Signature
+            :checked="checked[8] ? checked[8].checked : false"
+            :img="checked[8] ? checked[8].img : ''"
+            @checked="showSignature(8)"
+            @cancel="signatureCancel(8)"
+          >
+            <span slot>绳子、梯子符合安全规定</span>
+          </Signature>
+          <Signature
+            :checked="checked[9] ? checked[9].checked : false"
+            :img="checked[9] ? checked[9].img : ''"
+            @checked="showSignature(9)"
+            @cancel="signatureCancel(9)"
+          >
+            <span slot>石棉瓦等轻型棚的承重梁、柱能承重负荷的要求</span>
+          </Signature>
+          <Signature
+            :checked="checked[10] ? checked[10].checked : false"
+            :img="checked[10] ? checked[10].img : ''"
+            @checked="showSignature(10)"
+            @cancel="signatureCancel(10)"
+          >
+            <span slot>作业人员在石棉瓦等不承重物作业所搭设的承重板稳定牢固</span>
+          </Signature>
+          <Signature
+            :checked="checked[11] ? checked[11].checked : false"
+            :img="checked[11] ? checked[11].img : ''"
+            @checked="showSignature(11)"
+            @cancel="signatureCancel(11)"
+          >
+          <span>
+                采光,夜间作业照明符合作业要求, 
+                <span :class="light == 0? 'seclct_tag is_select': 'seclct_tag'" @click="light = 0">需采用并已采用</span>
+                <span :class="light == 1? 'seclct_tag is_select': 'seclct_tag'" @click="light = 1">无需采用</span>
+          防爆灯
+          </span>
+          </Signature>
+          <Signature
+            :checked="checked[12] ? checked[12].checked : false"
+            :img="checked[12] ? checked[12].img : ''"
+            @checked="showSignature(12)"
+            @cancel="signatureCancel(12)"
+          >
+            <span slot>30m 以上高处作业配备通讯、联络工具</span>
+          </Signature>
+          
+          
+        </div>
+        <van-popup
+        class="popup"
+        v-model="signatureShow"
+        :close-on-click-overlay="false"
+        position="bottom"
+      >
+        <Canvas ref="signature" @save="saveCanvas" @cancel="cancelCanvas"></Canvas>
+      </van-popup>
+      </div>
   </div>
 </template>
 <script>
 import { mapState } from "vuex";
 import { business } from "../../../../mixin/business";
+import GaoChuConfirm from "./Confirm";
+import StepperPlus from "@/components/StepperPlus.vue";
+import Canvas from "@/components/Canvas.vue";
+import Signature from "../components/Signature.vue";
 export default {
   name: "gaochu",
   mixins: [business],
   data() {
     return {
       storeModule: "gaochu",
+      light: 0,
+      mask: [0, 1],
       sendData: {
         workContent: "", //作业内容
         workAddress: "", //作业地点
@@ -157,12 +302,30 @@ export default {
         "其他"
       ],
       showPicker: false,
+      safeSendData: [
+        {
+          fatherId: "",
+          xuhao: "",
+          safetyMeasure: "",
+          confirmer: "",
+          qrzt: Number
+        }
+      ],
+      checked: [{ checked: false, image: "" }],
+      signatureShow: false,
+      xuhao: Number,
       actions: [
         { name: "保存", index: 0 },
         { name: "工作流提交", index: 1 },
         { name: "取消", index: 2 }
       ]
     };
+  },
+  components: {
+    GaoChuConfirm,
+    Canvas,
+    StepperPlus,
+    Signature
   },
   computed: mapState({
     specialWork: state => state.gaochu.specialWork,
@@ -186,6 +349,81 @@ export default {
     this.$store.dispatch("gaochu/cleanState");
   },
   methods: {
+    // 清除所有数据
+    clearData() {
+        this.sendData.workContent = "", //作业内容
+        this.sendData.workAddress = "", //作业地点
+        this.sendData.workHeight = "", //作业高度
+        this.sendData.heightType = "", //登高类别
+        this.sendData.startTime = "", //作业开始时间
+        this.sendData.endTime = "", //作业结束时间
+        this.sendData.specialWork = [], //涉及其他作业
+        this.sendData.harmAnalise = [], //危害辨识
+        this.sendData.workDeptLeader = [], //作业部门负责人
+        this.sendData.worker = [], //作业人
+        this.sendData.guarder = [] //监护人
+    },
+    // 判断数据输入的完整性
+    // true => 输入完整
+    // false => 有问题的输入
+    isDataEdit() {
+      // 作业内容
+      if (this.sendData.workContent == false) {
+        this.$notify("请输入作业内容");
+        return false;
+      }
+      // 作业地点
+      if (this.sendData.workAddress == false) {
+        this.$notify("请录入作业地点");
+        return false;
+      }
+      // 作业高度
+      if (this.sendData.workHeight == false) {
+        this.$notify("请选择作业高度");
+        return false;
+      }
+      // 登高类别
+      if (this.sendData.heightType == false) {
+        this.$notify("请选择登高类别");
+        return false;
+      }
+      // 作业开始时间
+      if (this.sendData.startTime == false) {
+        this.$notify("请选择作业开始时间");
+        return false;
+      }
+      // 作业结束时间
+      if (this.sendData.endTime == false) {
+        this.$notify("请选择作业结束时间");
+        return false;
+      }
+      // 涉及其他作业
+      if (this.sendData.specialWork == false) {
+        this.$notify("请选择涉及其他作业");
+        return false;
+      }
+      // 危害辨识
+      if (this.sendData.harmAnalise == false) {
+        this.$notify("请选择危害辨识");
+        return false;
+      }
+      // 作业部门负责人
+      if (this.sendData.workDeptLeader == false) {
+        this.$notify("请选择作业部门负责人");
+        return false;
+      }
+      // 作业人
+      if (this.sendData.worker == false) {
+        this.$notify("请选择作业人");
+        return false;
+      }
+      // 监护人
+      if (this.sendData.guarder == false) {
+        this.$notify("请选择监护人");
+        return false;
+      }
+      return true;
+    },
     /**
      * 获取工作票内容
      */
@@ -207,6 +445,10 @@ export default {
     },
     // 发送数据
     postData() {
+      // 检测到输入不完整直接退出函数
+      if (!this.isDataEdit()) {
+        return;
+      }
       const that = this;
       let sendData = JSON.parse(JSON.stringify(this.sendData));
       sendData.specialWork = this.stringData("specialWork", "list_1");
@@ -220,24 +462,227 @@ export default {
       sendData.applyDept = this.$userInfo.officeName;
       sendData.applicant = this.$userInfo.userName;
       sendData.__sid = this.$userInfo.sessionId;
+
+
+      let messageId; // 主表查询返回的ID
+      let sendSafeData = {
+        HtHseUpworkticketSon: [
+          {
+            fatherId: messageId,
+            xuhao: 1,
+            safetyMeasure: `作业人员身体条件符合要求`,
+            confirmer: this.checked[0] ? this.checked[0].img : 0,
+            qrzt: this.checked[0] ? 1 : 0
+          },
+          {
+            fatherId: messageId,
+            xuhao: 2,
+            safetyMeasure: `作业人员着装符合工作要求`,
+            confirmer: this.checked[1] ? this.checked[1].img : 0,
+            qrzt: this.checked[1] ? 1 : 0
+          },
+          {
+            fatherId: messageId,
+            xuhao: 3,
+            safetyMeasure: `作业人员佩戴合格的安全帽`,
+            confirmer: this.checked[2] ? this.checked[2].img : 0,
+            qrzt: this.checked[2] ? 1 : 0
+          },
+          {
+            fatherId: messageId,
+            xuhao: 4,
+            safetyMeasure: `作业人员佩戴安全带，安全带高挂抵用`,
+            confirmer: this.checked[3] ? this.checked[3].img : 0,
+            qrzt: this.checked[3] ? 1 : 0
+          },
+          {
+            fatherId: messageId,
+            xuhao: 5,
+            safetyMeasure: `作业人员携带有工具袋及安全绳`,
+            confirmer: this.checked[4] ? this.checked[4].img : 0,
+            qrzt: this.checked[4] ? 1 : 0
+          },
+          {
+            fatherId: messageId,
+            xuhao: 6,
+            safetyMeasure: `作业人员佩戴`,
+            confirmer: this.checked[5] ? this.checked[5].img : 0,
+            qrzt: this.checked[5] ? 1 : 0
+          },
+          {
+            fatherId: messageId,
+            xuhao: 7,
+            safetyMeasure: `现场搭设的脚手架、防护网、围栏符合安全规定`,
+            confirmer: this.checked[6] ? this.checked[6].img : 0,
+            qrzt: this.checked[6] ? 1 : 0
+          },
+          {
+            fatherId: messageId,
+            xuhao: 8,
+            safetyMeasure: `垂直分层作业中间有隔离设施`,
+            confirmer: this.checked[7] ? this.checked[7].img : 0,
+            qrzt: this.checked[7] ? 1 : 0
+          },
+          {
+            fatherId: messageId,
+            xuhao: 9,
+            safetyMeasure: `绳子、梯子符合安全规定`,
+            confirmer: this.checked[8] ? this.checked[8].img : 0,
+            qrzt: this.checked[8] ? 1 : 0
+          },
+          {
+            fatherId: messageId,
+            xuhao: 10,
+            safetyMeasure: `石棉瓦等轻型棚的承重梁、柱能承重负荷的要求`,
+            confirmer: this.checked[9] ? this.checked[9].img : 0,
+            qrzt: this.checked[9] ? 1 : 0
+          },
+          {
+            fatherId: messageId,
+            xuhao: 11,
+            safetyMeasure: `作业人员在石棉瓦等不承重物作业所搭设的承重板稳定牢固`,
+            confirmer: this.checked[10] ? this.checked[10].img : 0,
+            qrzt: this.checked[10] ? 1 : 0
+          },
+          {
+            fatherId: messageId,
+            xuhao: 12,
+            safetyMeasure: `采光,夜间作业照明符合作业要求, 防爆灯`,
+            confirmer: this.checked[11] ? this.checked[11].img : 0,
+            qrzt: this.checked[11] ? 1 : 0
+          },
+          {
+            fatherId: messageId,
+            xuhao: 13,
+            safetyMeasure: `30m 以上高处作业配备通讯、联络工具`,
+            confirmer: this.checked[12] ? this.checked[12].img : 0,
+            qrzt: this.checked[12] ? 1 : 0
+          },
+        ],
+        __sid: this.$userInfo.sessionId,
+      }
+
+      let ren0 = this.checked[0] ? this.checked[0].img : 0
+      let ren1 = this.checked[1] ? this.checked[1].img : 1
+      let ren2 = this.checked[2] ? this.checked[2].img : 2
+      let ren3 = this.checked[3] ? this.checked[3].img : 3
+      let ren4 = this.checked[4] ? this.checked[4].img : 4
+      let ren5 = this.checked[5] ? this.checked[5].img : 5
+      let ren6 = this.checked[6] ? this.checked[6].img : 6
+      let ren7 = this.checked[7] ? this.checked[7].img : 7
+      let ren8 = this.checked[8] ? this.checked[8].img : 8
+      let ren9 = this.checked[9] ? this.checked[9].img : 9
+      let ren10 = this.checked[10] ? this.checked[10].img : 10
+      let ren11 = this.checked[11] ? this.checked[11].img : 11
+      let ren12 = this.checked[12] ? this.checked[12].img : 12
+
+
+      let sendSafeData1 = {
+        __sid: this.$userInfo.sessionId,
+        zypId: messageId,
+        xuhao: [1, 2, 3, 4, 5, 6, 7, 8,9,10,11,12],
+        confirmer: [ren0, ren1, ren2, ren3, ren4, ren5, ren6, ren7, ren8, ren9, ren10, ren11, ren12],
+        qrzt: [
+          this.checked[1] ? 1 : 0,
+          this.checked[2] ? 1 : 0,
+          this.checked[3] ? 1 : 0,
+          this.checked[4] ? 1 : 0,
+          this.checked[5] ? 1 : 0,
+          this.checked[6] ? 1 : 0,
+          this.checked[7] ? 1 : 0,
+          this.checked[8] ? 1 : 0,
+          this.checked[9] ? 1 : 0,
+          this.checked[10] ? 1 : 0,
+          this.checked[11] ? 1 : 0,
+          this.checked[12] ? 1 : 0,
+          this.checked[13] ? 1 : 0
+        ],
+        safetyMeasure: [
+          `作业人员身体条件符合要求。`,
+          `作业人员着装符合工作要求`,
+          `作业人员佩戴合格的安全帽`,
+          `作业人员佩戴安全带，安全带高挂抵用`,
+          `作业人员携带有工具袋及安全绳`,
+          `作业人员佩戴:${this.mask[0] == 1 ? '过滤式防毒面具或口罩' : ''},${this.mask[1] == 1 ? '空气呼吸器' : ''}`,
+          `现场搭设的脚手架、防护网、围栏符合安全规定`,
+          `垂直分层作业中间有隔离设施`,
+          `绳子、梯子符合安全规定`,
+          `石棉瓦等轻型棚的承重梁、柱能承重负荷的要求`,
+          `作业人员在石棉瓦等不承重物作业所搭设的承重板稳定牢固`,
+          `采光,夜间作业照明符合作业要求, ${this.light == 0 ? '需采用并已采用' : '无需采用'}防爆灯`,
+          `30m 以上高处作业配备通讯、联络工具`,
+
+        ]
+      }
+
+      sendData.applyDept = this.$userInfo.officeName;
+      sendData.applyRen = this.$userInfo.userName;
+      sendData.__sid = this.$userInfo.sessionId;
+      console.log(sendData)
       this.$api.page_3
         .htHseUpworkticketSave(sendData)
         .then(res => {
           console.log("res: ", res);
+          messageId = res.message
           this.$Toast.success({
-            message: "提交成功",
-            onClose() {
-              that.pageBack();
-            }
+            message: "提交成功"
           });
+          console.log('1111111111',sendSafeData)
+          console.log('22222222',JSON.stringify(sendSafeData1),that.$userInfo.sessionId,this.$userInfo.sessionId)
+          // this.$api.page_3
+          //   .htHseUpworkticketSavelit(JSON.stringify(sendSafeData1), that.$userInfo.sessionId)
+          //   .then(res => {
+          //     console.log("res: ", res);
+              
+          //   })
         })
-        .catch(() => {});
+        .catch(() => { console.log('失败')});
     },
-    onSelect(item) {
-      this.showPicker = false;
-      if (item.index === 0) {
-        this.Next();
+    closeAction() {
+      this.showPicker = false
+    },
+    changeMask(id) {
+      if (id == 0) {
+          this.mask[0] == 0 ? this.mask.splice(0,1,1) : this.mask.splice(0,1,0)
+      } else {
+          this.mask[1] == 0 ? this.mask.splice(1,1,1) : this.mask.splice(1,1,0)
       }
+    },
+    
+    
+    saveCanvas(e) {
+      this.signatureShow = false;
+      this.checked[this.xuhao] = {
+        checked: false,
+        img: ""
+      };
+      this.checked[this.xuhao].img = e;
+      console.log("signatureShow: ");
+    },
+    onMaterialCancel() {
+      this.materialShowShow = false;
+    },
+    cancelCanvas() {
+      this.checked[this.xuhao].checked = false;
+      this.checked[this.xuhao].img = "";
+      this.signatureShow = false;
+    },
+    testButtonClick() {
+      console.log(`父组件 = ${this.value}`);
+    },
+    // 显示签名
+    showSignature(index) {
+      console.log("index: ", index);
+      console.log("显示签名");
+      this.xuhao = index;
+      this.signatureShow = true;
+    },
+    // 取消签名
+    signatureCancel(index) {
+      console.log("index: ", index);
+      console.log("取消");
+      this.checked[index].checked = false;
+      this.checked[index].img = "";
     }
   },
   watch: {
@@ -273,6 +718,105 @@ export default {
     line-height: 98px;
     background: rgba(96, 150, 248, 1);
     box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.5);
+  }
+  .confirm {
+    .head {
+      width: 100vw;
+      height: 94px;
+      padding: 0 40px;
+      background: rgba(255, 255, 255, 1);
+      font-size: 30px;
+      color: rgba(19, 19, 19, 1);
+      line-height: 45px;
+      display: flex;
+      align-items: center;
+      .head_1 {
+        flex: auto;
+      }
+      .head_2 {
+        margin-right: 140px;
+      }
+      .head_3 {
+        margin-right: 29px;
+      }
+    }
+    .confirm_list {
+      width: 100vw;
+      padding: 20px;
+      .confirm_item {
+        width: 100%;
+        min-height: 126px;
+        padding: 30px 30px 30px 20px;
+        margin-bottom: 20px;
+        background: rgba(96, 150, 248, 1);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        .confirm_item_content {
+          width: 392px;
+          height: auto;
+          font-size: 24px;
+          color: rgba(255, 255, 255, 1);
+          line-height: 33px;
+          margin-right: 39px;
+          display: flex;
+          flex-wrap: wrap;
+          .seclct_tag {
+            height: 34px;
+            padding: 0 15px;
+            font-size: 22px;
+            font-weight: 400;
+            color: rgba(51, 51, 51, 1);
+            line-height: 34px;
+            background-color: #ffffff;
+            margin-right: 10px;
+            margin-bottom: 5px;
+            border-radius: 5px;
+          }
+          .is_select {
+            color: rgba(255, 255, 255, 1);
+            background-color: #1fc41d;
+          }
+          .textarea {
+            width: 392px;
+            height: 170px;
+            background: rgba(255, 255, 255, 1);
+            border: none;
+          }
+        }
+        .confirm_item_check {
+          width: 46px;
+          height: 46px;
+          border-radius: 50%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          color: #6096f8;
+          background: rgba(255, 255, 255, 1);
+        }
+        .error {
+          color: #ffffff;
+          background: #e45454;
+        }
+        .confirm_item_signature {
+          width: 130px;
+          height: 66px;
+          background: rgba(255, 255, 255, 1);
+          margin-left: auto;
+        }
+        .content_lang_input {
+          width: 100%;
+          input {
+            width: 100%;
+            line-height: 1.03125rem;
+            text-align: center;
+            background-color: transparent;
+            border: none;
+            border-bottom: 1px solid #ffffff;
+          }
+        }
+      }
+    }
   }
 }
 </style>

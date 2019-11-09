@@ -19,6 +19,7 @@
               <label v-for="(item, index) in pageList.studyTask" :key="index">
                 <class-1 :info="item"></class-1>
               </label>
+              <div class="null" v-if="pageList.studyTask.length === 0">暂无数据</div>
             </div>
           </van-tab>
           <van-tab title="我的学习历史">
@@ -26,6 +27,7 @@
               <label v-for="(item, index) in pageList.historyTask" :key="index">
                 <class-1 :info="item" isStart></class-1>
               </label>
+              <div class="null" v-if="pageList.historyTask.length === 0">暂无数据</div>
             </div>
           </van-tab>
         </van-tabs>
@@ -45,7 +47,10 @@ export default {
   data() {
     return {
       isLoading: false, //页面是否正在下拉刷新
-      pageList: [], //页面数据
+      pageList: {
+        studyTask: [],
+        historyTask: []
+      }, //页面数据
       searchValue: "",
       tabActive: 0
     };
@@ -66,7 +71,7 @@ export default {
         .then(res => {
           // 加载状态结束
           this.isLoading = false;
-          this.pageList = res[0];
+          if (JSON.stringify(res[0]) !== "{}") this.pageList = res[0];
         })
         .catch(() => {
           this.isLoading = false;
@@ -78,5 +83,11 @@ export default {
 <style lang="scss" scoped>
 .tab-content {
   padding: 20px 30px;
+  width: 100vw;
+  .null {
+    text-align: center;
+    font-size: 14px;
+    line-height: 60px;
+  }
 }
 </style>

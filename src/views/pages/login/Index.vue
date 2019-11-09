@@ -1,23 +1,14 @@
 <template>
-  <div 
-    class="login" 
-    :style="{
+  <div class="login" :style="{
       height:screenHeight
-    }"
-  >
+    }">
     <div class="title">
       <div class="title-1">浙江嘉化能源安全生产</div>
       <div class="title-2">运营管理系统移动端</div>
     </div>
     <div class="content">
       <div class="cell-box">
-        <van-field
-          class="field"
-          v-model="username"
-          clearable
-          label="用户名"
-          placeholder="请输入用户名"
-        />
+        <van-field class="field" v-model="username" clearable label="用户名" placeholder="请输入用户名" />
         <van-field
           class="field password"
           v-model="password"
@@ -35,8 +26,7 @@
           size="large"
           color="#6096F8"
           class="aaa"
-          >登录</van-button
-        >
+        >登录</van-button>
       </div>
     </div>
   </div>
@@ -46,12 +36,12 @@ export default {
   name: "login",
   data() {
     return {
-      // username: "董建飞",
-      // password: "123456",
-      username: "system",
-      password: "admin123",
+      username: "董建飞",
+      password: "123456",
+      // username: "system",
+      // password: "admin123",
       loading: false,
-      screenHeight: 0,
+      screenHeight: 0
     };
   },
   methods: {
@@ -96,7 +86,7 @@ export default {
   },
   created() {
     this.screenHeight = `${document.documentElement.clientHeight}px`;
-    console.log(this.screenHeight)
+    console.log(this.screenHeight);
   }
 };
 </script>
@@ -104,7 +94,7 @@ export default {
 .login {
   width: 100%;
   // height: 100%;
-  background: #f4f4f4 url('../../../assets/images/login_1.png');
+  background: #f4f4f4;
   background-size: contain;
   position: relative;
   .content {

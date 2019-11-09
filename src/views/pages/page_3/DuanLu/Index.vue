@@ -3,8 +3,10 @@
     <van-nav-bar
       title="断路安全"
       left-text="返回"
+      right-text="操作"
       left-arrow
       @click-left="pageBack"
+      @click-right="openAction"
     />
     <div class="cell_group">
       <!-- 申请部门 -->
@@ -111,7 +113,16 @@
         </div>
       </div>
     </div>
-    <div class="next" @click="Next">下一步</div>
+    <!-- 操作Popup -->
+    <van-popup
+      v-model="isShowAction"
+      position="bottom"
+      class="action"
+    >
+      <button @click="postData">保存</button>
+      <button>工作流提交</button>
+      <button @click="closeAction">取消</button>
+    </van-popup>
   </div>
 </template>
 <script>
@@ -139,7 +150,8 @@ export default {
         "吊装设备",
         "管道"
       ],
-      list_2: ["人员受伤", "车辆伤害", "人员跌落沟渠"]
+      list_2: ["人员受伤", "车辆伤害", "人员跌落沟渠"],
+      isShowAction: false
     };
   },
   computed: mapState({
@@ -151,6 +163,17 @@ export default {
     this.$store.dispatch("duanlu/cleanState");
   },
   methods: {
+
+    // 打开操作Popup
+    openAction() {
+      this.isShowAction = true
+    },
+
+    // 关闭操作Popup
+    closeAction() {
+      this.isShowAction = false
+    },
+
     // 发送数据
     postData() {
       const that = this;
@@ -205,6 +228,22 @@ export default {
     line-height: 98px;
     background: rgba(96, 150, 248, 1);
     box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.5);
+  }
+}
+
+.action {
+  padding-left: 30px;
+  padding-right: 30px;
+  background-color: transparent;
+  button {
+    width: 100%;
+    height: 110px;
+    margin-bottom: 20px;
+    background-color: white;
+    border: none;
+    border-radius: 30px;
+    color: rgb(0, 118, 255);
+    font-size: 35px
   }
 }
 </style>

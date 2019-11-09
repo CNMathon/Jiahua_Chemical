@@ -4,9 +4,7 @@
       <span>{{ title }}</span>
       <span class="required" v-if="required">*</span>
     </div>
-    <div class="cell_value" @click="pickerShow = true">
-      {{ text || "点击选择" }}
-    </div>
+    <div class="cell_value" @click="pickerShow = true">{{ text || "点击选择" }}</div>
     <van-icon name="arrow" />
     <!-- 时间选择 -->
     <van-popup v-model="pickerShow" position="bottom">
@@ -35,7 +33,8 @@ export default {
     },
     columns: {
       type: Array
-    }
+    },
+    keyType: String
   },
   data() {
     return {
@@ -48,7 +47,11 @@ export default {
     // 确认选择
     onMaterialConfirm(value, index) {
       this.pickerShow = false;
-      this.text = value;
+      if (this.keyType) {
+        this.text = value[this.keyType];
+      } else {
+        this.text = value;
+      }
       this.value = index;
     },
     // 取消选择

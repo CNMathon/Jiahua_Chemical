@@ -12,21 +12,16 @@
       />
       <j-filter-bar
         v-model="searchValue"
+        placeholder="请输入作业内容名称"
         @search="getListData(true)"
         @tap="setShowFilter()"
       ></j-filter-bar>
     </van-sticky>
     <j-filter v-model="showFilter" @confirm="confirmFilter">
-      <j-filter-search
-        v-model="searchValues"
-        @search="filterSearch"
-      ></j-filter-search>
-      <j-filter-item
-        title="承包商"
-        :actions="cbslist"
-        :valueKey="'cbsName'"
-        @select="filterSelect_1"
-      ></j-filter-item>
+      <j-filter-search v-model="searchValues" @search="filterSearch"></j-filter-search>
+      <j-filter-item title="作业票状态" :actions="zypztList" @select="filterSelect_1"></j-filter-item>
+      <j-filter-cell title="申请部门"></j-filter-cell>
+      <j-filter-cell title="申请人"></j-filter-cell>
     </j-filter>
     <van-pull-refresh v-model="isLoading" @refresh="getListData(true)">
       <van-list
@@ -45,24 +40,12 @@
                 @click="toDetail(item.id, item.htStatus)"
               >
                 <div class="left">
-                  <div class="left-line left-line-notlast">
-                    作业内容：{{ item.workContent }}
-                  </div>
-                  <div class="left-line left-line-notlast">
-                    作业地点：{{ item.workAddress }}
-                  </div>
-                  <div class="left-line left-line-notlast">
-                    登高类别：{{ item.heightType }}
-                  </div>
-                  <div class="left-line left-line-notlast">
-                    申请部门：{{ item.applyDept }}
-                  </div>
-                  <div class="left-line left-line-notlast">
-                    申请人：{{ item.applicant }}
-                  </div>
-                  <div class="left-line left-line-notlast">
-                    作业开始时间：{{ item.startTime }}
-                  </div>
+                  <div class="left-line left-line-notlast">作业内容：{{ item.workContent }}</div>
+                  <div class="left-line left-line-notlast">作业地点：{{ item.workAddress }}</div>
+                  <div class="left-line left-line-notlast">登高类别：{{ item.heightType }}</div>
+                  <div class="left-line left-line-notlast">申请部门：{{ item.applyDept }}</div>
+                  <div class="left-line left-line-notlast">申请人：{{ item.applicant }}</div>
+                  <div class="left-line left-line-notlast">作业开始时间：{{ item.startTime }}</div>
                   <div class="left-line">作业结束时间：{{ item.endTime }}</div>
                 </div>
                 <div class="right" v-if="item.htStatus == 1">编辑</div>
@@ -97,7 +80,29 @@ export default {
       searchValues: "",
       cbslist: [],
       selectCbs: {}, //选择的承包商
-      confirmSelectCbs: {}
+      confirmSelectCbs: {},
+      zypztList: [
+        {
+          name: "编辑",
+          idnex: 1
+        },
+        {
+          name: "初审",
+          idnex: 2
+        },
+        {
+          name: "有效",
+          idnex: 3
+        },
+        {
+          name: "已验票",
+          idnex: 4
+        },
+        {
+          name: "已终结",
+          idnex: 5
+        }
+      ] // 作业票状态列表
     };
   },
   mixins: [mixin],

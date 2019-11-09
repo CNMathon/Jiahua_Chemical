@@ -376,11 +376,11 @@
             @checked="showSignature(27)"
             @cancel="signatureCancel(27)"
           >
-            <div slot>
-              人员出入口和撤离安全措施已落实:
-              <span class="seclct_tag is_select">指示牌</span>
-              <span class="seclct_tag">指示灯</span>
-            </div>
+              <span>
+                人员出入口和撤离安全措施已落实:
+                <span :class="mask[0] == 1 ? 'seclct_tag is_select':'seclct_tag'" @click="changeMask(0)">指示牌</span>
+                <span :class="mask[1] == 1 ? 'seclct_tag is_select':'seclct_tag'" @click="changeMask(1)">指示灯</span>
+              </span>
           </Signature>
           <Signature
             :checked="checked[28] ? checked[28].checked : false"
@@ -392,15 +392,15 @@
               <span>夜间作业采用足够、充足照明，</span>
               <span>
                 A防水型灯:
-                <span class="seclct_tag is_select">36V</span>
-                <span class="seclct_tag">24V</span>
-                <span class="seclct_tag">12V</span>
+                <span :class="Alight == 0? 'seclct_tag is_select': 'seclct_tag'" @click="Alight = 0">36V</span>
+                <span :class="Alight == 1? 'seclct_tag is_select': 'seclct_tag'" @click="Alight = 1">24V</span>
+                <span :class="Alight == 2? 'seclct_tag is_select': 'seclct_tag'" @click="Alight = 2">12V</span>
               </span>
               <span>
                 防爆型灯:
-                <span class="seclct_tag is_select">36V</span>
-                <span class="seclct_tag">24V</span>
-                <span class="seclct_tag">12V</span>
+                <span :class="light == 0? 'seclct_tag is_select': 'seclct_tag'" @click="light = 0">36V</span>
+                <span :class="light == 1? 'seclct_tag is_select': 'seclct_tag'" @click="light = 1">24V</span>
+                <span :class="light == 2? 'seclct_tag is_select': 'seclct_tag'" @click="light = 2">12V</span>
               </span>
             </div>
           </Signature>
@@ -428,11 +428,6 @@
         </div>
       </div>
     </div>
-    <van-action-sheet
-      v-model="showPicker"
-      :actions="actions"
-      @select="onSelect"
-    />
     <!-- 材质选择 -->
     <van-popup v-model="materialShowShow" position="bottom">
       <van-picker
@@ -455,11 +450,25 @@
         @cancel="cancelCanvas"
       ></Canvas>
     </van-popup>
+    
+    
+      <!-- 操作Popup -->
+      <van-popup
+        v-model="showPicker"
+        position="bottom"
+        class="action"
+      >
+        <button @click="postData">保存</button>
+        <button>工作流提交</button>
+        <button @click="closeAction">取消</button>
+      </van-popup>
   </div>
 </template>
 <script>
 import { mapState } from "vuex";
 import { business } from "@/mixin/business";
+import DiaoZhuangConfirm from "./Confirm";
+import StepperPlus from "@/components/StepperPlus.vue";
 import Canvas from "@/components/Canvas.vue";
 import Signature from "../components/Signature.vue";
 export default {
@@ -483,6 +492,9 @@ export default {
         zyfzr: [], // 作业负责人
         jhr: [] //监护人
       },
+      Alight: 0,
+      light: 0,
+      mask: [0, 1],
       value: 5,
       materialShowShow: false,
       material: {
@@ -507,6 +519,15 @@ export default {
       selectSignatureShow: 0, //当前确认选中
       signatureShow: false,
       showPicker: false,
+      safeSendData: [
+        {
+          dzzypId: "",
+          xuhao: "",
+          aqcsnr: "",
+          qrr: "",
+          qrzt: ''
+        }
+      ],
       actions: [
         { name: "保存", index: 0 },
         { name: "工作流提交", index: 1 },
@@ -526,6 +547,17 @@ export default {
     this.$store.dispatch("diaozhuang/cleanState");
   },
   methods: {
+    
+    changeMask(id) {
+      if (id == 0) {
+          this.mask[0] == 0 ? this.mask.splice(0,1,1) : this.mask.splice(0,1,0)
+      } else {
+          this.mask[1] == 0 ? this.mask.splice(1,1,1) : this.mask.splice(1,1,0)
+      }
+    },
+    closeAction() {
+      this.showPicker = false
+    },
     // 选择作业证
     selectUser(work_permit) {
       console.log("work_permit: ", work_permit);
@@ -591,16 +623,350 @@ export default {
       sendData.sqbm = this.$userInfo.officeName;
       sendData.sqr_code = this.$userInfo.refCode;
       sendData.__sid = this.$userInfo.sessionId;
+
+      
+      let messageId; // 主表查询返回的ID
+      let sendSafeData = {
+        HtHseDzzyp: [
+          {
+            dzzypId: messageId,
+            xuhao: 1,
+            aqcsnr: `吊装质量大于等于40t的重物和土建工程主体结构;吊装物体虽不足40t,但形状复杂、刚度小、长径比大、精密贵重,作业条件特殊,已编制吊装作业方案,且经作业主管部门和安全管理部门审查,报主管(主管安全生产副总/总工程师批准)`,
+            qrr: this.checked[0] ? this.checked[0].img : 0,
+            qrzt: this.checked[0] ? 1 : 0
+          },
+          {
+            dzzypId: messageId,
+            xuhao: 2,
+            aqcsnr: `指派专人监护,并监守岗位,非作业人员禁止入内`,
+            qrr: this.checked[1] ? this.checked[1].img : 0,
+            qrzt: this.checked[1] ? 1 : 0
+          },
+          {
+            dzzypId: messageId,
+            xuhao: 3,
+            aqcsnr: `作业人员已按规定佩戴防护器具和个体防护用品`,
+            qrr: this.checked[2] ? this.checked[2].img : 0,
+            qrzt: this.checked[2] ? 1 : 0
+          },
+          {
+            dzzypId: messageId,
+            xuhao: 4,
+            aqcsnr: `已与分厂(车间)负责人取得联系,建立联系信号`,
+            qrr: this.checked[3] ? this.checked[3].img : 0,
+            qrzt: this.checked[3] ? 1 : 0
+          },
+          {
+            dzzypId: messageId,
+            xuhao: 5,
+            aqcsnr: `已在吊装现场设置安全警戒标志,无关人员不许进入作业现场； `,
+            qrr: this.checked[4] ? this.checked[4].img : 0,
+            qrzt: this.checked[4] ? 1 : 0
+          },
+          {
+            dzzypId: messageId,
+            xuhao: 6,
+            aqcsnr: `室外作业遇到(大雪/暴雨/大雾/六级以上大风),已停止作业`,
+            qrr: this.checked[5] ? this.checked[5].img : 0,
+            qrzt: this.checked[5] ? 1 : 0
+          },
+          {
+            dzzypId: messageId,
+            xuhao: 7,
+            aqcsnr: `检查起重吊装设备、钢丝绳、揽风绳、链条、吊钩等各种机具,保证安全可靠`,
+            qrr: this.checked[6] ? this.checked[6].img : 0,
+            qrzt: this.checked[6] ? 1 : 0
+          },
+          {
+            dzzypId: messageId,
+            xuhao: 8,
+            aqcsnr: `明确分工、坚守岗位,并按规定的联络信号,统一指挥`,
+            qrr: this.checked[7] ? this.checked[7].img : 0,
+            qrzt: this.checked[7] ? 1 : 0
+          },
+          {
+            dzzypId: messageId,
+            xuhao: 9,
+            aqcsnr: `将建筑物、构筑物作为锚点,需经土建工程部门审查核算并批准`,
+            qrr: this.checked[8] ? this.checked[8].img : 0,
+            qrzt: this.checked[8] ? 1 : 0
+          },
+          {
+            dzzypId: messageId,
+            xuhao: 10,
+            aqcsnr: `吊装绳索、揽风绳、拖拉绳等避免同带电线路接触,并保持安全距离`,
+            qrr: this.checked[9] ? this.checked[9].img : 0,
+            qrzt: this.checked[9] ? 1 : 0
+          },
+          {
+            dzzypId: messageId,
+            xuhao: 11,
+            aqcsnr: `人员随同吊装重物或吊装机械升降,应采取可靠的安全措施,并经过现场指挥人员批准`,
+            qrr: this.checked[10] ? this.checked[10].img : 0,
+            qrzt: this.checked[10] ? 1 : 0
+          },
+          {
+            dzzypId: messageId,
+            xuhao: 12,
+            aqcsnr: `利用管道、管架、电杆、机电设备等作吊装锚点,不准吊装`,
+            qrr: this.checked[11] ? this.checked[11].img : 0,
+            qrzt: this.checked[11] ? 1 : 0
+          },
+          {
+            dzzypId: messageId,
+            xuhao: 13,
+            aqcsnr: `悬吊重物下方站人、通行和工作,不准吊装`,
+            qrr: this.checked[12] ? this.checked[12].img : 0,
+            qrzt: this.checked[12] ? 1 : 0
+          },
+          {
+            dzzypId: messageId,
+            xuhao: 14,
+            aqcsnr: `超负荷或重物质量不明,不准吊装`,
+            qrr: this.checked[13] ? this.checked[13].img : 0,
+            qrzt: this.checked[13] ? 1 : 0
+          },
+          {
+            dzzypId: messageId,
+            xuhao: 15,
+            aqcsnr: `斜拉重物、重物埋在地下或重物坚固不牢,绳打结、绳不齐,不准吊装`,
+            qrr: this.checked[14] ? this.checked[14].img : 0,
+            qrzt: this.checked[14] ? 1 : 0
+          },
+          {
+            dzzypId: messageId,
+            xuhao: 16,
+            aqcsnr: `棱角重物没有衬垫措施,不准吊装`,
+            qrr: this.checked[15] ? this.checked[15].img : 0,
+            qrzt: this.checked[15] ? 1 : 0
+          },
+          {
+            dzzypId: messageId,
+            xuhao: 17,
+            aqcsnr: `安全装置失灵,不准吊装`,
+            qrr: this.checked[16] ? this.checked[16].img : 0,
+            qrzt: this.checked[16] ? 1 : 0
+          },
+          {
+            dzzypId: messageId,
+            xuhao: 18,
+            aqcsnr: `用定型起重吊装机械(履带、轮胎、轿式吊车等)进行吊装作业,遵守该定型机械的操作规程`,
+            qrr: this.checked[17] ? this.checked[17].img : 0,
+            qrzt: this.checked[17] ? 1 : 0
+          },
+          {
+            dzzypId: messageId,
+            xuhao: 19,
+            aqcsnr: `作业现场出现危险品泄漏,立即停止作业,撤离人员`,
+            qrr: this.checked[18] ? this.checked[18].img : 0,
+            qrzt: this.checked[18] ? 1 : 0
+          },
+          {
+            dzzypId: messageId,
+            xuhao: 20,
+            aqcsnr: `作业完成后现场杂物已清理`,
+            qrr: this.checked[19] ? this.checked[19].img : 0,
+            qrzt: this.checked[19] ? 1 : 0
+          },
+          {
+            dzzypId: messageId,
+            xuhao: 21,
+            aqcsnr: `吊装作业人员持有法定的有效的证件`,
+            qrr: this.checked[20] ? this.checked[20].img : 0,
+            qrzt: this.checked[20] ? 1 : 0
+          },
+          {
+            dzzypId: messageId,
+            xuhao: 22,
+            aqcsnr: `地下通讯、网络电(光)缆、排水沟盖板,承重吊装机械的负重量已确认,保护措施已落实`,
+            qrr: this.checked[21] ? this.checked[21].img : 0,
+            qrzt: this.checked[21] ? 1 : 0
+          },
+          {
+            dzzypId: messageId,
+            xuhao: 23,
+            aqcsnr: `起吊物的质量${this.value}吨经确认,在吊装机械的承重范围`,
+            qrr: this.checked[22] ? this.checked[22].img : 0,
+            qrzt: this.checked[22] ? 1 : 0
+          },
+          {
+            dzzypId: messageId,
+            xuhao: 24,
+            aqcsnr: `在吊装高度的管线、电缆桥架已做好防护措施`,
+            qrr: this.checked[23] ? this.checked[23].img : 0,
+            qrzt: this.checked[23] ? 1 : 0
+          },
+          {
+            dzzypId: messageId,
+            xuhao: 25,
+            aqcsnr: `作业现场围栏、警戒线、警告牌、夜间警示灯已按要求设置`,
+            qrr: this.checked[24] ? this.checked[24].img : 0,
+            qrzt: this.checked[24] ? 1 : 0
+          },
+          {
+            dzzypId: messageId,
+            xuhao: 26,
+            aqcsnr: `吊装作业人员持有法定的有效的证件`,
+            qrr: this.checked[25] ? this.checked[25].img : 0,
+            qrzt: this.checked[25] ? 1 : 0
+          },
+          {
+            dzzypId: messageId,
+            xuhao: 27,
+            aqcsnr: `作业高度和转臂范围内,无架空线路`,
+            qrr: this.checked[26] ? this.checked[26].img : 0,
+            qrzt: this.checked[26] ? 1 : 0
+          },
+          {
+            dzzypId: messageId,
+            xuhao: 28,
+            aqcsnr: `人员出入口和撤离安全措施已落实:  ${this.mask[0] == 1 ? '指示牌' : ''}, ${this.mask[1] == 1 ? '指示灯' : ''}`,
+            qrr: this.checked[27] ? this.checked[27].img : 0,
+            qrzt: this.checked[27] ? 1 : 0
+          },
+          {
+            dzzypId: messageId,
+            xuhao: 29,
+            aqcsnr: `夜间作业采用足够、充足照明，A防水型灯${this.Alight == 0 ? '36V' : this.Alight == 1 ? '24V' : '12V'}, 防爆型灯:  ${this.light == 0 ? '36V' : this.light == 1 ? '24V' : '12V'}`,
+            qrr: this.checked[28] ? this.checked[28].img : 0,
+            qrzt: this.checked[28] ? 1 : 0
+          },
+          {
+            dzzypId: messageId,
+            xuhao: 30,
+            aqcsnr: `作业人员已佩戴防护器具`,
+            qrr: this.checked[29] ? this.checked[29].img : 0,
+            qrzt: this.checked[29] ? 1 : 0
+          }
+        ],
+        __sid: this.$userInfo.sessionId,
+      }
+
+      
+      let ren0 = this.checked[0] ? this.checked[0].img : 0
+      let ren1 = this.checked[1] ? this.checked[1].img : 1
+      let ren2 = this.checked[2] ? this.checked[2].img : 2
+      let ren3 = this.checked[3] ? this.checked[3].img : 3
+      let ren4 = this.checked[4] ? this.checked[4].img : 4
+      let ren5 = this.checked[5] ? this.checked[5].img : 5
+      let ren6 = this.checked[6] ? this.checked[6].img : 6
+      let ren7 = this.checked[7] ? this.checked[7].img : 7
+      let ren8 = this.checked[8] ? this.checked[8].img : 8
+      let ren9 = this.checked[9] ? this.checked[9].img : 9
+      let ren10 = this.checked[10] ? this.checked[10].img : 10
+      let ren11 = this.checked[11] ? this.checked[11].img : 11
+      let ren12 = this.checked[12] ? this.checked[12].img : 12
+      let ren13 = this.checked[13] ? this.checked[13].img : 13
+      let ren14 = this.checked[14] ? this.checked[14].img : 14
+      let ren15 = this.checked[15] ? this.checked[15].img : 15
+      let ren16 = this.checked[16] ? this.checked[16].img : 16
+      let ren17 = this.checked[17] ? this.checked[17].img : 17
+      let ren18 = this.checked[18] ? this.checked[18].img : 18
+      let ren19 = this.checked[19] ? this.checked[19].img : 19
+      let ren20 = this.checked[20] ? this.checked[20].img : 20
+      let ren21 = this.checked[21] ? this.checked[21].img : 21
+      let ren22 = this.checked[22] ? this.checked[22].img : 22
+      let ren23 = this.checked[23] ? this.checked[23].img : 23
+      let ren24 = this.checked[24] ? this.checked[24].img : 24
+      let ren25 = this.checked[25] ? this.checked[25].img : 25
+      let ren26 = this.checked[26] ? this.checked[26].img : 26
+      let ren27 = this.checked[27] ? this.checked[27].img : 27
+      let ren28 = this.checked[28] ? this.checked[28].img : 28
+      let ren29 = this.checked[29] ? this.checked[29].img : 29
+
+
+        let sendSafeData1 = {
+        __sid: this.$userInfo.sessionId,
+        zypId: messageId,
+        xuhao: [1, 2, 3, 4, 5, 6, 7, 8,9,10,11,12],
+        confirmer: [ren0, ren1, ren2, ren3, ren4, ren5, ren6, ren7, ren8, ren9, ren10, ren11, ren12, ren13, ren14, ren15, ren16, ren17, ren18, ren19, ren20, ren21, ren22, ren23, ren24, ren25, ren26, ren27, ren28, ren29],
+        qrzt: [
+          this.checked[1] ? 1 : 0,
+          this.checked[2] ? 1 : 0,
+          this.checked[3] ? 1 : 0,
+          this.checked[4] ? 1 : 0,
+          this.checked[5] ? 1 : 0,
+          this.checked[6] ? 1 : 0,
+          this.checked[7] ? 1 : 0,
+          this.checked[8] ? 1 : 0,
+          this.checked[9] ? 1 : 0,
+          this.checked[10] ? 1 : 0,
+          this.checked[11] ? 1 : 0,
+          this.checked[12] ? 1 : 0,
+          this.checked[13] ? 1 : 0,
+          this.checked[14] ? 1 : 0,
+          this.checked[15] ? 1 : 0,
+          this.checked[16] ? 1 : 0,
+          this.checked[17] ? 1 : 0,
+          this.checked[18] ? 1 : 0,
+          this.checked[19] ? 1 : 0,
+          this.checked[20] ? 1 : 0,
+          this.checked[21] ? 1 : 0,
+          this.checked[22] ? 1 : 0,
+          this.checked[23] ? 1 : 0,
+          this.checked[24] ? 1 : 0,
+          this.checked[25] ? 1 : 0,
+          this.checked[26] ? 1 : 0,
+          this.checked[27] ? 1 : 0,
+          this.checked[28] ? 1 : 0,
+          this.checked[29] ? 1 : 0,
+          this.checked[30] ? 1 : 0,
+        ],
+        safetyMeasure: [
+          `吊装质量大于等于40t的重物和土建工程主体结构;吊装物体虽不足40t,但形状复杂、刚度小、长径比大、精密贵重,作业条件特殊,已编制吊装作业方案,且经作业主管部门和安全管理部门审查,报主管(主管安全生产副总/总工程师批准)`,
+          `指派专人监护,并监守岗位,非作业人员禁止入内`,
+          `作业人员已按规定佩戴防护器具和个体防护用品`,
+          `已与分厂(车间)负责人取得联系,建立联系信号`,
+          `已在吊装现场设置安全警戒标志,无关人员不许进入作业现场； `,
+          `室外作业遇到(大雪/暴雨/大雾/六级以上大风),已停止作业`,
+          `检查起重吊装设备、钢丝绳、揽风绳、链条、吊钩等各种机具,保证安全可靠`,
+          `明确分工、坚守岗位,并按规定的联络信号,统一指挥`,
+          `将建筑物、构筑物作为锚点,需经土建工程部门审查核算并批准`,
+          `吊装绳索、揽风绳、拖拉绳等避免同带电线路接触,并保持安全距离`,
+          `人员随同吊装重物或吊装机械升降,应采取可靠的安全措施,并经过现场指挥人员批准`,
+          `利用管道、管架、电杆、机电设备等作吊装锚点,不准吊装`,
+          `悬吊重物下方站人、通行和工作,不准吊装`,
+          `超负荷或重物质量不明,不准吊装`,
+          `斜拉重物、重物埋在地下或重物坚固不牢,绳打结、绳不齐,不准吊装`,
+          `棱角重物没有衬垫措施,不准吊装`,
+          `安全装置失灵,不准吊装`,
+          `用定型起重吊装机械(履带、轮胎、轿式吊车等)进行吊装作业,遵守该定型机械的操作规程`,
+          `作业现场出现危险品泄漏,立即停止作业,撤离人员`,
+          `作业完成后现场杂物已清理`,
+          `吊装作业人员持有法定的有效的证件`,
+          `地下通讯、网络电(光)缆、排水沟盖板,承重吊装机械的负重量已确认,保护措施已落实`,
+          `起吊物的质量${this.value}吨经确认,在吊装机械的承重范围`,
+          `在吊装高度的管线、电缆桥架已做好防护措施`,
+          `作业现场围栏、警戒线、警告牌、夜间警示灯已按要求设置`,
+          `吊装作业人员持有法定的有效的证件`,
+          `作业高度和转臂范围内,无架空线路`,
+          `人员出入口和撤离安全措施已落实:  ${this.mask[0] == 1 ? '指示牌' : ''}, ${this.mask[1] == 1 ? '指示灯' : ''}`,
+          `夜间作业采用足够、充足照明，A防水型灯${this.Alight == 0 ? '36V' : this.Alight == 1 ? '24V' : '12V'}, 防爆型灯:  ${this.light == 0 ? '36V' : this.light == 1 ? '24V' : '12V'}`,
+          `作业人员已佩戴防护器具`
+
+        ]
+      }
+
+
+
+
       this.$api.page_3
         .htHseDzzypSave(sendData)
         .then(res => {
           console.log("res: ", res);
+          messageId = res.message
           this.$Toast.success({
             message: "提交成功",
             onClose() {
               that.pageBack();
             }
           });
+          this.$api.page_3
+            .htHseDzzypSaveLit(sendSafeData1, sendData.__sid)
+            .then(res => {
+              console.log("res: ", res);
+              
+            })
         })
         .catch(() => {});
     },
@@ -658,10 +1024,10 @@ export default {
         flex: auto;
       }
       .head_2 {
-        margin-right: 60px;
+        margin-right: 140px;
       }
       .head_3 {
-        margin-right: 29px;
+        margin-right: 20px;
       }
     }
     .confirm_list {
@@ -741,6 +1107,21 @@ export default {
         }
       }
     }
+  }
+}
+.action {
+  padding-left: 30px;
+  padding-right: 30px;
+  background-color: transparent;
+  button {
+    width: 100%;
+    height: 110px;
+    margin-bottom: 20px;
+    background-color: white;
+    border: none;
+    border-radius: 30px;
+    color: rgb(0, 118, 255);
+    font-size: 35px
   }
 }
 </style>

@@ -5,25 +5,27 @@
     </div>
     <div class="class-content">
       <div class="tags" v-if="isEnd">
-        总分100分 | 及格分60 |
-        <span>考试得分：80</span>
+        总分{{info.totalScore}}分 | 及格分60 |
+        <span>考试得分：{{info.passScore}}</span>
       </div>
       <div class="tags" v-else>总分100分 | 及格分60</div>
       <div class="bottom">
         <div class="times">
           <div class="time">
             考试时间：
-            <br />2019.06.23-2019.09.26
+            <br />
+            {{day(info.startDate)}}-{{day(info.endDate)}}
           </div>
           <div class="time">考试时长：60分钟</div>
         </div>
-        <div class="action" v-if="isEnd">查看试卷</div>
+        <div class="action" v-if="isEnd" @click="toAnalysis()">查看试卷</div>
         <div class="action" v-else @click="toAnswer()">开始考试</div>
       </div>
     </div>
   </div>
 </template>
 <script>
+import dayjs from "dayjs";
 export default {
   name: "class",
   props: {
@@ -37,10 +39,19 @@ export default {
     console.log(this.info);
   },
   methods: {
+    day(val) {
+      return dayjs(val).format("YYYY-MM-DD HH:mm");
+    },
     toAnswer() {
       this.$router.push({
-        name: "./kao_shi_answer",
-        query: { id: this.info.courseManageId }
+        path: "./kao_shi_answer",
+        query: { id: this.info.id }
+      });
+    },
+    toAnalysis() {
+      this.$router.push({
+        path: "./kao_shi_analysis",
+        query: { id: this.info.id }
       });
     }
   }
@@ -64,7 +75,7 @@ export default {
     }
   }
   .class-content {
-    height: 160px;
+    min-height: 160px;
     width: calc(100% - 230px);
     .tags {
       font-size: 24px;
@@ -80,6 +91,9 @@ export default {
       justify-content: space-between;
       flex-wrap: wrap;
       overflow: hidden;
+      .times {
+        max-width: 70%;
+      }
       .time {
         width: 100%;
         font-size: 24px;

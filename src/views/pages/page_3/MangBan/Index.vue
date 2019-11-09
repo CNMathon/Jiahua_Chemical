@@ -3,8 +3,10 @@
     <van-nav-bar
       title="盲板抽堵安全"
       left-text="返回"
+      right-text="操作"
       left-arrow
       @click-left="pageBack"
+      @click-right="openAction"
     />
     <div class="cell_group">
       <!-- 申请部门 -->
@@ -216,7 +218,7 @@
         </div>
       </div>
     </div>
-    <div class="next">下一步</div>
+    <!-- <div class="next">下一步</div> -->
     <!-- 材质选择 -->
     <van-popup v-model="materialShowShow" position="bottom">
       <van-picker
@@ -236,6 +238,16 @@
         @cancel="onTimeCancel"
         @confirm="onTimeConfirm"
       />
+    </van-popup>
+    <!-- 操作Popup -->
+    <van-popup
+      v-model="isShowAction"
+      position="bottom"
+      class="action"
+    >
+      <button @click="postData">保存</button>
+      <button>工作流提交</button>
+      <button @click="closeAction">取消</button>
     </van-popup>
   </div>
 </template>
@@ -261,12 +273,24 @@ export default {
         "吊装",
         "动土",
         "断路作业"
-      ]
+      ],
+      isShowAction: false
     };
   },
   mixins: [business],
   created() {},
   methods: {
+
+    // 打开操作Popup
+    openAction() {
+      this.isShowAction = true
+    },
+
+    // 关闭操作Popup
+    closeAction() {
+      this.isShowAction = false
+    },
+
     pageBack() {
       this.$router.back();
     },
@@ -278,6 +302,9 @@ export default {
         value: value
       };
     },
+
+    postData() {},
+
     // 材质选择取消
     onMaterialCancel() {
       this.materialShowShow = false;
@@ -321,6 +348,22 @@ export default {
     line-height: 98px;
     background: rgba(96, 150, 248, 1);
     box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.5);
+  }
+}
+
+.action {
+  padding-left: 30px;
+  padding-right: 30px;
+  background-color: transparent;
+  button {
+    width: 100%;
+    height: 110px;
+    margin-bottom: 20px;
+    background-color: white;
+    border: none;
+    border-radius: 30px;
+    color: rgb(0, 118, 255);
+    font-size: 35px
   }
 }
 </style>

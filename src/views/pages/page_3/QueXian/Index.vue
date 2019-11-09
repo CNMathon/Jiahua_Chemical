@@ -1,11 +1,6 @@
 <template>
   <div class="quexian">
-    <van-nav-bar
-      title="缺陷"
-      left-text="返回"
-      left-arrow
-      @click-left="pageBack"
-    />
+    <van-nav-bar title="缺陷" left-text="返回" left-arrow @click-left="pageBack" />
     <!-- 空间设备 -->
     <div class="cell_group">
       <div class="cell">
@@ -29,52 +24,51 @@
         storeKey="findPeopleName"
         v-model="sendData.findPeopleName"
       ></cell-select-user>
-      <!-- 缺陷内容 -->
-      <cell-textarea
-        required
-        v-model="sendData.workContent"
-        title="缺陷内容"
-        placeholder="请输入工作内容"
-      ></cell-textarea>
+      <!-- 缺陷描述 -->
+      <cell-textarea required v-model="sendData.description" title="缺陷描述" placeholder="请输入缺陷描述"></cell-textarea>
       <!-- 缺陷类型 -->
       <div class="cell">
         <div class="cell_title">
           <span>缺陷类型</span>
         </div>
-        <div class="cell_select" @click="gradeShow = true">
-          <span class="cell_select_text">{{ grade.value || "请选择" }}</span>
+        <div class="cell_select" @click="defectTypeShow = true">
+          <span class="cell_select_text">{{ sendData.defectType.name || "请选择" }}</span>
           <div class="cell_select_image">
             <img src="./../../../../assets/images/select.svg" alt />
           </div>
         </div>
       </div>
-      <!-- 缺陷类型 -->
+      <!-- 缺陷类别 -->
       <div class="cell">
         <div class="cell_title">
-          <span>缺陷类型</span>
+          <span>缺陷类别</span>
         </div>
-        <div class="cell_select" @click="gradeShow = true">
-          <span class="cell_select_text">{{ grade.value || "请选择" }}</span>
+        <div class="cell_select" @click="categoryShow = true">
+          <span class="cell_select_text">{{ sendData.category.name || "请选择" }}</span>
           <div class="cell_select_image">
             <img src="./../../../../assets/images/select.svg" alt />
           </div>
         </div>
       </div>
       <!-- 发现时间 -->
-      <cell-time
-        v-model="sendData.powertimeEnd"
-        title="发现时间"
-        required
-      ></cell-time>
+      <cell-time v-model="sendData.findDate" title="发现时间" required></cell-time>
     </div>
     <div class="next" @click="Next">提交</div>
-    <!-- 动火级别 -->
+    <!-- 缺陷类型 -->
     <van-action-sheet
-      v-model="gradeShow"
-      :actions="gradeColumns"
+      v-model="defectTypeShow"
+      :actions="defectTypeColumns"
       cancel-text="取消"
       @select="onSelect"
-      @cancel="gradeShow = false"
+      @cancel="defectTypeShow = false"
+    />
+    <!-- 缺陷类别 -->
+    <van-action-sheet
+      v-model="categoryShow"
+      :actions="categoryColumns"
+      cancel-text="取消"
+      @select="onSelects"
+      @cancel="categoryShow = false"
     />
   </div>
 </template>
@@ -88,15 +82,27 @@ export default {
     return {
       storeModule: "quexian",
       sendData: {
-        workContent: "", //缺陷内容
-        powertimeEnd: "", //发现时间
+        description: "", //缺陷内容
+        findDate: "", //发现时间
+        defectType: {}, //缺陷类型
+        category: {}, //缺陷类别
         findPeopleName: [] //发现人
       },
-      gradeShow: false,
-      grade: {
-        value: ""
-      },
-      gradeColumns: [{ name: "|类", index: 1 }, { name: "||类", index: 2 }]
+      defectTypeShow: false,
+      categoryShow: false,
+      defectTypeColumns: [
+        { name: "其他", index: 0 },
+        { name: "设备渗漏", index: 1 },
+        { name: "异常显示", index: 2 },
+        { name: "连锁故障", index: 3 },
+        { name: "性能下降", index: 4 },
+        { name: "物理异常", index: 5 }
+      ],
+      categoryColumns: [
+        { name: "一类缺陷", index: 0 },
+        { name: "二类缺陷", index: 1 },
+        { name: "三类缺陷", index: 2 }
+      ]
     };
   },
   computed: mapState({
@@ -111,6 +117,8 @@ export default {
         sendData.findPeopleName,
         "userName"
       );
+      sendData.defectType = sendData.defectType.index;
+      sendData.category = sendData.category.index;
       sendData.__sid = this.$userInfo.sessionId;
       this.$api.page_3
         .htDeviceDefectSave(sendData)
@@ -119,6 +127,13 @@ export default {
           this.$Toast.success({
             message: "提交成功",
             onClose() {
+              that.sendData = {
+                description: "", //缺陷内容
+                findDate: "", //发现时间
+                defectType: {}, //缺陷类型
+                category: {}, //缺陷类别
+                findPeopleName: [] //发现人
+              };
               that.pageBack();
             }
           });
@@ -126,19 +141,14 @@ export default {
         .catch(() => {});
     },
     onSelect(item) {
-      this.grade = {
-        value: item.name
-      };
+      this.sendData.defectType = item;
       // 点击选项时默认不会关闭菜单，可以手动关闭
-      this.gradeShow = false;
+      this.defectTypeShow = false;
     },
-    // 取消时间选择
-    onTimeCancel() {
-      this.timeShow = false;
-    },
-    // 确认时间选择
-    onTimeConfirm() {
-      this.timeShow = false;
+    onSelects(item) {
+      this.sendData.category = item;
+      // 点击选项时默认不会关闭菜单，可以手动关闭
+      this.categoryShow = false;
     }
   },
   watch: {

@@ -13,7 +13,7 @@
         <div class="title">学习进度：</div>
         <div class="line">
           <van-progress
-            :percentage="Number(info.schedule)"
+            :percentage="toNumber(info.schedule)"
             stroke-width="0.375rem"
             :show-pivot="false"
             color="#6096F8"
@@ -42,6 +42,9 @@ export default {
         path: `./xue_xi_detail`,
         query: { id: this.info.courseManageId }
       });
+    },
+    toNumber(num){
+      return Number(num)
     }
   }
 };

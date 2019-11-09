@@ -101,6 +101,6 @@ export default {
   color: rgba(255, 255, 255, 1);
   line-height: 97px;
   text-align: center;
-  z-index: 100;
+  z-index: 99;
 }
 </style>

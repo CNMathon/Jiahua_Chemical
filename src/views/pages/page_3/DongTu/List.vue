@@ -9,11 +9,18 @@
       @click-left="pageBack"
       @click-right="onClickRight"
     />
-    <van-search
-      placeholder="请输入动火地点及内容名称进行搜索"
+    <j-filter-bar
       v-model="searchValue"
-      right-icon="wap-nav"
-    />
+      placeholder="请输入作业地点名称"
+      @search="getPageData('refresh')"
+      @tap="showFilter = true"
+    ></j-filter-bar>
+    <j-filter v-model="showFilter" @confirm="confirmFilter">
+      <j-filter-search v-model="searchValues" @search="filterSearch"></j-filter-search>
+      <j-filter-item title="作业票状态" :actions="zypztList" @select="filterSelect_1"></j-filter-item>
+      <j-filter-cell title="申请部门"></j-filter-cell>
+      <j-filter-cell title="申请人"></j-filter-cell>
+    </j-filter>
     <div class="list-card-area">
       <list-card></list-card>
     </div>
@@ -26,16 +33,44 @@ import ListCard from "@/views/pages/page_3/components/DongTuListCard";
 export default {
   data() {
     return {
-      searchValue: ""
+      showFilter: false,
+      searchValue: "",
+      searchValues: "",
+      zypztList: [
+        {
+          name: "编辑",
+          idnex: 1
+        },
+        {
+          name: "初审",
+          idnex: 2
+        },
+        {
+          name: "有效",
+          idnex: 3
+        },
+        {
+          name: "已验票",
+          idnex: 4
+        },
+        {
+          name: "已终结",
+          idnex: 5
+        }
+      ] // 作业票状态列表
     };
   },
   mixins: [mixin],
   methods: {
     onClickRight() {
       this.$router.push({
-        path: "../donghuo"
+        path: "../dongtu"
       });
-    }
+    },
+    getPageData() {},
+    confirmFilter() {},
+    filterSearch() {},
+    filterSelect_1() {}
   },
   components: {
     ListCard

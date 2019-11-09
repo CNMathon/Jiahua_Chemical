@@ -9,27 +9,22 @@
       @click-left="pageBack"
       @click-right="onClickRight"
     />
-    <j-filter-bar v-model="searchValue" @search="getPageData('refresh')" @tap="showFilter = true"></j-filter-bar>
+    <j-filter-bar
+      v-model="searchValue"
+      placeholder="请输入动火地点及内容名称"
+      @search="getPageData('refresh')"
+      @tap="showFilter = true"
+    ></j-filter-bar>
     <j-filter v-model="showFilter" @confirm="confirmFilter">
-      <!-- <j-filter-search
-        v-model="searchValues"
-        @search="filterSearch"
-      ></j-filter-search> -->
-      <j-filter-item
-        title="作业票状态"
-        :actions="zypztList"
-        valueKey="zypztName"
-        @select="filterSelect_1"
-      ></j-filter-item>
+      <j-filter-search v-model="searchValues" @search="filterSearch"></j-filter-search>
+      <j-filter-item title="作业票状态" :actions="zypztList" @select="filterSelect_1"></j-filter-item>
+      <j-filter-item title="动火等级" :actions="dhLevelColumns" @select="filterSelect_2"></j-filter-item>
+      <j-filter-cell title="申请部门"></j-filter-cell>
+      <j-filter-cell title="申请人"></j-filter-cell>
     </j-filter>
     <div class="list-card-area">
       <div class="app">
-        <van-skeleton
-          title
-          :row="5"
-          :loading="isFirstLoading"
-          class="skeleton"
-        >
+        <van-skeleton title :row="5" :loading="isFirstLoading" class="skeleton">
           <van-pull-refresh v-model="isRefreshLoading" @refresh="getPageData('refresh')">
             <van-list
               v-model="isListLoading"
@@ -80,7 +75,46 @@ export default {
       isListMore: false, // 瀑布流加载状态 - 是否还有更多数据
       isListLoadingError: false, // 瀑布流加载状态 - 是否加载错误
       showFilter: false, // 筛选状态 - 是否开启
-      zypztList: ['1-编辑', '2-初审', '3-有效', '4-已验票', '5-已终结'], // 作业票状态列表
+      zypztList: [
+        {
+          name: "编辑",
+          idnex: 1
+        },
+        {
+          name: "初审",
+          idnex: 2
+        },
+        {
+          name: "有效",
+          idnex: 3
+        },
+        {
+          name: "已验票",
+          idnex: 4
+        },
+        {
+          name: "已终结",
+          idnex: 5
+        }
+      ], // 作业票状态列表
+      dhLevelColumns: [
+        {
+          name: "制定位置特殊动火作业",
+          idnex: 5
+        },
+        {
+          name: "特殊",
+          idnex: 5
+        },
+        {
+          name: "|类",
+          idnex: 5
+        },
+        {
+          name: "||类",
+          idnex: 5
+        }
+      ], //动火等级
       selectZypzt: {} // 选择的作业票状态
     };
   },
@@ -97,12 +131,11 @@ export default {
     // 获取页面数据
     // => 'refresh' => 刷新数据
     getPageData(where) {
-      
-      if (where = 'refresh') {
+      if ((where = "refresh")) {
         // this.pageNow = 1;
         this.isRefreshLoading = true;
       }
-      
+
       this.$api.page_3
         .htHseDhzypListData({
           siteContent: this.searchValue,
@@ -113,26 +146,30 @@ export default {
           this.isFirstLoading = false;
           console.log(this.listData);
 
-          if (where = 'refresh') {
+          if ((where = "refresh")) {
             // this.pageNow = 1;
             this.isRefreshLoading = false;
           }
-          if (where = 'list') {
+          if ((where = "list")) {
             // this.pageNow = 1;
             this.isListLoading = false;
           }
         });
     },
     confirmFilter() {
-      console.log('点击确认筛选')
+      console.log("点击确认筛选");
     },
     filterSearch(e) {
-      console.log(e)
+      console.log(e);
     },
     filterSelect_1(e) {
       console.log("e: ", e);
       this.selectZypzt = e;
     },
+    filterSelect_2(e) {
+      console.log("e: ", e);
+      this.selectZypzt = e;
+    }
   },
   created() {
     this.getPageData();

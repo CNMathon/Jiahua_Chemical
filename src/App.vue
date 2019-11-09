@@ -28,4 +28,8 @@
     }
   }
 }
+
+.fixed-first {
+  margin-top: 90px;
+}
 </style>

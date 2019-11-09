@@ -7,7 +7,7 @@
         right-text="操作"
         left-arrow
         @click-left="pageBack"
-        @click-right="showPicker = true"
+        @click-right="openAction"
       />
     </van-sticky>
     <div class="cell_group">
@@ -135,6 +135,16 @@
       :actions="actions"
       @select="onSelect"
     />
+    <!-- 操作Popup -->
+    <van-popup
+      v-model="isShowAction"
+      position="bottom"
+      class="action"
+    >
+      <button @click="postData">保存</button>
+      <button>工作流提交</button>
+      <button @click="closeAction">取消</button>
+    </van-popup>
   </div>
 </template>
 <script>
@@ -179,7 +189,8 @@ export default {
         { name: "保存", index: 0 },
         { name: "工作流提交", index: 1 },
         { name: "取消", index: 2 }
-      ]
+      ],
+      isShowAction: false,
     };
   },
   computed: mapState({
@@ -252,7 +263,16 @@ export default {
       if (item.index === 0) {
         this.Next();
       }
-    }
+    },
+    // 打开操作Popup
+    openAction() {
+      this.isShowAction = true
+    },
+
+    // 关闭操作Popup
+    closeAction() {
+      this.isShowAction = false
+    },
   },
   watch: {
     hazardIdentification(res) {
@@ -284,6 +304,22 @@ export default {
     line-height: 98px;
     background: rgba(96, 150, 248, 1);
     box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.5);
+  }
+}
+
+.action {
+  padding-left: 30px;
+  padding-right: 30px;
+  background-color: transparent;
+  button {
+    width: 100%;
+    height: 110px;
+    margin-bottom: 20px;
+    background-color: white;
+    border: none;
+    border-radius: 30px;
+    color: rgb(0, 118, 255);
+    font-size: 35px
   }
 }
 </style>

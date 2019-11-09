@@ -1,8 +1,7 @@
 // initial state
 const state = {
-  zyOtherspecial: [],
-  zywhBs: [],
-  guardian: [],
+  acceptanceCharge: [],
+  rectificationCharge: []
 };
 
 // getters
@@ -11,7 +10,7 @@ const getters = {};
 // actions
 const actions = {
   changTag({ commit }, tags) {
-    commit("setTag", { tags });
+    commit('setTag', { tags });
   },
   deleteTagItem({ commit, state }, tags) {
     let arr = state[tags.key];
@@ -19,10 +18,10 @@ const actions = {
       return item !== tags.value;
     });
     tags.value = newArr;
-    commit("setTag", { tags });
+    commit('setTag', { tags });
   },
   cleanState({ commit }) {
-    commit("resetState");
+    commit('resetState');
   }
 };
 

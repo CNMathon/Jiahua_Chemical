@@ -69,6 +69,7 @@
               <label v-for="(item, index) in studyData.studyTask" :key="index">
                 <class-1 :info="item" v-if="index < 3"></class-1>
               </label>
+              <div class="null" v-if="studyData.studyTask.length === 0">暂无数据</div>
             </div>
           </van-tab>
           <van-tab title="我的学习历史">
@@ -76,6 +77,7 @@
               <label v-for="(item, index) in studyData.historyTask" :key="index">
                 <class-1 :info="item" v-if="index < 3" isStart></class-1>
               </label>
+              <div class="null" v-if="studyData.historyTask.length === 0">暂无数据</div>
             </div>
           </van-tab>
         </van-tabs>
@@ -100,16 +102,18 @@
         >
           <van-tab title="我的考试任务">
             <div class="tab-content">
-              <label v-for="(item, index) in testHistory" :key="index">
-                <class-2 :info="item" v-if="index < 3" isEnd></class-2>
+              <label v-for="(item, index) in testTask.studyTask" :key="index">
+                <class-2 :info="item" v-if="index < 3"></class-2>
               </label>
+              <div class="null" v-if="testTask.studyTask.length === 0">暂无数据</div>
             </div>
           </van-tab>
           <van-tab title="我的考试历史">
             <div class="tab-content">
-              <label v-for="(item, index) in testHistory" :key="index">
+              <label v-for="(item, index) in testTask.historyTask" :key="index">
                 <class-2 :info="item" v-if="index < 3" isEnd></class-2>
               </label>
+              <div class="null" v-if="testTask.historyTask.length === 0">暂无数据</div>
             </div>
           </van-tab>
         </van-tabs>
@@ -157,13 +161,20 @@ export default {
       ],
       swiperData: [],
       testHistory: [], //总记录
-      studyData: [], //学习记录
-      testTask: []
+      studyData: {
+        studyTask: [],
+        historyTask: []
+      }, //学习记录
+      testTask: {
+        studyTask: [],
+        historyTask: []
+      }
     };
   },
   created() {
     if (this.load) return;
     this.getHomePage();
+    this.getMyTest();
     this.getMyTestHistory();
     this.getMyStudy();
     this.getUserName();
@@ -195,7 +206,21 @@ export default {
       this.$api.page_5
         .getMyStudy(sendData)
         .then(res => {
-          this.studyData = res[0];
+          if (JSON.stringify(data) !== "{}") this.studyData = res[0];
+        })
+        .catch(() => {});
+    },
+    // 获取待考试列表
+    getMyTest() {
+      let sendData = {
+        pageNo: 1,
+        pageSize: 10,
+        __sid: this.$userInfo.sessionId
+      };
+      this.$api.page_5
+        .getMyTestHistory(sendData)
+        .then(res => {
+          this.testTask.studyTask = res.list;
         })
         .catch(() => {});
     },
@@ -210,7 +235,7 @@ export default {
       this.$api.page_5
         .getMyTestHistory(sendData)
         .then(res => {
-          this.testHistory = res.list;
+          this.testTask.historyTask = res.list;
         })
         .catch(() => {});
     },
@@ -393,6 +418,11 @@ export default {
         padding: 20px 30px;
       }
     }
+  }
+  .null {
+    text-align: center;
+    font-size: 14px;
+    line-height: 60px;
   }
 }
 </style>

@@ -13,11 +13,15 @@ import CellSheet from './components/Cell/CellSheet.vue';
 import CellTextarea from './components/Cell/CellTextarea.vue';
 import CellOther from './components/Cell/CellOther.vue';
 import CellSelectUser from './components/Cell/CellSelectUser.vue';
+import CellSelectUsers from './components/Cell/CellSelectUsers.vue';
 import CellSelectTag from './components/Cell/CellSelectTag.vue';
 import JFilter from './components/Filter/Filter.vue';
 import JFilterItem from './components/Filter/FilterItem.vue';
+import FilterCell from './components/Filter/FilterCell.vue';
+import FilterTime from './components/Filter/FilterTime.vue';
 import FilterSearch from './components/Filter/FilterSearch.vue';
 import FilterBar from './components/Filter/FilterBar.vue';
+import Action from './components/action/Index.vue'
 import 'video.js/dist/video-js.css';
 import api from './api'; // 导入api接口
 import { Toast } from 'vant';
@@ -41,14 +45,18 @@ Vue.component('cell-picker', CellPicker);
 Vue.component('cell-textarea', CellTextarea);
 Vue.component('cell-other', CellOther);
 Vue.component('cell-select-user', CellSelectUser);
+Vue.component('cell-select-users', CellSelectUsers);
 Vue.component('cell-select-tag', CellSelectTag);
 Vue.component('j-filter', JFilter);
 Vue.component('j-filter-bar', FilterBar);
 Vue.component('j-filter-item', JFilterItem);
+Vue.component('j-filter-cell', FilterCell);
+Vue.component('j-filter-time', FilterTime);
 Vue.component('j-filter-search', FilterSearch);
+// Vue.component('Action', Action);
 
 new Vue({
-  router,
-  store,
-  render: h => h(App)
+    router,
+    store,
+    render: h => h(App)
 }).$mount('#app');
