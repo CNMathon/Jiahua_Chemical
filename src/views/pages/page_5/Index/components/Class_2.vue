@@ -5,10 +5,10 @@
     </div>
     <div class="class-content">
       <div class="tags" v-if="isEnd">
-        总分{{info.totalScore}}分 | 及格分60 |
+        总分{{info.totalScore}}分 | 及格分{{info.passScore}} |
         <span>考试得分：{{info.passScore}}</span>
       </div>
-      <div class="tags" v-else>总分100分 | 及格分60</div>
+      <div class="tags" v-else>总分{{info.totalScore}}分 | 及格分{{info.passScore}}</div>
       <div class="bottom">
         <div class="times">
           <div class="time">
@@ -16,7 +16,7 @@
             <br />
             {{day(info.startDate)}}-{{day(info.endDate)}}
           </div>
-          <div class="time">考试时长：60分钟</div>
+          <div class="time">考试时长：{{info.examTime}}分钟</div>
         </div>
         <div class="action" v-if="isEnd" @click="toAnalysis()">查看试卷</div>
         <div class="action" v-else @click="toAnswer()">开始考试</div>
@@ -35,9 +35,7 @@ export default {
     },
     info: Object
   },
-  created() {
-    console.log(this.info);
-  },
+  created() {},
   methods: {
     day(val) {
       return dayjs(val).format("YYYY-MM-DD HH:mm");

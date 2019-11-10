@@ -18,7 +18,8 @@
 </template>
 <script>
 import { mixin } from "@/mixin/mixin";
-
+import axios from "axios";
+const sha1 = require("sha1");
 export default {
   name: "photo",
   mixins: [mixin],
@@ -30,19 +31,50 @@ export default {
     };
   },
   mounted() {
+    axios
+      .get(
+        "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=wx66c7494423ceb027&secret=34fa9ffd9707f65f41989cff105f0451"
+      )
+      .then(res => {
+        let token = res.data.access_token;
+        axios
+          .get(
+            `https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=${token}&type=jsapi`
+          )
+          .then(res => {
+            let jsapi_ticket = res.data.ticket;
+            console.log("jsapi_ticket: ", jsapi_ticket);
+            let noncestr = "jiahua";
+            let timestamp = Date.parse(new Date()) / 1000;
+            let url = "http://localhost:8080";
+            let str = `jsapi_ticket=${jsapi_ticket}&noncestr=${noncestr}&timestamp=${timestamp}&url=${url}`; //按字典排序，拼接字符串
+            console.log("str: ", str);
+            let sha = sha1(str); //加密
+            console.log("sha: ", sha);
+            wx.config({
+              debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+              appId: "wx66c7494423ceb027", // 必填，公众号的唯一标识
+              timestamp: timestamp, // 必填，生成签名的时间戳
+              nonceStr: noncestr, // 必填，生成签名的随机串
+              signature: sha, // 必填，签名
+              jsApiList: ["chooseImage"] // 必填，需要使用的JS接口列表
+            });
+          });
+      });
     this.id = this.$route.params.id;
-    wx.config({
-      debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
-      appId: "", // 必填，公众号的唯一标识
-      timestamp: "", // 必填，生成签名的时间戳
-      nonceStr: "", // 必填，生成签名的随机串
-      signature: "", // 必填，签名
-      jsApiList: ["chooseImage"] // 必填，需要使用的JS接口列表
-    });
   },
   methods: {
     // 拍照
-    takePhoto() {},
+    takePhoto() {
+      wx.chooseImage({
+        count: 1, // 默认9
+        sizeType: ["original", "compressed"], // 可以指定是原图还是压缩图，默认二者都有
+        sourceType: ["camera"], // 可以指定来源是相册还是相机，默认二者都有
+        success: function(res) {
+          var localIds = res.localIds; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
+        }
+      });
+    },
     // 上传照片
     uploadPhoto() {
       this.$api.page_5

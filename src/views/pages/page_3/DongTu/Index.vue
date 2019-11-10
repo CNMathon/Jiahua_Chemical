@@ -10,24 +10,15 @@
     />
     <div class="cell_group">
       <!-- 申请部门 -->
-      <cell-value
-        title="申请部门"
-        required
-        :value="$userInfo.officeName"
-      ></cell-value>
+      <cell-value title="申请部门" :value="$userInfo.officeName" disable></cell-value>
       <!-- 申请人 -->
-      <cell-value
-        title="申请人"
-        required
-        :value="$userInfo.userName"
-      ></cell-value>
+      <cell-value title="申请人" :value="$userInfo.userName" disable></cell-value>
+      <!-- 作业票编号 -->
+      <cell-value title="作业票编号" value disable></cell-value>
+      <!-- 作业票状态 -->
+      <cell-value title="作业票状态" value="编辑" disable></cell-value>
       <!-- 作业地点 -->
-      <cell-input
-        v-model="sendData.dtSite"
-        title="作业地点"
-        required
-        placeholder="手工录入"
-      ></cell-input>
+      <cell-input v-model="sendData.dtSite" title="作业地点" required placeholder="手工录入"></cell-input>
       <!-- 涉及其他特殊作业 -->
       <cell-select-tag
         required
@@ -47,17 +38,9 @@
         :storeModule="storeModule"
       ></cell-select-tag>
       <!-- 动土开始时间 -->
-      <cell-time
-        v-model="sendData.dtStarttime"
-        title="动土开始时间"
-        required
-      ></cell-time>
+      <cell-time v-model="sendData.dtStarttime" title="动土开始时间" required></cell-time>
       <!-- 动土结束时间 -->
-      <cell-time
-        v-model="sendData.dtEndtime"
-        title="动土结束时间"
-        required
-      ></cell-time>
+      <cell-time v-model="sendData.dtEndtime" title="动土结束时间" required></cell-time>
       <!-- 监护人 -->
       <cell-select-user
         title="监护人"
@@ -92,12 +75,7 @@
           <span>作业范围、内容、方式</span>
         </div>
         <div class="cell_other">
-          <textarea
-            class="cell_textarea"
-            placeholder="请输入工作内容"
-            cols="30"
-            rows="10"
-          ></textarea>
+          <textarea class="cell_textarea" placeholder="请输入工作内容" cols="30" rows="10"></textarea>
         </div>
         <div class="cell_other">
           <div class="upload">
@@ -116,18 +94,10 @@
         </div>
       </div>
       <!-- 土建专工意见 -->
-      <cell-textarea
-        v-model="sendData.yj"
-        title="土建专工意见"
-        placeholder="手工录入"
-      ></cell-textarea>
+      <cell-textarea v-model="sendData.yj" title="土建专工意见" placeholder="手工录入"></cell-textarea>
     </div>
     <!-- 操作Popup -->
-    <van-popup
-      v-model="isShowAction"
-      position="bottom"
-      class="action"
-    >
+    <van-popup v-model="isShowAction" position="bottom" class="action">
       <button @click="postData">保存</button>
       <button>工作流提交</button>
       <button @click="closeAction">取消</button>
@@ -184,15 +154,14 @@ export default {
     this.$store.dispatch("dongtu/cleanState");
   },
   methods: {
-
     // 打开操作Popup
     openAction() {
-      this.isShowAction = true
+      this.isShowAction = true;
     },
 
     // 关闭操作Popup
     closeAction() {
-      this.isShowAction = false
+      this.isShowAction = false;
     },
 
     // 发送数据
@@ -267,7 +236,7 @@ export default {
       border: none;
       border-radius: 30px;
       color: rgb(0, 118, 255);
-      font-size: 35px
+      font-size: 35px;
     }
   }
 }

@@ -11,9 +11,13 @@
     />
     <div class="cell_group fixed-first">
       <!-- 申请部门 -->
-      <cell-value title="申请部门" required :value="$userInfo.officeName" class="readonly"></cell-value>
+      <cell-value title="申请部门" required :value="$userInfo.officeName" disable></cell-value>
       <!-- 申请人 -->
-      <cell-value title="申请人" required :value="$userInfo.userName" class="readonly"></cell-value>
+      <cell-value title="申请人" required :value="$userInfo.userName" disable></cell-value>
+      <!-- 作业票编号 -->
+      <cell-value title="作业票编号" value disable></cell-value>
+      <!-- 作业票状态 -->
+      <cell-value title="作业票状态" value="编辑" disable></cell-value>
       <!-- 作业票编号 -->
       <cell-value
         title="作业票编号"
@@ -104,7 +108,9 @@
             @cancel="signatureCancel(1)"
           >
             <span slot>断开与动火设备相连接的所有管线,加盲板</span>
-            <span><van-stepper :min=0 v-model="manbanNumber" /></span>
+            <span>
+              <van-stepper :min="0" v-model="manbanNumber" />
+            </span>
             <span slot>块</span>
           </Signature>
           <Signature
@@ -163,18 +169,24 @@
           >
             <div slot>
               <span>现场配备消防水带</span>
-              <span><van-stepper :min=0 v-model="fangshuidaiNumber" /></span>
+              <span>
+                <van-stepper :min="0" v-model="fangshuidaiNumber" />
+              </span>
               <span>根，灭火器</span>
-              <span><van-stepper :min=0 v-model="miehuoqiNumber" /></span>
+              <span>
+                <van-stepper :min="0" v-model="miehuoqiNumber" />
+              </span>
               <span>台，铁锹</span>
-              <span><van-stepper :min=0 v-model="tieqiuNumber" /></span>
+              <span>
+                <van-stepper :min="0" v-model="tieqiuNumber" />
+              </span>
               <span>把，灭火毯</span>
-              <span><van-stepper :min=0 v-model="miehuotanNumber" /></span>
+              <span>
+                <van-stepper :min="0" v-model="miehuotanNumber" />
+              </span>
               <span>块</span>
-
             </div>
           </Signature>
-          
         </div>
       </div>
 
@@ -189,23 +201,14 @@
       </van-popup>
 
       <!-- 操作Popup -->
-      <van-popup
-        v-model="isShowAction"
-        position="bottom"
-        class="action"
-      >
+      <van-popup v-model="isShowAction" position="bottom" class="action">
         <button @click="postData">保存</button>
         <button>工作流提交</button>
         <button @click="closeAction">取消</button>
       </van-popup>
-
     </div>
     <!-- 操作Popup -->
-    <van-popup
-      v-model="isShowAction"
-      position="bottom"
-      class="action"
-    >
+    <van-popup v-model="isShowAction" position="bottom" class="action">
       <button @click="postData">保存</button>
       <button>工作流提交</button>
       <button @click="closeAction">取消</button>
@@ -236,7 +239,7 @@ export default {
         otherSpecial: [], //涉及其他特殊作业
         hazardSb: [], //危害辨识
         dhzyPrincipal: [], //动火作业负责人
-        dhzyRen: [], //动火人
+        dhzyRen: [] //动火人
       },
       value: 5,
       materialShowShow: false,
@@ -307,25 +310,25 @@ export default {
   methods: {
     // 清除所有数据
     clearData() {
-      this.sendData.siteContent = "" //动火地点及内容
-      this.sendData.dhLevel = null //动火级别
-      this.sendData.startTime = "" //动火开始时间
-      this.sendData.endTime = "" //动火结束时间
-      this.sendData.dhWay = [] //动火方式
-      this.sendData.otherSpecial = [] //涉及其他特殊作业
-      this.sendData.hazardSb = [] //危害辨识
-      this.sendData.dhzyPrincipal = [] //动火作业负责人
-      this.sendData.dhzyRen = [] //动火人
+      this.sendData.siteContent = ""; //动火地点及内容
+      this.sendData.dhLevel = null; //动火级别
+      this.sendData.startTime = ""; //动火开始时间
+      this.sendData.endTime = ""; //动火结束时间
+      this.sendData.dhWay = []; //动火方式
+      this.sendData.otherSpecial = []; //涉及其他特殊作业
+      this.sendData.hazardSb = []; //危害辨识
+      this.sendData.dhzyPrincipal = []; //动火作业负责人
+      this.sendData.dhzyRen = []; //动火人
     },
 
     // 打开操作Popup
     openAction() {
-      this.isShowAction = true
+      this.isShowAction = true;
     },
 
     // 关闭操作Popup
     closeAction() {
-      this.isShowAction = false
+      this.isShowAction = false;
     },
 
     // 判断数据输入的完整性
@@ -388,9 +391,9 @@ export default {
     // 发送数据
     postData() {
       // 检测到输入不完整直接退出函数
-      if (!this.isDataEdit()) {
-        return;
-      }
+      // if (!this.isDataEdit()) {
+      //   return;
+      // }
 
       const that = this;
       let sendData = JSON.parse(JSON.stringify(this.sendData));
@@ -466,17 +469,17 @@ export default {
           safetyCs: `现场配备消防水带${this.fangshuidaiNumber}根，灭火器${this.miehuoqiNumber}台，铁锹${this.tieqiuNumber}把，灭火毯${this.miehuotanNumber}块`,
           affirmRen: this.checked[8] ? this.checked[8].img : 0,
           safetyStatus: this.checked[8] ? 1 : 0
-        },
-      ]
+        }
+      ];
 
-      let ren0 = this.checked[0] ? this.checked[0].img : 0
-      let ren1 = this.checked[1] ? this.checked[1].img : 1
-      let ren2 = this.checked[2] ? this.checked[2].img : 2
-      let ren3 = this.checked[3] ? this.checked[3].img : 3
-      let ren4 = this.checked[4] ? this.checked[4].img : 4
-      let ren5 = this.checked[5] ? this.checked[5].img : 5
-      let ren6 = this.checked[6] ? this.checked[6].img : 6
-      let ren7 = this.checked[7] ? this.checked[7].img : 6
+      let ren0 = this.checked[0] ? this.checked[0].img : 0;
+      let ren1 = this.checked[1] ? this.checked[1].img : 1;
+      let ren2 = this.checked[2] ? this.checked[2].img : 2;
+      let ren3 = this.checked[3] ? this.checked[3].img : 3;
+      let ren4 = this.checked[4] ? this.checked[4].img : 4;
+      let ren5 = this.checked[5] ? this.checked[5].img : 5;
+      let ren6 = this.checked[6] ? this.checked[6].img : 6;
+      let ren7 = this.checked[7] ? this.checked[7].img : 6;
 
       let sendSafeData1 = {
         // __sid: localStorage.getItem('JiaHuaSessionId'),
@@ -502,38 +505,40 @@ export default {
           `动火点周围易燃物已清除`,
           `电焊回路线已接在焊件上,把线未穿过下水井或与其他设备搭接`,
           `乙炔气瓶(直立放置)、氧气瓶间距大于5米，与火源间的距离大于10米`,
-          `现场配备消防水带${this.fangshuidaiNumber}根，灭火器${this.miehuoqiNumber}台，铁锹${this.tieqiuNumber}把，灭火毯${this.miehuotanNumber}块`,
+          `现场配备消防水带${this.fangshuidaiNumber}根，灭火器${this.miehuoqiNumber}台，铁锹${this.tieqiuNumber}把，灭火毯${this.miehuotanNumber}块`
         ]
-      }
+      };
 
       sendData.dhzyRen = this.userString(sendData.dhzyRen, "userName");
       sendData.applyDept = this.$userInfo.officeName;
       sendData.applyRen = this.$userInfo.userName;
       sendData.__sid = this.$userInfo.sessionId;
-      sendData.startTime = Date(sendData.startTime)
-      sendData.endTime = Date(sendData.endTime)
-      console.log(1111111)
-      console.log(sendData)
+      sendData.startTime = Date(sendData.startTime);
+      sendData.endTime = Date(sendData.endTime);
+      console.log(1111111);
+      console.log(sendData);
       this.$api.page_3
         .htHseDhzypSave(sendData)
         .then(res => {
           console.log("res: ", res);
-          messageId = res.message
+          messageId = res.message;
           this.$Toast.success({
-            message: "提交成功",
+            message: "提交成功"
             // onClose() {
-              // that.clearData();
-              // that.pageBack();
+            // that.clearData();
+            // that.pageBack();
             // }
           });
-          console.log(sendSafeData)
-          console.log(JSON.stringify(sendSafeData1))
+          console.log(sendSafeData);
+          console.log(JSON.stringify(sendSafeData1));
           this.$api.page_3
-            .htHseDhzypSaveHtHseDhzypSafety(JSON.stringify(sendSafeData), this.$userInfo.sessionId)
+            .htHseDhzypSaveHtHseDhzypSafety(
+              JSON.stringify(sendSafeData),
+              this.$userInfo.sessionId
+            )
             .then(res => {
               console.log("res: ", res);
-              
-            })
+            });
         })
         .catch(() => {});
     },
@@ -628,14 +633,14 @@ export default {
     dhzyRen(res) {
       this.sendData.dhzyRen = res;
     },
-    // 材质选择    
+    // 材质选择
     onMaterialConfirm(value, index) {
       this.materialShowShow = false;
       this.material = {
         index: index,
         value: value
       };
-    },
+    }
   },
   components: {
     DonghuoConfirm,
@@ -659,6 +664,21 @@ export default {
   }
   .head_3 {
     width: 300px;
+  }
+}
+.action {
+  padding-left: 30px;
+  padding-right: 30px;
+  background-color: transparent;
+  button {
+    width: 100%;
+    height: 110px;
+    margin-bottom: 20px;
+    background-color: white;
+    border: none;
+    border-radius: 30px;
+    color: rgb(0, 118, 255);
+    font-size: 35px;
   }
 }
 </style>

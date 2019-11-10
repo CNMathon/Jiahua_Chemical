@@ -10,17 +10,15 @@
     />
     <div class="cell_group">
       <!-- 申请部门 -->
-      <cell-value title="申请部门" required :value="$userInfo.officeName" class="readonly"></cell-value>
+      <cell-value title="申请部门" :value="$userInfo.officeName" disable></cell-value>
       <!-- 申请人 -->
-      <cell-value title="申请人" required :value="$userInfo.userName" class="readonly"></cell-value>
+      <cell-value title="申请人" :value="$userInfo.userName" disable></cell-value>
       <!-- 作业票编号 -->
-      <cell-value
-        title="作业票编号"
-        required
-        v-if="initData.dhzypCode"
-        :value="$userInfo.dhzypCode"
-        class="readonly"
-      ></cell-value>
+      <cell-value title="作业票编号" value disable></cell-value>
+      <!-- 作业票状态 -->
+      <cell-value title="作业票状态" value="编辑" disable></cell-value>
+      <!-- 作业票编号 -->
+      <cell-value title="作业票编号" required v-if="initData.dhzypCode" :value="$userInfo.dhzypCode"></cell-value>
       <!-- 作业票状态 -->
       <cell-value
         title="作业票状态"
@@ -36,7 +34,7 @@
           <span class="required">*</span>
         </div>
         <div class="cell_value" @click="routeToChoose">
-          <span>{{ sendData.zySskj.length == 0 ? "单位名称" : zySskj }}</span>
+          <span>{{ sendData.zySskj.length == 0 ? "单位名称" : sendData.zySskj[0] }}</span>
           <span class="cell_value_arrow">
             <van-icon name="search" />
           </span>
@@ -53,7 +51,7 @@
         required
         title="涉及其他特殊作业"
         storeKey="zyOtherspecial"
-        :tagList="zyOtherspecial"
+        :tagList="sendData.zyOtherspecial"
         :showList="list_1"
         :storeModule="storeModule"
       ></cell-select-tag>
@@ -109,7 +107,7 @@
             @checked="showSignature(0)"
             @cancel="signatureCancel(0)"
           >
-            <span slot>在有毒介质的管道、设备上作业时，尽可能降低系统压力，作业点应为常压。</span>
+            <span slot>对进入受限空间危险性进行分析。</span>
           </Signature>
           <Signature
             :checked="checked[1] ? checked[1].checked : false"
@@ -117,7 +115,7 @@
             @checked="showSignature(1)"
             @cancel="signatureCancel(1)"
           >
-            <span slot>在有毒介质的管道、设备上作业时，作业人员穿戴适合的防护用具。</span>
+            <span slot>与受限空间有联系的阀门管线加盲板隔离，列出盲板清单，落实抽堵盲板责任人。</span>
           </Signature>
           <Signature
             :checked="checked[2] ? checked[2].checked : false"
@@ -125,7 +123,7 @@
             @checked="showSignature(2)"
             @cancel="signatureCancel(2)"
           >
-            <div slot>易燃易爆场所,作业人员穿防静电工作服、工作鞋；作业时使用防爆灯具和防爆工具。</div>
+            <div slot>设备经过置换、吹扫、蒸煮。</div>
           </Signature>
           <Signature
             :checked="checked[3] ? checked[3].checked : false"
@@ -133,7 +131,7 @@
             @checked="showSignature(3)"
             @cancel="signatureCancel(3)"
           >
-            <div slot>易燃易爆场所，距作业地点 30m 内无其他动火作业。</div>
+            <div slot>设备打开通风孔进行自然通风,温度适宜人员作业;必要时采用强制通风或佩戴空气呼吸器,但严禁用通氧气或富氧空气的方法补充氧。</div>
           </Signature>
           <Signature
             :checked="checked[4] ? checked[4].checked : false"
@@ -141,7 +139,7 @@
             @checked="showSignature(4)"
             @cancel="signatureCancel(4)"
           >
-            <div slot>在强腐蚀性介质的管道、设备上作业时，作业人员已采取防止酸碱灼伤的措施。</div>
+            <div slot>相关设备进行处理,带搅拌机的设备要切断电源,电源开关处加锁或挂“禁止合闸”标志牌,设专人监护。</div>
           </Signature>
           <Signature
             :checked="checked[5] ? checked[5].checked : false"
@@ -149,7 +147,7 @@
             @checked="showSignature(5)"
             @cancel="signatureCancel(5)"
           >
-            <div slot>介质温度较高、可能造成烫伤的情况下，作业人员已采取防烫措施。</div>
+            <div slot>检查受限空间内部已具备作业条件,清罐时(无需用/已采用)防爆工具。</div>
           </Signature>
           <Signature
             :checked="checked[6] ? checked[6].checked : false"
@@ -157,7 +155,50 @@
             @checked="showSignature(6)"
             @cancel="signatureCancel(6)"
           >
-            <div slot>同一管道上不同时进行两处及两处以上的盲板抽堵作业。</div>
+            <div slot>检查受限空间进出口通道,无阻碍人员进出的障碍物。</div>
+          </Signature>
+          <Signature
+            :checked="checked[6] ? checked[6].checked : false"
+            :img="checked[6] ? checked[6].img : ''"
+            @checked="showSignature(6)"
+            @cancel="signatureCancel(6)"
+          >
+            <div slot>分析盛装过可燃有毒液体、气体的受限空间内的可燃、有毒有害气体含量。</div>
+          </Signature>
+          <Signature
+            :checked="checked[6] ? checked[6].checked : false"
+            :img="checked[6] ? checked[6].img : ''"
+            @checked="showSignature(6)"
+            @cancel="signatureCancel(6)"
+          >
+            <div slot>作业人员清楚受限空间内存在的其他危险因素,如内部附件、集渣坑等。</div>
+          </Signature>
+          <Signature
+            :checked="checked[6] ? checked[6].checked : false"
+            :img="checked[6] ? checked[6].img : ''"
+            @checked="showSignature(6)"
+            @cancel="signatureCancel(6)"
+          >
+            <div slot>作业监护措施:消防器材</div>
+            <div>
+              <input type="text" />
+            </div>
+            <div>、救生绳</div>
+            <div>
+              <input type="text" />
+            </div>
+            <div>、气防装备</div>
+            <div>
+              <input type="text" />
+            </div>
+          </Signature>
+          <Signature
+            :checked="checked[6] ? checked[6].checked : false"
+            :img="checked[6] ? checked[6].img : ''"
+            @checked="showSignature(6)"
+            @cancel="signatureCancel(6)"
+          >
+            <div slot>检查受限空间进出口通道,无阻碍人员进出的障碍物。</div>
           </Signature>
         </div>
       </div>
@@ -185,8 +226,9 @@
 import { mapState } from "vuex";
 import { business } from "../../../../mixin/business";
 import Canvas from "@/components/Canvas.vue";
-import StepperPlus from "@/components/StepperPlus.vue";
 import Signature from "../components/Signature.vue";
+import StepperPlus from "@/components/StepperPlus.vue";
+import { send } from 'q';
 export default {
   name: "kongjian",
   mixins: [business],
@@ -202,10 +244,12 @@ export default {
         zywhBs: [], //危害辨识
         zyStarttime: "", //作业开始时间
         zyEndtime: "", //作业结束时间
-        zySskj: [], // 受限空间所属空间
+        zySskj: ['动力中心'], // 受限空间所属空间
         guardian: [], // 监护人
         zyPrincipal: [], // 作业部门负责人
         zyRen: [], // 作业人
+        aqcsjl: [], // 安全措施勾选记录
+        querenman: "" // 确认人（签名）
       },
       checked: [],
       isShowAction: false,
@@ -235,12 +279,14 @@ export default {
   components: {
     // DonghuoConfirm,
     Canvas,
-    StepperPlus,
     Signature
   },
   computed: mapState({
     zyOtherspecial: state => state.kongjian.zyOtherspecial,
-    zywhBs: state => state.kongjian.zywhBs
+    zywhBs: state => state.kongjian.zywhBs,
+    guardian: state => state.kongjian.guardian,
+    zyRen: state => state.kongjian.zyRen,
+    zyPrincipal: state => state.kongjian.zyPrincipal
   }),
   beforeDestroy() {
     this.$store.dispatch("kongjian/cleanState");
@@ -250,6 +296,10 @@ export default {
     showSignature(index) {
       console.log("index: ", index);
       console.log("显示签名");
+      // console.log(this.sendData)
+      console.log(this.sendData.aqcsjl);
+      this.sendData.aqcsjl.push(index);
+      console.log(this.sendData.aqcsjl);
       this.selectSignatureShow = index;
       this.signatureShow = true;
     },
@@ -267,6 +317,7 @@ export default {
         checked: false,
         img: ""
       };
+      this.sendData.selectSignatureShow = e;
       this.checked[this.selectSignatureShow].img = e;
       console.log("signatureShow: ");
     },
@@ -291,6 +342,24 @@ export default {
       this.isShowAction = false;
     },
 
+    isEmpty(sendData) {
+      if(
+        sendData.zyContent == "" || 
+        sendData.devicename == "" ||
+        sendData.sxkjNeurogen == "" ||
+        sendData.zyOtherspecial == "" ||
+        sendData.zyStarttime == "" ||
+        sendData.zyEndtime == "" ||
+        sendData.zySskj == [] ||
+        sendData.guardian == [] ||
+        sendData.zyPrincipal == [] ||
+        sendData.zyRen == [] ||
+        sendData.aqcsjl == []
+      ){
+        return false
+      }
+    },
+
     // 发送数据
     postData() {
       const that = this;
@@ -300,6 +369,12 @@ export default {
       sendData.applyDept = this.$userInfo.officeName;
       sendData.applyRen = this.$userInfo.userName;
       sendData.__sid = this.$userInfo.sessionId;
+      console.log(sendData)
+      // 判断数据是否为空
+      if (this.isEmpty(sendData) == false) {
+        this.$notify('请将表单中的数据输入完整')
+        return
+      }
       this.$api.page_3
         .htHseSxkjzypSave(sendData)
         .then(res => {
@@ -340,6 +415,15 @@ export default {
     },
     zywhBs(res) {
       this.sendData.zywhBs = res;
+    },
+    guardian(res) {
+      this.sendData.guardian = res;
+    },
+    zyRen(res) {
+      this.sendData.zyRen = res;
+    },
+    zyPrincipal(res) {
+      this.sendData.zyPrincipal = res;
     }
   }
 };
@@ -348,6 +432,9 @@ export default {
 @import "@/assets/scss/cell.scss";
 .donghuo {
   background-color: #f5f5f5;
+  .cell {
+    background-color: #fff;
+  }
   .next {
     width: 100%;
     height: 98px;
@@ -359,10 +446,6 @@ export default {
     background: rgba(96, 150, 248, 1);
     box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.5);
   }
-}
-
-.readonly {
-  background-color: #eee !important;
 }
 
 .action {

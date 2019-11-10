@@ -170,6 +170,14 @@ const routes = {
           }
         },
         {
+          path: '/page_3/mangban/select_user',
+          name: 'Donghuo_SelectUser',
+          component: () => import('../views/pages/page_3/SelectUser/Index.vue'),
+          meta: {
+            keepAlive: false //此组件不需要被缓存
+          }
+        },
+        {
           path: '/page_3/mangban/list',
           name: 'mangban_list',
           component: () => import('../views/pages/page_3/MangBan/List.vue'),
@@ -338,6 +346,14 @@ const routes = {
           path: '/page_3/linshi/index',
           name: 'linshi_index',
           component: () => import('../views/pages/page_3/LinShi/Index.vue'),
+          meta: {
+            keepAlive: true //此组件需要被缓存
+          }
+        },
+        {
+          path: '/page_3/linshi/index2',
+          name: 'linshi_index2',
+          component: () => import('../views/pages/page_3/LinShi/Index2.vue'),
           meta: {
             keepAlive: true //此组件需要被缓存
           }

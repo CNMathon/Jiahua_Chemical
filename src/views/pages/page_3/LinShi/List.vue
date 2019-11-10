@@ -37,7 +37,6 @@
             <div v-for="(item, index) in pageList" :key="index">
               <div
                 class="donghuo-list-card donghuo-list-card-nolast"
-                @click="toDetail(item.id, item.htStatus)"
               >
                 <div class="left">
                   <div class="left-line left-line-notlast">作业内容：{{ item.workContent }}</div>
@@ -50,11 +49,13 @@
                   <div class="left-line left-line-notlast">作业开始时间：{{ item.powertimeStart }}</div>
                   <div class="left-line">作业结束时间：{{ item.powertimeEnd }}</div>
                 </div>
-                <div class="right" v-if="item.htStatus == 1">编辑</div>
-                <div class="right" v-if="item.htStatus == 2">初审</div>
-                <div class="right" v-if="item.htStatus == 3">有效</div>
-                <div class="right" v-if="item.htStatus == 4">已验票</div>
-                <div class="right" v-if="item.htStatus == 5">已终结</div>
+                <div>
+                  <div class="right" v-if="item.htStatus == 2">初审</div>
+                  <div class="right" v-else-if="item.htStatus == 3">有效</div>
+                  <div class="right" v-else-if="item.htStatus == 4">已验票</div>
+                  <div class="right" v-else-if="item.htStatus == 5">已终结</div>
+                  <div class="right" v-else @click="edit(item)">编辑</div>
+                </div>
               </div>
             </div>
           </div>
@@ -109,6 +110,10 @@ export default {
   },
   mixins: [mixin],
   methods: {
+    // 编辑
+    edit(item) {
+      this.$router.push({name:'linshi_index2', query: {id: item.id}})
+    },
     /**
      * 获取吊装工作票
      */

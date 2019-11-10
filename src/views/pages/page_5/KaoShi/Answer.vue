@@ -72,12 +72,17 @@ export default {
       radio: "1",
       result: [],
       isLoading: true,
-      answerData: []
+      answerData: [],
+      save: 0
     };
   },
   mounted() {
     // 获取考试数据
     this.getPageData();
+  },
+  beforeDestroy() {
+    console.log("beforeDestroy");
+    clearInterval(this.save);
   },
   methods: {
     // 获取考试数据
@@ -93,6 +98,9 @@ export default {
           // 加载状态结束
           this.isLoading = false;
           this.answerData = res;
+          this.save = setInterval(() => {
+            this.stopExam();
+          }, 10000);
         })
         .catch(() => {
           this.isLoading = false;
@@ -111,17 +119,42 @@ export default {
       return type ? "active" : "";
     },
     tapSend() {
-      this.stopExam();
-      // this.$dialog
-      //   .confirm({
-      //     message: "是否确认交卷"
-      //   })
-      //   .then(() => {
-      //  this.stopExam();
-      //     // on confirm
-      //   });
+      this.$dialog
+        .confirm({
+          message: "是否确认交卷"
+        })
+        .then(() => {
+          this.stopExam(1);
+        });
     },
-    stopExam() {}
+    stopExam(isFinalSubmit = 0) {
+      let sendData = {
+        id: this.$route.query.id,
+        userCode: this.$userInfo.userCode,
+        // __sid: this.$userInfo.sessionId,
+        isFinalSubmit: isFinalSubmit,
+        children: []
+      };
+      this.answerData.map(item => {
+        let obj = {
+          sectionID: item.sectionID,
+          questionID: item.questionID,
+          myAnswer: item.myAnswer,
+          myQuestionID: item.myQuestionID,
+          questionScore: item.questionScore
+        };
+        sendData.children.push(obj);
+      });
+      let data = {
+        data: sendData
+      };
+      this.$api.page_5
+        .submitMyPaper(data, this.$userInfo.sessionId)
+        .then(res => {
+          console.log("res: ", res);
+        })
+        .catch(() => {});
+    }
   }
 };
 </script>

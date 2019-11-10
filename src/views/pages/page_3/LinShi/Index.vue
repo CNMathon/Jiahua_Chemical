@@ -12,38 +12,19 @@
     </van-sticky>
     <div class="cell_group">
       <!-- 申请部门 -->
-      <cell-value
-        title="申请部门"
-        required
-        :value="$userInfo.officeName"
-      ></cell-value>
+      <cell-value title="申请部门" :value="$userInfo.officeName" disable></cell-value>
       <!-- 申请人 -->
-      <cell-value
-        title="申请人"
-        required
-        :value="$userInfo.userName"
-      ></cell-value>
+      <cell-value title="申请人" :value="$userInfo.userName" disable></cell-value>
+      <!-- 作业票编号 -->
+      <cell-value title="作业票编号" value disable></cell-value>
+      <!-- 作业票状态 -->
+      <cell-value title="作业票状态" value="编辑" disable></cell-value>
       <!-- 作业内容 -->
-      <cell-textarea
-        v-model="sendData.workContent"
-        title="作业内容"
-        required
-        placeholder="请输入作业内容"
-      ></cell-textarea>
+      <cell-textarea v-model="sendData.workContent" title="作业内容" required placeholder="请输入作业内容"></cell-textarea>
       <!-- 作业地点 -->
-      <cell-input
-        v-model="sendData.workLocation"
-        title="作业地点"
-        required
-        placeholder="请输作业地点"
-      ></cell-input>
+      <cell-input v-model="sendData.workLocation" title="作业地点" required placeholder="请输作业地点"></cell-input>
       <!-- 用电方式 -->
-      <cell-picker
-        v-model="sendData.powerType"
-        title="用电方式"
-        required
-        :columns="powerTypeColumns"
-      ></cell-picker>
+      <cell-picker v-model="sendData.powerType" title="用电方式" required :columns="powerTypeColumns"></cell-picker>
       <!-- 工作电压 -->
       <cell-picker
         v-model="sendData.jworkVoltage"
@@ -52,19 +33,9 @@
         :columns="jworkVoltageColumns"
       ></cell-picker>
       <!-- 公共区域 -->
-      <cell-picker
-        v-model="sendData.publicArea"
-        title="公共区域"
-        required
-        :columns="publicAreaColumns"
-      ></cell-picker>
+      <cell-picker v-model="sendData.publicArea" title="公共区域" required :columns="publicAreaColumns"></cell-picker>
       <!-- 用电设备及功率 -->
-      <cell-input
-        v-model="sendData.devicePower"
-        title="用电设备及功率"
-        required
-        placeholder="手工录入"
-      ></cell-input>
+      <cell-input v-model="sendData.devicePower" title="用电设备及功率" required placeholder="手工录入"></cell-input>
       <!-- 危害辨识 -->
       <cell-select-tag
         required
@@ -75,17 +46,9 @@
         :storeModule="storeModule"
       ></cell-select-tag>
       <!-- 用电开始时间 -->
-      <cell-time
-        v-model="sendData.powertimeStart"
-        title="用电开始时间"
-        required
-      ></cell-time>
+      <cell-time v-model="sendData.powertimeStart" title="用电开始时间" required></cell-time>
       <!-- 用电结束时间 -->
-      <cell-time
-        v-model="sendData.powertimeEnd"
-        title="用电结束时间"
-        required
-      ></cell-time>
+      <cell-time v-model="sendData.powertimeEnd" title="用电结束时间" required></cell-time>
       <!-- 接线人 -->
       <cell-select-user
         title="接线人"
@@ -123,24 +86,11 @@
         v-model="sendData.workRen"
       ></cell-select-user>
       <!-- 电工证号 -->
-      <cell-input
-        v-model="sendData.licenseCode"
-        title="电工证号"
-        required
-        placeholder="手工录入"
-      ></cell-input>
+      <cell-input v-model="sendData.licenseCode" title="电工证号" required placeholder="手工录入"></cell-input>
     </div>
-    <van-action-sheet
-      v-model="showPicker"
-      :actions="actions"
-      @select="onSelect"
-    />
+    <van-action-sheet v-model="showPicker" :actions="actions" @select="onSelect" />
     <!-- 操作Popup -->
-    <van-popup
-      v-model="isShowAction"
-      position="bottom"
-      class="action"
-    >
+    <van-popup v-model="isShowAction" position="bottom" class="action">
       <button @click="postData">保存</button>
       <button>工作流提交</button>
       <button @click="closeAction">取消</button>
@@ -190,7 +140,7 @@ export default {
         { name: "工作流提交", index: 1 },
         { name: "取消", index: 2 }
       ],
-      isShowAction: false,
+      isShowAction: false
     };
   },
   computed: mapState({
@@ -266,13 +216,13 @@ export default {
     },
     // 打开操作Popup
     openAction() {
-      this.isShowAction = true
+      this.isShowAction = true;
     },
 
     // 关闭操作Popup
     closeAction() {
-      this.isShowAction = false
-    },
+      this.isShowAction = false;
+    }
   },
   watch: {
     hazardIdentification(res) {
@@ -319,7 +269,7 @@ export default {
     border: none;
     border-radius: 30px;
     color: rgb(0, 118, 255);
-    font-size: 35px
+    font-size: 35px;
   }
 }
 </style>

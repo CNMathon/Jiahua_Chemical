@@ -177,12 +177,7 @@ export default {
       list_2: ["人员受伤", "车辆伤害", "人员跌落沟渠"],
       isShowAction: false,
       signatureShow: false,
-      selectSignatureShow: 0,
-      checked: [
-        { checked: false, image: "" },
-        { checked: false, image: "" },
-        { checked: false, image: "" }
-      ]
+      checked: [{ checked: false, image: "" }]
     };
   },
   computed: mapState({
@@ -265,7 +260,6 @@ export default {
       console.log("index: ", index);
       console.log("显示签名");
       this.selectSignatureShow = index;
-      this.checked[index].checked = true;
       this.signatureShow = true;
     },
     // 取消签名
@@ -283,11 +277,10 @@ export default {
         img: ""
       };
       this.checked[this.selectSignatureShow].img = e;
+      console.log("signatureShow: ");
     },
     // 取消签名
     cancelCanvas() {
-      console.log("取消签名");
-      console.log("this.selectSignatureShow: ", this.selectSignatureShow);
       this.checked[this.selectSignatureShow].checked = false;
       this.checked[this.selectSignatureShow].img = "";
       this.signatureShow = false;

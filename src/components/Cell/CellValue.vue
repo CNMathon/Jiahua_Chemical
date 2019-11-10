@@ -1,5 +1,5 @@
 <template>
-  <div class="cell" :class="[border ? 'border' : '']">
+  <div class="cell" :class="[border ? 'border' : '',disable? 'disable': '']">
     <div class="cell_title">
       <span>{{ title }}</span>
       <span class="required" v-if="required">*</span>
@@ -23,7 +23,11 @@ export default {
       type: Boolean,
       default: true
     },
-    value: String || Number
+    value: String || Number,
+    disable: {
+      type: Boolean,
+      default: false
+    }
   }
 };
 </script>
@@ -67,5 +71,8 @@ export default {
     -webkit-transform: scaleY(0.5);
     transform: scaleY(0.5);
   }
+}
+.disable {
+  background-color: #f5f5f5 !important;
 }
 </style>

@@ -22,32 +22,16 @@ const article = {
     },
     // 动火作业票安全措施子表保存
     htHseDhzypSaveHtHseDhzypSafety(params, __sid) {
-        // return axios.post(
-        //     `${base.sq}dhzyp/htHseDhzyp/saveHtHseDhzypSafety`,
-        //     qs.stringify(params)
-        // );
-        console.log(8888888)
-        console.log(params)
         return axios.post(
             `${base.sq}dhzyp/htHseDhzyp/saveHtHseDhzypSafety`,
-            qs.stringify(params),
+            params,
             {
                 headers: {
                     'Content-Type': 'application/json',
-                    '__sid': __sid
-                },
-                
+                    __sid: __sid
+                }
             }
         );
-        // return axios({
-        //     url: `${base.sq}dhzyp/htHseDhzyp/saveHtHseDhzypSafety`,
-        //     methods: 'POST',
-        //     data: qs.stringify(params),
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //         '__sid': __sid
-        //     },
-        // })
     },
     // 动火作业票查询
     htHseDhzypListData(params) {
@@ -74,13 +58,12 @@ const article = {
     htHseDzzypSaveLit(params, __sid) {
         return axios.post(
             `${base.sq}dzzy/htHseDzzyp/mysaveHtHseDzzypAqcs.json`,
-            qs.stringify(params),
+            params,
             {
                 headers: {
                     'Content-Type': 'application/json',
-                    '__sid': __sid
-                },
-                
+                    __sid: __sid
+                }
             }
         );
     },
@@ -93,7 +76,7 @@ const article = {
     // 动土作业票保存
     htHseDtzypSave(params) {
         return axios.post(
-            `${base.sq}dtzy/htHseDtzyp/save`,
+            `${base.sq}dtzyp/htHseDtzyp/save`,
             qs.stringify(params)
         );
     },
@@ -105,16 +88,15 @@ const article = {
         );
     },
     // 高处作业子票保存
-    htHseUpworkticketSave(params, __sid) {
+    htHseUpworkticketSaveLit(params, __sid) {
         return axios.post(
             `${base.sq}heightworkticket/htHseUpworkticket/saveHtHseUpworkticketSon.json`,
-            qs.stringify(params),
+            params,
             {
                 headers: {
                     'Content-Type': 'application/json',
-                    '__sid': __sid
-                },
-                
+                    __sid: __sid
+                }
             }
         );
     },
@@ -142,7 +124,7 @@ const article = {
     // 临时用电作业票列表
     htHseLsydzypListData(params) {
         return axios.post(
-            `${base.sq}lsydzyp/htHseLsydzyp/list`,
+            `${base.sq}lsydzyp/htHseLsydzyp/listData`,
             qs.stringify(params)
         );
     },
@@ -174,7 +156,14 @@ const article = {
             qs.stringify(params)
         );
     },
-    // 盲板抽堵作业票查询
+    // 盲板作业票新增和修改（表单提交）
+    htHseMbzypSave(params) {
+        return axios.post(
+            `${base.sq}mbzyp/htHseMbzyp/save`,
+            qs.stringify(params)
+        );
+    },
+    // 盲板作业票新增和修改
     htHseMbzypListData(params) {
         return axios.post(
             `${base.sq}mbzyp/htHseMbzyp/listData`,

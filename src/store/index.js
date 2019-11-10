@@ -10,6 +10,7 @@ import linshi from './modules/linshi';
 import duanlu from './modules/duanlu';
 import quexian from './modules/quexian';
 import yinhuan from './modules/yinhuan';
+import mangban from './modules/mangban';
 
 Vue.use(Vuex);
 
@@ -26,7 +27,8 @@ export default new Vuex.Store({
     linshi,
     duanlu,
     quexian,
-    yinhuan
+    yinhuan,
+    mangban
   },
   strict: debug
 });

@@ -12,45 +12,21 @@
     </van-sticky>
     <div class="cell_group">
       <!-- 申请部门 -->
-      <cell-value
-        title="申请部门"
-        required
-        :value="$userInfo.officeName"
-      ></cell-value>
+      <cell-value title="申请部门" :value="$userInfo.officeName" disable></cell-value>
       <!-- 申请人 -->
-      <cell-value
-        title="申请人"
-        required
-        :value="$userInfo.userName"
-      ></cell-value>
+      <cell-value title="申请人" :value="$userInfo.userName" disable></cell-value>
+      <!-- 作业票编号 -->
+      <cell-value title="作业票编号" value disable></cell-value>
+      <!-- 作业票状态 -->
+      <cell-value title="作业票状态" value="编辑" disable></cell-value>
       <!-- 作业内容 -->
-      <cell-textarea
-        title="作业内容"
-        required
-        v-model="sendData.workContent"
-        placeholder="请输入工作内容"
-      ></cell-textarea>
+      <cell-textarea title="作业内容" required v-model="sendData.workContent" placeholder="请输入工作内容"></cell-textarea>
       <!-- 作业地点 -->
-      <cell-input
-        title="作业地点"
-        required
-        v-model="sendData.workAddress"
-        placeholder="手工录入"
-      ></cell-input>
+      <cell-input title="作业地点" required v-model="sendData.workAddress" placeholder="手工录入"></cell-input>
       <!-- 作业高度 -->
-      <cell-picker
-        title="作业高度"
-        required
-        v-model="sendData.workHeight"
-        :columns="workHeightColumns"
-      ></cell-picker>
+      <cell-picker title="作业高度" required v-model="sendData.workHeight" :columns="workHeightColumns"></cell-picker>
       <!-- 登高类别 -->
-      <cell-picker
-        title="登高类别"
-        required
-        v-model="sendData.heightType"
-        :columns="heightTypeColumns"
-      ></cell-picker>
+      <cell-picker title="登高类别" required v-model="sendData.heightType" :columns="heightTypeColumns"></cell-picker>
       <!-- 涉及其他特殊作业 -->
       <cell-select-tag
         required
@@ -70,17 +46,9 @@
         :storeModule="storeModule"
       ></cell-select-tag>
       <!-- 作业开始时间 -->
-      <cell-time
-        v-model="sendData.startTime"
-        title="作业开始时间"
-        required
-      ></cell-time>
+      <cell-time v-model="sendData.startTime" title="作业开始时间" required></cell-time>
       <!-- 作业结束时间 -->
-      <cell-time
-        v-model="sendData.endTime"
-        title="作业结束时间"
-        required
-      ></cell-time>
+      <cell-time v-model="sendData.endTime" title="作业结束时间" required></cell-time>
       <!-- 作业部门负责人 -->
       <cell-select-user
         title="作业部门负责人"
@@ -106,142 +74,145 @@
         v-model="sendData.worker"
       ></cell-select-user>
     </div>
-    
-      <!-- 操作Popup -->
-      <van-popup
-        v-model="showPicker"
-        position="bottom"
-        class="action"
-      >
-        <button @click="postData">保存</button>
-        <button>工作流提交</button>
-        <button @click="closeAction">取消</button>
-      </van-popup>
+
+    <!-- 操作Popup -->
+    <van-popup v-model="showPicker" position="bottom" class="action">
+      <button @click="postData">保存</button>
+      <button>工作流提交</button>
+      <button @click="closeAction">取消</button>
+    </van-popup>
 
     <div class="confirm">
-        <div class="head">
-          <div class="head_1">安全措施</div>
-          <div class="head_2">确认</div>
-          <div class="head_3">确认人</div>
-        </div>
-        <div class="confirm_list">
-          <Signature
-            :checked="checked[0] ? checked[0].checked : false"
-            :img="checked[0] ? checked[0].img : ''"
-            @checked="showSignature(0)"
-            @cancel="signatureCancel(0)"
-          >
-            <span slot>作业人员身体条件符合要求。</span>
-          </Signature>
-          <Signature
-            :checked="checked[1] ? checked[1].checked : false"
-            :img="checked[1] ? checked[1].img : ''"
-            @checked="showSignature(1)"
-            @cancel="signatureCancel(1)"
-          >
-            <span slot>作业人员着装符合工作要求</span>
-          </Signature>
-          <Signature
-            :checked="checked[2] ? checked[2].checked : false"
-            :img="checked[2] ? checked[2].img : ''"
-            @checked="showSignature(2)"
-            @cancel="signatureCancel(2)"
-          >
-            <span slot>作业人员佩戴合格的安全帽</span>
-          </Signature>
-          <Signature
-            :checked="checked[3] ? checked[3].checked : false"
-            :img="checked[3] ? checked[3].img : ''"
-            @checked="showSignature(3)"
-            @cancel="signatureCancel(3)"
-          >
-            <span slot>作业人员佩戴安全带，安全带高挂抵用</span>
-          </Signature>
-          <Signature
-            :checked="checked[4] ? checked[4].checked : false"
-            :img="checked[4] ? checked[4].img : ''"
-            @checked="showSignature(4)"
-            @cancel="signatureCancel(4)"
-          >
-            <span slot>作业人员携带有工具袋及安全绳</span>
-          </Signature>
-          <Signature
-            :checked="checked[5] ? checked[5].checked : false"
-            :img="checked[5] ? checked[5].img : ''"
-            @checked="showSignature(5)"
-            @cancel="signatureCancel(5)"
-          >
-              <span>
-                作业人员佩戴:
-                <span :class="mask[0] == 1 ? 'seclct_tag is_select':'seclct_tag'" @click="changeMask(0)">过滤式防毒面具或口罩</span>
-                <span :class="mask[1] == 1 ? 'seclct_tag is_select':'seclct_tag'" @click="changeMask(1)">空气呼吸器</span>
-              </span>
-          </Signature>
-          <Signature
-            :checked="checked[6] ? checked[6].checked : false"
-            :img="checked[6] ? checked[5].img : ''"
-            @checked="showSignature(6)"
-            @cancel="signatureCancel(6)"
-          >
-            <span slot>现场搭设的脚手架、防护网、围栏符合安全规定</span>
-          </Signature>
-          <Signature
-            :checked="checked[7] ? checked[7].checked : false"
-            :img="checked[7] ? checked[7].img : ''"
-            @checked="showSignature(7)"
-            @cancel="signatureCancel(7)"
-          >
-            <span slot>垂直分层作业中间有隔离设施</span>
-          </Signature>
-          <Signature
-            :checked="checked[8] ? checked[8].checked : false"
-            :img="checked[8] ? checked[8].img : ''"
-            @checked="showSignature(8)"
-            @cancel="signatureCancel(8)"
-          >
-            <span slot>绳子、梯子符合安全规定</span>
-          </Signature>
-          <Signature
-            :checked="checked[9] ? checked[9].checked : false"
-            :img="checked[9] ? checked[9].img : ''"
-            @checked="showSignature(9)"
-            @cancel="signatureCancel(9)"
-          >
-            <span slot>石棉瓦等轻型棚的承重梁、柱能承重负荷的要求</span>
-          </Signature>
-          <Signature
-            :checked="checked[10] ? checked[10].checked : false"
-            :img="checked[10] ? checked[10].img : ''"
-            @checked="showSignature(10)"
-            @cancel="signatureCancel(10)"
-          >
-            <span slot>作业人员在石棉瓦等不承重物作业所搭设的承重板稳定牢固</span>
-          </Signature>
-          <Signature
-            :checked="checked[11] ? checked[11].checked : false"
-            :img="checked[11] ? checked[11].img : ''"
-            @checked="showSignature(11)"
-            @cancel="signatureCancel(11)"
-          >
+      <div class="head">
+        <div class="head_1">安全措施</div>
+        <div class="head_2">确认</div>
+        <div class="head_3">确认人</div>
+      </div>
+      <div class="confirm_list">
+        <Signature
+          :checked="checked[0] ? checked[0].checked : false"
+          :img="checked[0] ? checked[0].img : ''"
+          @checked="showSignature(0)"
+          @cancel="signatureCancel(0)"
+        >
+          <span slot>作业人员身体条件符合要求。</span>
+        </Signature>
+        <Signature
+          :checked="checked[1] ? checked[1].checked : false"
+          :img="checked[1] ? checked[1].img : ''"
+          @checked="showSignature(1)"
+          @cancel="signatureCancel(1)"
+        >
+          <span slot>作业人员着装符合工作要求</span>
+        </Signature>
+        <Signature
+          :checked="checked[2] ? checked[2].checked : false"
+          :img="checked[2] ? checked[2].img : ''"
+          @checked="showSignature(2)"
+          @cancel="signatureCancel(2)"
+        >
+          <span slot>作业人员佩戴合格的安全帽</span>
+        </Signature>
+        <Signature
+          :checked="checked[3] ? checked[3].checked : false"
+          :img="checked[3] ? checked[3].img : ''"
+          @checked="showSignature(3)"
+          @cancel="signatureCancel(3)"
+        >
+          <span slot>作业人员佩戴安全带，安全带高挂抵用</span>
+        </Signature>
+        <Signature
+          :checked="checked[4] ? checked[4].checked : false"
+          :img="checked[4] ? checked[4].img : ''"
+          @checked="showSignature(4)"
+          @cancel="signatureCancel(4)"
+        >
+          <span slot>作业人员携带有工具袋及安全绳</span>
+        </Signature>
+        <Signature
+          :checked="checked[5] ? checked[5].checked : false"
+          :img="checked[5] ? checked[5].img : ''"
+          @checked="showSignature(5)"
+          @cancel="signatureCancel(5)"
+        >
           <span>
-                采光,夜间作业照明符合作业要求, 
-                <span :class="light == 0? 'seclct_tag is_select': 'seclct_tag'" @click="light = 0">需采用并已采用</span>
-                <span :class="light == 1? 'seclct_tag is_select': 'seclct_tag'" @click="light = 1">无需采用</span>
-          防爆灯
+            作业人员佩戴:
+            <span
+              :class="mask[0] == 1 ? 'seclct_tag is_select':'seclct_tag'"
+              @click="changeMask(0)"
+            >过滤式防毒面具或口罩</span>
+            <span
+              :class="mask[1] == 1 ? 'seclct_tag is_select':'seclct_tag'"
+              @click="changeMask(1)"
+            >空气呼吸器</span>
           </span>
-          </Signature>
-          <Signature
-            :checked="checked[12] ? checked[12].checked : false"
-            :img="checked[12] ? checked[12].img : ''"
-            @checked="showSignature(12)"
-            @cancel="signatureCancel(12)"
-          >
-            <span slot>30m 以上高处作业配备通讯、联络工具</span>
-          </Signature>
-          
-          
-        </div>
-        <van-popup
+        </Signature>
+        <Signature
+          :checked="checked[6] ? checked[6].checked : false"
+          :img="checked[6] ? checked[5].img : ''"
+          @checked="showSignature(6)"
+          @cancel="signatureCancel(6)"
+        >
+          <span slot>现场搭设的脚手架、防护网、围栏符合安全规定</span>
+        </Signature>
+        <Signature
+          :checked="checked[7] ? checked[7].checked : false"
+          :img="checked[7] ? checked[7].img : ''"
+          @checked="showSignature(7)"
+          @cancel="signatureCancel(7)"
+        >
+          <span slot>垂直分层作业中间有隔离设施</span>
+        </Signature>
+        <Signature
+          :checked="checked[8] ? checked[8].checked : false"
+          :img="checked[8] ? checked[8].img : ''"
+          @checked="showSignature(8)"
+          @cancel="signatureCancel(8)"
+        >
+          <span slot>绳子、梯子符合安全规定</span>
+        </Signature>
+        <Signature
+          :checked="checked[9] ? checked[9].checked : false"
+          :img="checked[9] ? checked[9].img : ''"
+          @checked="showSignature(9)"
+          @cancel="signatureCancel(9)"
+        >
+          <span slot>石棉瓦等轻型棚的承重梁、柱能承重负荷的要求</span>
+        </Signature>
+        <Signature
+          :checked="checked[10] ? checked[10].checked : false"
+          :img="checked[10] ? checked[10].img : ''"
+          @checked="showSignature(10)"
+          @cancel="signatureCancel(10)"
+        >
+          <span slot>作业人员在石棉瓦等不承重物作业所搭设的承重板稳定牢固</span>
+        </Signature>
+        <Signature
+          :checked="checked[11] ? checked[11].checked : false"
+          :img="checked[11] ? checked[11].img : ''"
+          @checked="showSignature(11)"
+          @cancel="signatureCancel(11)"
+        >
+          <span>
+            采光,夜间作业照明符合作业要求,
+            <span
+              :class="light == 0? 'seclct_tag is_select': 'seclct_tag'"
+              @click="light = 0"
+            >需采用并已采用</span>
+            <span :class="light == 1? 'seclct_tag is_select': 'seclct_tag'" @click="light = 1">无需采用</span>
+            防爆灯
+          </span>
+        </Signature>
+        <Signature
+          :checked="checked[12] ? checked[12].checked : false"
+          :img="checked[12] ? checked[12].img : ''"
+          @checked="showSignature(12)"
+          @cancel="signatureCancel(12)"
+        >
+          <span slot>30m 以上高处作业配备通讯、联络工具</span>
+        </Signature>
+      </div>
+      <van-popup
         class="popup"
         v-model="signatureShow"
         :close-on-click-overlay="false"
@@ -249,7 +220,7 @@
       >
         <Canvas ref="signature" @save="saveCanvas" @cancel="cancelCanvas"></Canvas>
       </van-popup>
-      </div>
+    </div>
   </div>
 </template>
 <script>
@@ -351,17 +322,17 @@ export default {
   methods: {
     // 清除所有数据
     clearData() {
-        this.sendData.workContent = "", //作业内容
-        this.sendData.workAddress = "", //作业地点
-        this.sendData.workHeight = "", //作业高度
-        this.sendData.heightType = "", //登高类别
-        this.sendData.startTime = "", //作业开始时间
-        this.sendData.endTime = "", //作业结束时间
-        this.sendData.specialWork = [], //涉及其他作业
-        this.sendData.harmAnalise = [], //危害辨识
-        this.sendData.workDeptLeader = [], //作业部门负责人
-        this.sendData.worker = [], //作业人
-        this.sendData.guarder = [] //监护人
+      (this.sendData.workContent = ""), //作业内容
+        (this.sendData.workAddress = ""), //作业地点
+        (this.sendData.workHeight = ""), //作业高度
+        (this.sendData.heightType = ""), //登高类别
+        (this.sendData.startTime = ""), //作业开始时间
+        (this.sendData.endTime = ""), //作业结束时间
+        (this.sendData.specialWork = []), //涉及其他作业
+        (this.sendData.harmAnalise = []), //危害辨识
+        (this.sendData.workDeptLeader = []), //作业部门负责人
+        (this.sendData.worker = []), //作业人
+        (this.sendData.guarder = []); //监护人
     },
     // 判断数据输入的完整性
     // true => 输入完整
@@ -463,7 +434,6 @@ export default {
       sendData.applicant = this.$userInfo.userName;
       sendData.__sid = this.$userInfo.sessionId;
 
-
       let messageId; // 主表查询返回的ID
       let sendSafeData = {
         HtHseUpworkticketSon: [
@@ -557,31 +527,44 @@ export default {
             safetyMeasure: `30m 以上高处作业配备通讯、联络工具`,
             confirmer: this.checked[12] ? this.checked[12].img : 0,
             qrzt: this.checked[12] ? 1 : 0
-          },
+          }
         ],
-        __sid: this.$userInfo.sessionId,
-      }
+        __sid: this.$userInfo.sessionId
+      };
 
-      let ren0 = this.checked[0] ? this.checked[0].img : 0
-      let ren1 = this.checked[1] ? this.checked[1].img : 1
-      let ren2 = this.checked[2] ? this.checked[2].img : 2
-      let ren3 = this.checked[3] ? this.checked[3].img : 3
-      let ren4 = this.checked[4] ? this.checked[4].img : 4
-      let ren5 = this.checked[5] ? this.checked[5].img : 5
-      let ren6 = this.checked[6] ? this.checked[6].img : 6
-      let ren7 = this.checked[7] ? this.checked[7].img : 7
-      let ren8 = this.checked[8] ? this.checked[8].img : 8
-      let ren9 = this.checked[9] ? this.checked[9].img : 9
-      let ren10 = this.checked[10] ? this.checked[10].img : 10
-      let ren11 = this.checked[11] ? this.checked[11].img : 11
-      let ren12 = this.checked[12] ? this.checked[12].img : 12
-
+      let ren0 = this.checked[0] ? this.checked[0].img : 0;
+      let ren1 = this.checked[1] ? this.checked[1].img : 1;
+      let ren2 = this.checked[2] ? this.checked[2].img : 2;
+      let ren3 = this.checked[3] ? this.checked[3].img : 3;
+      let ren4 = this.checked[4] ? this.checked[4].img : 4;
+      let ren5 = this.checked[5] ? this.checked[5].img : 5;
+      let ren6 = this.checked[6] ? this.checked[6].img : 6;
+      let ren7 = this.checked[7] ? this.checked[7].img : 7;
+      let ren8 = this.checked[8] ? this.checked[8].img : 8;
+      let ren9 = this.checked[9] ? this.checked[9].img : 9;
+      let ren10 = this.checked[10] ? this.checked[10].img : 10;
+      let ren11 = this.checked[11] ? this.checked[11].img : 11;
+      let ren12 = this.checked[12] ? this.checked[12].img : 12;
 
       let sendSafeData1 = {
         __sid: this.$userInfo.sessionId,
         zypId: messageId,
-        xuhao: [1, 2, 3, 4, 5, 6, 7, 8,9,10,11,12],
-        confirmer: [ren0, ren1, ren2, ren3, ren4, ren5, ren6, ren7, ren8, ren9, ren10, ren11, ren12],
+        xuhao: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+        confirmer: [
+          ren0,
+          ren1,
+          ren2,
+          ren3,
+          ren4,
+          ren5,
+          ren6,
+          ren7,
+          ren8,
+          ren9,
+          ren10,
+          ren11,
+          ren12
+        ],
         qrzt: [
           this.checked[1] ? 1 : 0,
           this.checked[2] ? 1 : 0,
@@ -603,53 +586,67 @@ export default {
           `作业人员佩戴合格的安全帽`,
           `作业人员佩戴安全带，安全带高挂抵用`,
           `作业人员携带有工具袋及安全绳`,
-          `作业人员佩戴:${this.mask[0] == 1 ? '过滤式防毒面具或口罩' : ''},${this.mask[1] == 1 ? '空气呼吸器' : ''}`,
+          `作业人员佩戴:${this.mask[0] == 1 ? "过滤式防毒面具或口罩" : ""},${
+            this.mask[1] == 1 ? "空气呼吸器" : ""
+          }`,
           `现场搭设的脚手架、防护网、围栏符合安全规定`,
           `垂直分层作业中间有隔离设施`,
           `绳子、梯子符合安全规定`,
           `石棉瓦等轻型棚的承重梁、柱能承重负荷的要求`,
           `作业人员在石棉瓦等不承重物作业所搭设的承重板稳定牢固`,
-          `采光,夜间作业照明符合作业要求, ${this.light == 0 ? '需采用并已采用' : '无需采用'}防爆灯`,
-          `30m 以上高处作业配备通讯、联络工具`,
-
+          `采光,夜间作业照明符合作业要求, ${
+            this.light == 0 ? "需采用并已采用" : "无需采用"
+          }防爆灯`,
+          `30m 以上高处作业配备通讯、联络工具`
         ]
-      }
+      };
 
       sendData.applyDept = this.$userInfo.officeName;
       sendData.applyRen = this.$userInfo.userName;
       sendData.__sid = this.$userInfo.sessionId;
+      console.log(111111)
       console.log(sendData)
       this.$api.page_3
         .htHseUpworkticketSave(sendData)
         .then(res => {
-          console.log("res: ", res);
-          messageId = res.message
-          this.$Toast.success({
-            message: "提交成功"
+          messageId = res.message;
+          sendSafeData.HtHseUpworkticketSon.map(item => {
+            item.fatherId = messageId;
           });
-          console.log('1111111111',sendSafeData)
-          console.log('22222222',JSON.stringify(sendSafeData1),that.$userInfo.sessionId,this.$userInfo.sessionId)
-          // this.$api.page_3
-          //   .htHseUpworkticketSavelit(JSON.stringify(sendSafeData1), that.$userInfo.sessionId)
-          //   .then(res => {
-          //     console.log("res: ", res);
-              
-          //   })
+          this.$api.page_3
+            .htHseUpworkticketSaveLit(
+              sendSafeData.HtHseUpworkticketSon,
+              this.$userInfo.sessionId
+            )
+            .then(res => {
+              messageId = res.message;
+              this.$Toast.success({
+                message: "提交成功"
+              });
+            })
+            .catch(() => {
+              console.log("失败");
+            });
         })
-        .catch(() => { console.log('失败')});
+        .catch(() => {
+          console.log("失败");
+        });
     },
     closeAction() {
-      this.showPicker = false
+      this.showPicker = false;
     },
     changeMask(id) {
       if (id == 0) {
-          this.mask[0] == 0 ? this.mask.splice(0,1,1) : this.mask.splice(0,1,0)
+        this.mask[0] == 0
+          ? this.mask.splice(0, 1, 1)
+          : this.mask.splice(0, 1, 0);
       } else {
-          this.mask[1] == 0 ? this.mask.splice(1,1,1) : this.mask.splice(1,1,0)
+        this.mask[1] == 0
+          ? this.mask.splice(1, 1, 1)
+          : this.mask.splice(1, 1, 0);
       }
     },
-    
-    
+
     saveCanvas(e) {
       this.signatureShow = false;
       this.checked[this.xuhao] = {
@@ -817,6 +814,22 @@ export default {
         }
       }
     }
+  }
+}
+
+.action {
+  padding-left: 30px;
+  padding-right: 30px;
+  background-color: transparent;
+  button {
+    width: 100%;
+    height: 110px;
+    margin-bottom: 20px;
+    background-color: white;
+    border: none;
+    border-radius: 30px;
+    color: rgb(0, 118, 255);
+    font-size: 35px;
   }
 }
 </style>

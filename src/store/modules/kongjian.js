@@ -1,8 +1,11 @@
 // initial state
 const state = {
   zyOtherspecial: [],
+  otherSpecial: [],
   zywhBs: [],
   guardian: [],
+  zyPrincipal: [],
+  zyRen: [],
 };
 
 // getters

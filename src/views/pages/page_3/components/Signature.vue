@@ -1,14 +1,10 @@
 <template>
-  <div class="confirm_item">
+  <div class="confirm_item BGblue">
     <div class="confirm_item_content">
       <slot></slot>
     </div>
     <div class="confirm_item_check success">
-      <van-checkbox
-        v-model="checked"
-        checked-color="#07c160"
-        @click="showSignature(0)"
-      ></van-checkbox>
+      <van-checkbox v-model="checked" checked-color="#07c160" @click="showSignature(0)"></van-checkbox>
     </div>
     <div class="confirm_item_signature" v-if="img">
       <van-image width="100%" height="100%" fit="scale-down" :src="img" />
@@ -50,12 +46,14 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.BGblue {
+  background: rgba(96, 150, 248, 1);
+}
 .confirm_item {
   width: 100%;
   min-height: 126px;
   padding: 30px 30px 30px 20px;
   margin-bottom: 20px;
-  background: rgba(96, 150, 248, 1);
   border-radius: 10px;
   display: flex;
   align-items: center;

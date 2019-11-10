@@ -12,45 +12,21 @@
     </van-sticky>
     <div class="cell_group">
       <!-- 申请部门 -->
-      <cell-value
-        title="申请部门"
-        required
-        :value="$userInfo.officeName"
-      ></cell-value>
+      <cell-value title="申请部门" :value="$userInfo.officeName" disable></cell-value>
       <!-- 申请人 -->
-      <cell-value
-        title="申请人"
-        required
-        :value="$userInfo.userName"
-      ></cell-value>
+      <cell-value title="申请人" :value="$userInfo.userName" disable></cell-value>
+      <!-- 作业票编号 -->
+      <cell-value title="作业票编号" value disable></cell-value>
+      <!-- 作业票状态 -->
+      <cell-value title="作业票状态" value="编辑" disable></cell-value>
       <!-- 吊装内容 -->
-      <cell-textarea
-        v-model="sendData.dznr"
-        title="吊装内容"
-        required
-        placeholder="请输入吊装内容"
-      ></cell-textarea>
+      <cell-textarea v-model="sendData.dznr" title="吊装内容" required placeholder="请输入吊装内容"></cell-textarea>
       <!-- 吊装地点 -->
-      <cell-input
-        v-model="sendData.dzdd"
-        title="吊装地点"
-        required
-        placeholder="手工录入"
-      ></cell-input>
+      <cell-input v-model="sendData.dzdd" title="吊装地点" required placeholder="手工录入"></cell-input>
       <!-- 吊装工具名称 -->
-      <cell-picker
-        v-model="sendData.dzgjmc"
-        title="吊装工具名称"
-        required
-        :columns="dzgjmcColumns"
-      ></cell-picker>
+      <cell-picker v-model="sendData.dzgjmc" title="吊装工具名称" required :columns="dzgjmcColumns"></cell-picker>
       <!-- 起吊重物重量（t） -->
-      <cell-input
-        v-model="sendData.qdzwzl"
-        title="起吊重物重量（t）"
-        required
-        placeholder="手工录入"
-      ></cell-input>
+      <cell-input v-model="sendData.qdzwzl" title="起吊重物重量（t）" required placeholder="手工录入"></cell-input>
       <!-- 吊装人员及特殊工种作业证号 -->
       <div class="cell">
         <div class="cell_title">
@@ -97,19 +73,9 @@
         :storeModule="storeModule"
       ></cell-select-tag>
       <!-- 作业开始时间 -->
-      <cell-time
-        title="作业开始时间"
-        v-model="sendData.zyksDate"
-        :maxTime="sendData.zyjsDate"
-        required
-      ></cell-time>
+      <cell-time title="作业开始时间" v-model="sendData.zyksDate" :maxTime="sendData.zyjsDate" required></cell-time>
       <!-- 作业结束时间 -->
-      <cell-time
-        title="作业结束时间"
-        v-model="sendData.zyjsDate"
-        :minTime="sendData.zyksDate"
-        required
-      ></cell-time>
+      <cell-time title="作业结束时间" v-model="sendData.zyjsDate" :minTime="sendData.zyksDate" required></cell-time>
       <!-- 作业负责人 -->
       <cell-select-user
         title="作业负责人"
@@ -139,9 +105,9 @@
             @checked="showSignature(0)"
             @cancel="signatureCancel(0)"
           >
-            <div slot>
-              吊装质量大于等于40t的重物和土建工程主体结构;吊装物体虽不足40t,但形状复杂、刚度小、长径比大、精密贵重,作业条件特殊,已编制吊装作业方案,且经作业主管部门和安全管理部门审查,报主管(主管安全生产副总/总工程师批准)
-            </div>
+            <div
+              slot
+            >吊装质量大于等于40t的重物和土建工程主体结构;吊装物体虽不足40t,但形状复杂、刚度小、长径比大、精密贵重,作业条件特殊,已编制吊装作业方案,且经作业主管部门和安全管理部门审查,报主管(主管安全生产副总/总工程师批准)</div>
           </Signature>
           <Signature
             :checked="checked[1] ? checked[1].checked : false"
@@ -173,9 +139,7 @@
             @checked="showSignature(4)"
             @cancel="signatureCancel(4)"
           >
-            <div slot>
-              已在吊装现场设置安全警戒标志,无关人员不许进入作业现场；
-            </div>
+            <div slot>已在吊装现场设置安全警戒标志,无关人员不许进入作业现场；</div>
           </Signature>
           <Signature
             :checked="checked[5] ? checked[5].checked : false"
@@ -191,9 +155,7 @@
             @checked="showSignature(6)"
             @cancel="signatureCancel(6)"
           >
-            <div slot>
-              检查起重吊装设备、钢丝绳、揽风绳、链条、吊钩等各种机具,保证安全可靠
-            </div>
+            <div slot>检查起重吊装设备、钢丝绳、揽风绳、链条、吊钩等各种机具,保证安全可靠</div>
           </Signature>
           <Signature
             :checked="checked[7] ? checked[7].checked : false"
@@ -209,9 +171,7 @@
             @checked="showSignature(8)"
             @cancel="signatureCancel(8)"
           >
-            <div slot>
-              将建筑物、构筑物作为锚点,需经土建工程部门审查核算并批准
-            </div>
+            <div slot>将建筑物、构筑物作为锚点,需经土建工程部门审查核算并批准</div>
           </Signature>
           <Signature
             :checked="checked[9] ? checked[9].checked : false"
@@ -219,9 +179,7 @@
             @checked="showSignature(9)"
             @cancel="signatureCancel(9)"
           >
-            <div slot>
-              吊装绳索、揽风绳、拖拉绳等避免同带电线路接触,并保持安全距离
-            </div>
+            <div slot>吊装绳索、揽风绳、拖拉绳等避免同带电线路接触,并保持安全距离</div>
           </Signature>
           <Signature
             :checked="checked[10] ? checked[10].checked : false"
@@ -229,9 +187,7 @@
             @checked="showSignature(10)"
             @cancel="signatureCancel(10)"
           >
-            <div slot>
-              人员随同吊装重物或吊装机械升降,应采取可靠的安全措施,并经过现场指挥人员批准
-            </div>
+            <div slot>人员随同吊装重物或吊装机械升降,应采取可靠的安全措施,并经过现场指挥人员批准</div>
           </Signature>
           <Signature
             :checked="checked[11] ? checked[11].checked : false"
@@ -263,9 +219,7 @@
             @checked="showSignature(14)"
             @cancel="signatureCancel(14)"
           >
-            <div slot>
-              斜拉重物、重物埋在地下或重物坚固不牢,绳打结、绳不齐,不准吊装
-            </div>
+            <div slot>斜拉重物、重物埋在地下或重物坚固不牢,绳打结、绳不齐,不准吊装</div>
           </Signature>
           <Signature
             :checked="checked[15] ? checked[15].checked : false"
@@ -289,9 +243,7 @@
             @checked="showSignature(17)"
             @cancel="signatureCancel(17)"
           >
-            <div slot>
-              用定型起重吊装机械(履带、轮胎、轿式吊车等)进行吊装作业,遵守该定型机械的操作规程
-            </div>
+            <div slot>用定型起重吊装机械(履带、轮胎、轿式吊车等)进行吊装作业,遵守该定型机械的操作规程</div>
           </Signature>
           <Signature
             :checked="checked[18] ? checked[18].checked : false"
@@ -323,9 +275,7 @@
             @checked="showSignature(21)"
             @cancel="signatureCancel(21)"
           >
-            <div slot>
-              地下通讯、网络电(光)缆、排水沟盖板,承重吊装机械的负重量已确认,保护措施已落实
-            </div>
+            <div slot>地下通讯、网络电(光)缆、排水沟盖板,承重吊装机械的负重量已确认,保护措施已落实</div>
           </Signature>
           <Signature
             :checked="checked[22] ? checked[22].checked : false"
@@ -376,11 +326,17 @@
             @checked="showSignature(27)"
             @cancel="signatureCancel(27)"
           >
-              <span>
-                人员出入口和撤离安全措施已落实:
-                <span :class="mask[0] == 1 ? 'seclct_tag is_select':'seclct_tag'" @click="changeMask(0)">指示牌</span>
-                <span :class="mask[1] == 1 ? 'seclct_tag is_select':'seclct_tag'" @click="changeMask(1)">指示灯</span>
-              </span>
+            <span>
+              人员出入口和撤离安全措施已落实:
+              <span
+                :class="mask[0] == 1 ? 'seclct_tag is_select':'seclct_tag'"
+                @click="changeMask(0)"
+              >指示牌</span>
+              <span
+                :class="mask[1] == 1 ? 'seclct_tag is_select':'seclct_tag'"
+                @click="changeMask(1)"
+              >指示灯</span>
+            </span>
           </Signature>
           <Signature
             :checked="checked[28] ? checked[28].checked : false"
@@ -392,15 +348,33 @@
               <span>夜间作业采用足够、充足照明，</span>
               <span>
                 A防水型灯:
-                <span :class="Alight == 0? 'seclct_tag is_select': 'seclct_tag'" @click="Alight = 0">36V</span>
-                <span :class="Alight == 1? 'seclct_tag is_select': 'seclct_tag'" @click="Alight = 1">24V</span>
-                <span :class="Alight == 2? 'seclct_tag is_select': 'seclct_tag'" @click="Alight = 2">12V</span>
+                <span
+                  :class="Alight == 0? 'seclct_tag is_select': 'seclct_tag'"
+                  @click="Alight = 0"
+                >36V</span>
+                <span
+                  :class="Alight == 1? 'seclct_tag is_select': 'seclct_tag'"
+                  @click="Alight = 1"
+                >24V</span>
+                <span
+                  :class="Alight == 2? 'seclct_tag is_select': 'seclct_tag'"
+                  @click="Alight = 2"
+                >12V</span>
               </span>
               <span>
                 防爆型灯:
-                <span :class="light == 0? 'seclct_tag is_select': 'seclct_tag'" @click="light = 0">36V</span>
-                <span :class="light == 1? 'seclct_tag is_select': 'seclct_tag'" @click="light = 1">24V</span>
-                <span :class="light == 2? 'seclct_tag is_select': 'seclct_tag'" @click="light = 2">12V</span>
+                <span
+                  :class="light == 0? 'seclct_tag is_select': 'seclct_tag'"
+                  @click="light = 0"
+                >36V</span>
+                <span
+                  :class="light == 1? 'seclct_tag is_select': 'seclct_tag'"
+                  @click="light = 1"
+                >24V</span>
+                <span
+                  :class="light == 2? 'seclct_tag is_select': 'seclct_tag'"
+                  @click="light = 2"
+                >12V</span>
               </span>
             </div>
           </Signature>
@@ -444,24 +418,15 @@
       :close-on-click-overlay="false"
       position="bottom"
     >
-      <Canvas
-        ref="signature"
-        @save="saveCanvas"
-        @cancel="cancelCanvas"
-      ></Canvas>
+      <Canvas ref="signature" @save="saveCanvas" @cancel="cancelCanvas"></Canvas>
     </van-popup>
-    
-    
-      <!-- 操作Popup -->
-      <van-popup
-        v-model="showPicker"
-        position="bottom"
-        class="action"
-      >
-        <button @click="postData">保存</button>
-        <button>工作流提交</button>
-        <button @click="closeAction">取消</button>
-      </van-popup>
+
+    <!-- 操作Popup -->
+    <van-popup v-model="showPicker" position="bottom" class="action">
+      <button @click="postData">保存</button>
+      <button>工作流提交</button>
+      <button @click="closeAction">取消</button>
+    </van-popup>
   </div>
 </template>
 <script>
@@ -525,7 +490,7 @@ export default {
           xuhao: "",
           aqcsnr: "",
           qrr: "",
-          qrzt: ''
+          qrzt: ""
         }
       ],
       actions: [
@@ -547,16 +512,19 @@ export default {
     this.$store.dispatch("diaozhuang/cleanState");
   },
   methods: {
-    
     changeMask(id) {
       if (id == 0) {
-          this.mask[0] == 0 ? this.mask.splice(0,1,1) : this.mask.splice(0,1,0)
+        this.mask[0] == 0
+          ? this.mask.splice(0, 1, 1)
+          : this.mask.splice(0, 1, 0);
       } else {
-          this.mask[1] == 0 ? this.mask.splice(1,1,1) : this.mask.splice(1,1,0)
+        this.mask[1] == 0
+          ? this.mask.splice(1, 1, 1)
+          : this.mask.splice(1, 1, 0);
       }
     },
     closeAction() {
-      this.showPicker = false
+      this.showPicker = false;
     },
     // 选择作业证
     selectUser(work_permit) {
@@ -624,7 +592,6 @@ export default {
       sendData.sqr_code = this.$userInfo.refCode;
       sendData.__sid = this.$userInfo.sessionId;
 
-      
       let messageId; // 主表查询返回的ID
       let sendSafeData = {
         HtHseDzzyp: [
@@ -820,14 +787,20 @@ export default {
           {
             dzzypId: messageId,
             xuhao: 28,
-            aqcsnr: `人员出入口和撤离安全措施已落实:  ${this.mask[0] == 1 ? '指示牌' : ''}, ${this.mask[1] == 1 ? '指示灯' : ''}`,
+            aqcsnr: `人员出入口和撤离安全措施已落实:  ${
+              this.mask[0] == 1 ? "指示牌" : ""
+            }, ${this.mask[1] == 1 ? "指示灯" : ""}`,
             qrr: this.checked[27] ? this.checked[27].img : 0,
             qrzt: this.checked[27] ? 1 : 0
           },
           {
             dzzypId: messageId,
             xuhao: 29,
-            aqcsnr: `夜间作业采用足够、充足照明，A防水型灯${this.Alight == 0 ? '36V' : this.Alight == 1 ? '24V' : '12V'}, 防爆型灯:  ${this.light == 0 ? '36V' : this.light == 1 ? '24V' : '12V'}`,
+            aqcsnr: `夜间作业采用足够、充足照明，A防水型灯${
+              this.Alight == 0 ? "36V" : this.Alight == 1 ? "24V" : "12V"
+            }, 防爆型灯:  ${
+              this.light == 0 ? "36V" : this.light == 1 ? "24V" : "12V"
+            }`,
             qrr: this.checked[28] ? this.checked[28].img : 0,
             qrzt: this.checked[28] ? 1 : 0
           },
@@ -839,47 +812,76 @@ export default {
             qrzt: this.checked[29] ? 1 : 0
           }
         ],
-        __sid: this.$userInfo.sessionId,
-      }
+        __sid: this.$userInfo.sessionId
+      };
 
-      
-      let ren0 = this.checked[0] ? this.checked[0].img : 0
-      let ren1 = this.checked[1] ? this.checked[1].img : 1
-      let ren2 = this.checked[2] ? this.checked[2].img : 2
-      let ren3 = this.checked[3] ? this.checked[3].img : 3
-      let ren4 = this.checked[4] ? this.checked[4].img : 4
-      let ren5 = this.checked[5] ? this.checked[5].img : 5
-      let ren6 = this.checked[6] ? this.checked[6].img : 6
-      let ren7 = this.checked[7] ? this.checked[7].img : 7
-      let ren8 = this.checked[8] ? this.checked[8].img : 8
-      let ren9 = this.checked[9] ? this.checked[9].img : 9
-      let ren10 = this.checked[10] ? this.checked[10].img : 10
-      let ren11 = this.checked[11] ? this.checked[11].img : 11
-      let ren12 = this.checked[12] ? this.checked[12].img : 12
-      let ren13 = this.checked[13] ? this.checked[13].img : 13
-      let ren14 = this.checked[14] ? this.checked[14].img : 14
-      let ren15 = this.checked[15] ? this.checked[15].img : 15
-      let ren16 = this.checked[16] ? this.checked[16].img : 16
-      let ren17 = this.checked[17] ? this.checked[17].img : 17
-      let ren18 = this.checked[18] ? this.checked[18].img : 18
-      let ren19 = this.checked[19] ? this.checked[19].img : 19
-      let ren20 = this.checked[20] ? this.checked[20].img : 20
-      let ren21 = this.checked[21] ? this.checked[21].img : 21
-      let ren22 = this.checked[22] ? this.checked[22].img : 22
-      let ren23 = this.checked[23] ? this.checked[23].img : 23
-      let ren24 = this.checked[24] ? this.checked[24].img : 24
-      let ren25 = this.checked[25] ? this.checked[25].img : 25
-      let ren26 = this.checked[26] ? this.checked[26].img : 26
-      let ren27 = this.checked[27] ? this.checked[27].img : 27
-      let ren28 = this.checked[28] ? this.checked[28].img : 28
-      let ren29 = this.checked[29] ? this.checked[29].img : 29
+      let ren0 = this.checked[0] ? this.checked[0].img : 0;
+      let ren1 = this.checked[1] ? this.checked[1].img : 1;
+      let ren2 = this.checked[2] ? this.checked[2].img : 2;
+      let ren3 = this.checked[3] ? this.checked[3].img : 3;
+      let ren4 = this.checked[4] ? this.checked[4].img : 4;
+      let ren5 = this.checked[5] ? this.checked[5].img : 5;
+      let ren6 = this.checked[6] ? this.checked[6].img : 6;
+      let ren7 = this.checked[7] ? this.checked[7].img : 7;
+      let ren8 = this.checked[8] ? this.checked[8].img : 8;
+      let ren9 = this.checked[9] ? this.checked[9].img : 9;
+      let ren10 = this.checked[10] ? this.checked[10].img : 10;
+      let ren11 = this.checked[11] ? this.checked[11].img : 11;
+      let ren12 = this.checked[12] ? this.checked[12].img : 12;
+      let ren13 = this.checked[13] ? this.checked[13].img : 13;
+      let ren14 = this.checked[14] ? this.checked[14].img : 14;
+      let ren15 = this.checked[15] ? this.checked[15].img : 15;
+      let ren16 = this.checked[16] ? this.checked[16].img : 16;
+      let ren17 = this.checked[17] ? this.checked[17].img : 17;
+      let ren18 = this.checked[18] ? this.checked[18].img : 18;
+      let ren19 = this.checked[19] ? this.checked[19].img : 19;
+      let ren20 = this.checked[20] ? this.checked[20].img : 20;
+      let ren21 = this.checked[21] ? this.checked[21].img : 21;
+      let ren22 = this.checked[22] ? this.checked[22].img : 22;
+      let ren23 = this.checked[23] ? this.checked[23].img : 23;
+      let ren24 = this.checked[24] ? this.checked[24].img : 24;
+      let ren25 = this.checked[25] ? this.checked[25].img : 25;
+      let ren26 = this.checked[26] ? this.checked[26].img : 26;
+      let ren27 = this.checked[27] ? this.checked[27].img : 27;
+      let ren28 = this.checked[28] ? this.checked[28].img : 28;
+      let ren29 = this.checked[29] ? this.checked[29].img : 29;
 
-
-        let sendSafeData1 = {
+      let sendSafeData1 = {
         __sid: this.$userInfo.sessionId,
         zypId: messageId,
-        xuhao: [1, 2, 3, 4, 5, 6, 7, 8,9,10,11,12],
-        confirmer: [ren0, ren1, ren2, ren3, ren4, ren5, ren6, ren7, ren8, ren9, ren10, ren11, ren12, ren13, ren14, ren15, ren16, ren17, ren18, ren19, ren20, ren21, ren22, ren23, ren24, ren25, ren26, ren27, ren28, ren29],
+        xuhao: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+        confirmer: [
+          ren0,
+          ren1,
+          ren2,
+          ren3,
+          ren4,
+          ren5,
+          ren6,
+          ren7,
+          ren8,
+          ren9,
+          ren10,
+          ren11,
+          ren12,
+          ren13,
+          ren14,
+          ren15,
+          ren16,
+          ren17,
+          ren18,
+          ren19,
+          ren20,
+          ren21,
+          ren22,
+          ren23,
+          ren24,
+          ren25,
+          ren26,
+          ren27,
+          ren28,
+          ren29
+        ],
         qrzt: [
           this.checked[1] ? 1 : 0,
           this.checked[2] ? 1 : 0,
@@ -910,7 +912,7 @@ export default {
           this.checked[27] ? 1 : 0,
           this.checked[28] ? 1 : 0,
           this.checked[29] ? 1 : 0,
-          this.checked[30] ? 1 : 0,
+          this.checked[30] ? 1 : 0
         ],
         safetyMeasure: [
           `吊装质量大于等于40t的重物和土建工程主体结构;吊装物体虽不足40t,但形状复杂、刚度小、长径比大、精密贵重,作业条件特殊,已编制吊装作业方案,且经作业主管部门和安全管理部门审查,报主管(主管安全生产副总/总工程师批准)`,
@@ -940,33 +942,37 @@ export default {
           `作业现场围栏、警戒线、警告牌、夜间警示灯已按要求设置`,
           `吊装作业人员持有法定的有效的证件`,
           `作业高度和转臂范围内,无架空线路`,
-          `人员出入口和撤离安全措施已落实:  ${this.mask[0] == 1 ? '指示牌' : ''}, ${this.mask[1] == 1 ? '指示灯' : ''}`,
-          `夜间作业采用足够、充足照明，A防水型灯${this.Alight == 0 ? '36V' : this.Alight == 1 ? '24V' : '12V'}, 防爆型灯:  ${this.light == 0 ? '36V' : this.light == 1 ? '24V' : '12V'}`,
+          `人员出入口和撤离安全措施已落实:  ${
+            this.mask[0] == 1 ? "指示牌" : ""
+          }, ${this.mask[1] == 1 ? "指示灯" : ""}`,
+          `夜间作业采用足够、充足照明，A防水型灯${
+            this.Alight == 0 ? "36V" : this.Alight == 1 ? "24V" : "12V"
+          }, 防爆型灯:  ${
+            this.light == 0 ? "36V" : this.light == 1 ? "24V" : "12V"
+          }`,
           `作业人员已佩戴防护器具`
-
         ]
-      }
-
-
-
+      };
 
       this.$api.page_3
         .htHseDzzypSave(sendData)
         .then(res => {
           console.log("res: ", res);
-          messageId = res.message
+          messageId = res.message;
           this.$Toast.success({
             message: "提交成功",
             onClose() {
               that.pageBack();
             }
           });
+          sendSafeData.HtHseDzzyp.map(item => {
+            item.dzzypId = messageId;
+          });
           this.$api.page_3
-            .htHseDzzypSaveLit(sendSafeData1, sendData.__sid)
+            .htHseDzzypSaveLit(sendSafeData.HtHseDzzyp, sendData.__sid)
             .then(res => {
               console.log("res: ", res);
-              
-            })
+            });
         })
         .catch(() => {});
     },
@@ -1121,7 +1127,7 @@ export default {
     border: none;
     border-radius: 30px;
     color: rgb(0, 118, 255);
-    font-size: 35px
+    font-size: 35px;
   }
 }
 </style>

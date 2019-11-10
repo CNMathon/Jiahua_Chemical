@@ -32,4 +32,23 @@
 .fixed-first {
   margin-top: 90px;
 }
+
+.readonly {
+  background-color: #eee !important;
+}
+
+.head {
+  display: flex;
+  text-align: center;
+  .head_1 {
+    width: 420px;
+    // background-color: red
+  }
+  .head_2 {
+    width: 100px;
+  }
+  .head_3 {
+    width: 300px;
+  }
+}
 </style>

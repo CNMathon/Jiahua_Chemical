@@ -26,6 +26,15 @@ const article = {
             params: params
         });
     },
+    // 提交考试答案
+    submitMyPaper(params, __sid) {
+        return axios.post(`${base.sq}myexam/myexam/submitMyPaper`, params, {
+            headers: {
+                'Content-Type': 'application/json',
+                __sid: __sid
+            }
+        });
+    },
     // 我的学习
     getMyStudy(params) {
         return axios.post(

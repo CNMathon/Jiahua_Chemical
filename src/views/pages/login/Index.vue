@@ -36,10 +36,16 @@ export default {
   name: "login",
   data() {
     return {
+
+      // username: "潘建华",
+      // password: "123465",
+
       username: "董建飞",
       password: "123456",
+
       // username: "system",
       // password: "admin123",
+
       loading: false,
       screenHeight: 0
     };

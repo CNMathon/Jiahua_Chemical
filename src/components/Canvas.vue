@@ -2,11 +2,19 @@
   <div class="container">
     <div id="canvasBox" :style="getHorizontalStyle">
       <div class="head">
+        <div class="default">
+          <van-checkbox v-model="setDefault">
+            <div class="default__text">设置为默认签名</div>
+          </van-checkbox>
+        </div>
         <div class="title">请签名确认</div>
-        <van-icon name="close" @click="clear" />
+        <div class="clear">
+          <van-icon name="delete" @click="clear" />
+        </div>
       </div>
       <canvas></canvas>
       <div class="confirm" @click="savePNG">保存</div>
+      <div class="cancel" @click="tapCancel">取消</div>
     </div>
   </div>
 </template>
@@ -19,7 +27,8 @@ export default {
   data() {
     return {
       degree: 0,
-      signImage: null
+      signImage: null,
+      setDefault: false
     };
   },
   beforeCreate() {},
@@ -67,11 +76,16 @@ export default {
     },
     clear() {
       this.draw.clear();
-      this.$emit("cancel");
     },
     savePNG() {
       let signImage = this.draw.getPNGImage();
       this.$emit("save", signImage);
+      setTimeout(() => {
+        this.draw.clear();
+      }, 0);
+    },
+    tapCancel() {
+      this.$emit("cancel");
       setTimeout(() => {
         this.draw.clear();
       }, 0);
@@ -93,11 +107,25 @@ export default {
       display: flex;
       align-items: center;
       justify-content: space-between;
+
       .title {
+        flex: 1;
         font-size: 32px;
         font-weight: 400;
         color: rgba(51, 51, 51, 1);
         line-height: 45px;
+      }
+      .default {
+        flex: 1;
+        &__text {
+          font-size: 12px;
+        }
+      }
+      .clear {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
       }
     }
     canvas {
@@ -106,6 +134,7 @@ export default {
       border: 1px dashed lightgray;
     }
     .confirm {
+      margin-top: 2px;
       width: 100%;
       height: 97px;
       font-size: 32px;
@@ -113,6 +142,16 @@ export default {
       color: rgba(255, 255, 255, 1);
       line-height: 97px;
       background: rgba(96, 150, 248, 1);
+      box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.5);
+    }
+    .cancel {
+      width: 100%;
+      height: 97px;
+      font-size: 32px;
+      text-align: center;
+      color: #333;
+      line-height: 97px;
+      background: #fff;
       box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.5);
     }
   }
