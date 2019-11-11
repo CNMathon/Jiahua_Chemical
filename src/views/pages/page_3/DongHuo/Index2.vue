@@ -25,6 +25,7 @@
         v-if="initData.dhzypCode"
         :value="$userInfo.dhzypCode"
         class="readonly"
+        disable
       ></cell-value>
       <!-- 作业票状态 -->
       <cell-value
@@ -33,42 +34,58 @@
         v-if="initData.htStatus"
         :value="$userInfo.userName"
         class="readonly"
+        disable
       ></cell-value>
       <!-- 动火地点及内容 -->
-      <cell-textarea title="动火地点及内容" required v-model="sendData.siteContent" placeholder="请输入作业内容"></cell-textarea>
+      <cell-textarea
+        title="动火地点及内容"
+        required
+        v-model="sendData.siteContent"
+        placeholder="请输入作业内容"
+        disable
+      ></cell-textarea>
       <!-- 动火级别 -->
-      <cell-picker title="动火级别" required v-model="sendData.dhLevel" :columns="dhLevelColumns"></cell-picker>
+      <cell-picker
+        title="动火级别"
+        required
+        v-model="sendData.dhLevel"
+        :columns="dhLevelColumns"
+        disable
+      ></cell-picker>
       <!-- 动火方式 -->
       <cell-select-tag
         required
         title="动火方式"
         storeKey="dhWay"
-        :tagList="sendData.dhWay"
+        :tagList="dhWay"
         :showList="list_1"
         :storeModule="storeModule"
+        disable
       ></cell-select-tag>
       <!-- 涉及其他作业 -->
       <cell-select-tag
         required
         title="涉及其他特殊作业"
         storeKey="otherSpecial"
-        :tagList="sendData.otherSpecial"
+        :tagList="otherSpecial"
         :showList="list_2"
         :storeModule="storeModule"
+        disable
       ></cell-select-tag>
       <!-- 危害辨识 -->
       <cell-select-tag
         required
         title="危害辨识"
         storeKey="hazardSb"
-        :tagList="sendData.hazardSb"
+        :tagList="hazardSb"
         :showList="list_3"
         :storeModule="storeModule"
+        disable
       ></cell-select-tag>
       <!-- 动火开始时间 -->
-      <cell-time v-model="sendData.dhStarttime" title="动火开始时间" required></cell-time>
+      <cell-time v-model="sendData.startTime" title="动火开始时间" required disable></cell-time>
       <!-- 动火结束时间 -->
-      <cell-time v-model="sendData.dhEndtime" title="动火结束时间" required></cell-time>
+      <cell-time v-model="sendData.endTime" title="动火结束时间" required disable></cell-time>
       <!-- 动火作业负责人 -->
       <cell-select-user
         title="动火作业负责人"
@@ -76,6 +93,7 @@
         :storeModule="storeModule"
         storeKey="dhzyPrincipal"
         v-model="sendData.dhzyPrincipal"
+        disable
       ></cell-select-user>
       <!-- 动火人 -->
       <cell-select-user
@@ -84,6 +102,7 @@
         :storeModule="storeModule"
         storeKey="dhzyRen"
         v-model="sendData.dhzyRen"
+        disable
       ></cell-select-user>
       <!-- 动火安全 -->
       <div class="confirm">
@@ -199,19 +218,68 @@
       >
         <Canvas ref="signature" @save="saveCanvas" @cancel="cancelCanvas"></Canvas>
       </van-popup>
-
-      <!-- 操作Popup -->
-      <van-popup v-model="isShowAction" position="bottom" class="action">
-        <button @click="postData">保存</button>
-        <button>工作流提交</button>
-        <button @click="closeAction">取消</button>
-      </van-popup>
     </div>
+    <!-- 动火分析 -->
+    <div class="fenxi">
+      <div class="fenxi__title">动火分析1</div>
+      <!-- 动火开始时间 -->
+      <cell-time v-model="sendData.startTime" title="动火分析时间" required disable></cell-time>
+      <cell-input v-model="sendData.dtSite" title="分析点名称" required placeholder="手工录入" disable></cell-input>
+      <!-- 动火级别 -->
+      <cell-picker
+        title="可燃气体爆炸极限"
+        required
+        v-model="sendData.dhLevel"
+        :columns="dhLevelColumns"
+        disable
+      ></cell-picker>
+      <cell-input v-model="sendData.dtSite" title="分析数据" required placeholder="手工录入" disable></cell-input>
+      <!-- 动火作业负责人 -->
+      <cell-select-user
+        title="分析人"
+        required
+        :storeModule="storeModule"
+        storeKey="dhzyPrincipal"
+        v-model="sendData.dhzyPrincipal"
+        disable
+      ></cell-select-user>
+    </div>
+    <cell-textarea title="其他安全措施" required placeholder="请输入其他安全措施"></cell-textarea>
+    <div class="signature" @click="signatureShow = true">
+      <div>签字</div>
+      <van-icon name="edit" />
+    </div>
+    <!-- 作业范围、内容、方式 -->
+    <div class="cell border_none upload">
+      <div class="cell_title">
+        <span>环境分析图</span>
+      </div>
+      <div class="cell_other">
+        <div class="upload">
+          <div class="upload_box">
+            <van-uploader
+              :before-read="beforeRead"
+              :before-delete="beforeDelete"
+              v-model="fileList"
+              preview-size="5rem"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- 操作Popup -->
+    <van-popup v-model="isShowAction" position="bottom" class="action">
+      <button @click="postData">保存</button>
+      <button>工作流提交</button>
+      <button @click="closeAction">取消</button>
+    </van-popup>
+    <!-- <div class="next" @click="postData">下一步</div> -->
   </div>
 </template>
 <script>
 import { mapState } from "vuex";
 import { business } from "@/mixin/business";
+import { uploadFile } from "@/mixin/uploadFile";
 import DonghuoConfirm from "./Confirm";
 import StepperPlus from "@/components/StepperPlus.vue";
 import Canvas from "@/components/Canvas.vue";
@@ -219,15 +287,15 @@ import Signature from "../components/Signature.vue";
 // import Action from "../components/Action/Index.vue"
 export default {
   name: "donghuo",
-  mixins: [business],
+  mixins: [business, uploadFile],
   data() {
     return {
       storeModule: "donghuo",
       sendData: {
         siteContent: "", //动火地点及内容
         dhLevel: null, //动火级别
-        dhStarttime: "", //动火开始时间
-        dhEndtime: "", //动火结束时间
+        startTime: "", //动火开始时间
+        endTime: "", //动火结束时间
         dhWay: [], //动火方式
         otherSpecial: [], //涉及其他特殊作业
         hazardSb: [], //危害辨识
@@ -287,7 +355,8 @@ export default {
       signatureShow: false,
       checked: [{ checked: false, image: "" }],
       selectSignatureShow: Number,
-      isShowAction: false
+      isShowAction: false,
+      fileList: []
     };
   },
   computed: mapState({
@@ -309,17 +378,13 @@ export default {
       }
     }
   },
-  beforeDestroy() {
-    this.queryId = "";
-    this.$store.dispatch("dongtu/cleanState");
-  },
   methods: {
     // 清除所有数据
     clearData() {
       this.sendData.siteContent = ""; //动火地点及内容
       this.sendData.dhLevel = null; //动火级别
-      this.sendData.dhStarttime = ""; //动火开始时间
-      this.sendData.dhEndtime = ""; //动火结束时间
+      this.sendData.startTime = ""; //动火开始时间
+      this.sendData.endTime = ""; //动火结束时间
       this.sendData.dhWay = []; //动火方式
       this.sendData.otherSpecial = []; //涉及其他特殊作业
       this.sendData.hazardSb = []; //危害辨识
@@ -367,12 +432,12 @@ export default {
         return false;
       }
       // 动火开始时间
-      if (this.sendData.dhStarttime == false) {
+      if (this.sendData.startTime == false) {
         this.$notify("请选择动火开始时间");
         return false;
       }
       // 动火结束时间
-      if (this.sendData.dhEndtime == false) {
+      if (this.sendData.endTime == false) {
         this.$notify("请选择动火结束时间");
         return false;
       }
@@ -393,7 +458,40 @@ export default {
       }
       return true;
     },
-
+    // 编辑-获取页面数据
+    getPageData() {
+      this.$api.page_3
+        .htHseDhzypListData({
+          id: this.queryId,
+          __sid: localStorage.getItem("JiaHuaSessionId")
+        })
+        .then(res => {
+          let info = res.list[0];
+          console.log("info: ", info);
+          for (const key in this.sendData) {
+            if (key === "guardian") {
+              this.sendData[key] = this.reductionSelectUser(info[key]);
+            } else if (key === "dtMan") {
+              this.sendData[key] = this.reductionSelectUser(info[key]);
+            } else if (key === "otherSpecial") {
+              if (info[key])
+                this.sendData[key] = this.reductionSelectTag(
+                  info[key],
+                  this.list_1
+                );
+            } else if (key === "hazardSb") {
+              if (info[key])
+                this.sendData[key] = this.reductionSelectTag(
+                  info[key],
+                  this.list_2
+                );
+            } else {
+              this.sendData[key] = info[key];
+            }
+          }
+          console.log("this.sendData: ", this.sendData);
+        });
+    },
     // 发送数据
     postData() {
       // 检测到输入不完整直接退出函数
@@ -519,17 +617,14 @@ export default {
       sendData.applyDept = this.$userInfo.officeName;
       sendData.applyRen = this.$userInfo.userName;
       sendData.__sid = this.$userInfo.sessionId;
-      sendData.dhStarttime = Date(sendData.dhStarttime);
-      sendData.dhEndtime = Date(sendData.dhEndtime);
+      sendData.startTime = Date(sendData.startTime);
+      sendData.endTime = Date(sendData.endTime);
       console.log(1111111);
       console.log(sendData);
       this.$api.page_3
         .htHseDhzypSave(sendData)
         .then(res => {
-          console.log("res: ", res);
           messageId = res.message;
-          console.log(sendSafeData);
-          console.log(JSON.stringify(sendSafeData1));
           this.$api.page_3
             .htHseDhzypSaveHtHseDhzypSafety(
               JSON.stringify(sendSafeData),
@@ -621,44 +716,6 @@ export default {
       console.log("取消");
       this.checked[index].checked = false;
       this.checked[index].img = "";
-    },
-    getPageData() {
-      this.$api.page_3
-        .htHseDhzypListData({
-          dhzypCode: this.queryId,
-          __sid: localStorage.getItem("JiaHuaSessionId")
-        })
-        .then(res => {
-          let info = res.list[0];
-          console.log("info: ", info);
-          for (const key in this.sendData) {
-            if (key === "dhzyPrincipal") {
-              this.sendData[key] = this.reductionSelectUser(info[key]);
-            } else if (key === "dhzyRen") {
-              this.sendData[key] = this.reductionSelectUser(info[key]);
-            } else if (key === "dhWay") {
-              if (info[key])
-                this.sendData[key] = this.reductionSelectTag(
-                  info[key],
-                  this.list_1
-                );
-            } else if (key === "otherSpecial") {
-              if (info[key])
-                this.sendData[key] = this.reductionSelectTag(
-                  info[key],
-                  this.list_2
-                );
-            } else if (key === "hazardSb") {
-              if (info[key])
-                this.sendData[key] = this.reductionSelectTag(
-                  info[key],
-                  this.list_3
-                );
-            } else {
-              this.sendData[key] = info[key];
-            }
-          }
-        });
     }
   },
   watch: {
@@ -696,6 +753,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.cell_group {
+  /deep/ .cell {
+    background-color: #f5f5f5;
+  }
+}
 .head {
   display: flex;
   text-align: center;
@@ -723,6 +785,28 @@ export default {
     border-radius: 30px;
     color: rgb(0, 118, 255);
     font-size: 35px;
+  }
+}
+.signature {
+  background-color: white;
+  padding: 30px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.upload {
+  padding: 30px;
+  box-sizing: border-box;
+}
+.fenxi {
+  padding: 30px 0;
+  box-sizing: border-box;
+  &__title {
+    padding: 30px;
+    color: #fff;
+    box-sizing: border-box;
+    background-color: blue;
   }
 }
 </style>

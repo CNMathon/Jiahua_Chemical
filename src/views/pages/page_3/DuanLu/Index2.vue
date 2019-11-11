@@ -123,6 +123,13 @@
           <div slot>夜间作业设置警示红灯，并设置固定的围栏</div>
         </Signature>
       </div>
+	  
+	  <!-- 其他安全措施 -->
+	  <cell-textarea title="其他安全措施" required placeholder="请输入其他安全措施"></cell-textarea>
+	  
+	  <!-- 签字 -->
+	  <cell-input title="签字" required placeholder="请签字"></cell-input>
+	  
     </div>
     <!-- 画板Popup -->
     <van-popup

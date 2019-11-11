@@ -36,7 +36,7 @@
             >
               <label v-for="(item, index) in listData" :key="index">
                 <!-- 此处在做完AJAX后需要判断是否为最后行 - class存在判断 -->
-                <div class="donghuo-list-card donghuo-list-card-nolast">
+                <div class="donghuo-list-card donghuo-list-card-nolast" @click="tap(item)">
                   <div class="left">
                     <div class="left-line left-line-notlast">动火地点及内容：{{item.siteContent}}</div>
                     <div class="left-line left-line-notlast">动火级别：{{item.dhLevel}}</div>
@@ -120,6 +120,20 @@ export default {
   },
   mixins: [mixin],
   methods: {
+    tap(info) {
+      let dhzypCode = info.dhzypCode;
+      if (Number(info.htStatus) === 1) {
+        this.$router.push({
+          path: "../donghuo",
+          query: { id: dhzypCode }
+        });
+      } else {
+        this.$router.push({
+          path: "../donghuo/index2",
+          query: { id: dhzypCode }
+        });
+      }
+    },
     onClickRight() {
       this.$router.push({
         path: "../donghuo"
@@ -142,9 +156,12 @@ export default {
           __sid: localStorage.getItem("JiaHuaSessionId")
         })
         .then(res => {
+          if (res.list.length === 0) {
+            this.isListLoading = false;
+            this.isListMore = true;
+          }
           this.listData = res.list;
           this.isFirstLoading = false;
-          console.log(this.listData);
 
           if ((where = "refresh")) {
             // this.pageNow = 1;
@@ -156,18 +173,12 @@ export default {
           }
         });
     },
-    confirmFilter() {
-      console.log("点击确认筛选");
-    },
-    filterSearch(e) {
-      console.log(e);
-    },
+    confirmFilter() {},
+    filterSearch(e) {},
     filterSelect_1(e) {
-      console.log("e: ", e);
       this.selectZypzt = e;
     },
     filterSelect_2(e) {
-      console.log("e: ", e);
       this.selectZypzt = e;
     }
   },

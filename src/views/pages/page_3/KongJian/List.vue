@@ -33,7 +33,7 @@
         ></van-skeleton>
         <label v-for="(item, index) in listData" :key="index">
           <!-- 此处在做完AJAX后需要判断是否为最后行 - class存在判断 -->
-          <div class="donghuo-list-card donghuo-list-card-nolast" @click="jumpToMorePage(item.htStatus)">
+          <div class="donghuo-list-card donghuo-list-card-nolast" @click="jumpToMorePage(item.htStatus, item.sxkjCode)">
             <div class="left">
               <div class="left-line left-line-notlast">作业内容：{{item.sxkjNeurogen}}</div>
               <div class="left-line left-line-notlast left-line-hor">申请部门：{{item.applyDept}}</div>
@@ -91,9 +91,10 @@ export default {
   },
   mixins: [mixin],
   methods: {
-    selectKongJianZyp() {
+    getPageData() {
       this.$api.page_3
         .htHseSxkjzypListData({
+          zyContent: this.searchValue,
           __sid: localStorage.getItem("JiaHuaSessionId")
         })
         .then(res => {
@@ -104,26 +105,41 @@ export default {
     },
     onClickRight() {
       this.$router.push({
-        path: "../kongjian"
+        path: "../kongjian",
+        query: {
+          isNew: true
+        }
       });
     },
     // 跳转至详情页
-    jumpToMorePage(status) {
-      if (status == 1) {
-        this.$router.push({
-          path: "./index"
-          
-        })
+    jumpToMorePage(status, code) {
+      const that = this;
+      function todo(statusList, path, moreInfo = null) {
+        if (status == statusList) {
+          that.$router.push({
+            path: path,
+            query: {
+              status: status,
+              id: code,
+              moreInfo: moreInfo
+            }
+          })
+        }
       }
-      console.log(status)
+
+      // todo 参数
+      // 参数1 => 需要指定的 status
+      // 参数2 => 跳转页面
+      // 参数3 => 其他需要通过 router 传输的数据
+      todo(1, './index', {isInitData: true})
+      todo(2, './Index2', {isInitData: true})
     },
-    getPageData() {},
     confirmFilter() {},
     filterSearch() {},
     filterSelect_1() {}
   },
   created() {
-    this.selectKongJianZyp()
+    this.getPageData()
   },
 };
 </script>

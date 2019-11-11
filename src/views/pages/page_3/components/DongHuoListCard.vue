@@ -7,11 +7,10 @@
       class="skeleton"
       v-for="(item, index) in 3"
       :key="index"
-    >
-    </van-skeleton>
+    ></van-skeleton>
     <label v-for="(item, index) in listData" :key="index">
       <!-- 此处在做完AJAX后需要判断是否为最后行 - class存在判断 -->
-      <div class="donghuo-list-card donghuo-list-card-nolast">
+      <div class="donghuo-list-card donghuo-list-card-nolast" @click="tap(item)">
         <div class="left">
           <div class="left-line left-line-notlast">动火地点及内容：{{item.siteContent}}</div>
           <div class="left-line left-line-notlast">动火级别：{{item.dhLevel}}</div>
@@ -46,14 +45,22 @@ export default {
         })
         .then(res => {
           this.listData = res.list;
-          this.isLoading = false
-          console.log(this.listData)
+          this.isLoading = false;
+          console.log(this.listData);
         });
+    },
+    tap(info) {
+      console.log("info: ", info);
+      let dhzypCode = info.dhzypCode;
+      this.$router.push({
+        path: "../dongtu",
+        query: { id: dhzypCode }
+      });
     }
   },
   created() {
-    this.selectDonghuoZyp()
-  },
+    this.selectDonghuoZyp();
+  }
 };
 </script>
 
@@ -90,6 +97,6 @@ export default {
 }
 
 .skeleton {
-  margin-bottom: 10px
+  margin-bottom: 10px;
 }
 </style>

@@ -18,7 +18,7 @@
       <!-- 作业票状态 -->
       <cell-value title="作业票状态" value="编辑" disable></cell-value>
       <!-- 作业地点 -->
-      <cell-input v-model="sendData.dtSite" title="作业地点" required placeholder="手工录入"></cell-input>
+      <cell-input v-model="sendData.dtSite" title="作业地点" required placeholder="手工录入" disable></cell-input>
       <!-- 涉及其他特殊作业 -->
       <cell-select-tag
         required
@@ -27,6 +27,7 @@
         :tagList="sendData.otherSpecial"
         :showList="list_1"
         :storeModule="storeModule"
+        disable
       ></cell-select-tag>
       <!-- 危害辨识 -->
       <cell-select-tag
@@ -36,11 +37,12 @@
         :tagList="sendData.hazardSb"
         :showList="list_1"
         :storeModule="storeModule"
+        disable
       ></cell-select-tag>
       <!-- 动土开始时间 -->
-      <cell-time v-model="sendData.dtStarttime" title="动土开始时间" required></cell-time>
+      <cell-time v-model="sendData.dtStarttime" title="动土开始时间" required disable></cell-time>
       <!-- 动土结束时间 -->
-      <cell-time v-model="sendData.dtEndtime" title="动土结束时间" required></cell-time>
+      <cell-time v-model="sendData.dtEndtime" title="动土结束时间" required disable></cell-time>
       <!-- 监护人 -->
       <cell-select-user
         title="监护人"
@@ -48,6 +50,7 @@
         :storeModule="storeModule"
         storeKey="guardian"
         v-model="sendData.guardian"
+        disable
       ></cell-select-user>
       <!-- 作业部门 -->
       <div class="cell">
@@ -68,6 +71,7 @@
         :storeModule="storeModule"
         storeKey="dtMan"
         v-model="sendData.dtMan"
+        disable
       ></cell-select-user>
       <!-- 作业范围、内容、方式 -->
       <div class="cell border_none">
@@ -75,7 +79,7 @@
           <span>作业范围、内容、方式</span>
         </div>
         <div class="cell_other">
-          <textarea class="cell_textarea" placeholder="请输入工作内容" cols="30" rows="10"></textarea>
+          <textarea class="cell_textarea" placeholder="请输入工作内容" cols="30" rows="10" disable></textarea>
         </div>
         <div class="cell_other">
           <div class="upload">
@@ -94,6 +98,20 @@
         </div>
       </div>
     </div>
+    <cell-textarea v-model="sendData.dznr" title="其他安全措施" required placeholder="请输入其他安全措施"></cell-textarea>
+    <!-- 画板Popup -->
+    <van-popup
+      class="popup"
+      v-model="signatureShow"
+      :close-on-click-overlay="false"
+      position="bottom"
+    >
+      <Canvas ref="signature" @save="saveCanvas" @cancel="cancelCanvas"></Canvas>
+    </van-popup>
+    <div class="signature" @click="signatureShow = true">
+      <div>签字</div>
+      <van-icon name="edit" />
+    </div>
     <!-- 操作Popup -->
     <van-popup v-model="isShowAction" position="bottom" class="action">
       <button @click="postData">保存</button>
@@ -106,6 +124,7 @@
 import { mapState } from "vuex";
 import { business } from "@/mixin/business";
 import { uploadFile } from "@/mixin/uploadFile";
+import Canvas from "@/components/Canvas.vue";
 export default {
   name: "dongtu",
   mixins: [business, uploadFile],
@@ -140,8 +159,12 @@ export default {
         "受限空间"
       ],
       isShowAction: false,
-      queryId: ""
+      queryId: "",
+      signatureShow: false
     };
+  },
+  components: {
+    Canvas
   },
   computed: mapState({
     otherSpecial: state => state.dongtu.otherSpecial,
@@ -254,6 +277,16 @@ export default {
           }
           console.log("this.sendData: ", this.sendData);
         });
+    },
+    // 保存签名
+    saveCanvas(e) {
+      console.log("e: ", e);
+      this.signatureShow = false;
+    },
+    // 取消签名
+    cancelCanvas() {
+      console.log("取消签名");
+      this.signatureShow = false;
     }
   },
   watch: {
@@ -276,6 +309,12 @@ export default {
 @import "@/assets/scss/cell.scss";
 .mangban {
   background-color: #f5f5f5;
+  .cell_group {
+    /deep/ .cell {
+      background-color: #f5f5f5;
+    }
+  }
+
   .next {
     width: 100%;
     height: 98px;
@@ -303,5 +342,13 @@ export default {
       font-size: 35px;
     }
   }
+}
+.signature {
+  background-color: white;
+  padding: 30px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 </style>

@@ -32,10 +32,15 @@ export default {
       type: Boolean,
       default: false
     },
-    value: Array
+    value: Array,
+    disable: {
+      type: Boolean,
+      default: false
+    }
   },
   methods: {
     toSelectUser() {
+      if (this.disable) return;
       this.$router.push({
         path: "./select_user",
         query: {

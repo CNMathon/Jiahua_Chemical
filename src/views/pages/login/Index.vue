@@ -37,17 +37,10 @@ export default {
   data() {
     return {
 
-      // username: "潘建华",
-      // password: "123465",
-
-      username: "董建飞",
-      password: "123456",
-
-      // username: "system",
-      // password: "admin123",
-
       loading: false,
-      screenHeight: 0
+      screenHeight: 0,
+      username: '',
+      password: ''
     };
   },
   methods: {
@@ -100,7 +93,7 @@ export default {
 .login {
   width: 100%;
   // height: 100%;
-  background: #f4f4f4;
+  background: url(../../../assets/images/login_1.png) no-repeat;
   background-size: contain;
   position: relative;
   .content {

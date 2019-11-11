@@ -8,6 +8,7 @@
       <input
         :type="inputType"
         :placeholder="placeholder"
+        :disabled="disable"
         ref="cell_input"
         :value="value"
         @input="$emit('input', $event.target.value)"
@@ -30,7 +31,11 @@ export default {
       default: false
     },
     value: String || Number,
-    placeholder: String
+    placeholder: String,
+    disable: {
+      type: Boolean,
+      default: false
+    }
   }
 };
 </script>

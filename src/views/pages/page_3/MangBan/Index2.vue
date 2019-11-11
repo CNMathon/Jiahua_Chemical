@@ -146,6 +146,28 @@
 			<van-popup class="popup" v-model="signatureShow" :close-on-click-overlay="false" position="bottom">
 				<Canvas ref="signature" @save="saveCanvas" @cancel="cancelCanvas"></Canvas>
 			</van-popup>
+			
+			<div class="cell_group">
+				<div class="cell border_none">
+					<div class="cell_other">
+						<div class="upload">
+							<div class="upload_icon">
+								<van-icon name="photo-o" />
+							</div>
+							<div class="upload_box">
+								<van-uploader :before-read="beforeRead" :before-delete="beforeDelete" v-model="fileList" preview-size="5rem" />
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- 其他安全措施 -->
+			<cell-textarea title="其他安全措施" required placeholder="请输入其他安全措施"></cell-textarea>
+
+			<!-- 签字 -->
+			<cell-input title="签字" required placeholder="请签字"></cell-input>
+
 		</div>
 
 		<!-- 操作Popup -->
@@ -163,13 +185,17 @@
 	import {
 		mapState
 	} from "vuex";
+	import {
+		uploadFile
+	} from "@/mixin/uploadFile";
 	import Canvas from "@/components/Canvas.vue";
 	import Signature from "../components/Signature.vue";
 	export default {
 		name: "mangban",
+		mixins: [business, uploadFile],
 		data() {
 			return {
-				infoId:0,
+				infoId: 0,
 				storeModule: "mangban",
 				materialShowShow: false,
 				material: {
@@ -219,7 +245,9 @@
 					checked: false,
 					image: ""
 				}],
-				signatureShow: false
+				signatureShow: false,
+				fileList: []
+
 			};
 		},
 		computed: mapState({
@@ -254,10 +282,10 @@
 		},
 		mixins: [business],
 		created() {
-			
-			this.infoId=this.$route.query.id || 0;
+
+			this.infoId = this.$route.query.id || 0;
 			this.getInfo();
-			
+
 		},
 		methods: {
 
@@ -273,6 +301,11 @@
 						this.isLoading = false
 						console.log(this.listData)
 					}).catch(() => {});
+
+			},
+
+			beforeRead() {},
+			beforeDelete() {
 
 			},
 

@@ -112,7 +112,7 @@ export default {
   methods: {
     // 编辑
     edit(item) {
-      this.$router.push({name:'linshi_index2', query: {id: item.id}})
+      this.$router.push({name:'linshi_index', query: {id: item.id}})
     },
     /**
      * 获取吊装工作票

@@ -20,8 +20,8 @@
           <div class="left-line left-line-notlast">作业开始时间：{{item.offtimeStart}}</div>
           <div class="left-line">作业结束时间：{{item.offtimeEnd}}</div>
         </div>
-        <div class="right" v-if="item.htStatus == 1">编辑</div>
-        <div class="right" v-if="item.htStatus == 2">初审</div>
+        <div class="right" @click.stop="()=>{$router.push({path:'/page_3/duanlu/index',query:{id:item.id}})}" v-if="item.htStatus == 1">编辑</div>
+        <div class="right" @click.stop="()=>{$router.push({path:'/page_3/duanlu/index2',query:{id:item.id}})}" v-if="item.htStatus == 2">初审</div>
         <div class="right" v-if="item.htStatus == 3">审核</div>
         <div class="right" v-if="item.htStatus == 4">有效</div>
         <div class="right" v-if="item.htStatus == 5">结束</div>

@@ -30,6 +30,11 @@
 import { mixin } from "@/mixin/mixin";
 import ListCard from "@/views/pages/page_3/components/DuanLuListCard";
 export default {
+  created(){
+
+    this.getPageData()
+
+  },
   data() {
     return {
       showFilter: false,
@@ -65,8 +70,19 @@ export default {
       this.$router.push({
         path: "../duanlu"
       });
+
     },
-    getPageData() {},
+    getPageData() {
+
+      this.$api.page_3
+        .htHseDlzypListData({
+          __sid: localStorage.getItem("JiaHuaSessionId"),
+        })
+        .then(res => {
+           console.log(res)
+        }).catch(()=>{});
+
+    },
     confirmFilter() {},
     filterSearch() {},
     filterSelect_1() {}

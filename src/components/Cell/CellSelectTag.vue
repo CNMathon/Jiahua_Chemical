@@ -6,11 +6,7 @@
         <span class="required" v-if="required">*</span>
       </div>
       <div class="cell_title_right">
-        <img
-          src="../../assets/images/add.jpg"
-          class="cell_add_button"
-          @click="toSelect"
-        />
+        <img src="../../assets/images/add.jpg" class="cell_add_button" @click="toSelect" />
       </div>
     </div>
     <div class="cell_other">
@@ -24,7 +20,7 @@
       </van-col>
       <!-- <van-col span="8">
         <div class="cell_type_tag_add" @click="toSelect()">+</div>
-      </van-col> -->
+      </van-col>-->
     </div>
   </div>
 </template>
@@ -45,10 +41,15 @@ export default {
     tagList: Array,
     showList: Array,
     storeModule: String,
-    storeKey: String
+    storeKey: String,
+    disable: {
+      type: Boolean,
+      default: false
+    }
   },
   methods: {
     toSelect() {
+      if (this.disable) return;
       this.$router.push({
         path: "./select",
         query: {
@@ -59,6 +60,7 @@ export default {
       });
     },
     removeItem(item) {
+      if (this.disable) return;
       let obj = {
         key: this.storeKey,
         value: item

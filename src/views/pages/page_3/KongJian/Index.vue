@@ -8,201 +8,208 @@
       @click-left="pageBack"
       @click-right="openAction"
     />
-    <div class="cell_group">
-      <!-- 申请部门 -->
-      <cell-value title="申请部门" :value="$userInfo.officeName" disable></cell-value>
-      <!-- 申请人 -->
-      <cell-value title="申请人" :value="$userInfo.userName" disable></cell-value>
-      <!-- 作业票编号 -->
-      <cell-value title="作业票编号" value disable></cell-value>
-      <!-- 作业票状态 -->
-      <cell-value title="作业票状态" value="编辑" disable></cell-value>
-      <!-- 作业票编号 -->
-      <cell-value title="作业票编号" required v-if="initData.dhzypCode" :value="$userInfo.dhzypCode"></cell-value>
-      <!-- 作业票状态 -->
-      <cell-value
-        title="作业票状态"
-        required
-        v-if="initData.htStatus"
-        :value="$userInfo.userName"
-        class="readonly"
-      ></cell-value>
-      <!-- 受限空间所属空间 -->
-      <div class="cell">
-        <div class="cell_title">
-          <span>受限空间所属空间</span>
-          <span class="required">*</span>
+    <van-skeleton
+      title
+      :row="3"
+      :loading="isLoading"
+      class="skeleton"
+    >
+      <div class="cell_group">
+        <!-- 申请部门 -->
+        <cell-value title="申请部门" :value="$userInfo.officeName" disable></cell-value>
+        <!-- 申请人 -->
+        <cell-value title="申请人" :value="$userInfo.userName" disable></cell-value>
+        <!-- 作业票编号 -->
+        <cell-value title="作业票编号" :value="sendData.id" disable></cell-value>
+        <!-- 作业票状态 -->
+        <cell-value title="作业票状态" value="编辑" disable></cell-value>
+        <!-- 作业票编号 -->
+        <cell-value title="作业票编号" required v-if="initData.dhzypCode" :value="$userInfo.dhzypCode"></cell-value>
+        <!-- 作业票状态 -->
+        <cell-value
+          title="作业票状态"
+          required
+          v-if="initData.htStatus"
+          :value="$userInfo.userName"
+          class="readonly"
+        ></cell-value>
+        <!-- 受限空间所属空间 -->
+        <div class="cell">
+          <div class="cell_title">
+            <span>受限空间所属空间</span>
+            <span class="required">*</span>
+          </div>
+          <div class="cell_value" @click="routeToChoose">
+            <span>{{ sendData.zySskj.length == 0 ? "单位名称" : sendData.zySskj[0] }}</span>
+            <span class="cell_value_arrow">
+              <van-icon name="search" />
+            </span>
+          </div>
         </div>
-        <div class="cell_value" @click="routeToChoose">
-          <span>{{ sendData.zySskj.length == 0 ? "单位名称" : sendData.zySskj[0] }}</span>
-          <span class="cell_value_arrow">
-            <van-icon name="search" />
-          </span>
-        </div>
-      </div>
-      <!-- 作业内容 -->
-      <cell-textarea title="作业内容" required v-model="sendData.zyContent" placeholder="请输入作业内容"></cell-textarea>
-      <!-- 设备名称 -->
-      <cell-input title="设备名称" required v-model="sendData.devicename" placeholder="请输入设备名称"></cell-input>
-      <!-- 受限空间原有界质 -->
-      <cell-input title="受限空间原有界质" required v-model="sendData.sxkjNeurogen" placeholder="请输入界质名称"></cell-input>
-      <!-- 涉及其他特殊作业 -->
-      <cell-select-tag
-        required
-        title="涉及其他特殊作业"
-        storeKey="zyOtherspecial"
-        :tagList="sendData.zyOtherspecial"
-        :showList="list_1"
-        :storeModule="storeModule"
-      ></cell-select-tag>
-      <!-- 危害辨识 -->
-      <cell-select-tag
-        required
-        title="危害辨识"
-        storeKey="zywhBs"
-        :tagList="zywhBs"
-        :showList="list_2"
-        :storeModule="storeModule"
-      ></cell-select-tag>
-      <!-- 作业开始时间 -->
-      <cell-time title="作业开始时间" required v-model="sendData.zyStarttime"></cell-time>
-      <!-- 作业结束时间 -->
-      <cell-time title="作业结束时间" v-model="sendData.zyEndtime" required></cell-time>
-      <!-- 作业部门负责人 -->
-      <cell-select-user
-        title="作业部门负责人"
-        required
-        :storeModule="storeModule"
-        storeKey="zyPrincipal"
-        v-model="sendData.zyPrincipal"
-      ></cell-select-user>
-      <!-- 作业人 -->
-      <cell-select-user
-        title="作业人"
-        required
-        :storeModule="storeModule"
-        storeKey="zyRen"
-        v-model="sendData.zyRen"
-      ></cell-select-user>
-      <!-- 监护人 -->
-      <cell-select-user
-        title="监护人"
-        required
-        :storeModule="storeModule"
-        storeKey="guardian"
-        v-model="sendData.guardian"
-      ></cell-select-user>
+        <!-- 作业内容 -->
+        <cell-textarea title="作业内容" required v-model="sendData.zyContent" placeholder="请输入作业内容"></cell-textarea>
+        <!-- 设备名称 -->
+        <cell-input title="设备名称" required v-model="sendData.devicename" placeholder="请输入设备名称"></cell-input>
+        <!-- 受限空间原有界质 -->
+        <cell-input title="受限空间原有界质" required v-model="sendData.sxkjNeurogen" placeholder="请输入界质名称"></cell-input>
+        <!-- 涉及其他特殊作业 -->
+        <cell-select-tag
+          required
+          title="涉及其他特殊作业"
+          storeKey="zyOtherspecial"
+          :tagList="sendData.zyOtherspecial"
+          :showList="list_1"
+          :storeModule="storeModule"
+        ></cell-select-tag>
+        <!-- 危害辨识 -->
+        <cell-select-tag
+          required
+          title="危害辨识"
+          storeKey="zywhBs"
+          :tagList="sendData.zywhBs"
+          :showList="list_2"
+          :storeModule="storeModule"
+        ></cell-select-tag>
+        <!-- 作业开始时间 -->
+        <cell-time title="作业开始时间" required v-model="sendData.zyStarttime"></cell-time>
+        <!-- 作业结束时间 -->
+        <cell-time title="作业结束时间" v-model="sendData.zyEndtime" required></cell-time>
+        <!-- 作业部门负责人 -->
+        <cell-select-user
+          title="作业部门负责人"
+          required
+          :storeModule="storeModule"
+          storeKey="zyPrincipal"
+          v-model="sendData.zyPrincipal"
+        ></cell-select-user>
+        <!-- 作业人 -->
+        <cell-select-user
+          title="作业人"
+          required
+          :storeModule="storeModule"
+          storeKey="zyRen"
+          v-model="sendData.zyRen"
+        ></cell-select-user>
+        <!-- 监护人 -->
+        <cell-select-user
+          title="监护人"
+          required
+          :storeModule="storeModule"
+          storeKey="guardian"
+          v-model="sendData.guardian"
+        ></cell-select-user>
 
-      <!-- 安全措施 -->
-      <div class="confirm">
-        <div class="head">
-          <div class="head_1">安全措施</div>
-          <div class="head_2">确认</div>
-          <div class="head_3">确认人</div>
-        </div>
-        <div class="confirm_list">
-          <Signature
-            :checked="checked[0] ? checked[0].checked : false"
-            :img="checked[0] ? checked[0].img : ''"
-            @checked="showSignature(0)"
-            @cancel="signatureCancel(0)"
-          >
-            <span slot>对进入受限空间危险性进行分析。</span>
-          </Signature>
-          <Signature
-            :checked="checked[1] ? checked[1].checked : false"
-            :img="checked[1] ? checked[1].img : ''"
-            @checked="showSignature(1)"
-            @cancel="signatureCancel(1)"
-          >
-            <span slot>与受限空间有联系的阀门管线加盲板隔离，列出盲板清单，落实抽堵盲板责任人。</span>
-          </Signature>
-          <Signature
-            :checked="checked[2] ? checked[2].checked : false"
-            :img="checked[2] ? checked[2].img : ''"
-            @checked="showSignature(2)"
-            @cancel="signatureCancel(2)"
-          >
-            <div slot>设备经过置换、吹扫、蒸煮。</div>
-          </Signature>
-          <Signature
-            :checked="checked[3] ? checked[3].checked : false"
-            :img="checked[3] ? checked[3].img : ''"
-            @checked="showSignature(3)"
-            @cancel="signatureCancel(3)"
-          >
-            <div slot>设备打开通风孔进行自然通风,温度适宜人员作业;必要时采用强制通风或佩戴空气呼吸器,但严禁用通氧气或富氧空气的方法补充氧。</div>
-          </Signature>
-          <Signature
-            :checked="checked[4] ? checked[4].checked : false"
-            :img="checked[4] ? checked[4].img : ''"
-            @checked="showSignature(4)"
-            @cancel="signatureCancel(4)"
-          >
-            <div slot>相关设备进行处理,带搅拌机的设备要切断电源,电源开关处加锁或挂“禁止合闸”标志牌,设专人监护。</div>
-          </Signature>
-          <Signature
-            :checked="checked[5] ? checked[5].checked : false"
-            :img="checked[5] ? checked[5].img : ''"
-            @checked="showSignature(5)"
-            @cancel="signatureCancel(5)"
-          >
-            <div slot>检查受限空间内部已具备作业条件,清罐时(无需用/已采用)防爆工具。</div>
-          </Signature>
-          <Signature
-            :checked="checked[6] ? checked[6].checked : false"
-            :img="checked[6] ? checked[6].img : ''"
-            @checked="showSignature(6)"
-            @cancel="signatureCancel(6)"
-          >
-            <div slot>检查受限空间进出口通道,无阻碍人员进出的障碍物。</div>
-          </Signature>
-          <Signature
-            :checked="checked[6] ? checked[6].checked : false"
-            :img="checked[6] ? checked[6].img : ''"
-            @checked="showSignature(6)"
-            @cancel="signatureCancel(6)"
-          >
-            <div slot>分析盛装过可燃有毒液体、气体的受限空间内的可燃、有毒有害气体含量。</div>
-          </Signature>
-          <Signature
-            :checked="checked[6] ? checked[6].checked : false"
-            :img="checked[6] ? checked[6].img : ''"
-            @checked="showSignature(6)"
-            @cancel="signatureCancel(6)"
-          >
-            <div slot>作业人员清楚受限空间内存在的其他危险因素,如内部附件、集渣坑等。</div>
-          </Signature>
-          <Signature
-            :checked="checked[6] ? checked[6].checked : false"
-            :img="checked[6] ? checked[6].img : ''"
-            @checked="showSignature(6)"
-            @cancel="signatureCancel(6)"
-          >
-            <div slot>作业监护措施:消防器材</div>
-            <div>
-              <input type="text" />
-            </div>
-            <div>、救生绳</div>
-            <div>
-              <input type="text" />
-            </div>
-            <div>、气防装备</div>
-            <div>
-              <input type="text" />
-            </div>
-          </Signature>
-          <Signature
-            :checked="checked[6] ? checked[6].checked : false"
-            :img="checked[6] ? checked[6].img : ''"
-            @checked="showSignature(6)"
-            @cancel="signatureCancel(6)"
-          >
-            <div slot>检查受限空间进出口通道,无阻碍人员进出的障碍物。</div>
-          </Signature>
+        <!-- 安全措施 -->
+        <div class="confirm">
+          <div class="head">
+            <div class="head_1">安全措施</div>
+            <div class="head_2">确认</div>
+            <div class="head_3">确认人</div>
+          </div>
+          <div class="confirm_list">
+            <Signature
+              :checked="checked[0] ? checked[0].checked : false"
+              :img="checked[0] ? checked[0].img : ''"
+              @checked="showSignature(0)"
+              @cancel="signatureCancel(0)"
+            >
+              <span slot>对进入受限空间危险性进行分析。</span>
+            </Signature>
+            <Signature
+              :checked="checked[1] ? checked[1].checked : false"
+              :img="checked[1] ? checked[1].img : ''"
+              @checked="showSignature(1)"
+              @cancel="signatureCancel(1)"
+            >
+              <span slot>与受限空间有联系的阀门管线加盲板隔离，列出盲板清单，落实抽堵盲板责任人。</span>
+            </Signature>
+            <Signature
+              :checked="checked[2] ? checked[2].checked : false"
+              :img="checked[2] ? checked[2].img : ''"
+              @checked="showSignature(2)"
+              @cancel="signatureCancel(2)"
+            >
+              <div slot>设备经过置换、吹扫、蒸煮。</div>
+            </Signature>
+            <Signature
+              :checked="checked[3] ? checked[3].checked : false"
+              :img="checked[3] ? checked[3].img : ''"
+              @checked="showSignature(3)"
+              @cancel="signatureCancel(3)"
+            >
+              <div slot>设备打开通风孔进行自然通风,温度适宜人员作业;必要时采用强制通风或佩戴空气呼吸器,但严禁用通氧气或富氧空气的方法补充氧。</div>
+            </Signature>
+            <Signature
+              :checked="checked[4] ? checked[4].checked : false"
+              :img="checked[4] ? checked[4].img : ''"
+              @checked="showSignature(4)"
+              @cancel="signatureCancel(4)"
+            >
+              <div slot>相关设备进行处理,带搅拌机的设备要切断电源,电源开关处加锁或挂“禁止合闸”标志牌,设专人监护。</div>
+            </Signature>
+            <Signature
+              :checked="checked[5] ? checked[5].checked : false"
+              :img="checked[5] ? checked[5].img : ''"
+              @checked="showSignature(5)"
+              @cancel="signatureCancel(5)"
+            >
+              <div slot>检查受限空间内部已具备作业条件,清罐时(无需用/已采用)防爆工具。</div>
+            </Signature>
+            <Signature
+              :checked="checked[6] ? checked[6].checked : false"
+              :img="checked[6] ? checked[6].img : ''"
+              @checked="showSignature(6)"
+              @cancel="signatureCancel(6)"
+            >
+              <div slot>检查受限空间进出口通道,无阻碍人员进出的障碍物。</div>
+            </Signature>
+            <Signature
+              :checked="checked[6] ? checked[6].checked : false"
+              :img="checked[6] ? checked[6].img : ''"
+              @checked="showSignature(6)"
+              @cancel="signatureCancel(6)"
+            >
+              <div slot>分析盛装过可燃有毒液体、气体的受限空间内的可燃、有毒有害气体含量。</div>
+            </Signature>
+            <Signature
+              :checked="checked[6] ? checked[6].checked : false"
+              :img="checked[6] ? checked[6].img : ''"
+              @checked="showSignature(6)"
+              @cancel="signatureCancel(6)"
+            >
+              <div slot>作业人员清楚受限空间内存在的其他危险因素,如内部附件、集渣坑等。</div>
+            </Signature>
+            <Signature
+              :checked="checked[6] ? checked[6].checked : false"
+              :img="checked[6] ? checked[6].img : ''"
+              @checked="showSignature(6)"
+              @cancel="signatureCancel(6)"
+            >
+              <div slot>作业监护措施:消防器材</div>
+              <div>
+                <input type="text" />
+              </div>
+              <div>、救生绳</div>
+              <div>
+                <input type="text" />
+              </div>
+              <div>、气防装备</div>
+              <div>
+                <input type="text" />
+              </div>
+            </Signature>
+            <Signature
+              :checked="checked[6] ? checked[6].checked : false"
+              :img="checked[6] ? checked[6].img : ''"
+              @checked="showSignature(6)"
+              @cancel="signatureCancel(6)"
+            >
+              <div slot>检查受限空间进出口通道,无阻碍人员进出的障碍物。</div>
+            </Signature>
+          </div>
         </div>
       </div>
-    </div>
+    </van-skeleton>
 
     <!-- 画板Popup -->
     <van-popup
@@ -238,6 +245,7 @@ export default {
       storeModule: "kongjian",
       sendData: {
         zyContent: "", //作业内容
+        id: "", // 作业票编号
         devicename: "", //设备名称
         sxkjNeurogen: "", //受限空间内原有介质
         zyOtherspecial: [], //涉及的其他特殊作业
@@ -273,7 +281,8 @@ export default {
         "高处坠落"
       ],
       selectSignatureShow: Number,
-      signatureShow: false
+      signatureShow: false,
+      isLoading: false
     };
   },
   components: {
@@ -288,6 +297,14 @@ export default {
     zyRen: state => state.kongjian.zyRen,
     zyPrincipal: state => state.kongjian.zyPrincipal
   }),
+  // computed: {
+  //   zypStatus() {
+  //     return this.$route.query.status
+  //   },
+  //   zypId() {
+  //     return this.$route.query.id
+  //   }
+  // },
   beforeDestroy() {
     this.$store.dispatch("kongjian/cleanState");
   },
@@ -407,7 +424,7 @@ export default {
             }
           });
         });
-    }
+    },
   },
   watch: {
     zyOtherspecial(res) {
@@ -425,13 +442,61 @@ export default {
     zyPrincipal(res) {
       this.sendData.zyPrincipal = res;
     }
-  }
+  },
+  
+  activated() {
+    this.sendData.id = ""
+    if (this.$route.query.status == 1 && this.$route.query.moreInfo.isInitData == true) {
+      this.isLoading = true
+      this.sendData.id = this.$route.query.sxkjCode
+      console.log(111111)
+      console.log(this.$route.query.sxkjCode)
+      this.$api.page_3
+        .htHseSxkjzypListData({
+          id: this.sendData.id,
+          __sid: localStorage.getItem("JiaHuaSessionId")
+        })
+        .then(res => {
+          this.isLoading = false
+          console.log(res)
+          let content = res.list[0]
+          this.sendData.zyContent = content.zyContent
+          this.sendData.devicename = content.devicename
+          this.sendData.sxkjNeurogen = content.sxkjNeurogen
+          this.sendData.zyOtherspecial = content.zyOtherspecial
+          this.sendData.zywhBs = content.zywhBs
+          this.sendData.zyStarttime = content.zyStarttime
+          this.sendData.zyEndtime = content.zyStarttime
+          this.sendData.zyPrincipal = content.zyPrincipal
+          this.sendData.zyRen = content.zyRen
+          this.sendData.guardian = content.guardian
+        })
+    }
+    if (this.$route.query.isNew) {
+      this.sendData = {
+        zyContent: "", //作业内容
+        id: "", // 作业票编号
+        devicename: "", //设备名称
+        sxkjNeurogen: "", //受限空间内原有介质
+        zyOtherspecial: [], //涉及的其他特殊作业
+        zywhBs: [], //危害辨识
+        zyStarttime: "", //作业开始时间
+        zyEndtime: "", //作业结束时间
+        zySskj: ['动力中心'], // 受限空间所属空间
+        guardian: [], // 监护人
+        zyPrincipal: [], // 作业部门负责人
+        zyRen: [], // 作业人
+        aqcsjl: [], // 安全措施勾选记录
+        querenman: "" // 确认人（签名）
+      }
+    }
+  },
 };
 </script>
 <style lang="scss" scoped>
 @import "@/assets/scss/cell.scss";
 .donghuo {
-  background-color: #f5f5f5;
+  // background-color: #f5f5f5;
   .cell {
     background-color: #fff;
   }
@@ -463,6 +528,12 @@ export default {
     font-size: 35px;
   }
 }
+</style>
+
+<style lang="scss">
+  .skeleton {
+    padding-top: 40px;
+  }
 </style>
 
 <style lang="scss" scoped>

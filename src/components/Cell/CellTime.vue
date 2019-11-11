@@ -4,9 +4,7 @@
       <span>{{ title }}</span>
       <span class="required" v-if="required">*</span>
     </div>
-    <div class="cell_value" @click="timeShow = true">
-      {{ value || "点击选择" }}
-    </div>
+    <div class="cell_value" @click="showTime()">{{ value || "点击选择" }}</div>
     <van-icon name="arrow" />
     <!-- 时间选择 -->
     <van-popup v-model="timeShow" position="bottom">
@@ -31,21 +29,30 @@ export default {
     maxTime: String
   },
   props: {
+    value: "",
     title: String,
     required: {
+      type: Boolean,
+      default: false
+    },
+    disable: {
       type: Boolean,
       default: false
     }
   },
   data() {
     return {
-      value: "",
+      values: "",
       timeShow: false,
       selectTime: new Date(),
       pickerTime: ""
     };
   },
   methods: {
+    showTime() {
+      if (this.disable) return;
+      this.timeShow = true;
+    },
     // 补零
     addZero: function(str) {
       if (Number(str) < 10) {
@@ -63,12 +70,15 @@ export default {
       let H = this.addZero(date.getHours());
       let M = this.addZero(date.getMinutes());
       this.timeShow = false;
-      this.value = `${year}-${month}-${day} ${H}:${M}`;
+      this.values = `${year}-${month}-${day} ${H}:${M}`;
     }
   },
   watch: {
-    value() {
-      this.$emit("input", this.value);
+    value(val) {
+      this.values = val;
+    },
+    values() {
+      this.$emit("input", this.values);
     }
   }
 };

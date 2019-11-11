@@ -148,10 +148,19 @@ export default {
       let data = {
         data: sendData
       };
+      let that = this;
       this.$api.page_5
         .submitMyPaper(data, this.$userInfo.sessionId)
         .then(res => {
           console.log("res: ", res);
+          if (isFinalSubmit === 1) {
+            this.$Toast.success({
+              message: "提交成功",
+              onClose() {
+                that.pageBack();
+              }
+            });
+          }
         })
         .catch(() => {});
     }

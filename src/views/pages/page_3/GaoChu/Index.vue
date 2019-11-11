@@ -16,7 +16,7 @@
       <!-- 申请人 -->
       <cell-value title="申请人" :value="$userInfo.userName" disable></cell-value>
       <!-- 作业票编号 -->
-      <cell-value title="作业票编号" value disable></cell-value>
+      <cell-value title="作业票编号" :value="sendData.id" disable></cell-value>
       <!-- 作业票状态 -->
       <cell-value title="作业票状态" value="编辑" disable></cell-value>
       <!-- 作业内容 -->
@@ -604,8 +604,8 @@ export default {
       sendData.applyDept = this.$userInfo.officeName;
       sendData.applyRen = this.$userInfo.userName;
       sendData.__sid = this.$userInfo.sessionId;
-      console.log(111111)
-      console.log(sendData)
+      console.log(111111);
+      console.log(sendData);
       this.$api.page_3
         .htHseUpworkticketSave(sendData)
         .then(res => {
@@ -697,6 +697,37 @@ export default {
     },
     worker(res) {
       this.sendData.worker = res;
+    }
+  },
+  activated() {
+    console.log(1111);
+    this.sendData.id = "";
+    let zypId = this.$route.query.id;
+    let zypStatus = this.$route.query.status;
+    let isInitData = this.$route.query.moreInfo.isInitData;
+    console.log(this.$route);
+    if (zypStatus == 1 && isInitData == true) {
+      this.sendData.id = zypId;
+      this.$api.page_3
+        .htHseSxkjzypListData({
+          id: this.sendData.id,
+          __sid: localStorage.getItem("JiaHuaSessionId")
+        })
+        .then(res => {
+          console.log(res);
+          let content = res.list[0];
+          this.sendData.zyContent = content.zyContent;
+          this.sendData.devicename = content.devicename;
+          this.sendData.sxkjNeurogen = content.sxkjNeurogen;
+          this.sendData.zyOtherspecial = content.zyOtherspecial;
+          this.sendData.zywhBs = content.zywhBs;
+          this.sendData.zyStarttime = content.zyStarttime;
+          this.sendData.zyEndtime = content.zyStarttime;
+          this.sendData.zyPrincipal = content.zyPrincipal;
+          this.sendData.zyRen = content.zyRen;
+          this.sendData.guardian = content.guardian;
+        });
+      console.log(zypId);
     }
   }
 };

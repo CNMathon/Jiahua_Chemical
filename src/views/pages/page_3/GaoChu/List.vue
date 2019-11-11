@@ -37,7 +37,7 @@
             <div v-for="(item, index) in pageList" :key="index">
               <div
                 class="donghuo-list-card donghuo-list-card-nolast"
-                @click="toDetail(item.id, item.htStatus)"
+                @click="jumpToMorePage(item.htStatus, item.id)"
               >
                 <div class="left">
                   <div class="left-line left-line-notlast">作业内容：{{ item.workContent }}</div>
@@ -48,8 +48,8 @@
                   <div class="left-line left-line-notlast">作业开始时间：{{ item.startTime }}</div>
                   <div class="left-line">作业结束时间：{{ item.endTime }}</div>
                 </div>
-                <div class="right" v-if="item.htStatus == 1">编辑</div>
-                <div class="right" v-if="item.htStatus == 2">初审</div>
+				<div class="right" @click.stop="()=>{$router.push({path:'/page_3/gaochu/index',query:{id:item.id}})}" v-if="item.htStatus == 1">编辑</div>
+                <div class="right" @click.stop="()=>{$router.push({path:'/page_3/gaochu/index2',query:{id:item.id}})}" v-if="item.htStatus == 2">初审</div>
                 <div class="right" v-if="item.htStatus == 3">有效</div>
                 <div class="right" v-if="item.htStatus == 4">已验票</div>
                 <div class="right" v-if="item.htStatus == 5">已终结</div>
@@ -125,6 +125,7 @@ export default {
       }
       let sendData = {};
       sendData.__sid = this.$userInfo.sessionId;
+      sendData.workContent = this.searchValue;
       this.$api.page_3
         .htHseUpworkticketListData(sendData)
         .then(res => {
@@ -165,7 +166,29 @@ export default {
           status: status
         }
       });
-    }
+    },
+    jumpToMorePage(status, id) {
+      const that = this;
+      function todo(statusList, path, moreInfo = null) {
+        if (status == statusList) {
+          that.$router.push({
+            path: path,
+            query: {
+              status: status,
+              id: id,
+              moreInfo: moreInfo
+            }
+          })
+        }
+      }
+
+      // todo 参数
+      // 参数1 => 需要指定的 status
+      // 参数2 => 跳转页面
+      // 参数3 => 其他需要通过 router 传输的数据
+      todo(1, './index', {isInitData: true})
+      todo(2, './IndexChuShen', {isInitData: true})
+    },
   }
 };
 </script>
