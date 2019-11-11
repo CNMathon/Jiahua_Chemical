@@ -15,7 +15,7 @@
       @search="getPageData('refresh')"
       @tap="showFilter = true"
     ></j-filter-bar>
-    <j-filter v-model="showFilter" @confirm="confirmFilter">
+    <j-filter v-model="showFilter" @confirm="getPageData('refresh')">
       <j-filter-search v-model="searchValues" @search="filterSearch"></j-filter-search>
       <j-filter-item title="作业票状态" :actions="zypztList" @select="filterSelect_1"></j-filter-item>
       <j-filter-item title="动火等级" :actions="dhLevelColumns" @select="filterSelect_2"></j-filter-item>
@@ -26,14 +26,14 @@
       <div class="app">
         <van-skeleton title :row="5" :loading="isFirstLoading" class="skeleton">
           <van-pull-refresh v-model="isRefreshLoading" @refresh="getPageData('refresh')">
-            <van-list
+            <!-- <van-list
               v-model="isListLoading"
               :finished="isListMore"
               :error.sync="isListLoadingError"
               error-text="请求失败，点击重新加载"
               finished-text="没有更多了"
               @load="getPageData('list')"
-            >
+            > -->
               <label v-for="(item, index) in listData" :key="index">
                 <!-- 此处在做完AJAX后需要判断是否为最后行 - class存在判断 -->
                 <div class="donghuo-list-card donghuo-list-card-nolast" @click="tap(item)">
@@ -52,7 +52,7 @@
                   <div class="right" v-if="item.htStatus == 5">已终结</div>
                 </div>
               </label>
-            </van-list>
+            <!-- </van-list> -->
           </van-pull-refresh>
         </van-skeleton>
       </div>
@@ -115,7 +115,8 @@ export default {
           idnex: 5
         }
       ], //动火等级
-      selectZypzt: {} // 选择的作业票状态
+      selectZypzt: "", // 选择的作业票状态
+      selectDhlevel: "",
     };
   },
   mixins: [mixin],
@@ -153,6 +154,7 @@ export default {
       this.$api.page_3
         .htHseDhzypListData({
           siteContent: this.searchValue,
+          dhLevel: this.selectDhlevel,
           __sid: localStorage.getItem("JiaHuaSessionId")
         })
         .then(res => {
@@ -176,10 +178,11 @@ export default {
     confirmFilter() {},
     filterSearch(e) {},
     filterSelect_1(e) {
-      this.selectZypzt = e;
+      this.selectZypzt = e.name;
     },
     filterSelect_2(e) {
-      this.selectZypzt = e;
+      console.log(e.name)
+      this.selectDhlevel = e.name;
     }
   },
   created() {

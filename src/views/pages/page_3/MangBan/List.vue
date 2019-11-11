@@ -16,7 +16,7 @@
       @tap="showFilter = true"
     />
     <j-filter v-model="showFilter" @confirm="getPageData">
-      <j-filter-search v-model="searchValues" @search="testFun"></j-filter-search>
+      <j-filter-search v-model="searchValues" @search="filterSearch"></j-filter-search>
       <j-filter-item title="作业票状态" :actions="zypztList" @select="filterSelect_1"></j-filter-item>
       <j-filter-cell title="申请部门"></j-filter-cell>
       <j-filter-cell title="申请人"></j-filter-cell>
@@ -29,36 +29,35 @@
           :row="3"
           :loading="isLoading"
           class="skeleton"
-          v-for="(item, index) in 3"
-          :key="index"
-        ></van-skeleton>
-        <label v-for="(item, index) in listData" :key="index">
-          <!-- 此处在做完AJAX后需要判断是否为最后行 - class存在判断 -->
-          <div class="donghuo-list-card donghuo-list-card-nolast">
-            <div class="left">
-              <div class="left-line left-line-notlast">设备管道名称：{{item.pipe}}</div>
-              <div class="left-line left-line-notlast">盲板抽堵编号：{{item.mbzypCode}}</div>
-              <div class="left-line left-line-notlast left-line-hor">申请部门：{{item.applyDept}}</div>
-              <div class="left-line left-line-notlast left-line-hor">申请人：{{item.applyer}}</div>
-              <div class="left-line left-line-notlast">生活部门产品负责人：{{item.scMan}}</div>
-              <div class="left-line">作业部门负责人：{{item.zyMan}}</div>
+        >
+          <label v-for="(item, index) in listData" :key="index">
+            <!-- 此处在做完AJAX后需要判断是否为最后行 - class存在判断 -->
+            <div class="donghuo-list-card donghuo-list-card-nolast">
+              <div class="left">
+                <div class="left-line left-line-notlast">设备管道名称：{{item.pipe}}</div>
+                <div class="left-line left-line-notlast">盲板抽堵编号：{{item.mbzypCode}}</div>
+                <div class="left-line left-line-notlast left-line-hor">申请部门：{{item.applyDept}}</div>
+                <div class="left-line left-line-notlast left-line-hor">申请人：{{item.applyer}}</div>
+                <div class="left-line left-line-notlast">生活部门产品负责人：{{item.scMan}}</div>
+                <div class="left-line">作业部门负责人：{{item.zyMan}}</div>
+              </div>
+              <div
+                class="right"
+                @click.stop="()=>{$router.push({path:'/page_3/mangban/index',query:{id:item.id}})}"
+                v-if="item.htStatus == 1"
+              >编辑</div>
+              <div class="right" v-if="item.htStatus == 2">提交资料</div>
+              <div
+                class="right"
+                @click.stop="()=>{$router.push({path:'/page_3/mangban/index2',query:{id:item.id}})}"
+                v-if="item.htStatus == 3"
+              >初审</div>
+              <div class="right" v-if="item.htStatus == 4">审核</div>
+              <div class="right" v-if="item.htStatus == 5">有效</div>
+              <div class="right" v-if="item.htStatus == 6">结束</div>
             </div>
-            <div
-              class="right"
-              @click.stop="()=>{$router.push({path:'/page_3/mangban/index',query:{id:item.id}})}"
-              v-if="item.htStatus == 1"
-            >编辑</div>
-            <div class="right" v-if="item.htStatus == 2">提交资料</div>
-            <div
-              class="right"
-              @click.stop="()=>{$router.push({path:'/page_3/mangban/index2',query:{id:item.id}})}"
-              v-if="item.htStatus == 3"
-            >初审</div>
-            <div class="right" v-if="item.htStatus == 4">审核</div>
-            <div class="right" v-if="item.htStatus == 5">有效</div>
-            <div class="right" v-if="item.htStatus == 6">结束</div>
-          </div>
-        </label>
+          </label>
+        </van-skeleton>
       </div>
     </div>
   </div>
@@ -66,7 +65,6 @@
 
 <script>
 import { mixin } from "@/mixin/mixin";
-import ListCard from "@/views/pages/page_3/components/MangBanListCard";
 export default {
   data() {
     return {
@@ -75,6 +73,7 @@ export default {
       searchValues: "",
       zypztList: [
         // 作业票状态列表
+        { name: "请选择", index: -1 },
         { name: "编辑", index: 1 },
         { name: "提交资料", index: 2 },
         { name: "初审", index: 3 },
@@ -84,37 +83,22 @@ export default {
       ],
       searchStatus: "",
       isLoading: true,
-      listData: []
+      listData: [],
+      status: ""
     };
   },
   mixins: [mixin],
   methods: {
+    // 右侧文字点击文案
     onClickRight() {
       this.$router.push({
         path: "../mangban"
       });
     },
-    // initData() {
-    //   this.$api.page_3
-    //     .htHseMbzypListData({
-    //       __sid: localStorage.getItem("JiaHuaSessionId")
-    //     })
-    //     .then(res => {
-    //       this.listData = res.list;
-    //       this.isLoading = false;
-    //       console.log(this.listData);
-    //     });
-    // },
-    testFun() {
-      console.log(123)
-    },
-    getPageData(where) {
-      // console.log(123)
-      // if ((where = "refresh")) {
-      //   // this.pageNow = 1;
-      //   this.isRefreshLoading = true;
-      // }
 
+    // 获取页面数据
+    getPageData(where) {
+      this.isLoading = true
       this.$api.page_3
         .htHseMbzypListData({
           pipe: this.searchValue,
@@ -137,10 +121,10 @@ export default {
           }
         });
     },
-    confirmFilter() {},
     filterSearch() {},
     filterSelect_1(e) {
-      this.filterStatus = e.name
+      console.log(e)
+      this.searchStatus = e.index
     }
     // selectDonghuoZyp() {
     //   this.$api.page_3
@@ -156,9 +140,6 @@ export default {
   created() {
     this.getPageData();
   },
-  components: {
-    ListCard
-  }
 };
 </script>
 

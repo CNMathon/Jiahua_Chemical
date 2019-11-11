@@ -5,7 +5,7 @@
 			<van-nav-bar title="吊装安全" left-text="返回" right-text="发起" left-arrow @click-left="pageBack" @click-right="onClickRight" />
 			<j-filter-bar v-model="searchValue" placeholder="请输入吊装内容名称" @search="getListData(true)" @tap="setShowFilter()"></j-filter-bar>
 		</van-sticky>
-		<j-filter v-model="showFilter" @confirm="confirmFilter">
+		<j-filter v-model="showFilter" @confirm="getListData(true)">
 			<j-filter-search v-model="searchValues" @search="filterSearch"></j-filter-search>
 			<j-filter-item title="作业票状态" :actions="zypztList" @select="filterSelect_1"></j-filter-item>
 			<j-filter-cell title="申请部门"></j-filter-cell>
@@ -64,27 +64,28 @@
 				confirmSelectCbs: {},
 				zypztList: [{
 						name: "编辑",
-						idnex: 1
+						index: 1
 					},
 					{
 						name: "初审",
-						idnex: 2
+						index: 2
 					},
 					{
 						name: "有效",
-						idnex: 3
+						index: 3
 					},
 					{
 						name: "已验票",
-						idnex: 4
+						index: 4
 					},
 					{
 						name: "已终结",
-						idnex: 5
+						index: 5
 					}
 				] // 作业票状态列表
 			};
 		},
+		searchStatus: "",
 		mixins: [mixin],
 		methods: {
 			/**
@@ -105,6 +106,8 @@
 				}
 				let sendData = {};
 				sendData.__sid = this.$userInfo.sessionId;
+				sendData.sqr = this.searchValue;
+				sendData.htStatus = this.searchStatus;
 				this.$api.page_3
 					.htHseDzzypList(sendData)
 					.then(res => {
@@ -131,7 +134,10 @@
 				this.showFilter = true;
 			},
 			filterSearch() {},
-			filterSelect_1() {},
+			filterSelect_1(e) {
+				console.log(e)
+				this.searchStatus = e.index
+			},
 			confirmFilter() {},
 			onClickRight() {
 				this.$router.push({
