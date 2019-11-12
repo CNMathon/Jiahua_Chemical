@@ -1,23 +1,26 @@
 <template>
   <div class="guolu">
-    <div class="number">东侧烟囱</div>
+    <div class="number">{{info.name}}</div>
     <div class="value">
-      25.21
+      {{info.so2}}
       <div class="unit">mg/Nm³</div>
     </div>
     <div class="value">
-      82.20
+      {{info.nox}}
       <div class="unit">mg/Nm³</div>
     </div>
     <div class="value">
-      1.50
+      {{info.yanchen}}
       <div class="unit">mg/Nm³</div>
     </div>
   </div>
 </template>
 <script>
 export default {
-  name: "guoLu"
+  name: "guoLu",
+  props: {
+    info: Object
+  }
 };
 </script>
 <style lang="scss" scoped>

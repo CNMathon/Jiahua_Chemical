@@ -37,6 +37,14 @@ const routes = {
             name: '动火安全',
             keepAlive: true //此组件需要被缓存
           }
+        },{
+          path: '/page_3/donghuo/index3',
+          name: 'donghuo_index3',
+          component: () => import('../views/pages/page_3/DongHuo/Index3.vue'),
+          meta: {
+            name: '动火安全',
+            keepAlive: false //此组件需要被缓存
+          }
         },
         {
           path: '/page_3/donghuo/list',

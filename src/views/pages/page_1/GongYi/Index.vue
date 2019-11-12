@@ -1,11 +1,6 @@
 <template>
   <div class="gongyi">
-    <van-nav-bar
-      title="工艺卡片"
-      left-text="返回"
-      left-arrow
-      @click-left="pageBack"
-    />
+    <van-nav-bar title="新材料" left-text="返回" left-arrow @click-left="pageBack" />
     <Search></Search>
     <ActionBar></ActionBar>
     <div class="head">
@@ -17,8 +12,8 @@
       <div>值</div>
     </div>
     <div class="list">
-      <div class="item" v-for="index in 8" :key="index">
-        <Item></Item>
+      <div class="item" v-for="(item,index) in list" :key="index">
+        <Item :info="item"></Item>
       </div>
     </div>
   </div>
@@ -35,6 +30,39 @@ export default {
     Search,
     DropDown,
     Item
+  },
+  data() {
+    return {
+      list: [
+        {
+          title: "硫磺工艺",
+          name: "硫磺釜温度",
+          key: "2PIA-2001A",
+          value: "21"
+        },
+        {
+          title: "还原工艺",
+          name: "还原温度",
+          key: "3PICA-1001A",
+          value: "74",
+          unit: "℃"
+        },
+        {
+          title: "甲砜工艺",
+          name: "甲基化反应温度",
+          key: "2AIA-3011",
+          value: "97",
+          unit: "℃"
+        },
+        {
+          title: "BA工艺",
+          name: "氧化温度",
+          key: "3PIA-1101A",
+          value: "158",
+          unit: "℃"
+        }
+      ]
+    };
   },
   methods: {
     pageBack() {

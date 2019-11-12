@@ -1,17 +1,20 @@
 <template>
   <div class="guolu">
-    <div class="value">电解</div>
-    <div class="values">A套氯处理一楼环境氯气浓度</div>
-    <div class="values">2PIA-2001A</div>
+    <div class="value">{{info.title}}</div>
+    <div class="values">{{info.name}}</div>
+    <div class="values">{{info.key}}</div>
     <div class="number">
-      65
-      <div class="unit">kPa</div>
+      {{info.value}}
+      <div class="unit">{{info.unit}}</div>
     </div>
   </div>
 </template>
 <script>
 export default {
-  name: "guoLu"
+  name: "guoLu",
+  props: {
+    info: Object
+  }
 };
 </script>
 <style lang="scss" scoped>

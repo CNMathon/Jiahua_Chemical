@@ -95,7 +95,7 @@ export default {
           router: "/shaojian"
         },
         {
-          text: "工艺卡片",
+          text: "新材料",
           color: "rgba(78,169,232,0.1)",
           router: "/gongyi"
         },

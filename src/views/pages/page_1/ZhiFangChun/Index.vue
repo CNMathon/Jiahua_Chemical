@@ -16,9 +16,10 @@
       <div>值</div>
     </div>
     <div class="list">
-      <div class="item" v-for="index in 8" :key="index">
+      <!-- <div class="item" v-for="index in 4" :key="index">
         <Item></Item>
-      </div>
+      </div> -->
+      <Item2></Item2>
     </div>
   </div>
 </template>
@@ -27,13 +28,15 @@ import ActionBar from "../components/ActionBar";
 import Search from "../components/Search";
 import DropDown from "../components/DropDown";
 import Item from "./components/Item";
+import Item2 from "./components/Item2";
 export default {
   name: "liusuan",
   components: {
     ActionBar,
     Search,
     DropDown,
-    Item
+    Item,
+    Item2
   },
   methods: {
     pageBack() {

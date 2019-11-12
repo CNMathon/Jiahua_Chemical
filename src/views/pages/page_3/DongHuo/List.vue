@@ -128,9 +128,14 @@ export default {
           path: "../donghuo",
           query: { id: dhzypCode }
         });
-      } else {
+      } else if (Number(info.htStatus) === 2) {
         this.$router.push({
           path: "../donghuo/index2",
+          query: { id: dhzypCode }
+        });
+      } else {
+        this.$router.push({
+          path: "../donghuo/index3",
           query: { id: dhzypCode }
         });
       }

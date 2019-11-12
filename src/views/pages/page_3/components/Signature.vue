@@ -23,10 +23,15 @@ export default {
     img: {
       type: String,
       default: ""
+    },
+    disable: {
+      type: Boolean,
+      default: false
     }
   },
   watch: {
     checked(val) {
+      if (this.disable) return;
       if (val) {
         this.changeChecked(val);
       } else {

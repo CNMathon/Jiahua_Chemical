@@ -67,9 +67,18 @@
           class="tabs-box"
         >
           <ActionBar></ActionBar>
-          <div class="tabs-box-item" v-for="index in 3" :key="index">
-            <Panel :type="index"></Panel>
+          <div class="tabs-box-item">
+            <Panel name="温度" value="155℃"></Panel>
           </div>
+          <div class="tabs-box-item">
+            <Panel name="压力" value="61 Pa"></Panel>
+          </div>
+          <div class="tabs-box-item">
+            <Panel name="液位" value="329M"></Panel>
+          </div>
+          <!-- <div class="tabs-box-item">
+            <Panel2 :type="index"></Panel2>
+          </div> -->
         </van-tab>
       </van-tabs>
     </div>
@@ -93,6 +102,7 @@
 <script>
 import Liquidfill from "./components/Liquidfill";
 import Panel from "../components/Panel";
+import Panel2 from "../components/Panel2";
 import ActionBar from "../components/ActionBar";
 import SelectTime from "./components/SelectTime";
 import LineChart from "./components/LineChart";
@@ -102,6 +112,7 @@ export default {
   components: {
     Liquidfill,
     Panel,
+    Panel2,
     ActionBar,
     SelectTime,
     LineChart,
@@ -121,7 +132,7 @@ export default {
           router: "./shaojian"
         },
         {
-          text: "工艺卡片",
+          text: "新材料",
           color: "rgba(78,169,232,0.1)",
           router: "./gongyi"
         },

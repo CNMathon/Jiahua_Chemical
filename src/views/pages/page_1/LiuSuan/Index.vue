@@ -17,8 +17,37 @@
       <div>值</div>
     </div>
     <div class="list">
-      <div class="item" v-for="index in 8" :key="index">
-        <Item></Item>
+      <div class="item">
+        <Item
+          desc="壁炉温度T101"
+          id="2PIA-2001A"
+          :value="65"
+          unit="℃"
+        />
+      </div>
+      <div class="item">
+        <Item
+          desc="氯化压力"
+          id="3PICA-1001A"
+          :value="65"
+          unit="Mpa"
+        />
+      </div>
+      <div class="item">
+        <Item
+          desc="进料流量(低液位)"
+          id="2AIA-3011"
+          :value="65"
+          unit="μS/cm"
+        />
+      </div>
+      <div class="item">
+        <Item
+          desc="用气排放中氯氧化物含量"
+          id="3PICA-1101A"
+          :value="65"
+          unit="mm"
+        />
       </div>
     </div>
   </div>

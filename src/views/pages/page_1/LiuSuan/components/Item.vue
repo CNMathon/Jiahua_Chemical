@@ -1,18 +1,24 @@
 <template>
   <div class="guolu">
-    <div class="value">电解</div>
-    <div class="values">A套氯处理一楼环境氯气浓度</div>
-    <div class="values">2PIA-2001A</div>
+    <div class="value">装置名称</div>
+    <div class="values">{{desc}}</div>
+    <div class="values">{{id}}</div>
     <div class="number">
-      65
-      <div class="unit">kPa</div>
+      {{value}}
+      <div class="unit">{{unit}}</div>
     </div>
   </div>
 </template>
 <script>
 export default {
-  name: "guoLu"
-};
+  name: "guoLu",
+  props: {
+    desc: String,
+    id: String,
+    value: Number,
+    unit: String
+  }
+}
 </script>
 <style lang="scss" scoped>
 .guolu {
@@ -41,6 +47,7 @@ export default {
     font-size: 40px;
     font-weight: 500;
     color: rgba(255, 255, 255, 1);
+    text-align: right;
     .unit {
       font-size: 28px;
     }
