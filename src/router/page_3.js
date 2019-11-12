@@ -459,6 +459,15 @@ const routes = {
           props: true
         },
         {
+          path: '/page_3/dongtu/index2',
+          name: 'dongtu_index',
+          component: () => import('../views/pages/page_3/DongTu/Index2.vue'),
+          meta: {
+            keepAlive: true //此组件需要被缓存
+          },
+          props: true
+        },
+        {
           path: '/page_3/dongtu/index_2',
           name: 'dongtu_index_2',
           component: () => import('../views/pages/page_3/DongTu/Index2.vue'),

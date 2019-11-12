@@ -20,29 +20,13 @@
       <!-- 作业地点 -->
       <cell-input v-model="sendData.dtSite" title="作业地点" required placeholder="手工录入" disable></cell-input>
       <!-- 涉及其他特殊作业 -->
-      <cell-select-tag
-        required
-        title="涉及其他特殊作业"
-        storeKey="otherSpecial"
-        :tagList="sendData.otherSpecial"
-        :showList="list_1"
-        :storeModule="storeModule"
-        disable
-      ></cell-select-tag>
+      <cell-value title="涉及其他特殊作业" :value="String(sendData.otherSpecial)" disable></cell-value>
       <!-- 危害辨识 -->
-      <cell-select-tag
-        required
-        title="危害辨识"
-        storeKey="hazardSb"
-        :tagList="sendData.hazardSb"
-        :showList="list_1"
-        :storeModule="storeModule"
-        disable
-      ></cell-select-tag>
+      <cell-value title="危害辨识" :value="String(sendData.hazardSb)" disable></cell-value>
       <!-- 动土开始时间 -->
-      <cell-time v-model="sendData.dtStarttime" title="动土开始时间" required disable></cell-time>
+      <cell-value title="动土开始时间" :value="String(sendData.dtStarttime)" disable></cell-value>
       <!-- 动土结束时间 -->
-      <cell-time v-model="sendData.dtEndtime" title="动土结束时间" required disable></cell-time>
+      <cell-value title="动土结束时间" :value="String(sendData.dtEndtime)" disable></cell-value>
       <!-- 监护人 -->
       <cell-select-user
         title="监护人"
@@ -79,19 +63,20 @@
           <span>作业范围、内容、方式</span>
         </div>
         <div class="cell_other">
-          <textarea class="cell_textarea" placeholder="请输入工作内容" cols="30" rows="10" disable></textarea>
+          <textarea class="cell_textarea" placeholder="请输入工作内容" cols="30" rows="10" disabled></textarea>
         </div>
         <div class="cell_other">
           <div class="upload">
-            <div class="upload_icon">
+            <!-- <div class="upload_icon">
               <van-icon name="photo-o" />
-            </div>
+            </div> -->
             <div class="upload_box">
               <van-uploader
                 :before-read="beforeRead"
                 :before-delete="beforeDelete"
                 v-model="fileList"
                 preview-size="5rem"
+                disabled
               />
             </div>
           </div>

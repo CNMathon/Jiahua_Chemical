@@ -1,2 +1,0 @@
-(window["webpackJsonp"]=window["webpackJsonp"]||[]).push([["chunk-2d0d34a3"],{"5baa":function(e,a,n){"use strict";n.r(a);var t=function(){var e=this,a=e.$createElement,n=e._self._c||a;return n("div",{staticClass:"mangban_home"},[n("keep-alive",[e.$route.meta.keepAlive?n("router-view"):e._e()],1),e.$route.meta.keepAlive?e._e():n("router-view")],1)},r=[],u={name:"mangban_home"},i=u,l=n("2877"),o=Object(l["a"])(i,t,r,!1,null,null,null);a["default"]=o.exports}}]);
-//# sourceMappingURL=chunk-2d0d34a3.0cd0f949.js.map

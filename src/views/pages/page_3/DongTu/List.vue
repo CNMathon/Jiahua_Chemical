@@ -26,7 +26,7 @@
         <van-skeleton title :row="3" :loading="isLoading" class="skeleton">
           <label v-for="(item, index) in listData" :key="index">
             <!-- 此处在做完AJAX后需要判断是否为最后行 - class存在判断 -->
-            <div class="donghuo-list-card donghuo-list-card-nolast" @click="tap(item)">
+            <div class="donghuo-list-card donghuo-list-card-nolast" @click="jumpToMorePage(item.htStatus, item.dtzypCode)">
               <div class="left">
                 <div class="left-line left-line-notlast">动土作业票编号：{{item.dtzypCode}}</div>
                 <div class="left-line left-line-notlast">作业地点：{{item.mbzypCode}}</div>
@@ -91,13 +91,35 @@ export default {
           console.log(this.listData);
         });
     },
-    tap(info) {
-      console.log("info: ", info);
-      let dtzypCode = info.dtzypCode;
-      this.$router.push({
-        path: "../dongtu",
-        query: { id: dtzypCode }
-      });
+    // tap(info) {
+    //   console.log("info: ", info);
+    //   let dtzypCode = info.dtzypCode;
+    //   this.$router.push({
+    //     path: "../dongtu",
+    //     query: { id: dtzypCode }
+    //   });
+    // },
+    jumpToMorePage(status, code) {
+      const that = this;
+      function todo(statusList, path, moreInfo = null) {
+        if (status == statusList) {
+          that.$router.push({
+            path: path,
+            query: {
+              status: status,
+              id: code,
+              moreInfo: moreInfo
+            }
+          })
+        }
+      }
+
+      // todo 参数
+      // 参数1 => 需要指定的 status
+      // 参数2 => 跳转页面
+      // 参数3 => 其他需要通过 router 传输的数据
+      todo(1, './index', {isInitData: true})
+      todo(2, './Index2', {isInitData: true})
     },
     filterSelect_1(e) {
       console.log(e)
