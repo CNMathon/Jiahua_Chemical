@@ -11,6 +11,7 @@ import duanlu from './modules/duanlu';
 import quexian from './modules/quexian';
 import yinhuan from './modules/yinhuan';
 import mangban from './modules/mangban';
+import weizhang from "./modules/weizhang";
 
 Vue.use(Vuex);
 
@@ -28,7 +29,8 @@ export default new Vuex.Store({
     duanlu,
     quexian,
     yinhuan,
-    mangban
+    mangban,
+	weizhang
   },
   strict: debug
 });

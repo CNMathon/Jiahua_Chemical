@@ -48,8 +48,8 @@
                   <div class="left-line left-line-notlast">作业开始时间：{{ item.startTime }}</div>
                   <div class="left-line">作业结束时间：{{ item.endTime }}</div>
                 </div>
-				<div class="right" @click.stop="()=>{$router.push({path:'/page_3/gaochu/index',query:{id:item.id}})}" v-if="item.htStatus == 1">编辑</div>
-                <div class="right" @click.stop="()=>{$router.push({path:'/page_3/gaochu/index2',query:{id:item.id}})}" v-if="item.htStatus == 2">初审</div>
+				<div class="right" @click.stop="()=>{$router.push({path:'/page_3/gaochu/index',query:{gczyCode:item.gczyCode}})}" v-if="item.htStatus == 1">编辑</div>
+                <div class="right" @click.stop="()=>{$router.push({path:'/page_3/gaochu/index2',query:{gczyCode:item.gczyCode}})}" v-if="item.htStatus == 2">初审</div>
                 <div class="right" v-if="item.htStatus == 3">有效</div>
                 <div class="right" v-if="item.htStatus == 4">已验票</div>
                 <div class="right" v-if="item.htStatus == 5">已终结</div>
@@ -116,6 +116,7 @@ export default {
       this.$api.page_3
         .htHseUpworkticketListData(sendData)
         .then(res => {
+			console.log("res",res);
           // 加载状态结束
           this.loading = false;
           this.isLoading = false;

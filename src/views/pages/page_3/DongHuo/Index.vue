@@ -285,9 +285,10 @@ export default {
       tieqiuNumber: 0,
       miehuotanNumber: 0,
       signatureShow: false,
-      checked: [{ checked: false, image: "" }],
+      checked: [],
       selectSignatureShow: Number,
-      isShowAction: false
+      isShowAction: false,
+      oldInfo: {}
     };
   },
   computed: mapState({
@@ -301,7 +302,6 @@ export default {
     this.$store.dispatch("donghuo/cleanState");
   },
   activated() {
-    console.log(this.$route.query.id);
     if (this.$route.query.id) {
       if (this.queryId !== this.$route.query.id) {
         this.queryId = this.$route.query.id;
@@ -342,66 +342,59 @@ export default {
     // false => 有问题的输入
     isDataEdit() {
       // 动火地点和内容
-      if (this.sendData.siteContent == false) {
+      if (!this.sendData.siteContent) {
         this.$notify("请输入动火地点和内容");
         return false;
       }
       // 动火级别
-      if (this.sendData.dhLevel == null) {
+      if (!this.sendData.dhLevel) {
         this.$notify("请选择动火级别");
         return false;
       }
       // 动火方式
-      if (this.sendData.dhWay == false) {
+      if (this.sendData.dhWay.length === 0) {
         this.$notify("请选择动火方式");
         return false;
       }
       // 涉及其他作业
-      if (this.sendData.otherSpecial == false) {
+      if (this.sendData.otherSpecial.length === 0) {
         this.$notify("请选择涉及的其他特殊作业");
         return false;
       }
       // 危害辨识
-      if (this.sendData.hazardSb == false) {
+      if (this.sendData.hazardSb.length === 0) {
         this.$notify("请选择危害辨识");
         return false;
       }
       // 动火开始时间
-      if (this.sendData.dhStarttime == false) {
+      if (!this.sendData.dhStarttime) {
         this.$notify("请选择动火开始时间");
         return false;
       }
       // 动火结束时间
-      if (this.sendData.dhEndtime == false) {
+      if (!this.sendData.dhEndtime) {
         this.$notify("请选择动火结束时间");
         return false;
       }
       // 动火作业负责人
-      if (this.sendData.dhzyPrincipal == false) {
+      if (!this.sendData.dhzyPrincipal) {
         this.$notify("请选择动火作业负责人");
         return false;
       }
       // 危害辨识
-      if (this.sendData.hazardSb == false) {
-        this.$notify("请选择危害辨识");
-        return false;
-      }
-      // 危害辨识
-      if (this.sendData.hazardSb == false) {
+      if (this.sendData.hazardSb.length === 0) {
         this.$notify("请选择危害辨识");
         return false;
       }
       return true;
     },
 
-    // 发送数据
+    // 主表保存
     postData() {
       // 检测到输入不完整直接退出函数
-      // if (!this.isDataEdit()) {
-      //   return;
-      // }
-
-      const that = this;
+      if (!this.isDataEdit()) {
+        return;
+      }
       let sendData = JSON.parse(JSON.stringify(this.sendData));
       sendData.dhWay = this.stringData("dhWay", "list_1");
       sendData.otherSpecial = this.stringData("otherSpecial", "list_2");
@@ -410,8 +403,25 @@ export default {
         sendData.dhzyPrincipal,
         "userName"
       );
-
-      let messageId; // 主表查询返回的ID
+      sendData.dhzyRen = this.userString(sendData.dhzyRen, "userName");
+      sendData.applyDept = this.$userInfo.officeName;
+      sendData.applyRen = this.$userInfo.userName;
+      sendData.__sid = this.$userInfo.sessionId;
+      if (this.$route.query.id) {
+        sendData.id = this.oldInfo.id;
+        sendData.dhzypCode = this.oldInfo.dhzypCode;
+      }
+      this.$api.page_3
+        .htHseDhzypSave(sendData)
+        .then(res => {
+          // 子表保存
+          this.saveChi(res.message);
+        })
+        .catch(() => {});
+    },
+    // 子表保存
+    saveChi(messageId) {
+      const that = this;
       let sendSafeData = [
         {
           zypId: messageId,
@@ -477,78 +487,22 @@ export default {
           safetyStatus: this.checked[8] ? 1 : 0
         }
       ];
-
-      let ren0 = this.checked[0] ? this.checked[0].img : 0;
-      let ren1 = this.checked[1] ? this.checked[1].img : 1;
-      let ren2 = this.checked[2] ? this.checked[2].img : 2;
-      let ren3 = this.checked[3] ? this.checked[3].img : 3;
-      let ren4 = this.checked[4] ? this.checked[4].img : 4;
-      let ren5 = this.checked[5] ? this.checked[5].img : 5;
-      let ren6 = this.checked[6] ? this.checked[6].img : 6;
-      let ren7 = this.checked[7] ? this.checked[7].img : 6;
-
-      let sendSafeData1 = {
-        // __sid: localStorage.getItem('JiaHuaSessionId'),
-        zypId: messageId,
-        num: [1, 2, 3, 4, 5, 6, 7, 8],
-        affirmRen: [ren0, ren1, ren2, ren3, ren4, ren5, ren6, ren7],
-        safetyStatus: [
-          this.checked[1] ? 1 : 0,
-          this.checked[2] ? 1 : 0,
-          this.checked[3] ? 1 : 0,
-          this.checked[4] ? 1 : 0,
-          this.checked[5] ? 1 : 0,
-          this.checked[6] ? 1 : 0,
-          this.checked[7] ? 1 : 0,
-          this.checked[8] ? 1 : 0
-        ],
-        safetyCs: [
-          `动火设备内部构件清理干净,蒸汽吹扫或水洗合格,达到用火条件。`,
-          `断开与动火设备相连接的所有管线,加盲板${this.manbanNumber}块`,
-          `动火点周围的下水井、地漏、地沟、电缆沟等已清除易燃物,并已采取覆盖、铺沙、水封等手段进行隔离`,
-          `罐区内动火点同一围堰内和防火间距内的油罐不同时进行脱水作业`,
-          `高处作业已采取防火花飞溅措施`,
-          `动火点周围易燃物已清除`,
-          `电焊回路线已接在焊件上,把线未穿过下水井或与其他设备搭接`,
-          `乙炔气瓶(直立放置)、氧气瓶间距大于5米，与火源间的距离大于10米`,
-          `现场配备消防水带${this.fangshuidaiNumber}根，灭火器${this.miehuoqiNumber}台，铁锹${this.tieqiuNumber}把，灭火毯${this.miehuotanNumber}块`
-        ]
-      };
-
-      sendData.dhzyRen = this.userString(sendData.dhzyRen, "userName");
-      sendData.applyDept = this.$userInfo.officeName;
-      sendData.applyRen = this.$userInfo.userName;
-      sendData.__sid = this.$userInfo.sessionId;
-      sendData.dhStarttime = Date(sendData.dhStarttime);
-      sendData.dhEndtime = Date(sendData.dhEndtime);
-      console.log(1111111);
-      console.log(sendData);
       this.$api.page_3
-        .htHseDhzypSave(sendData)
+        .htHseDhzypSaveHtHseDhzypSafety(
+          JSON.stringify(sendSafeData),
+          this.$userInfo.sessionId
+        )
         .then(res => {
-          console.log("res: ", res);
-          messageId = res.message;
-          console.log(sendSafeData);
-          console.log(JSON.stringify(sendSafeData1));
-          this.$api.page_3
-            .htHseDhzypSaveHtHseDhzypSafety(
-              JSON.stringify(sendSafeData),
-              this.$userInfo.sessionId
-            )
-            .then(res => {
-              this.closeAction();
-              this.$Toast.success({
-                message: "提交成功",
-                onClose() {
-                  that.clearData();
-                  that.pageBack();
-                }
-              });
-            });
-        })
-        .catch(() => {});
+          this.closeAction();
+          this.$Toast.success({
+            message: "提交成功",
+            onClose() {
+              that.clearData();
+              that.pageBack();
+            }
+          });
+        });
     },
-
     // 返回上一页
     pageBack() {
       this.$router.back();
@@ -556,9 +510,7 @@ export default {
 
     onClickCheckbox(e) {
       setTimeout(() => {
-        console.log(e);
         this.checked[e] = false;
-        console.log(this.checked);
       }, 0);
     },
 
@@ -569,7 +521,6 @@ export default {
         img: ""
       };
       this.checked[this.selectSignatureShow].img = e;
-      console.log("signatureShow: ");
     },
     onMaterialCancel() {
       this.materialShowShow = false;
@@ -579,9 +530,7 @@ export default {
       this.checked[this.selectSignatureShow].img = "";
       this.signatureShow = false;
     },
-    testButtonClick() {
-      console.log(`父组件 = ${this.value}`);
-    },
+    testButtonClick() {},
     getManbanNumber(data) {
       this.manbanNumber = data;
     },
@@ -610,18 +559,15 @@ export default {
 
     // 显示签名
     showSignature(index) {
-      console.log("index: ", index);
-      console.log("显示签名");
       this.selectSignatureShow = index;
       this.signatureShow = true;
     },
     // 取消签名
     signatureCancel(index) {
-      console.log("index: ", index);
-      console.log("取消");
       this.checked[index].checked = false;
       this.checked[index].img = "";
     },
+    // 动火主表查询
     getPageData() {
       this.$api.page_3
         .htHseDhzypListData({
@@ -630,7 +576,7 @@ export default {
         })
         .then(res => {
           let info = res.list[0];
-          console.log("info: ", info);
+          this.oldInfo = info;
           for (const key in this.sendData) {
             if (key === "dhzyPrincipal") {
               this.sendData[key] = this.reductionSelectUser(info[key]);
@@ -658,6 +604,19 @@ export default {
               this.sendData[key] = info[key];
             }
           }
+          // 动火子表查询
+          this.mylistDataD();
+        });
+    },
+    // 动火子表查询
+    mylistDataD() {
+      this.$api.page_3
+        .mylistDataD({
+          id: this.oldInfo.id,
+          __sid: localStorage.getItem("JiaHuaSessionId")
+        })
+        .then(res => {
+          console.log("res: ", res);
         });
     }
   },

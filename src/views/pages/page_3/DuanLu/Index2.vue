@@ -14,10 +14,11 @@
       <!-- 申请人 -->
       <cell-value title="申请人" :value="$userInfo.userName" disable></cell-value>
       <!-- 作业票编号 -->
-      <cell-value title="作业票编号" value disable></cell-value>
+      <cell-value title="作业票编号" :value="$route.query.id" disable></cell-value>
       <!-- 作业票状态 -->
-      <cell-value title="作业票状态" value="编辑" disable></cell-value>
+      <cell-value title="作业票状态" value="初审" disable></cell-value>
       <!-- 断路原因 -->
+      <cell-value title="作业票状态" :value="storeModule" disable></cell-value>
       <cell-select-tag
         required
         title="断路原因"

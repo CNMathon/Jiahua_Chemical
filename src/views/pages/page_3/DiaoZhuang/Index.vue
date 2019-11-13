@@ -63,9 +63,9 @@
 			<!-- 作业结束时间 -->
 			<cell-time title="作业结束时间" v-model="sendData.zyjsDate" :minTime="sendData.zyksDate" required></cell-time>
 			<!-- 作业负责人 -->
-			<cell-select-user title="作业负责人" required :storeModule="storeModule" storeKey="zyfzr" v-model="sendData.zyfzr"></cell-select-user>
+			<cell-select-user title="作业负责人" :value="sendData.zyfzr" required :storeModule="storeModule" storeKey="zyfzr" v-model="sendData.zyfzr"></cell-select-user>
 			<!-- 监护人 -->
-			<cell-select-user title="负责人" required :storeModule="storeModule" storeKey="jhr" v-model="sendData.jhr"></cell-select-user>
+			<cell-select-user title="负责人" :value="sendData.jhr" required :storeModule="storeModule" storeKey="jhr" v-model="sendData.jhr"></cell-select-user>
 			<div class="confirm">
 				<div class="head">
 					<div class="head_1">安全措施</div>
@@ -244,7 +244,8 @@
 </template>
 <script>
 	import {
-		mapState
+		mapState,
+		mapMutations
 	} from "vuex";
 	import {
 		business
@@ -262,7 +263,7 @@
 		mixins: [business],
 		data() {
 			return {
-				infoId: 0, //详情id
+				zypcode: 0, //详情编号
 				storeModule: "diaozhuang",
 				sendData: {
 					dznr: "", //吊装内容
@@ -339,21 +340,57 @@
 			this.$store.dispatch("diaozhuang/cleanState");
 		},
 		created() {
-			this.infoId = this.$route.query.id || 0;
+			this.zypcode = this.$route.query.zypcode || 0;
 			this.getInfo();
 		},
 		methods: {
+			
+			...mapMutations('diaozhuang', {
+				setTag: 'setTag'
+			}),
 
 			//获取详情
 			getInfo() {
 
 				let sendData = {};
 				sendData.__sid = this.$userInfo.sessionId;
-				sendData.id = this.infoId;
+				sendData.zypcode = this.zypcode;
 				this.$api.page_3
 					.htHseDzzypList(sendData)
 					.then(res => {
-						console.log("res", res);
+						
+						const info=res.list[0];
+						
+						this.sendData.dznr=info.dznr;
+						this.sendData.dzdd=info.dzdd;
+						this.sendData.dzgjmc=info.dzgjmc;
+						this.sendData.qdzwzl=info.qdzwzl;
+						this.sendData.zyksDate=info.zyksDate;
+						this.sendData.zyjsDate=info.zyjsDate;
+						this.sendData.id=info.id;
+						
+						let zyfzr=[];
+						info.zyfzr.split(",").map(items=>{
+							zyfzr.push({
+								userName:items
+							});
+						})
+						this.sendData.zyfzr=zyfzr;
+						
+						let jhr=[];
+						info.jhr.split(",").map(items=>{
+							jhr.push({
+								userName:items
+							});
+						})
+						this.sendData.jhr=jhr;
+						
+						let whsb=[];
+						info.whsb.split(",").map(items=>{
+							whsb.push(this.list_1[items]);
+						})
+						this.setTag({tags:{key:"whsb",value:whsb}});
+						
 					})
 					.catch(() => {
 

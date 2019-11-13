@@ -52,6 +52,7 @@ export default {
   },
   watch: {
     value(value) {
+		
       let newValueArray = value.map(item => {
         return item.userName;
       });

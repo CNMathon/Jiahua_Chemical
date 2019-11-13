@@ -18,7 +18,7 @@
       <!-- 作业票状态 -->
       <cell-value title="作业票状态" value="编辑" disable></cell-value>
       <!-- 作业地点 -->
-      <cell-input v-model="sendData.dtSite" title="作业地点" required placeholder="手工录入" disable></cell-input>
+      <cell-input v-model="sendData.dtSite" title="作业地点" disable></cell-input>
       <!-- 涉及其他特殊作业 -->
       <cell-value title="涉及其他特殊作业" :value="String(sendData.otherSpecial)" disable></cell-value>
       <!-- 危害辨识 -->
@@ -30,7 +30,6 @@
       <!-- 监护人 -->
       <cell-select-user
         title="监护人"
-        required
         :storeModule="storeModule"
         storeKey="guardian"
         v-model="sendData.guardian"
@@ -51,7 +50,6 @@
       <!-- 作业负责人 -->
       <cell-select-user
         title="作业负责人"
-        required
         :storeModule="storeModule"
         storeKey="dtMan"
         v-model="sendData.dtMan"
@@ -77,6 +75,7 @@
                 v-model="fileList"
                 preview-size="5rem"
                 disabled
+                deletable="false"
               />
             </div>
           </div>
@@ -265,6 +264,7 @@ export default {
     },
     // 保存签名
     saveCanvas(e) {
+      // console.log(123)
       console.log("e: ", e);
       this.signatureShow = false;
     },

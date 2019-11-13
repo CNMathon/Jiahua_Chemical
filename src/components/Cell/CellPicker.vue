@@ -4,9 +4,8 @@
       <span>{{ title }}</span>
       <span class="required" v-if="required">*</span>
     </div>
-    <div class="cell_value" @click="showPicker()">{{ text || "点击选择" }}</div>
+    <div class="cell_value" @click="showPicker()">{{ showText() }}</div>
     <van-icon name="arrow" />
-    <!-- 时间选择 -->
     <van-popup v-model="pickerShow" position="bottom">
       <van-picker
         show-toolbar
@@ -20,10 +19,13 @@
 </template>
 <script>
 export default {
+created() {
+	console.log(this.value);
+},
   name: "cell_input",
   model: {
     prop: "value",
-    event: "input"
+    event: "change"
   },
   props: {
     title: String,
@@ -38,12 +40,13 @@ export default {
     disable: {
       type: Boolean,
       default: false
-    }
+    },
+    value: Number
   },
   data() {
     return {
-      value: "",
       text: "",
+      values: Number,
       pickerShow: false
     };
   },
@@ -56,21 +59,15 @@ export default {
     // 确认选择
     onMaterialConfirm(value, index) {
       this.pickerShow = false;
-      if (this.keyType) {
-        this.text = value[this.keyType];
-      } else {
-        this.text = value;
-      }
-      this.value = index;
+      this.values = index;
+      this.$emit("change", this.values + 1);
     },
     // 取消选择
     onMaterialCancel() {
       this.pickerShow = false;
-    }
-  },
-  watch: {
-    value() {
-      this.$emit("input", this.value + 1);
+    },
+    showText() {
+      return this.columns[this.value - 1] || "点击选择";
     }
   }
 };

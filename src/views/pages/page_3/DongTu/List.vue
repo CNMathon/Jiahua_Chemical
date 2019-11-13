@@ -29,11 +29,11 @@
             <div class="donghuo-list-card donghuo-list-card-nolast" @click="jumpToMorePage(item.htStatus, item.dtzypCode)">
               <div class="left">
                 <div class="left-line left-line-notlast">动土作业票编号：{{item.dtzypCode}}</div>
-                <div class="left-line left-line-notlast">作业地点：{{item.mbzypCode}}</div>
+                <div class="left-line left-line-notlast">作业地点：{{item.dtSite}}</div>
                 <div class="left-line left-line-notlast left-line-hor">申请部门：{{item.applyDept}}</div>
                 <div class="left-line left-line-notlast left-line-hor">申请人：{{item.applyer}}</div>
-                <div class="left-line left-line-notlast">动土开始时间：{{item.dtStarttime_gte}}</div>
-                <div class="left-line">动土结束时间：{{item.dtEndtime_gte}}</div>
+                <div class="left-line left-line-notlast">动土开始时间：{{item.dtStarttime}}</div>
+                <div class="left-line">动土结束时间：{{item.dtEndtime}}</div>
               </div>
               <div class="right" v-if="item.htStatus == 1">编辑</div>
               <div class="right" v-if="item.htStatus == 2">初审</div>

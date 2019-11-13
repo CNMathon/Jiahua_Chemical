@@ -379,6 +379,7 @@ export default {
 
     // 发送数据
     postData() {
+      this.isLoading = true
       const that = this;
       let sendData = JSON.parse(JSON.stringify(this.sendData));
       sendData.zyOtherspecial = this.stringData("zyOtherspecial", "list_1");
@@ -395,6 +396,7 @@ export default {
       this.$api.page_3
         .htHseSxkjzypSave(sendData)
         .then(res => {
+          this.isLoading = false
           console.log("res: ", res);
           this.$Toast.success({
             message: "提交成功",

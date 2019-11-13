@@ -258,7 +258,7 @@ const routes = {
           name: 'gaochu_index',
           component: () => import('../views/pages/page_3/GaoChu/Index.vue'),
           meta: {
-            keepAlive: false //此组件需要被缓存
+            keepAlive: true //此组件需要被缓存
           }
         },
 		{
@@ -266,7 +266,7 @@ const routes = {
 		  name: 'gaochu_index2',
 		  component: () => import('../views/pages/page_3/GaoChu/Index2.vue'),
 		  meta: {
-		    keepAlive: false //此组件需要被缓存
+		    keepAlive: true //此组件需要被缓存
 		  }
 		},
         {

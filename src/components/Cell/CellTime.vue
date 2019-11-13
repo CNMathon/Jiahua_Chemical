@@ -4,7 +4,7 @@
       <span>{{ title }}</span>
       <span class="required" v-if="required">*</span>
     </div>
-    <div class="cell_value" @click="showTime()">{{ value || "点击选择" }}</div>
+    <div class="cell_value" @click="showTime()">{{ showText() }}</div>
     <van-icon name="arrow" />
     <!-- 时间选择 -->
     <van-popup v-model="timeShow" position="bottom">
@@ -63,22 +63,18 @@ export default {
     },
     // 确认时间选择
     onTimeConfirm(val) {
-      let date = new Date(val);
-      let year = date.getFullYear();
-      let month = this.addZero(date.getMonth() + 1);
-      let day = this.addZero(date.getDate());
-      let H = this.addZero(date.getHours());
-      let M = this.addZero(date.getMinutes());
+      this.values = val;
       this.timeShow = false;
-      this.values = `${year}-${month}-${day} ${H}:${M}`;
+    },
+    showText() {
+      return this.value
+        ? this.$dayjs(this.value).format("YYYY-MM-DD HH:mm")
+        : "点击选择";
     }
   },
   watch: {
-    value(val) {
-      this.values = val;
-    },
     values() {
-      this.$emit("input", this.values);
+      this.$emit("input", this.$dayjs(this.values).valueOf());
     }
   }
 };

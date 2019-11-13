@@ -31,7 +31,7 @@
               <div class="left-line left-line-notlast">隐患等级：{{item.dangerLevel}}</div>
               <div class="left-line left-line-notlast">隐患类型：{{item.dangerType}}</div>
             </div>
-            <div class="right" v-if="item.htStatus == 1">编辑</div>
+            <div class="right" @click.stop="()=>{$router.push({path:'/page_3/yinhuan/index',query:{id:item.id}})}" v-if="item.htStatus == 1">编辑</div>
             <div class="right" v-if="item.htStatus == 2">验收关闭</div>
             <div class="right" v-if="item.htStatus == 3">整改中</div>
             <div class="right" v-if="item.htStatus == 4">预申请</div>
@@ -76,7 +76,10 @@ export default {
           this.isLoading = false
           console.log(this.listData)
         });
-    }
+    },
+	getPageData(e){
+		console.log(e);
+	}
   },
   created() {
     this.listSelect()

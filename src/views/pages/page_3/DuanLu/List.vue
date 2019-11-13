@@ -30,7 +30,7 @@
         >
           <label v-for="(item, index) in listData" :key="index">
             <!-- 此处在做完AJAX后需要判断是否为最后行 - class存在判断 -->
-            <div class="donghuo-list-card donghuo-list-card-nolast">
+            <div class="donghuo-list-card donghuo-list-card-nolast" @click="jumpToMorePage(item.htStatus, item.permitCode)">
               <div class="left">
                 <div class="left-line left-line-notlast">许可证编号：{{item.permitCode}}</div>
                 <div class="left-line left-line-notlast">断路原因：{{item.reason}}</div>
@@ -39,16 +39,8 @@
                 <div class="left-line left-line-notlast">作业开始时间：{{item.offtimeStart}}</div>
                 <div class="left-line">作业结束时间：{{item.offtimeEnd}}</div>
               </div>
-              <div
-                class="right"
-                @click.stop="()=>{$router.push({path:'/page_3/duanlu/index',query:{id:item.id}})}"
-                v-if="item.htStatus == 1"
-              >编辑</div>
-              <div
-                class="right"
-                @click.stop="()=>{$router.push({path:'/page_3/duanlu/index2',query:{id:item.id}})}"
-                v-if="item.htStatus == 2"
-              >初审</div>
+              <div class="right" v-if="item.htStatus == 1">编辑</div>
+              <div class="right" v-if="item.htStatus == 2">初审</div>
               <div class="right" v-if="item.htStatus == 3">审核</div>
               <div class="right" v-if="item.htStatus == 4">有效</div>
               <div class="right" v-if="item.htStatus == 5">结束</div>
@@ -97,6 +89,30 @@ export default {
   },
   mixins: [mixin],
   methods: {
+    // 跳转至详情页
+    jumpToMorePage(status, code) {
+      const that = this;
+      function todo(statusList, path, moreInfo = null) {
+        if (status == statusList) {
+          that.$router.push({
+            path: path,
+            query: {
+              status: status,
+              id: code,
+              moreInfo: moreInfo
+            }
+          })
+        }
+      }
+
+      // todo 参数
+      // 参数1 => 需要指定的 status
+      // 参数2 => 跳转页面
+      // 参数3 => 其他需要通过 router 传输的数据
+      todo(1, './index', {isInitData: true})
+      todo(2, './Index2', {isInitData: true})
+    },
+
     // 点击右侧文案事件
     onClickRight() {
       this.$router.push({

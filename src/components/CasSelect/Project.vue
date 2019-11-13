@@ -30,20 +30,13 @@ export default {
         {
           name: 'A化工厂',
           children: [
-            {
-              name: 'a-a'
-            },
-            {
-              name: 'a-b'
-            }
+           
           ]
         },
         {
           name: 'B化工厂',
           children: [
-            {
-              name: 'b-a'
-            }
+           
           ]
         }
       ],
@@ -55,12 +48,7 @@ export default {
       this.$router.back();
     },
     onClickCell() {
-      this.$router.push({
-        path: './Project',
-        params: {
-          testData: 'aaa'
-        }
-      })
+      this.$router.back();
     },
     created() {
       console.log(this.$route.params.testData)

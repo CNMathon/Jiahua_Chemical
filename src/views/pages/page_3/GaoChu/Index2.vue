@@ -117,7 +117,8 @@
 
 <script>
 	import {
-		mapState
+		mapState,
+		mapMutations
 	} from "vuex";
 	import {
 		business
@@ -157,6 +158,85 @@
 
 		},
 		methods: {
+
+			...mapMutations('gaochu', {
+				setTag: 'setTag'
+			}),
+
+			/**
+			 * 获取工作票内容
+			 */
+			getData() {
+				console.log("获取工作票内容");
+				let sendData = {};
+				sendData.gczyCode = this.gczyCode;
+				sendData.__sid = this.$userInfo.sessionId;
+				this.$api.page_3
+					.htHseUpworkticketListData(sendData)
+					.then(res => {
+
+						const info = res.list[0];
+
+						this.sendData.workContent = info.workContent;
+						this.sendData.workAddress = info.workAddress;
+						this.sendData.workHeight = Number(info.workHeight);
+						this.sendData.heightType = Number(info.heightType);
+						this.sendData.startTime = info.startTime;
+						this.sendData.endTime = info.endTime;
+						this.sendData.specialWork = info.specialWork.split(",");
+						this.sendData.harmAnalise = info.harmAnalise.split(",");
+
+						let workDeptLeader = [];
+						info.workDeptLeader.split(",").map(items => {
+							workDeptLeader.push({
+								userName: items
+							});
+						})
+
+						let worker = [];
+						info.worker.split(",").map(items => {
+							worker.push({
+								userName: items
+							});
+						})
+
+						let guarder = [];
+						info.guarder.split(",").map(items => {
+							guarder.push({
+								userName: items
+							});
+						})
+
+						this.sendData.workDeptLeader = workDeptLeader;
+						this.sendData.worker = worker;
+						this.sendData.guarder = guarder;
+
+						let specialWork = [];
+						this.sendData.specialWork.map(items => {
+							specialWork.push(this.list_1[items]);
+						})
+						let harmAnalise = [];
+						this.sendData.harmAnalise.map(items => {
+							harmAnalise.push(this.list_2[items]);
+						})
+						this.setTag({
+							tags: {
+								key: "harmAnalise",
+								value: harmAnalise
+							}
+						});
+						this.setTag({
+							tags: {
+								key: "specialWork",
+								value: specialWork
+							}
+						});
+
+						console.log(this.sendData);
+
+					})
+					.catch(() => {});
+			},
 
 			// 打开操作Popup
 			openAction() {
