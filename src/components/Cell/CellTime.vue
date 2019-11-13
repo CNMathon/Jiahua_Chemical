@@ -1,5 +1,5 @@
 <template>
-  <div class="cell">
+  <div class="cell" :class="[border ? 'border' : '',disable? 'disable': '']">
     <div class="cell_title">
       <span>{{ title }}</span>
       <span class="required" v-if="required">*</span>
@@ -34,6 +34,10 @@ export default {
     required: {
       type: Boolean,
       default: false
+    },
+    border: {
+      type: Boolean,
+      default: true
     },
     disable: {
       type: Boolean,
@@ -74,7 +78,7 @@ export default {
   },
   watch: {
     values() {
-      this.$emit("input", this.$dayjs(this.values).valueOf());
+      this.$emit("input", this.$dayjs(this.value).format("YYYY-MM-DD HH:mm"));
     }
   }
 };
@@ -111,7 +115,9 @@ export default {
     justify-content: center;
     color: #888888;
   }
-  .cell::after {
+}
+.border {
+  &::after {
     position: absolute;
     box-sizing: border-box;
     content: " ";
@@ -123,5 +129,8 @@ export default {
     -webkit-transform: scaleY(0.5);
     transform: scaleY(0.5);
   }
+}
+.disable {
+  background-color: #f5f5f5 !important;
 }
 </style>

@@ -41,11 +41,12 @@
                   <div class="left-line">作业结束时间：{{ item.powertimeEnd }}</div>
                 </div>
                 <div>
-                  <div class="right" v-if="item.htStatus == 2">初审</div>
+                  <!-- <div class="right" v-if="item.htStatus == 2">初审</div>
                   <div class="right" v-else-if="item.htStatus == 3">有效</div>
                   <div class="right" v-else-if="item.htStatus == 4">已验票</div>
                   <div class="right" v-else-if="item.htStatus == 5">已终结</div>
-                  <div class="right" v-else @click="edit(item)">编辑</div>
+                  <div class="right" v-else @click="edit(item)">编辑</div> -->
+				  <div class="right" @click="edit(item)">编辑</div>
                 </div>
               </div>
             </div>
@@ -90,7 +91,8 @@ export default {
   methods: {
     // 编辑
     edit(item) {
-      this.$router.push({ name: "linshi_index", query: { id: item.id } });
+		console.log(item);
+      this.$router.push({ name: "linshi_index", query: { zypCode: item.zypCode } });
     },
     /**
      * 获取吊装工作票

@@ -1,19 +1,19 @@
 <template>
-  <div class="cell" :class="[border ? 'border' : '']">
+  <div class="cell" :class="[border ? 'border' : '',disable? 'disable': '']">
     <div class="cell_title">
       <span>{{ title }}</span>
       <span class="required" v-if="required">*</span>
     </div>
     <div class="cell_other">
       <textarea
-        :disabled="disabled"
+        ref="cell_textarea"
         class="cell_textarea"
         cols="30"
         rows="10"
         type="text"
         :placeholder="placeholder"
-        ref="cell_textarea"
         :value="value"
+        :disabled="disable"
         @input="$emit('input', $event.target.value)"
       ></textarea>
     </div>
@@ -32,7 +32,7 @@ export default {
       type: Boolean,
       default: true
     },
-    disabled: {
+    disable: {
       type: Boolean,
       default: false
     },
@@ -95,5 +95,8 @@ export default {
     -webkit-transform: scaleY(0.5);
     transform: scaleY(0.5);
   }
+}
+.disable {
+  background-color: #f5f5f5 !important;
 }
 </style>

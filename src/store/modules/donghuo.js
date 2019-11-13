@@ -4,7 +4,8 @@ const state = {
   otherSpecial: [],
   hazardSb: [],
   dhzyPrincipal: [],
-  dhzyRen: []
+  dhzyRen: [],
+  fxRenA: [] //分析人1
 };
 
 // getters

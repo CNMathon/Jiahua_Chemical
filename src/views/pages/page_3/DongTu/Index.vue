@@ -16,7 +16,7 @@
           <!-- 申请人 -->
           <cell-value title="申请人" :value="$userInfo.userName" disable></cell-value>
           <!-- 作业票编号 -->
-          <cell-value title="作业票编号" :value="$route.query.id" disable></cell-value>
+          <cell-value title="作业票编号" :value="$route.query.code" disable></cell-value>
           <!-- 作业票状态 -->
           <cell-value title="作业票状态" value="编辑" disable></cell-value>
           <!-- 作业地点 -->
@@ -30,17 +30,15 @@
             :showList="list_1"
             :storeModule="storeModule"
           ></cell-select-tag>
-          {{sendData.otherSpecial}}
           <!-- 危害辨识 -->
           <cell-select-tag
             required
             title="危害辨识"
             storeKey="hazardSb"
             :tagList="sendData.hazardSb"
-            :showList="list_1"
+            :showList="list_2"
             :storeModule="storeModule"
           ></cell-select-tag>
-          {{sendData.hazardSb}}
           <!-- 动土开始时间 -->
           <cell-time v-model="sendData.dtStarttime" title="动土开始时间" required></cell-time>
           <!-- 动土结束时间 -->
@@ -74,13 +72,13 @@
             v-model="sendData.dtMan"
           ></cell-select-user>
           <!-- 作业范围、内容、方式 -->
-          <div class="cell border_none">
+          <div class="cell border_none image-update">
             <div class="cell_title">
-              <span>作业范围、内容、方式</span>
+              <span>动土范围示意图及相关说明</span>
             </div>
-            <div class="cell_other">
+            <!-- <div class="cell_other">
               <textarea class="cell_textarea" placeholder="请输入工作内容" cols="30" rows="10"></textarea>
-            </div>
+            </div> -->
             <div class="cell_other">
               <div class="upload">
                 <!-- <div class="upload_icon">
@@ -175,10 +173,10 @@ export default {
     }
   },
   activated() {
-    console.log(this.$route.query.id);
-    if (this.$route.query.id) {
-      if (this.queryId !== this.$route.query.id) {
-        this.queryId = this.$route.query.id;
+    console.log('code:', this.$route.query.code);
+    if (this.$route.query.code) {
+      if (this.queryId !== this.$route.query.code) {
+        this.queryId = this.$route.query.code;
         this.getPageData();
       }
     }
@@ -205,6 +203,7 @@ export default {
       let htDeviceDefect_file = this.fileList.map(item => {
         return item.id
       })
+      console.log('file', htDeviceDefect_file)
       sendData.otherSpecial = this.stringData("otherSpecial", "list_1");
       sendData.hazardSb = this.stringData("hazardSb", "list_2");
       sendData.guardian = this.userString(sendData.guardian, "userName");
@@ -214,6 +213,8 @@ export default {
       sendData.dtSite = this.sendData.dtSite; // 作业地点
       sendData.htDeviceDefect_file = htDeviceDefect_file.join(",");
       sendData.__sid = this.$userInfo.sessionId;
+      sendData.dtStarttime = this.sendData.dtStarttime
+      sendData.dtEndtime = this.sendData.dtEndtime
       if (this.$route.query.id) {
         sendData.id = this.$route.query.id;
       }
@@ -235,13 +236,15 @@ export default {
       this.isLoading = true
       this.$api.page_3
         .htHseDtzypListData({
-          dtzypCode: this.queryId,
+          dtzypCode: this.$route.query.code,
           __sid: localStorage.getItem("JiaHuaSessionId")
         })
         .then(res => {
           this.isLoading = false
           let info = res.list[0];
-          console.log("info: ", info);
+          console.log("pageData: ", info);
+          console.log("id: ", info.id);
+          this.sendData.id = info.id
           for (const key in this.sendData) {
             if (key === "guardian") {
               this.sendData[key] = this.reductionSelectUser(info[key]);
@@ -265,7 +268,7 @@ export default {
           }
           console.log("this.sendData: ", this.sendData);
         });
-    }
+    },
   },
   watch: {
     otherSpecial(res) {
@@ -312,6 +315,9 @@ export default {
       color: rgb(0, 118, 255);
       font-size: 35px;
     }
+  }
+  .image-update {
+    flex-wrap: initial !important;
   }
 }
 </style>

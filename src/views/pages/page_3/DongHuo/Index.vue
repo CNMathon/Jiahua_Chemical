@@ -212,14 +212,15 @@
 <script>
 import { mapState } from "vuex";
 import { business } from "@/mixin/business";
-import DonghuoConfirm from "./Confirm";
-import StepperPlus from "@/components/StepperPlus.vue";
 import Canvas from "@/components/Canvas.vue";
 import Signature from "../components/Signature.vue";
-// import Action from "../components/Action/Index.vue"
 export default {
   name: "donghuo",
   mixins: [business],
+  components: {
+    Canvas,
+    Signature
+  },
   data() {
     return {
       storeModule: "donghuo",
@@ -290,6 +291,23 @@ export default {
       isShowAction: false,
       oldInfo: {}
     };
+  },
+  watch: {
+    dhWay(res) {
+      this.sendData.dhWay = res;
+    },
+    otherSpecial(res) {
+      this.sendData.otherSpecial = res;
+    },
+    hazardSb(res) {
+      this.sendData.hazardSb = res;
+    },
+    dhzyPrincipal(res) {
+      this.sendData.dhzyPrincipal = res;
+    },
+    dhzyRen(res) {
+      this.sendData.dhzyRen = res;
+    }
   },
   computed: mapState({
     dhWay: state => state.donghuo.dhWay,
@@ -503,17 +521,6 @@ export default {
           });
         });
     },
-    // 返回上一页
-    pageBack() {
-      this.$router.back();
-    },
-
-    onClickCheckbox(e) {
-      setTimeout(() => {
-        this.checked[e] = false;
-      }, 0);
-    },
-
     saveCanvas(e) {
       this.signatureShow = false;
       this.checked[this.selectSignatureShow] = {
@@ -522,41 +529,11 @@ export default {
       };
       this.checked[this.selectSignatureShow].img = e;
     },
-    onMaterialCancel() {
-      this.materialShowShow = false;
-    },
     cancelCanvas() {
       this.checked[this.selectSignatureShow].checked = false;
       this.checked[this.selectSignatureShow].img = "";
       this.signatureShow = false;
     },
-    testButtonClick() {},
-    getManbanNumber(data) {
-      this.manbanNumber = data;
-    },
-    getFangshuidaiNumber(data) {
-      this.fangshuidaiNumber = data;
-    },
-    getMiehuoqiNumber(data) {
-      this.miehuoqiNumber = data;
-    },
-    getTieqiuNumber(data) {
-      this.tieqiuNumber = data;
-    },
-    getMiehuotanNumber(data) {
-      this.miehuotanNumber = data;
-    },
-
-    testme() {
-      console.log({
-        manbanNumber: this.manbanNumber,
-        fangshuidaiNumber: this.fangshuidaiNumber,
-        miehuoqiNumber: this.miehuoqiNumber,
-        tieqiuNumber: this.tieqiuNumber,
-        miehuotanNumber: this.miehuotanNumber
-      });
-    },
-
     // 显示签名
     showSignature(index) {
       this.selectSignatureShow = index;
@@ -619,37 +596,6 @@ export default {
           console.log("res: ", res);
         });
     }
-  },
-  watch: {
-    dhWay(res) {
-      this.sendData.dhWay = res;
-    },
-    otherSpecial(res) {
-      this.sendData.otherSpecial = res;
-    },
-    hazardSb(res) {
-      this.sendData.hazardSb = res;
-    },
-    dhzyPrincipal(res) {
-      this.sendData.dhzyPrincipal = res;
-    },
-    dhzyRen(res) {
-      this.sendData.dhzyRen = res;
-    },
-    // 材质选择
-    onMaterialConfirm(value, index) {
-      this.materialShowShow = false;
-      this.material = {
-        index: index,
-        value: value
-      };
-    }
-  },
-  components: {
-    DonghuoConfirm,
-    Canvas,
-    StepperPlus,
-    Signature
   }
 };
 </script>

@@ -1,11 +1,11 @@
 <template>
-  <div class="cell" @click="toSelectUser">
+  <div class="cell" :class="[border ? 'border' : '',disable? 'disable': '']" @click="toSelectUser">
     <div class="cell_title">
       <span>{{ title }}</span>
       <span class="required" v-if="required">*</span>
     </div>
     <div class="cell_value">
-      <span>{{ showNames || "人名" }}</span>
+      <span>{{ showNames() || "人名" }}</span>
       <span class="cell_value_arrow">
         <van-icon name="search" />
       </span>
@@ -21,7 +21,7 @@ export default {
   },
   data() {
     return {
-      showNames: ""
+      values: []
     };
   },
   props: {
@@ -33,7 +33,15 @@ export default {
       default: false
     },
     value: Array,
+    border: {
+      type: Boolean,
+      default: true
+    },
     disable: {
+      type: Boolean,
+      default: false
+    },
+    radio: {
       type: Boolean,
       default: false
     }
@@ -45,18 +53,19 @@ export default {
         path: "./select_user",
         query: {
           storeModule: this.storeModule,
-          storeKey: this.storeKey
+          storeKey: this.storeKey,
+          radio: this.radio
         }
       });
-    }
-  },
-  watch: {
-    value(value) {
-		
-      let newValueArray = value.map(item => {
-        return item.userName;
-      });
-      this.showNames = newValueArray.join(",");
+    },
+    showNames() {
+      if (this.value) {
+        let arr = JSON.parse(JSON.stringify(this.value));
+        let newArr = arr.map(item => {
+          return item.userName;
+        });
+        return newArr.join(",");
+      }
     }
   }
 };
@@ -96,7 +105,9 @@ export default {
       margin-left: 10px;
     }
   }
-  .cell::after {
+}
+.border {
+  &::after {
     position: absolute;
     box-sizing: border-box;
     content: " ";
@@ -108,5 +119,8 @@ export default {
     -webkit-transform: scaleY(0.5);
     transform: scaleY(0.5);
   }
+}
+.disable {
+  background-color: #f5f5f5 !important;
 }
 </style>

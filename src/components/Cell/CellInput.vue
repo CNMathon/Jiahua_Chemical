@@ -1,5 +1,5 @@
 <template>
-  <div class="cell">
+  <div class="cell" :class="[border ? 'border' : '',disable? 'disable': '']">
     <div class="cell_title">
       <span>{{ title }}</span>
       <span class="required" v-if="required">*</span>
@@ -32,6 +32,10 @@ export default {
     },
     value: String || Number,
     placeholder: String,
+    border: {
+      type: Boolean,
+      default: true
+    },
     disable: {
       type: Boolean,
       default: false
@@ -78,7 +82,10 @@ export default {
       color: #2d2c33;
     }
   }
-  .cell::after {
+}
+.border {
+  position: relative;
+  &::after {
     position: absolute;
     box-sizing: border-box;
     content: " ";
@@ -90,5 +97,8 @@ export default {
     -webkit-transform: scaleY(0.5);
     transform: scaleY(0.5);
   }
+}
+.disable {
+  background-color: #f5f5f5 !important;
 }
 </style>

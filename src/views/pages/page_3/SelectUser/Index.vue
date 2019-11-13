@@ -1,11 +1,6 @@
 <template>
   <div class="select-user">
-    <van-nav-bar
-      title="人员选择"
-      left-text="返回"
-      left-arrow
-      @click-left="pageBack"
-    />
+    <van-nav-bar title="人员选择" left-text="返回" left-arrow @click-left="pageBack" />
     <div class="head">
       <van-search
         v-model="searchValue"
@@ -18,20 +13,11 @@
       />
     </div>
     <div class="list">
-      <van-list
-        v-model="loading"
-        :finished="finished"
-        finished-text="没有更多了"
-        @load="getUserData"
-      >
-        <van-checkbox-group v-model="result">
+      <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="getUserData">
+        <!-- 多选 -->
+        <van-checkbox-group v-model="result" v-if="!$route.query.radio">
           <van-cell-group>
-            <van-cell
-              v-for="(item, index) in list"
-              clickable
-              :key="item.id"
-              @click="toggle(index)"
-            >
+            <van-cell v-for="(item, index) in list" clickable :key="item.id" @click="toggle(index)">
               <template slot="title">
                 <div class="cell-title">
                   <div class="header">
@@ -47,11 +33,39 @@
             </van-cell>
           </van-cell-group>
         </van-checkbox-group>
+        <!-- 单选 -->
+        <van-radio-group v-model="radio" v-else>
+          <van-cell-group>
+            <van-cell
+              v-for="(item, index) in list"
+              clickable
+              :key="item.id"
+              @click="tapRadio(index)"
+            >
+              <template slot="title">
+                <div class="cell-title">
+                  <div class="header">
+                    <img :src="item.avatarUrl" alt srcset />
+                  </div>
+                  <div class="info">
+                    <div class="name">{{ item.userName }}</div>
+                    <div class="department">{{ item.fullName }}</div>
+                  </div>
+                </div>
+              </template>
+              <van-radio slot="icon" :name="index" />
+              <!-- <van-checkbox :name="item" ref="checkboxes" slot="icon" /> -->
+            </van-cell>
+          </van-cell-group>
+        </van-radio-group>
       </van-list>
     </div>
-    <div class="action" @click="pageBack">
-      确定（{{ result.length }}/{{ pageSetting.count }}）
-    </div>
+    <div
+      class="action"
+      v-if="!$route.query.radio"
+      @click="pageBack"
+    >确定（{{ result.length }}/{{ pageSetting.count }}）</div>
+    <div class="action" v-else @click="pageBack">确定</div>
   </div>
 </template>
 <script>
@@ -68,7 +82,8 @@ export default {
       list: [],
       loading: false,
       finished: false,
-      result: []
+      result: [],
+      radio: ""
     };
   },
   created() {
@@ -87,7 +102,6 @@ export default {
       this.searchValue = "";
       this.list = "";
       this.getUserData();
-      console.log(123);
     },
     onLoad() {
       // 异步更新数据
@@ -107,27 +121,11 @@ export default {
     toggle(index) {
       this.$refs.checkboxes[index].toggle();
     },
-    check() {
-      console.log(this.results);
-      //   this.result = JSON.parse(JSON.stringify(this.results));
-      //   this.list.forEach((element, index) => {
-      //     this.result.forEach(elements => {
-      //       if (element.userCode === elements.userCode) {
-      //         this.clickChech(index);
-      //         console.log("elements.userCode: ", elements.userCode);
-      //         console.log("index: ", index);
-      //         // this.$refs.checkboxes[index].toggle();
-      //         // this.$refs.checkboxes[index].toggle();
-      //       }
-      //     });
-      //   });
+    tapRadio(index) {
+      this.radio = index;
     },
     clickChech() {
       this.$nextTick(index => {
-        console.log(
-          "this.$refs.checkboxes[index]: ",
-          this.$refs.checkboxes.checked
-        );
         this.$refs.checkboxes[index].checked = true;
       });
     },
@@ -162,7 +160,6 @@ export default {
           this.pageSetting.count = res.count;
           this.pageSetting.pageNo = res.pageNo + 1;
           this.list = [...this.list, ...list];
-          this.check();
         })
         .catch(() => {});
     },
@@ -171,6 +168,10 @@ export default {
         key: this.storeKey,
         value: this.result
       };
+      if (this.$route.query.radio) {
+        obj.value = [];
+        obj.value.push(this.list[this.radio]);
+      }
       this.$store.dispatch(`${this.storeModule}/changTag`, obj);
       this.$router.back();
     }

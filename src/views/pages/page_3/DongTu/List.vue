@@ -107,7 +107,7 @@ export default {
             path: path,
             query: {
               status: status,
-              id: code,
+              code: code,
               moreInfo: moreInfo
             }
           })
@@ -120,6 +120,9 @@ export default {
       // 参数3 => 其他需要通过 router 传输的数据
       todo(1, './index', {isInitData: true})
       todo(2, './Index2', {isInitData: true})
+      todo(3, './Index2', {isInitData: true})
+      todo(4, './Index2', {isInitData: true})
+      todo(5, './Index2', {isInitData: true})
     },
     filterSelect_1(e) {
       console.log(e)

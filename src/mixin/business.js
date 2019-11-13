@@ -64,6 +64,11 @@ export const business = {
         newArr.push(obj);
       });
       return newArr;
+    },
+    // 作业票状态
+    htStatus(status){
+      const statusList = ['编辑','初审','有效','已验票','已终结',]
+      return statusList[Number(status) - 1]
     }
   }
 };

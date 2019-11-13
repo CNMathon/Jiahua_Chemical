@@ -8,6 +8,7 @@
     <div class="cell_value" v-else>
       <slot></slot>
     </div>
+    <van-icon name="arrow" v-if="arrow" />
   </div>
 </template>
 <script>
@@ -27,6 +28,10 @@ export default {
     disable: {
       type: Boolean,
       default: false
+    },
+    arrow: {
+      type: Boolean,
+      default: false
     }
   }
 };
@@ -41,7 +46,7 @@ export default {
   position: relative;
   background-color: #ffffff;
   .cell_title {
-    width: 50%;
+    width: 45%;
     font-size: 28px;
     color: rgba(45, 44, 51, 1);
     line-height: 40px;

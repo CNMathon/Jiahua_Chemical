@@ -1,11 +1,11 @@
 <template>
-  <div class="cell">
+  <div class="cell" :class="[border ? 'border' : '',disable? 'disable': '']">
     <div class="cell_title">
       <div class="cell_title_left">
         <span>{{ title }}</span>
         <span class="required" v-if="required">*</span>
       </div>
-      <div class="cell_title_right">
+      <div class="cell_title_right" v-if="!disable">
         <img src="../../assets/images/add.jpg" class="cell_add_button" @click="toSelect" />
       </div>
     </div>
@@ -13,25 +13,17 @@
       <van-col span="8" v-for="(item, index) in tagList" :key="index">
         <div class="cell_type_tag">
           {{ item }}
-          <span class="delete">
+          <span class="delete" v-if="!disable">
             <van-icon name="cross" @click="removeItem(item)" />
           </span>
         </div>
       </van-col>
-      <!-- <van-col span="8">
-        <div class="cell_type_tag_add" @click="toSelect()">+</div>
-      </van-col>-->
     </div>
   </div>
 </template>
 <script>
 export default {
   name: "cell_select_tag",
-  // data() {
-  //   return {
-  //     showImg: './../assets/images/add.jpg'
-  //   }
-  // },
   props: {
     title: String,
     required: {
@@ -42,6 +34,10 @@ export default {
     showList: Array,
     storeModule: String,
     storeKey: String,
+    border: {
+      type: Boolean,
+      default: true
+    },
     disable: {
       type: Boolean,
       default: false
@@ -142,7 +138,12 @@ export default {
       font-size: 39px;
     }
   }
-  .cell::after {
+  .cell_add_button {
+    width: 40px;
+  }
+}
+.border {
+  &::after {
     position: absolute;
     box-sizing: border-box;
     content: " ";
@@ -154,8 +155,8 @@ export default {
     -webkit-transform: scaleY(0.5);
     transform: scaleY(0.5);
   }
-  .cell_add_button {
-    width: 40px;
-  }
+}
+.disable {
+  background-color: #f5f5f5 !important;
 }
 </style>

@@ -8,106 +8,100 @@
       @click-left="pageBack"
       @click-right="openAction"
     />
-    <van-skeleton title :row="3" :loading="isLoading" class="skeleton">
-      <div class="app">
-        <div class="cell_group">
-          <!-- 申请部门 -->
-          <cell-value title="申请部门" :value="$userInfo.officeName" disable></cell-value>
-          <!-- 申请人 -->
-          <cell-value title="申请人" :value="$userInfo.userName" disable></cell-value>
-          <!-- 作业票编号 -->
-          <cell-value title="作业票编号" :value="$route.query.code" disable></cell-value>
-          <!-- 作业票状态 -->
-          <cell-value title="作业票状态" value="审核" disable v-if="$route.query.status == 3"></cell-value>
-          <cell-value title="作业票状态" value="有效" disable v-if="$route.query.status == 4"></cell-value>
-          <cell-value title="作业票状态" value="已终结" disable v-if="$route.query.status == 5"></cell-value>
-          <!-- 作业地点 -->
-          <cell-input v-model="sendData.dtSite" title="作业地点" disable></cell-input>
-          <!-- 涉及其他特殊作业 -->
-          <cell-value title="涉及其他特殊作业" :value="String(sendData.otherSpecial)" disable></cell-value>
-          <!-- 危害辨识 -->
-          <cell-value title="危害辨识" :value="String(sendData.hazardSb)" disable></cell-value>
-          <!-- 动土开始时间 -->
-          <cell-value title="动土开始时间" :value="String(sendData.dtStarttime)" disable></cell-value>
-          <!-- 动土结束时间 -->
-          <cell-value title="动土结束时间" :value="String(sendData.dtEndtime)" disable></cell-value>
-          <!-- 监护人 -->
-          <cell-select-user
-            title="监护人"
-            :storeModule="storeModule"
-            storeKey="guardian"
-            v-model="sendData.guardian"
-            disable
-          ></cell-select-user>
-          <!-- 作业部门 -->
-          <div class="cell">
-            <div class="cell_title">
-              <span>作业部门</span>
-            </div>
-            <div class="cell_value">
-              <span>{{sendData.dtDept}}</span>
-              <span class="cell_value_arrow">
-                <van-icon name="search" />
-              </span>
-            </div>
-          </div>
-          <!-- 作业负责人 -->
-          <cell-select-user
-            title="作业负责人"
-            :storeModule="storeModule"
-            storeKey="dtMan"
-            v-model="sendData.dtMan"
-            disable
-          ></cell-select-user>
-          <!-- 作业范围、内容、方式 -->
-          <div class="cell border_none">
-            <div class="cell_title">
-              <span>作业范围、内容、方式</span>
-            </div>
-            <div class="cell_other">
-              <textarea class="cell_textarea" placeholder="请输入工作内容" cols="30" rows="10" disabled></textarea>
-            </div>
-            <div class="cell_other">
-              <div class="upload">
-                <!-- <div class="upload_icon">
-                <van-icon name="photo-o" />
-                </div>-->
-                <div class="upload_box">
-                  <van-uploader
-                    :before-read="beforeRead"
-                    :before-delete="beforeDelete"
-                    v-model="fileList"
-                    preview-size="5rem"
-                    disabled
-                    deletable="false"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
+    <div class="cell_group">
+      <!-- 申请部门 -->
+      <cell-value title="申请部门" :value="$userInfo.officeName" disable></cell-value>
+      <!-- 申请人 -->
+      <cell-value title="申请人" :value="$userInfo.userName" disable></cell-value>
+      <!-- 作业票编号 -->
+      <cell-value title="作业票编号" :value="$route.query.id" disable></cell-value>
+      <!-- 作业票状态 -->
+      <cell-value title="作业票状态" value="编辑" disable></cell-value>
+      <!-- 作业地点 -->
+      <cell-input v-model="sendData.dtSite" title="作业地点" disable></cell-input>
+      <!-- 涉及其他特殊作业 -->
+      <cell-value title="涉及其他特殊作业" :value="String(sendData.otherSpecial)" disable></cell-value>
+      <!-- 危害辨识 -->
+      <cell-value title="危害辨识" :value="String(sendData.hazardSb)" disable></cell-value>
+      <!-- 动土开始时间 -->
+      <cell-value title="动土开始时间" :value="String(sendData.dtStarttime)" disable></cell-value>
+      <!-- 动土结束时间 -->
+      <cell-value title="动土结束时间" :value="String(sendData.dtEndtime)" disable></cell-value>
+      <!-- 监护人 -->
+      <cell-select-user
+        title="监护人"
+        :storeModule="storeModule"
+        storeKey="guardian"
+        v-model="sendData.guardian"
+        disable
+      ></cell-select-user>
+      <!-- 作业部门 -->
+      <div class="cell">
+        <div class="cell_title">
+          <span>作业部门</span>
         </div>
-        <cell-textarea v-model="sendData.dznr" title="其他安全措施" required placeholder="请输入其他安全措施"></cell-textarea>
-        <!-- 画板Popup -->
-        <van-popup
-          class="popup"
-          v-model="signatureShow"
-          :close-on-click-overlay="false"
-          position="bottom"
-        >
-          <Canvas ref="signature" @save="saveCanvas" @cancel="cancelCanvas"></Canvas>
-        </van-popup>
-        <div class="signature" @click="signatureShow = true">
-          <div>签字</div>
-          <van-icon name="edit" />
+        <div class="cell_value">
+          <span>部门名1、部门名2</span>
+          <span class="cell_value_arrow">
+            <van-icon name="search" />
+          </span>
         </div>
-        <!-- 操作Popup -->
-        <van-popup v-model="isShowAction" position="bottom" class="action">
-          <button @click="postData">保存</button>
-          <button>工作流提交</button>
-          <button @click="closeAction">取消</button>
-        </van-popup>
       </div>
-    </van-skeleton>
+      <!-- 作业负责人 -->
+      <cell-select-user
+        title="作业负责人"
+        :storeModule="storeModule"
+        storeKey="dtMan"
+        v-model="sendData.dtMan"
+        disable
+      ></cell-select-user>
+      <!-- 作业范围、内容、方式 -->
+      <div class="cell border_none">
+        <div class="cell_title">
+          <span>作业范围、内容、方式</span>
+        </div>
+        <div class="cell_other">
+          <textarea class="cell_textarea" placeholder="请输入工作内容" cols="30" rows="10" disabled></textarea>
+        </div>
+        <div class="cell_other">
+          <div class="upload">
+            <!-- <div class="upload_icon">
+              <van-icon name="photo-o" />
+            </div> -->
+            <div class="upload_box">
+              <van-uploader
+                :before-read="beforeRead"
+                :before-delete="beforeDelete"
+                v-model="fileList"
+                preview-size="5rem"
+                disabled
+                deletable="false"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <cell-textarea v-model="sendData.dznr" title="其他安全措施" required placeholder="请输入其他安全措施"></cell-textarea>
+    <!-- 画板Popup -->
+    <van-popup
+      class="popup"
+      v-model="signatureShow"
+      :close-on-click-overlay="false"
+      position="bottom"
+    >
+      <Canvas ref="signature" @save="saveCanvas" @cancel="cancelCanvas"></Canvas>
+    </van-popup>
+    <div class="signature" @click="signatureShow = true">
+      <div>签字</div>
+      <van-icon name="edit" />
+    </div>
+    <!-- 操作Popup -->
+    <van-popup v-model="isShowAction" position="bottom" class="action">
+      <button @click="postData">保存</button>
+      <button>工作流提交</button>
+      <button @click="closeAction">取消</button>
+    </van-popup>
   </div>
 </template>
 <script>
@@ -150,8 +144,7 @@ export default {
       ],
       isShowAction: false,
       queryId: "",
-      signatureShow: false,
-      isLoading: false
+      signatureShow: false
     };
   },
   components: {
@@ -182,10 +175,10 @@ export default {
     }
   },
   activated() {
-    console.log(this.$route.query.code);
-    if (this.$route.query.code) {
-      if (this.queryId !== this.$route.query.code) {
-        this.queryId = this.$route.query.code;
+    console.log(this.$route.query.id);
+    if (this.$route.query.id) {
+      if (this.queryId !== this.$route.query.id) {
+        this.queryId = this.$route.query.id;
         this.getPageData();
       }
     }
@@ -219,10 +212,9 @@ export default {
       sendData.applyDept = this.$userInfo.officeName;
       sendData.applyer = this.$userInfo.userName;
       sendData.htDeviceDefect_file = htDeviceDefect_file.join(",");
-      // sendData.id = 
       sendData.__sid = this.$userInfo.sessionId;
-      if (this.$route.query.code) {
-        sendData.code = this.$route.query.code;
+      if (this.$route.query.id) {
+        sendData.id = this.$route.query.id;
       }
       this.$api.page_3
         .htHseDtzypSave(sendData)
@@ -238,17 +230,14 @@ export default {
     },
     // 编辑-获取页面数据
     getPageData() {
-      this.isLoading = true
       this.$api.page_3
         .htHseDtzypListData({
           dtzypCode: this.queryId,
           __sid: localStorage.getItem("JiaHuaSessionId")
         })
         .then(res => {
-          this.isLoading = false
           let info = res.list[0];
           console.log("info: ", info);
-          this.sendData.id = info.id
           for (const key in this.sendData) {
             if (key === "guardian") {
               this.sendData[key] = this.reductionSelectUser(info[key]);
@@ -304,6 +293,7 @@ export default {
 <style lang="scss" scoped>
 @import "@/assets/scss/cell.scss";
 .mangban {
+  background-color: #f5f5f5;
   .cell_group {
     /deep/ .cell {
       background-color: #f5f5f5;

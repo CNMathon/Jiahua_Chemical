@@ -1,5 +1,5 @@
 <template>
-  <div class="cell">
+  <div class="cell" :class="[border ? 'border' : '',disable? 'disable': '']">
     <div class="cell_title">
       <span>{{ title }}</span>
       <span class="required" v-if="required">*</span>
@@ -19,9 +19,6 @@
 </template>
 <script>
 export default {
-created() {
-	console.log(this.value);
-},
   name: "cell_input",
   model: {
     prop: "value",
@@ -37,11 +34,15 @@ created() {
       type: Array
     },
     keyType: String,
+    border: {
+      type: Boolean,
+      default: true
+    },
     disable: {
       type: Boolean,
       default: false
     },
-    value: Number
+    value: null
   },
   data() {
     return {
@@ -67,7 +68,7 @@ created() {
       this.pickerShow = false;
     },
     showText() {
-      return this.columns[this.value - 1] || "点击选择";
+      return this.columns[Number(this.value) - 1] || "点击选择";
     }
   }
 };
@@ -104,7 +105,10 @@ created() {
     justify-content: center;
     color: #888888;
   }
-  .cell::after {
+}
+.border {
+  position: relative;
+  &::after {
     position: absolute;
     box-sizing: border-box;
     content: " ";
@@ -116,5 +120,8 @@ created() {
     -webkit-transform: scaleY(0.5);
     transform: scaleY(0.5);
   }
+}
+.disable {
+  background-color: #f5f5f5 !important;
 }
 </style>
