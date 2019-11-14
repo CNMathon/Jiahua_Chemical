@@ -85,7 +85,149 @@
               </div>
             </div>
           </div>
+          <!-- 安全措施 -->
+          <div class="confirm">
+            <div class="head">
+              <div class="head_1">安全措施</div>
+              <div class="head_2">确认</div>
+              <div class="head_3">确认人</div>
+            </div>
+            <div class="confirm_list">
+              <Signature
+                :checked="checked[0] ? checked[0].checked : false"
+                :img="checked[0] ? checked[0].img : ''"
+              >
+                <div slot>作业人员已进行了安全教育</div>
+              </Signature>
+              <Signature
+                :checked="checked[1] ? checked[1].checked : false"
+                :img="checked[1] ? checked[1].img : ''"
+              >
+                <div slot>作业地点处于易燃易爆场所，需要动火时已办理动火证</div>
+              </Signature>
+              <Signature
+                :checked="checked[2] ? checked[2].checked : false"
+                :img="checked[2] ? checked[2].img : ''"
+              >
+                <div slot>地下电力点啦已确认保护措施已落实</div>
+              </Signature>
+              <Signature
+                :checked="checked[2] ? checked[2].checked : false"
+                :img="checked[2] ? checked[2].img : ''"
+              >
+                <div slot>地下通讯电（光）缆、局域网络电（光）缆已确认保护措施已落实</div>
+              </Signature>
+              <Signature
+                :checked="checked[2] ? checked[2].checked : false"
+                :img="checked[2] ? checked[2].img : ''"
+              >
+                <div slot>地下供排水、消防管道、工艺管道已确认保护措施已落实。</div>
+              </Signature>
+              <Signature
+                :checked="checked[2] ? checked[2].checked : false"
+                :img="checked[2] ? checked[2].img : ''"
+              >
+                <div slot>已按作业方案图划线和立绘</div>
+              </Signature>
+              <Signature
+                :checked="checked[2] ? checked[2].checked : false"
+                :img="checked[2] ? checked[2].img : ''"
+              >
+                <div slot>动土地点有电线、管道等地下设施，已向作业单位交代并派人监护；作业时情挖做使用铁棒、铁镐或抓斗等机械工具。</div>
+              </Signature>
+              <Signature
+                :checked="checked[2] ? checked[2].checked : false"
+                :img="checked[2] ? checked[2].img : ''"
+              >
+                <div slot>作业现场围栏、警戒线、告示牌、夜间照明、警示灯已按要求设置</div>
+              </Signature>
+              <Signature
+                :checked="checked[2] ? checked[2].checked : false"
+                :img="checked[2] ? checked[2].img : ''"
+              >
+                <div slot>已进行放坡处理和固壁支撑</div>
+              </Signature>
+              <Signature
+                :checked="checked[2] ? checked[2].checked : false"
+                :img="checked[2] ? checked[2].img : ''"
+              >
+                <div slot>人员出入口和撤离安全措施已落实：</div>
+                <span
+                  :class="safe.indexOf('梯子') != -1 ? 'seclct_tag is_select':'seclct_tag'"
+                  @click="changeChoose('safe', '梯子', false)"
+                >梯子</span>
+                <span
+                  :class="safe.indexOf('修坡道') != -1 ? 'seclct_tag is_select':'seclct_tag'"
+                  @click="changeChoose('safe', '修坡道', false)"
+                >修坡道</span>
+              </Signature>
+              <Signature
+                :checked="checked[2] ? checked[2].checked : false"
+                :img="checked[2] ? checked[2].img : ''"
+              >
+                <div slot>施工作业已报</div>
+                <span
+                  :class="report.indexOf('公司办') != -1 ? 'seclct_tag is_select':'seclct_tag'"
+                  @click="changeChoose('report', '公司办', false)"
+                >公司办</span>
+                <span
+                  :class="report.indexOf('消防队') != -1 ? 'seclct_tag is_select':'seclct_tag'"
+                  @click="changeChoose('report', '消防队', false)"
+                >消防队</span>
+                <span
+                  :class="report.indexOf('安全环保部') != -1 ? 'seclct_tag is_select':'seclct_tag'"
+                  @click="changeChoose('report', '安全环保部', false)"
+                >安全环保部</span>
+                <span
+                  :class="report.indexOf('公司调度') != -1 ? 'seclct_tag is_select':'seclct_tag'"
+                  @click="changeChoose('report', '公司调度', false)"
+                >公司调度</span>
+              </Signature>
+              <Signature
+                :checked="checked[2] ? checked[2].checked : false"
+                :img="checked[2] ? checked[2].img : ''"
+              >
+                <div slot>夜间作业采用足够、充足照明，</div>
+                <div slot>A防水型灯</div>
+                <span
+                  :class="waterLight.indexOf('36V') != -1 ? 'seclct_tag is_select':'seclct_tag'"
+                >36V</span>
+                <span
+                  :class="waterLight.indexOf('24V') != -1 ? 'seclct_tag is_select':'seclct_tag'"
+                >24V</span>
+                <span
+                  :class="waterLight.indexOf('12V') != -1 ? 'seclct_tag is_select':'seclct_tag'"
+                >12V</span>
+                <div slot>防爆型灯</div>
+                <span
+                  :class="boomLight[0] == '36V' ? 'seclct_tag is_select':'seclct_tag'"
+                >36V</span>
+                <span
+                  :class="boomLight[0] == '24V' ? 'seclct_tag is_select':'seclct_tag'"
+                >24V</span>
+                <span
+                  :class="boomLight[0] == '12V' ? 'seclct_tag is_select':'seclct_tag'"
+                >12V</span>
+                <div slot>作业人员已佩戴防护器械</div>
+              </Signature>
+              <Signature
+                :checked="checked[2] ? checked[2].checked : false"
+                :img="checked[2] ? checked[2].img : ''"
+              >
+                <div slot>动土范围内无障碍物，并在总图上做标记</div>
+              </Signature>
+            </div>
+          </div>
         </div>
+        <!-- 画板Popup -->
+        <van-popup
+          class="popup"
+          v-model="signatureShow"
+          :close-on-click-overlay="false"
+          position="bottom"
+        >
+          <Canvas ref="signature" @save="saveCanvas" @cancel="cancelCanvas"></Canvas>
+        </van-popup>
         <cell-textarea v-model="sendData.dznr" title="其他安全措施" required placeholder="请输入其他安全措施"></cell-textarea>
         <!-- 画板Popup -->
         <van-popup
@@ -115,6 +257,8 @@ import { mapState } from "vuex";
 import { business } from "@/mixin/business";
 import { uploadFile } from "@/mixin/uploadFile";
 import Canvas from "@/components/Canvas.vue";
+import Signature from "../components/Signature.vue";
+
 export default {
   name: "dongtu",
   mixins: [business, uploadFile],
@@ -128,7 +272,7 @@ export default {
         otherSpecial: [], //涉及其他作业
         hazardSb: [], //危害辨识
         guardian: [], //监护人
-        dtMan: [] //作业部门负责人
+        dtMan: [], //作业部门负责人
       },
       list_1: [
         "动火",
@@ -151,10 +295,16 @@ export default {
       isShowAction: false,
       queryId: "",
       signatureShow: false,
-      isLoading: false
+      isLoading: false,
+      checked: [],
+      safe: [],
+      report: [],
+      waterLight: [],
+      boomLight: []
     };
   },
   components: {
+    Signature,
     Canvas
   },
   computed: mapState({
@@ -219,7 +369,7 @@ export default {
       sendData.applyDept = this.$userInfo.officeName;
       sendData.applyer = this.$userInfo.userName;
       sendData.htDeviceDefect_file = htDeviceDefect_file.join(",");
-      // sendData.id = 
+      // sendData.id =
       sendData.__sid = this.$userInfo.sessionId;
       if (this.$route.query.code) {
         sendData.code = this.$route.query.code;
@@ -238,17 +388,17 @@ export default {
     },
     // 编辑-获取页面数据
     getPageData() {
-      this.isLoading = true
+      this.isLoading = true;
       this.$api.page_3
         .htHseDtzypListData({
           dtzypCode: this.queryId,
           __sid: localStorage.getItem("JiaHuaSessionId")
         })
         .then(res => {
-          this.isLoading = false
+          this.isLoading = false;
           let info = res.list[0];
           console.log("info: ", info);
-          this.sendData.id = info.id
+          this.sendData.id = info.id;
           for (const key in this.sendData) {
             if (key === "guardian") {
               this.sendData[key] = this.reductionSelectUser(info[key]);

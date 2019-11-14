@@ -1,3 +1,6 @@
+// Mine的子组件 用户中心
+const SelectDaiBanRen = () =>
+  import("../views/pages/page_3/DaiBanRen/index.vue");
 const routes = {
   path: "/page_3",
   name: "page_3",
@@ -10,8 +13,15 @@ const routes = {
       component: () => import("../views/pages/page_3/Home/Home.vue"),
       meta: {
         showTabBar: true, //是否显示tabBar
-        tabBar: 2
+        tabBar: 2,
+        keepAlive: true //此组件需要被缓存
       }
+    },
+    {
+      // 选择待办人
+      path: "/page_3/daibanren",
+      name: "daibanren",
+      component: SelectDaiBanRen
     },
     // 动火安全
     {

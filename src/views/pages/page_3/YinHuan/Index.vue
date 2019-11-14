@@ -12,7 +12,7 @@
 				</div>
 				<div class="cell_value">
 					<div class="cell_input">
-						<input type="text" placeholder="整改公司名称" />
+						<input type="text" v-model="sendData.rectificationCompany" placeholder="整改公司名称" />
 					</div>
 					<span class="cell_value_arrow">
 						<van-icon name="search" />
@@ -29,7 +29,7 @@
 				</div>
 				<div class="cell_value">
 					<div class="cell_input">
-						<input type="text" placeholder="整改部门名称" />
+						<input type="text" v-model="sendData.rectificationDepartment" placeholder="整改部门名称" />
 					</div>
 					<span class="cell_value_arrow">
 						<van-icon name="search" />
@@ -93,8 +93,12 @@
 		name: "yinhuan",
 		mixins: [business, uploadFile],
 		created() {
-			this.id = this.$route.query.id;
-			this.getDataInfo();
+
+			if (this.$route.query.id) {
+				this.id = this.$route.query.id;
+				this.getDataInfo();
+			}
+			
 		},
 		data() {
 			return {
@@ -102,6 +106,9 @@
 				id: 0,
 				sendData: {
 					rectificationName: "", //整改单
+					rectificationCompany: "", //整改公司
+					rectificationDepartmen: "", //整改部门
+					rectificationCharge: [], //整改负责人
 					location: "", //地点
 					isPunish: "", //是否处罚
 					isSuspended: 0, //是否处挂起
@@ -109,13 +116,12 @@
 					dangerType: "", //隐患类型
 					dangerSource: "", //隐患来源
 					acceptanceCharge: [], //验收负责人
-					rectificationCharge: [], //整改负责人
 					punishMoney: "", //处罚金额
 					dangerDesc: "" //隐患描述
 				},
 				isPunishColumns: ["是", "否"],
 				isSuspendedColumns: ["否", "是"],
-				dangerSourceColumns: [{
+				/* dangerSourceColumns: [{
 						text: "行为观察卡",
 						key: "XWGCK"
 					},
@@ -131,7 +137,8 @@
 						text: "承包商约谈",
 						key: "CBSYT"
 					}
-				], //隐患来源
+				], */ //隐患来源
+				dangerSourceColumns: ["行为观察卡", "风险/隐患识别卡", "安全检查记录", "承包商约谈"],
 				dangerLevelColumns: ["一般", "较大", "重大"], //隐患等级
 				dangerTypeColumns: [
 					"作业票",
@@ -177,6 +184,10 @@
 				} else {
 					this.sendData.isSuspended = 0;
 				}
+			},
+			//隐患等级
+			"sendData.dangerSource"(val) {
+				this.sendData.dangerSource = val
 			}
 		},
 		methods: {
@@ -191,32 +202,39 @@
 					.then(res => {
 
 						const info = res.dangerRectification;
+
 						this.sendData.rectificationName = info.rectificationName || "";
+						this.sendData.rectificationCompany = info.rectificationCompany || "";
+						this.sendData.rectificationDepartment = info.rectificationDepartment || "";
 						this.sendData.location = info.location || "";
-						this.sendData.isPunish = parseInt(info.isPunish || 0);
-						this.sendData.dangerLevel = parseInt(info.dangerLevel || 0);
-						this.sendData.dangerType = parseInt(info.dangerType || 0);
-						this.sendData.dangerSource = parseInt(info.dangerSource || 0);
+						this.sendData.id = info.id;
+
+						this.sendData.isPunish = parseInt(info.isPunish || 0) + 1;
+						this.sendData.dangerLevel = parseInt(info.dangerLevel || 0) + 1;
+						this.sendData.dangerType = parseInt(info.dangerType || 0) + 1;
+						this.sendData.dangerSource = parseInt(info.dangerSource || 0) + 1;
 						this.sendData.punishMoney = info.punishMoney || "";
 						this.sendData.dangerDesc = info.dangerDesc || "";
-						
-						if(info.ysfzr){
+
+						if (info.ysfzr) {
 							this.sendData.acceptanceCharge.push({
-								avatarUrl: this.$imageUrl+info.ysfzr.avatarUrl,
+								avatarUrl: this.$imageUrl + info.ysfzr.avatarUrl,
 								fullName: "",
 								userCode: info.ysfzr.userCode,
 								userName: info.ysfzr.userName
 							});
 						}
-						
-						if(info.zgfzr){
+
+						if (info.zgfzr) {
 							this.sendData.rectificationCharge.push({
-								avatarUrl: this.$imageUrl+info.zgfzr.avatarUrl,
+								avatarUrl: this.$imageUrl + info.zgfzr.avatarUrl,
 								fullName: "",
 								userCode: info.zgfzr.userCode,
 								userName: info.zgfzr.userName
 							});
 						}
+
+						console.log(this.sendData);
 
 
 					}).catch(() => {});
@@ -224,10 +242,10 @@
 			},
 			// 发送数据
 			postData() {
-				
+
 				const that = this;
 				let sendData = JSON.parse(JSON.stringify(this.sendData));
-				
+
 				sendData.acceptanceCharge = this.userString(
 					sendData.acceptanceCharge,
 					"userCode"
@@ -237,7 +255,7 @@
 					"userCode"
 				);
 				sendData.__sid = this.$userInfo.sessionId;
-				
+
 				this.$api.page_3
 					.dangerRectificationSave(sendData)
 					.then(res => {

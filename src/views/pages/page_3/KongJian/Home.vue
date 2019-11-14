@@ -1,16 +1,18 @@
 <template>
   <div class="kongjian_home">
-    <keep-alive>
-      <router-view v-if="$route.meta.keepAlive">
+    <keep-alive :include="cachedViews">
+      <router-view>
         <!-- 这里是会被缓存的视图组件 -->
       </router-view>
     </keep-alive>
-
-    <router-view v-if="!$route.meta.keepAlive">
-      <!-- 这里是不被缓存的视图组件 -->
-    </router-view>
   </div>
 </template>
 <script>
-export default {};
+export default {
+  computed: {
+    cachedViews() {
+      return this.$store.state.kongjian.keepAliveComponents;
+    }
+  }
+};
 </script>

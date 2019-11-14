@@ -101,11 +101,13 @@ const article = {
     );
   },
   // 受限空间作业票保存
-  htHseSxkjzypSave(params) {
-    return axios.post(
-      `${base.sq}sxkjzyp/htHseSxkjzyp/save`,
-      qs.stringify(params)
-    );
+  htHseSxkjzypSave(params, __sid) {
+    return axios.post(`${base.sq}sxkjzyp/htHseSxkjzyp/save`, params, {
+      headers: {
+        "Content-Type": "application/json",
+        __sid: __sid
+      }
+    });
   },
   // 受限空间作业票查询
   htHseSxkjzypListData(params) {
@@ -181,14 +183,14 @@ const article = {
   // 隐患管理查询
   dangerRectificationListData(params) {
     return axios.post(
-      `${base.sq}dangerrectification/dangerRectification/listData.json`,
+      `${base.sq}jhdangerrect/jhDangerRect/listData.json`,
       qs.stringify(params)
     );
   },
   // 隐患保存
   dangerRectificationSave(params) {
     return axios.post(
-      `${base.sq}dangerrectification/dangerRectification/save.json`,
+      `${base.sq}jhdangerrect/jhDangerRect/save.json`,
       qs.stringify(params)
     );
   },
@@ -204,16 +206,24 @@ const article = {
   // 违章管理查询
   htCbsBreakrulesmanageListData(params) {
     return axios.post(
-      `${base.sq}breakrulemanage/htCbsBreakrulesmanage/listData.json`,
+      `${base.sq}breakrulemanage/jhCbsBrkRulesManage/listData.json`,
       qs.stringify(params)
     );
   },
   //违章保存
   htCbsBreakrulesmanageSave(params) {
     return axios.post(
-      `${base.sq}breakrulemanage/htCbsBreakrulesmanage/Save`,
+      `${base.sq}breakrulemanage/jhCbsBrkRulesManage/save`,
       qs.stringify(params)
     );
+  },
+  //获取部门数据
+  getPosts(params) {
+    return axios.get(`${base.sq}act/core/client/getPosts`, { params: params });
+  },
+  //获取部门人员数据
+  getUsers(params) {
+    return axios.get(`${base.sq}act/core/client/getUsers`, { params: params });
   }
 };
 

@@ -52,7 +52,7 @@
                 <div class="right" @click.stop="()=>{$router.push({path:'/page_3/gaochu/index2',query:{gczyCode:item.gczyCode}})}" v-if="item.htStatus == 2">初审</div>
                 <div class="right" v-if="item.htStatus == 3">有效</div>
                 <div class="right" v-if="item.htStatus == 4">已验票</div>
-                <div class="right" v-if="item.htStatus == 5">已终结</div>
+                <div class="right" v-if="item.htStatus == 5">已终结</div> 
               </div>
             </div>
           </div>

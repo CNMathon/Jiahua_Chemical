@@ -340,8 +340,12 @@
 			this.$store.dispatch("diaozhuang/cleanState");
 		},
 		created() {
-			this.zypcode = this.$route.query.zypcode || 0;
-			this.getInfo();
+			
+			if(this.$route.query.zypcode){
+				this.zypcode = this.$route.query.zypcode || 0;
+				this.getInfo();
+			}
+			
 		},
 		methods: {
 			

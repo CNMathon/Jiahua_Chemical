@@ -11,8 +11,60 @@
 			<cell-value title="作业票编号" value disable></cell-value>
 			<!-- 作业票状态 -->
 			<cell-value title="作业票状态" value="编辑" disable></cell-value>
-			<!-- 作业内容 -->
-			<cell-textarea title="吊装内容" required placeholder="请输入吊装内容"></cell-textarea>
+			<!-- 吊装内容 -->
+			<cell-textarea v-model="sendData.dznr" title="吊装内容" required placeholder="请输入吊装内容"></cell-textarea>
+			<!-- 吊装地点 -->
+			<cell-input v-model="sendData.dzdd" title="吊装地点" required placeholder="手工录入"></cell-input>
+			<!-- 吊装工具名称 -->
+			<cell-picker v-model="sendData.dzgjmc" title="吊装工具名称" required :columns="dzgjmcColumns"></cell-picker>
+			<!-- 起吊重物重量（t） -->
+			<cell-input v-model="sendData.qdzwzl" title="起吊重物重量（t）" required placeholder="手工录入"></cell-input>
+			<!-- 吊装人员及特殊工种作业证号 -->
+			<div class="cell">
+				<div class="cell_title">
+					<span>
+						吊装人员及
+						<br />特殊工种作业证号
+					</span>
+				</div>
+				<div class="cell_value">
+					<div class="cell_value_people">
+						<div class="cell_input" @click="selectUser('work_permit_1')">
+							<span>{{ work_permit_1.name || "点击选择" }}</span>
+							<van-icon name="plus" />
+						</div>
+						<div class="cell_input" @click="selectUser('work_permit_2')">
+							<span>{{ work_permit_2.name || "点击选择" }}</span>
+							<van-icon name="plus" />
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- 吊装指挥及特殊工种作业证号 -->
+			<div class="cell">
+				<div class="cell_title">
+					<span>
+						吊装指挥及
+						<br />特殊工种作业证号
+					</span>
+				</div>
+				<div class="cell_value" @click="selectUser('work_permit_3')">
+					<span>{{ work_permit_3.name || "点击选择" }}</span>
+					<span class="cell_value_arrow">
+						<van-icon name="arrow" />
+					</span>
+				</div>
+			</div>
+			<!-- 危害辨识 -->
+			<cell-select-tag required title="危害辨识" storeKey="whsb" :tagList="whsb" :showList="list_1" :storeModule="storeModule"></cell-select-tag>
+			<!-- 作业开始时间 -->
+			<cell-time title="作业开始时间" v-model="sendData.zyksDate" :maxTime="sendData.zyjsDate" required></cell-time>
+			<!-- 作业结束时间 -->
+			<cell-time title="作业结束时间" v-model="sendData.zyjsDate" :minTime="sendData.zyksDate" required></cell-time>
+			<!-- 作业负责人 -->
+			<cell-select-user title="作业负责人" :value="sendData.zyfzr" required :storeModule="storeModule" storeKey="zyfzr" v-model="sendData.zyfzr"></cell-select-user>
+			<!-- 监护人 -->
+			<cell-select-user title="负责人" :value="sendData.jhr" required :storeModule="storeModule" storeKey="jhr" v-model="sendData.jhr"></cell-select-user>
 			
 			<div class="confirm">
 				<div class="head">
@@ -180,7 +232,7 @@
 			</van-popup>
 
 			<!-- 其他安全措施 -->
-			<!-- <cell-textarea title="其他安全措施" required placeholder="请输入其他安全措施"></cell-textarea> -->
+			<cell-textarea title="其他安全措施" required placeholder="请输入其他安全措施"></cell-textarea>
 
 			<!-- 签字 -->
 			<cell-input title="签字" required placeholder="请签字"></cell-input>
@@ -198,7 +250,8 @@
 
 <script>
 	import {
-		mapState
+		mapState,
+		mapMutations
 	} from "vuex";
 	import {
 		business
@@ -216,16 +269,25 @@
 			Signature,
 			Canvas
 		},
+		
+		created() {
+			this.zypcode = this.$route.query.zypcode || 0;
+			this.getInfo();
+		},
 
 		computed: mapState({
-			reason: state => state.duanlu.reason,
-			endangerSign: state => state.duanlu.endangerSign,
-			workCharger: state => state.duanlu.workCharger
+			whsb: state => state.diaozhuang.whsb,
+			zyfzr: state => state.diaozhuang.zyfzr,
+			jhr: state => state.diaozhuang.jhr,
+			work_permit_1: state => state.diaozhuang.work_permit_1,
+			work_permit_2: state => state.diaozhuang.work_permit_2,
+			work_permit_3: state => state.diaozhuang.work_permit_3
 		}),
 
 		data() {
 
 			return {
+				zypcode:0,
 				isShowAction: false,
 				checked: [{
 					checked: false,
@@ -236,11 +298,107 @@
 				value:5,
 				light:0,
 				Alight: 0,
+				storeModule: "diaozhuang",
+				dzgjmcColumns: ["吊车", "行车", "把杆"],
+				materialColumns: ["吊车", "行车", "把杆"],
+				currentDate: new Date(),
+				list_1: [
+					"锁具断裂",
+					"吊钩脱落",
+					"设备倾倒",
+					"吊装机械故障倾倒",
+					"周边电线杆",
+					"输电线",
+					"危化品管道泄漏",
+					"可燃液体",
+					"气体泄漏"
+				],
+				checked: [{
+					checked: false,
+					image: ""
+				}],
+				sendData: {
+					dznr: "", //吊装内容
+					dzdd: "", //吊装地点
+					dzgjmc: null, //吊装工具名称
+					qdzwzl: "", //起吊重物质量(t)
+					whsb: [], //危害辨识
+					zyksDate: "", //作业开始时间
+					zyjsDate: "", //作业结束时间
+					zyfzr: [], // 作业负责人
+					jhr: [] //监护人
+				}
 				
 			}
 
 		},
 		methods: {
+			
+			
+			...mapMutations('diaozhuang', {
+				setTag: 'setTag'
+			}),
+			
+			// 选择作业证
+			selectUser(work_permit) {
+				console.log("work_permit: ", work_permit);
+				this.$router.push({
+					path: "./select_work_permit",
+					query: {
+						storeModule: this.storeModule,
+						storeKey: work_permit
+					}
+				});
+			},
+			
+			//获取详情
+			getInfo() {
+			
+				let sendData = {};
+				sendData.__sid = this.$userInfo.sessionId;
+				sendData.zypcode = this.zypcode;
+				this.$api.page_3
+					.htHseDzzypList(sendData)
+					.then(res => {
+						
+						const info=res.list[0];
+						
+						this.sendData.dznr=info.dznr;
+						this.sendData.dzdd=info.dzdd;
+						this.sendData.dzgjmc=info.dzgjmc;
+						this.sendData.qdzwzl=info.qdzwzl;
+						this.sendData.zyksDate=info.zyksDate;
+						this.sendData.zyjsDate=info.zyjsDate;
+						this.sendData.id=info.id;
+						
+						let zyfzr=[];
+						info.zyfzr.split(",").map(items=>{
+							zyfzr.push({
+								userName:items
+							});
+						})
+						this.sendData.zyfzr=zyfzr;
+						
+						let jhr=[];
+						info.jhr.split(",").map(items=>{
+							jhr.push({
+								userName:items
+							});
+						})
+						this.sendData.jhr=jhr;
+						
+						let whsb=[];
+						info.whsb.split(",").map(items=>{
+							whsb.push(this.list_1[items]);
+						})
+						this.setTag({tags:{key:"whsb",value:whsb}});
+						
+					})
+					.catch(() => {
+			
+					});
+			
+			},
 
 			// 打开操作Popup
 			openAction() {

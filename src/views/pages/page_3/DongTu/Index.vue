@@ -186,11 +186,11 @@
                   <div slot>人员出入口和撤离安全措施已落实：</div>
                   <span
                     :class="safe.indexOf('梯子') != -1 ? 'seclct_tag is_select':'seclct_tag'"
-                    @click="changeSafe('梯子')"
+                    @click="changeChoose('safe', '梯子', false)"
                   >梯子</span>
                   <span
                     :class="safe.indexOf('修坡道') != -1 ? 'seclct_tag is_select':'seclct_tag'"
-                    @click="changeSafe('修坡道')"
+                    @click="changeChoose('safe', '修坡道', false)"
                   >修坡道</span>
                 </Signature>
                 <Signature
@@ -202,19 +202,19 @@
                   <div slot>施工作业已报</div>
                   <span
                     :class="report.indexOf('公司办') != -1 ? 'seclct_tag is_select':'seclct_tag'"
-                    @click="changeReport('公司办')"
+                    @click="changeChoose('report', '公司办', false)"
                   >公司办</span>
                   <span
                     :class="report.indexOf('消防队') != -1 ? 'seclct_tag is_select':'seclct_tag'"
-                    @click="changeReport('消防队')"
+                    @click="changeChoose('report', '消防队', false)"
                   >消防队</span>
                   <span
                     :class="report.indexOf('安全环保部') != -1 ? 'seclct_tag is_select':'seclct_tag'"
-                    @click="changeReport('安全环保部')"
+                    @click="changeChoose('report', '安全环保部', false)"
                   >安全环保部</span>
                   <span
                     :class="report.indexOf('公司调度') != -1 ? 'seclct_tag is_select':'seclct_tag'"
-                    @click="changeReport('公司调度')"
+                    @click="changeChoose('report', '公司调度', false)"
                   >公司调度</span>
                 </Signature>
                 <Signature
@@ -237,6 +237,19 @@
                     :class="waterLight.indexOf('12V') != -1 ? 'seclct_tag is_select':'seclct_tag'"
                     @click="changeChoose('waterLight', '12V')"
                   >12V</span>
+                  <div slot>防爆型灯</div>
+                  <span
+                    :class="boomLight[0] == '36V' ? 'seclct_tag is_select':'seclct_tag'"
+                    @click="changeChoose('boomLight', '36V')"
+                  >36V</span>
+                  <span
+                    :class="boomLight[0] == '24V' ? 'seclct_tag is_select':'seclct_tag'"
+                    @click="changeChoose('boomLight', '24V')"
+                  >24V</span>
+                  <span
+                    :class="boomLight[0] == '12V' ? 'seclct_tag is_select':'seclct_tag'"
+                    @click="changeChoose('boomLight', '12V')"
+                  >12V</span>
                   <div slot>作业人员已佩戴防护器械</div>
                 </Signature>
                 <Signature
@@ -245,7 +258,7 @@
                   @checked="showSignature(2)"
                   @cancel="signatureCancel(2)"
                 >
-                  <div slot>已进行放坡处理和固壁支撑</div>
+                  <div slot>动土范围内无障碍物，并在总图上做标记</div>
                 </Signature>
               </div>
             </div>
@@ -262,7 +275,7 @@
           <!-- 操作Popup -->
           <van-popup v-model="isShowAction" position="bottom" class="action">
             <button @click="postData">保存</button>
-            <button>工作流提交</button>
+            <button @click="workflowSubmit">工作流提交</button>
             <button @click="closeAction">取消</button>
           </van-popup>
         </div>
@@ -321,7 +334,9 @@ export default {
       isShowAction: false,
       queryId: "",
       isLoading: false,
-      signatureShow: false
+      signatureShow: false,
+      isSave: false,
+      canClean: false,
     };
   },
   computed: mapState({
@@ -357,17 +372,37 @@ export default {
       }
     }
   },
-  beforeDestroy() {
-    this.queryId = "";
-    this.$store.dispatch("dongtu/cleanState");
-  },
+  // beforeDestroy() {
+  //   if (this.canClean) {
+  //     this.queryId = "";
+  //     this.$store.dispatch("dongtu/cleanState");
+  //   }
+  // },
   methods: {
+    // 工作流提交
+    workflowSubmit() {
+      if (this.$route.query.status == undefined) {
+        this.$notify('请先保存表单')
+      }
+    },
+
     // 选择器选择事件
     // groupArr => 选择值存放变量 => String => 必填
     // value => 选择值 => String => 必填
     // isSingle => 是否单选 => Boolean => 选填（默认为true）
     changeChoose(groupArr, value, isSingle = true) {
-
+      if (!isSingle) {
+        const index = this[groupArr].indexOf(value);
+        if (index == -1) {
+          this[groupArr].push(value);
+        } else {
+          this[groupArr].splice(index);
+        }
+      }
+      else {
+        this[groupArr].splice(0);
+        this[groupArr].push(value);
+      }
     },
     // 显示签名
     showSignature(index) {
@@ -384,22 +419,20 @@ export default {
     },
 
     changeSafe(id) {
-      let index = this.safe.indexOf(id)
+      let index = this.safe.indexOf(id);
       if (index == -1) {
-        this.safe.push(id)
-      }
-      else {
-        this.safe.splice(index)
+        this.safe.push(id);
+      } else {
+        this.safe.splice(index);
       }
     },
     changeReport(id) {
-      let index = this.report.indexOf(id)
+      let index = this.report.indexOf(id);
       if (index == -1) {
-        this.report.push(id)
+        this.report.push(id);
         // console.log(this.report)
-      }
-      else {
-        this.report.splice(index)
+      } else {
+        this.report.splice(index);
         // console.log(this.report)
       }
     },
@@ -447,6 +480,12 @@ export default {
       sendData.__sid = this.$userInfo.sessionId;
       sendData.dtStarttime = this.sendData.dtStarttime;
       sendData.dtEndtime = this.sendData.dtEndtime;
+      let htHseDtzypListData = [
+        {
+
+        }
+      ]
+      sendData.htHseDtzypListData = htHseDtzypListData;
       if (this.$route.query.id) {
         sendData.id = this.$route.query.id;
       }
@@ -454,7 +493,6 @@ export default {
         this.isDataEmpty(
           sendData.dtSite,
           sendData.otherSpecial,
-          sendData.hazardSb,
           sendData.hazardSb,
           sendData.dtStarttime,
           sendData.dtEndtime,

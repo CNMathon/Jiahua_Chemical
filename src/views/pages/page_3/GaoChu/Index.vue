@@ -574,6 +574,8 @@
 						sendSafeData.HtHseUpworkticketSon.map(item => {
 							item.fatherId = messageId;
 						});
+						console.log(110111)
+						console.log(sendSafeData.HtHseUpworkticketSon)
 						this.$api.page_3
 							.htHseUpworkticketSaveLit(
 								sendSafeData.HtHseUpworkticketSon,

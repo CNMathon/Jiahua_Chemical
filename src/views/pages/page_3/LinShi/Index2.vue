@@ -143,7 +143,8 @@
 </template>
 <script>
 	import {
-		mapState
+		mapState,
+		mapMutations
 	} from "vuex";
 	import {
 		business
@@ -227,7 +228,7 @@
 					}
 				],
 				isShowAction: false,
-				id: ''
+				zypCode: 0
 			};
 		},
 		computed: mapState({
@@ -239,11 +240,11 @@
 		created() {
 			console.log(this.$route.query);
 			// 获取显示List序列
-			this.id = this.$route.query.id || "";
+			this.zypCode = this.$route.query.zypCode || "";
 			// 设置显示List
 			this.status = this.$route.query.status || 0;
-			console.log("this.id: ", this.id);
-			if (this.id) {
+			console.log("this.zypCode: ", this.zypCode);
+			if (this.zypCode) {
 				this.getData();
 			}
 		},
@@ -252,29 +253,74 @@
 			this.$destroy("LinShi");
 		},
 		methods: {
+			...mapMutations('linshi', {
+				setTag: 'setTag'
+			}),
 			/**
 			 * 获取工作票内容
 			 */
 			getData() {
 				console.log("获取工作票内容");
 				let sendData = {};
-				sendData.id = this.id;
+				sendData.zypCode = this.zypCode;
 				sendData.__sid = this.$userInfo.sessionId;
 				this.$api.page_3
 					.htHseLsydzypListData(sendData)
 					.then(res => {
-						console.log("res: ", res);
+						
 						this.sendData.workContent = res.list[0].workContent;
 						this.sendData.workLocation = res.list[0].workLocation;
-						this.sendData.powerType = res.list[0].powerType;
-						this.sendData.jworkVoltage = res.list[0].jworkVoltage;
-						this.sendData.hazardIdentification = res.list[0].hazardIdentification.split(",");
+						this.sendData.powerType = Number(res.list[0].powerType ? res.list[0].powerType : 0);
+						this.sendData.jworkVoltage = Number(res.list[0].workVoltage ? res.list[0].workVoltage : 0);
+						this.sendData.publicArea = Number(res.list[0].publicArea ? res.list[0].publicArea : 0);
+						this.sendData.devicePower = res.list[0].devicePower;
+						this.sendData.licenseCode = res.list[0].licenseCode;
 						this.sendData.powertimeStart = res.list[0].powertimeStart;
 						this.sendData.powertimeEnd = res.list[0].powertimeEnd;
-						this.sendData.connectRen = res.list[0].connectRen.split(",");
-						this.sendData.workCharger = res.list[0].workCharger.split(",");
-						this.sendData.workRen = res.list[0].workRen.split(",");
-						this.sendData.licenseCode = res.list[0].licenseCode;
+						this.sendData.id=res.list[0].id;
+						
+						
+						let hazardIdentification = [];
+						res.list[0].hazardIdentification.split(",").map(items => {
+							hazardIdentification.push(this.list_1[items]);
+						})
+						this.setTag({
+							tags: {
+								key: "hazardIdentification",
+								value: hazardIdentification
+							}
+						});
+						
+						
+						let connectRen = [];
+						res.list[0].connectRen || "".split(",").map(items => {
+							connectRen.push({
+								userName: items
+							});
+						})
+						
+						
+						let workCharger = [];
+						res.list[0].workCharger || "".split(",").map(items => {
+							workCharger.push({
+								userName: items
+							});
+						})
+						
+						
+						let workRen = [];
+						res.list[0].workRen || "".split(",").map(items => {
+							workRen.push({
+								userName: items
+							});
+						})
+						
+						console.log(this.sendData);
+						
+						this.sendData.connectRen = connectRen;
+						this.sendData.workCharger = workCharger;
+						this.sendData.workRen = workRen; 
+						
 					})
 					.catch(() => {});
 			},

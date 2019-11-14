@@ -17,19 +17,9 @@
         <!-- 申请人 -->
         <cell-value title="申请人" :value="$userInfo.userName" disable></cell-value>
         <!-- 作业票编号 -->
-        <cell-value title="作业票编号" :value="sendData.id" disable></cell-value>
+        <cell-value title="作业票编号" :value="$route.query.id" disable></cell-value>
         <!-- 作业票状态 -->
         <cell-value title="作业票状态" value="编辑" disable></cell-value>
-        <!-- 作业票编号 -->
-        <cell-value title="作业票编号" required v-if="initData.dhzypCode" :value="$userInfo.dhzypCode"></cell-value>
-        <!-- 作业票状态 -->
-        <cell-value
-          title="作业票状态"
-          required
-          v-if="initData.htStatus"
-          :value="$userInfo.userName"
-          class="readonly"
-        ></cell-value>
         <!-- 受限空间所属单位 -->
         <cell-select-department
           title="受限空间所属单位"
@@ -229,12 +219,20 @@ import Canvas from "@/components/Canvas.vue";
 import Signature from "../components/Signature.vue";
 import StepperPlus from "@/components/StepperPlus.vue";
 export default {
-  name: "kongjian",
-  mixins: [business],
+  name: "kongjianindex",
   components: {
     Canvas,
     Signature
   },
+  mixins: [business],
+  computed: mapState({
+    zyOtherspecial: state => state.kongjian.zyOtherspecial,
+    zywhBs: state => state.kongjian.zywhBs,
+    guardian: state => state.kongjian.guardian,
+    zyRen: state => state.kongjian.zyRen,
+    zyPrincipal: state => state.kongjian.zyPrincipal,
+    sxkjDanwei: state => state.kongjian.sxkjDanwei
+  }),
   data() {
     return {
       initData: {},
@@ -275,7 +273,8 @@ export default {
       ],
       selectSignatureShow: Number,
       signatureShow: false,
-      isLoading: false
+      isLoading: false,
+      oldInfo: {}
     };
   },
   watch: {
@@ -298,24 +297,13 @@ export default {
       this.sendData.sxkjDanwei = res;
     }
   },
-  computed: mapState({
-    zyOtherspecial: state => state.kongjian.zyOtherspecial,
-    zywhBs: state => state.kongjian.zywhBs,
-    guardian: state => state.kongjian.guardian,
-    zyRen: state => state.kongjian.zyRen,
-    zyPrincipal: state => state.kongjian.zyPrincipal,
-    sxkjDanwei: state => state.kongjian.sxkjDanwei
-  }),
   activated() {
     if (this.$route.query.id) {
       if (this.queryId !== this.$route.query.id) {
         this.queryId = this.$route.query.id;
-        // this.getPageData();
+        this.getPageData();
       }
     }
-  },
-  beforeDestroy() {
-    this.$store.dispatch("kongjian/cleanState");
   },
   methods: {
     // 显示签名
@@ -362,15 +350,19 @@ export default {
       let sendData = JSON.parse(JSON.stringify(this.sendData));
       sendData.zyOtherspecial = this.stringData("zyOtherspecial", "list_1");
       sendData.zywhBs = this.stringData("zywhBs", "list_2");
-      sendData.guardian = this.userString(sendData.guardian, "userName");
-      sendData.zyPrincipal = this.userString(sendData.zyPrincipal, "userName");
-      sendData.zyRen = this.userString(sendData.zyRen, "userName");
-      sendData.sxkjDanwei = this.userString(sendData.sxkjDanwei, "name");
+      sendData.guardian = this.userString(sendData.guardian, "userCode");
+      sendData.zyPrincipal = this.userString(sendData.zyPrincipal, "userCode");
+      sendData.zyRen = this.userString(sendData.zyRen, "userCode");
+      sendData.sxkjDanwei = this.userString(sendData.sxkjDanwei, "id");
       sendData.applyDept = this.$userInfo.officeName;
       sendData.applyRen = this.$userInfo.userName;
       sendData.__sid = this.$userInfo.sessionId;
+      if (this.$route.query.id) {
+        sendData.id = this.oldInfo.id;
+        sendData.sxkjCode = this.oldInfo.sxkjCode;
+      }
       this.$api.page_3
-        .htHseSxkjzypSave(sendData)
+        .htHseSxkjzypSave(sendData, this.$userInfo.sessionId)
         .then(res => {
           this.$Toast.clear();
           this.$Toast.success({
@@ -381,6 +373,45 @@ export default {
           });
         })
         .catch(() => {});
+    },
+    // 空间主表查询
+    getPageData() {
+      this.$api.page_3
+        .htHseSxkjzypListData({
+          sxkjCode: this.queryId,
+          __sid: localStorage.getItem("JiaHuaSessionId")
+        })
+        .then(res => {
+          let info = res.list[0];
+          this.oldInfo = info;
+          for (const key in this.sendData) {
+            if (key === "sxkjDanwei") {
+              this.sendData[key] = this.reductionSelectUser(info[key]);
+            } else if (key === "zyPrincipal") {
+              this.sendData[key] = this.reductionSelectUser(info[key]);
+            } else if (key === "guardian") {
+              this.sendData[key] = this.reductionSelectUser(info[key]);
+            } else if (key === "zyRen") {
+              this.sendData[key] = this.reductionSelectUser(info[key]);
+            } else if (key === "zyOtherspecial") {
+              if (info[key])
+                this.sendData[key] = this.reductionSelectTag(
+                  info[key],
+                  this.list_1
+                );
+            } else if (key === "zywhBs") {
+              if (info[key])
+                this.sendData[key] = this.reductionSelectTag(
+                  info[key],
+                  this.list_2
+                );
+            } else {
+              this.sendData[key] = info[key];
+            }
+          }
+          // 动火子表查询
+          this.mylistDataD();
+        });
     }
   }
 };

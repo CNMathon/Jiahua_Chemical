@@ -33,25 +33,25 @@
               error-text="请求失败，点击重新加载"
               finished-text="没有更多了"
               @load="getPageData('list')"
-            > -->
-              <label v-for="(item, index) in listData" :key="index">
-                <!-- 此处在做完AJAX后需要判断是否为最后行 - class存在判断 -->
-                <div class="donghuo-list-card donghuo-list-card-nolast" @click="tap(item)">
-                  <div class="left">
-                    <div class="left-line left-line-notlast">动火地点及内容：{{item.siteContent}}</div>
-                    <div class="left-line left-line-notlast">动火级别：{{item.dhLevel}}</div>
-                    <div class="left-line left-line-notlast">申请部门：{{item.applyDept}}</div>
-                    <div class="left-line left-line-notlast">申请人：{{item.applyRen}}</div>
-                    <div class="left-line left-line-notlast">动火开始时间：{{item.dhStarttime}}</div>
-                    <div class="left-line">动火结束时间：{{item.dhEndtime}}</div>
-                  </div>
-                  <div class="right" v-if="item.htStatus == 1">编辑</div>
-                  <div class="right" v-if="item.htStatus == 2">初审</div>
-                  <div class="right" v-if="item.htStatus == 3">有效</div>
-                  <div class="right" v-if="item.htStatus == 4">已验票</div>
-                  <div class="right" v-if="item.htStatus == 5">已终结</div>
+            >-->
+            <label v-for="(item, index) in listData" :key="index">
+              <!-- 此处在做完AJAX后需要判断是否为最后行 - class存在判断 -->
+              <div class="donghuo-list-card donghuo-list-card-nolast" @click="tap(item)">
+                <div class="left">
+                  <div class="left-line left-line-notlast">动火地点及内容：{{item.siteContent}}</div>
+                  <div class="left-line left-line-notlast">动火级别：{{item.dhLevel}}</div>
+                  <div class="left-line left-line-notlast">申请部门：{{item.applyDept}}</div>
+                  <div class="left-line left-line-notlast">申请人：{{item.applyRen}}</div>
+                  <div class="left-line left-line-notlast">动火开始时间：{{item.dhStarttime}}</div>
+                  <div class="left-line">动火结束时间：{{item.dhEndtime}}</div>
                 </div>
-              </label>
+                <div class="right" v-if="item.htStatus == 1">编辑</div>
+                <div class="right" v-if="item.htStatus == 2">初审</div>
+                <div class="right" v-if="item.htStatus == 3">有效</div>
+                <div class="right" v-if="item.htStatus == 4">已验票</div>
+                <div class="right" v-if="item.htStatus == 5">已终结</div>
+              </div>
+            </label>
             <!-- </van-list> -->
           </van-pull-refresh>
         </van-skeleton>
@@ -116,10 +116,18 @@ export default {
         }
       ], //动火等级
       selectZypzt: "", // 选择的作业票状态
-      selectDhlevel: "",
+      selectDhlevel: ""
     };
   },
   mixins: [mixin],
+  created() {
+    this.getPageData();
+    this.$store.dispatch("donghuo/cleanState");
+    this.$store.commit("donghuo/delete_KeepAlive", "donghuoindex");
+    this.$nextTick(() => {
+      this.$store.commit("donghuo/add_KeepAlive", "donghuoindex");
+    });
+  },
   methods: {
     tap(info) {
       let dhzypCode = info.dhzypCode;
@@ -186,12 +194,9 @@ export default {
       this.selectZypzt = e.name;
     },
     filterSelect_2(e) {
-      console.log(e.name)
+      console.log(e.name);
       this.selectDhlevel = e.name;
     }
-  },
-  created() {
-    this.getPageData();
   }
 };
 </script>

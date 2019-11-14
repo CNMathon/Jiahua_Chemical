@@ -27,12 +27,11 @@
 									<div class="left-line left-line-notlast">作业开始时间：{{ item.zyksDate }}</div>
 									<div class="left-line">作业结束时间：{{ item.zyjsDate }}</div>
 								</div>
-								<!-- <div class="right" @click.stop="()=>{$router.push({path:'/page_3/diaozhuang/index',query:{zypcode:item.zypcode}})}" v-if="item.htStatus == 1">编辑</div>
+								<div class="right" @click.stop="()=>{$router.push({path:'/page_3/diaozhuang/index',query:{zypcode:item.zypcode}})}" v-if="item.htStatus == 1">编辑</div>
 								<div class="right" @click.stop="()=>{$router.push({path:'/page_3/diaozhuang/index2',query:{zypcode:item.zypcode}})}" v-if="item.htStatus == 2">初审</div>
 								<div class="right" v-if="item.htStatus == 3">有效</div>
 								<div class="right" v-if="item.htStatus == 4">已验票</div>
-								<div class="right" v-if="item.htStatus == 5">已终结</div> -->
-								<div class="right" @click.stop="()=>{$router.push({path:'/page_3/diaozhuang/index',query:{zypcode:item.zypcode}})}">编辑</div>
+								<div class="right" v-if="item.htStatus == 5">已终结</div>
 							</div>
 						</div>
 					</div>

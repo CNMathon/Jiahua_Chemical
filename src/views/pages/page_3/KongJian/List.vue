@@ -54,6 +54,7 @@
 <script>
 import { mixin } from "@/mixin/mixin";
 export default {
+  name: "kongjian_list",
   data() {
     return {
       showFilter: false,
@@ -74,6 +75,14 @@ export default {
     };
   },
   mixins: [mixin],
+  created() {
+    this.getPageData();
+    this.$store.dispatch("kongjian/cleanState");
+    this.$store.commit("kongjian/delete_KeepAlive", "kongjianindex");
+    this.$nextTick(() => {
+      this.$store.commit("kongjian/add_KeepAlive", "kongjianindex");
+    });
+  },
   methods: {
     getPageData() {
       this.isLoading = true;
@@ -97,26 +106,22 @@ export default {
     },
     // 跳转至详情页
     jumpToMorePage(status, code) {
-      const that = this;
-      function todo(statusList, path, moreInfo = null) {
-        if (status == statusList) {
-          that.$router.push({
-            path: path,
-            query: {
-              status: status,
-              code: code,
-              moreInfo: moreInfo
-            }
-          });
-        }
+      if (Number(status) === 1) {
+        this.$router.push({
+          path: "../kongjian",
+          query: { id: code }
+        });
+      } else if (Number(status) === 2) {
+        this.$router.push({
+          path: "../kongjian/index2",
+          query: { id: code }
+        });
+      } else {
+        this.$router.push({
+          path: "../kongjian/index3",
+          query: { id: code }
+        });
       }
-
-      // todo 参数
-      // 参数1 => 需要指定的 status
-      // 参数2 => 跳转页面
-      // 参数3 => 其他需要通过 router 传输的数据
-      todo(1, "./index", { isInitData: true });
-      todo(2, "./Index2", { isInitData: true });
     },
     confirmFilter() {},
     filterSearch() {},
@@ -128,9 +133,6 @@ export default {
         this.status = e.index;
       }
     }
-  },
-  created() {
-    this.getPageData();
   }
 };
 </script>
@@ -191,55 +193,54 @@ export default {
 </style>
 
 <style lang="scss" scoped>
-	@import "@/assets/scss/cell.scss";
+@import "@/assets/scss/cell.scss";
 
-	.mangban {
+.mangban {
+  .next {
+    width: 100%;
+    height: 98px;
+    margin-top: 25px;
+    font-size: 32px;
+    text-align: center;
+    color: rgba(255, 255, 255, 1);
+    line-height: 98px;
+    background: rgba(96, 150, 248, 1);
+    box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.5);
+  }
+}
 
-		.next {
-			width: 100%;
-			height: 98px;
-			margin-top: 25px;
-			font-size: 32px;
-			text-align: center;
-			color: rgba(255, 255, 255, 1);
-			line-height: 98px;
-			background: rgba(96, 150, 248, 1);
-			box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.5);
-		}
-	}
+.head {
+  display: flex;
+  text-align: center;
+  margin-bottom: 20px;
 
-	.head {
-		display: flex;
-		text-align: center;
-		margin-bottom: 20px;
+  .head_1 {
+    width: 420px;
+  }
 
-		.head_1 {
-			width: 420px;
-		}
+  .head_2 {
+    width: 100px;
+  }
 
-		.head_2 {
-			width: 100px;
-		}
+  .head_3 {
+    width: 300px;
+  }
+}
 
-		.head_3 {
-			width: 300px;
-		}
-	}
+.action {
+  padding-left: 30px;
+  padding-right: 30px;
+  background-color: transparent;
 
-	.action {
-		padding-left: 30px;
-		padding-right: 30px;
-		background-color: transparent;
-
-		button {
-			width: 100%;
-			height: 110px;
-			margin-bottom: 20px;
-			background-color: white;
-			border: none;
-			border-radius: 30px;
-			color: rgb(0, 118, 255);
-			font-size: 35px;
-		}
-	}
+  button {
+    width: 100%;
+    height: 110px;
+    margin-bottom: 20px;
+    background-color: white;
+    border: none;
+    border-radius: 30px;
+    color: rgb(0, 118, 255);
+    font-size: 35px;
+  }
+}
 </style>

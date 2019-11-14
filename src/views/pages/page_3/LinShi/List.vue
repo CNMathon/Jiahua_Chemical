@@ -91,8 +91,9 @@ export default {
   methods: {
     // 编辑
     edit(item) {
-		console.log(item);
-      this.$router.push({ name: "linshi_index", query: { zypCode: item.zypCode } });
+		
+      //this.$router.push({ name: "linshi_index", query: { zypCode: item.zypCode } });
+	  this.$router.push({ name: "linshi_index2", query: { zypCode: item.zypCode } });
     },
     /**
      * 获取吊装工作票
@@ -161,7 +162,7 @@ export default {
     }
   },
   created() {
-    this.getListData()
+    this.getListData(true)
   }
 };
 </script>

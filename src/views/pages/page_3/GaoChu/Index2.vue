@@ -12,16 +12,16 @@
 			<!-- 作业票状态 -->
 			<cell-value title="作业票状态" value="编辑" disable></cell-value>
 			<!-- 作业内容 -->
-			<cell-textarea title="作业内容" required placeholder="请输入作业内容"></cell-textarea>
+			<cell-textarea title="作业内容" v-model="sendData.workContent" required placeholder="请输入作业内容"></cell-textarea>
 
 			<!-- 作业地点 -->
-			<cell-input title="作业地点" required placeholder="请输作业地点"></cell-input>
+			<cell-input title="作业地点" v-model="sendData.workAddress" required placeholder="请输作业地点"></cell-input>
 
 			<!-- 作业高度 -->
-			<cell-picker title="作业高度" required :columns="[]"></cell-picker>
+			<cell-picker title="作业高度" v-model="sendData.workHeight" required :columns="workHeightColumns"></cell-picker>
 
 			<!-- 登高类别 -->
-			<cell-picker title="登高类别" required :columns="[]"></cell-picker>
+			<cell-picker title="登高类别" v-model="sendData.heightType" required :columns="heightTypeColumns"></cell-picker>
 
 
 			<div class="confirm">
@@ -135,6 +135,11 @@
 			Signature,
 			Canvas
 		},
+		
+		created() {
+			this.gczyCode=this.$route.query.gczyCode;
+			this.getData();
+		},
 
 		computed: mapState({
 			reason: state => state.duanlu.reason,
@@ -152,7 +157,16 @@
 				}],
 				signatureShow: false,
 				mask: [0, 1],
-				light: 0
+				light: 0,
+				gczyCode:0,
+				sendData: {
+					workContent: "", //作业内容
+					workAddress: "", //作业地点
+					workHeight: "", //作业高度
+					heightType: "" //登高类别
+				},
+				workHeightColumns: ["2-5米", "5-15米", "15-30米", "30米以上"],
+				heightTypeColumns: ["Ⅰ级", "Ⅱ级", "Ⅲ级", "Ⅳ级", "特级"]
 
 			}
 
@@ -181,58 +195,7 @@
 						this.sendData.workAddress = info.workAddress;
 						this.sendData.workHeight = Number(info.workHeight);
 						this.sendData.heightType = Number(info.heightType);
-						this.sendData.startTime = info.startTime;
-						this.sendData.endTime = info.endTime;
-						this.sendData.specialWork = info.specialWork.split(",");
-						this.sendData.harmAnalise = info.harmAnalise.split(",");
 
-						let workDeptLeader = [];
-						info.workDeptLeader.split(",").map(items => {
-							workDeptLeader.push({
-								userName: items
-							});
-						})
-
-						let worker = [];
-						info.worker.split(",").map(items => {
-							worker.push({
-								userName: items
-							});
-						})
-
-						let guarder = [];
-						info.guarder.split(",").map(items => {
-							guarder.push({
-								userName: items
-							});
-						})
-
-						this.sendData.workDeptLeader = workDeptLeader;
-						this.sendData.worker = worker;
-						this.sendData.guarder = guarder;
-
-						let specialWork = [];
-						this.sendData.specialWork.map(items => {
-							specialWork.push(this.list_1[items]);
-						})
-						let harmAnalise = [];
-						this.sendData.harmAnalise.map(items => {
-							harmAnalise.push(this.list_2[items]);
-						})
-						this.setTag({
-							tags: {
-								key: "harmAnalise",
-								value: harmAnalise
-							}
-						});
-						this.setTag({
-							tags: {
-								key: "specialWork",
-								value: specialWork
-							}
-						});
-
-						console.log(this.sendData);
 
 					})
 					.catch(() => {});

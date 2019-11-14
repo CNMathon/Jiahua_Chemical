@@ -135,7 +135,7 @@
 			// 设置显示List
 			this.status = this.$route.query.status || 0;
 			console.log("this.zypCode: ", this.zypCode);
-			if (this.zypCode) {
+			if (this.$route.query.zypCode) {
 				this.getData();
 			}
 		},
@@ -159,7 +159,7 @@
 				this.$api.page_3
 					.htHseLsydzypListData(sendData)
 					.then(res => {
-						console.log("res",res);
+						console.log("res", res);
 
 						this.sendData.workContent = res.list[0].workContent;
 						this.sendData.workLocation = res.list[0].workLocation;
@@ -170,6 +170,7 @@
 						this.sendData.licenseCode = res.list[0].licenseCode;
 						this.sendData.powertimeStart = res.list[0].powertimeStart;
 						this.sendData.powertimeEnd = res.list[0].powertimeEnd;
+						this.sendData.id=res.list[0].id;
 
 
 						let hazardIdentification = [];
@@ -185,20 +186,15 @@
 
 
 						let connectRen = [];
-						let connectRenStr = res.list[0].connectRen || [];
-						connectRenStr.split(",").map(items => {
+						res.list[0].connectRen || "".split(",").map(items => {
 							connectRen.push({
 								userName: items
 							});
 						})
 
-						console.log(111);
-
-
-						/* console.log(connectRen);
 
 						let workCharger = [];
-						res.list[0].workCharger.split(",").map(items => {
+						res.list[0].workCharger || "".split(",").map(items => {
 							workCharger.push({
 								userName: items
 							});
@@ -206,17 +202,17 @@
 						
 
 						let workRen = [];
-						res.list[0].workRen.split(",").map(items => {
+						res.list[0].workRen || "".split(",").map(items => {
 							workRen.push({
 								userName: items
 							});
 						})
 						
+						console.log(this.sendData);
 						
-
 						this.sendData.connectRen = connectRen;
 						this.sendData.workCharger = workCharger;
-						this.sendData.workRen = workRen; */
+						this.sendData.workRen = workRen; 
 
 
 

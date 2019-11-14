@@ -191,7 +191,6 @@
           </Signature>
         </div>
       </div>
-
       <!-- 画板Popup -->
       <van-popup
         class="popup"
@@ -201,11 +200,10 @@
       >
         <Canvas ref="signature" @save="saveCanvas" @cancel="cancelCanvas"></Canvas>
       </van-popup>
-
       <!-- 操作Popup -->
       <van-popup v-model="isShowAction" position="bottom" class="action">
         <button @click="postData">保存</button>
-        <button>工作流提交</button>
+        <button @click="Next">工作流提交</button>
         <button @click="closeAction">取消</button>
       </van-popup>
     </div>
@@ -217,7 +215,7 @@ import { business } from "@/mixin/business";
 import Canvas from "@/components/Canvas.vue";
 import Signature from "../components/Signature.vue";
 export default {
-  name: "donghuo",
+  name: "donghuoindex",
   mixins: [business],
   components: {
     Canvas,
@@ -318,10 +316,7 @@ export default {
     dhzyPrincipal: state => state.donghuo.dhzyPrincipal,
     dhzyRen: state => state.donghuo.dhzyRen
   }),
-  beforeDestroy() {
-    this.$store.dispatch("donghuo/cleanState");
-  },
-  activated() {
+  created() {
     if (this.$route.query.id) {
       if (this.queryId !== this.$route.query.id) {
         this.queryId = this.$route.query.id;
@@ -329,24 +324,7 @@ export default {
       }
     }
   },
-  beforeDestroy() {
-    this.queryId = "";
-    this.$store.dispatch("dongtu/cleanState");
-  },
   methods: {
-    // 清除所有数据
-    clearData() {
-      this.sendData.siteContent = ""; //动火地点及内容
-      this.sendData.dhLevel = null; //动火级别
-      this.sendData.dhStarttime = ""; //动火开始时间
-      this.sendData.dhEndtime = ""; //动火结束时间
-      this.sendData.dhWay = []; //动火方式
-      this.sendData.otherSpecial = []; //涉及其他特殊作业
-      this.sendData.hazardSb = []; //危害辨识
-      this.sendData.dhzyPrincipal = []; //动火作业负责人
-      this.sendData.dhzyRen = []; //动火人
-    },
-
     // 打开操作Popup
     openAction() {
       this.isShowAction = true;
@@ -517,7 +495,6 @@ export default {
           this.$Toast.success({
             message: "提交成功",
             onClose() {
-              that.clearData();
               that.pageBack();
             }
           });
@@ -548,6 +525,10 @@ export default {
     },
     // 动火主表查询
     getPageData() {
+      this.$Toast.loading({
+        message: "加载中...",
+        forbidClick: true
+      });
       this.$api.page_3
         .htHseDhzypListData({
           dhzypCode: this.queryId,
@@ -585,7 +566,8 @@ export default {
           }
           // 动火子表查询
           this.mylistDataD();
-        });
+        })
+        .catch(() => this.$Toast.clear());
     },
     // 动火子表查询
     mylistDataD() {
@@ -595,8 +577,17 @@ export default {
           __sid: localStorage.getItem("JiaHuaSessionId")
         })
         .then(res => {
+          this.$Toast.clear();
           console.log("res: ", res);
-        });
+        })
+        .catch(() => this.$Toast.clear());
+    },
+    // 工作流提交
+    Next() {
+      if (!this.$route.query.id) {
+        this.$notify("请先提交保存");
+        return;
+      }
     }
   }
 };

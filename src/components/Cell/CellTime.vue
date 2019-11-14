@@ -80,7 +80,7 @@ export default {
     values() {
       this.$emit(
         "input",
-        this.$dayjs(this.value || this.values).format("YYYY-MM-DD HH:mm")
+        this.$dayjs(this.value || this.values).format("YYYY-MM-DD HH:mm:ss")
       );
     }
   }

@@ -70,15 +70,15 @@ export default {
       this.showPopup = true;
     },
     listSelect() {
-      // this.$api.page_3
-      //   .htCbsBreakrulesmanageListData({
-      //     __sid: localStorage.getItem("JiaHuaSessionId")
-      //   })
-      //   .then(res => {
-      //     this.listData = res.list;
-      //     this.isLoading = false
-      //     console.log(this.listData)
-      //   });
+       this.$api.page_3
+         .htCbsBreakrulesmanageListData({
+           __sid: localStorage.getItem("JiaHuaSessionId")
+         })
+         .then(res => {
+           this.listData = res.list;
+           this.isLoading = false
+           console.log(this.listData)
+         });
     }
   },
   created() {
