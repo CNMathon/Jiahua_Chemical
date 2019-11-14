@@ -48,6 +48,15 @@ const routes = {
           }
         },
         {
+          path: "/page_3/donghuo/index4",
+          name: "donghuo_index3",
+          component: () => import("../views/pages/page_3/DongHuo/Index4.vue"),
+          meta: {
+            name: "动火安全-不可编辑",
+            keepAlive: false //此组件需要被缓存
+          }
+        },
+        {
           path: "/page_3/donghuo/list",
           name: "donghuo_list",
           component: () => import("../views/pages/page_3/DongHuo/List.vue"),
@@ -73,29 +82,11 @@ const routes = {
           }
         },
         {
-          path: "/page_3/donghuo/analysis",
-          name: "donghuo_analysis",
-          component: () => import("../views/pages/page_3/DongHuo/Analysis.vue"),
-          meta: {
-            name: "动火安全-安全分析",
-            keepAlive: true //此组件不需要被缓存
-          }
-        },
-        {
-          path: "/page_3/donghuo/add_analysis",
-          name: "donghuo_add_analysis",
-          component: () =>
-            import("../views/pages/page_3/DongHuo/AddAnalysis.vue"),
-          meta: {
-            keepAlive: false //此组件不需要被缓存
-          }
-        },
-        {
           path: "/page_3/donghuo/confirm",
           name: "donghuo_confirm",
           component: () => import("../views/pages/page_3/DongHuo/Confirm.vue"),
           meta: {
-            name: "动火安全-确认签字",
+            name: "动火安全-审批",
             keepAlive: false //此组件不需要被缓存
           }
         }
@@ -164,6 +155,15 @@ const routes = {
           name: "kongjian_select",
           component: () =>
             import("../views/pages/page_3/components/TagSelect.vue"),
+          meta: {
+            keepAlive: false //此组件不需要被缓存
+          }
+        },
+        {
+          path: "/page_3/kongjian/kongjian_select_department",
+          name: "kongjian_select_department",
+          component: () =>
+            import("../views/pages/page_3/SelectDepartment/Index.vue"),
           meta: {
             keepAlive: false //此组件不需要被缓存
           }

@@ -380,6 +380,10 @@ export default {
     },
     // 动火主表查询
     getPageData() {
+      this.$Toast.loading({
+        message: "加载中...",
+        forbidClick: true
+      });
       this.$api.page_3
         .htHseDhzypListData({
           dhzypCode: this.queryId,
@@ -419,6 +423,9 @@ export default {
           }
           // 动火子表查询
           this.mylistDataD();
+        })
+        .catch(() => {
+          this.$Toast.clear();
         });
     },
     // 动火子表查询
@@ -429,8 +436,11 @@ export default {
           __sid: localStorage.getItem("JiaHuaSessionId")
         })
         .then(res => {
-          console.log("res: ", res);
           this.childrenData = res;
+          this.$Toast.clear();
+        })
+        .catch(() => {
+          this.$Toast.clear();
         });
     },
 
@@ -471,6 +481,11 @@ export default {
       if (!this.isDataEdit()) {
         return;
       }
+      this.isShowAction = false;
+      this.$Toast.loading({
+        message: "加载中...",
+        forbidClick: true
+      });
       let sendData = JSON.parse(JSON.stringify(this.sendData));
       sendData.dhWay = this.stringData("dhWay", "list_1");
       sendData.otherSpecial = this.stringData("otherSpecial", "list_2");
@@ -486,10 +501,22 @@ export default {
       sendData.__sid = this.$userInfo.sessionId;
       sendData.id = this.oldInfo.id;
       sendData.dhzypCode = this.oldInfo.dhzypCode;
+      const that = this;
       this.$api.page_3
         .htHseDhzypSave(sendData)
-        .then(res => {})
-        .catch(() => {});
+        .then(res => {
+          this.$Toast.clear();
+          this.$Toast.success({
+            message: "保存成功",
+            onClose() {
+              // 动火主表查询
+              that.getPageData();
+            }
+          });
+        })
+        .catch(() => {
+          this.$Toast.clear();
+        });
     }
   }
 };

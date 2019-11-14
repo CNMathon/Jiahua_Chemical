@@ -78,7 +78,10 @@ export default {
   },
   watch: {
     values() {
-      this.$emit("input", this.$dayjs(this.value).format("YYYY-MM-DD HH:mm"));
+      this.$emit(
+        "input",
+        this.$dayjs(this.value || this.values).format("YYYY-MM-DD HH:mm")
+      );
     }
   }
 };

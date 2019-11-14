@@ -1,19 +1,16 @@
 <template>
   <div class="donghuo">
-    <van-nav-bar
-      title="受限空间安全"
-      left-text="返回"
-      right-text="操作"
-      left-arrow
-      @click-left="pageBack"
-      @click-right="openAction"
-    />
-    <van-skeleton
-      title
-      :row="3"
-      :loading="isLoading"
-      class="skeleton"
-    >
+    <van-sticky>
+      <van-nav-bar
+        title="受限空间安全"
+        left-text="返回"
+        right-text="操作"
+        left-arrow
+        @click-left="pageBack"
+        @click-right="openAction"
+      />
+    </van-sticky>
+    <van-skeleton title :row="3" :loading="isLoading" class="skeleton">
       <div class="cell_group">
         <!-- 申请部门 -->
         <cell-value title="申请部门" :value="$userInfo.officeName" disable></cell-value>
@@ -33,19 +30,14 @@
           :value="$userInfo.userName"
           class="readonly"
         ></cell-value>
-        <!-- 受限空间所属空间 -->
-        <div class="cell">
-          <div class="cell_title">
-            <span>受限空间所属空间</span>
-            <span class="required">*</span>
-          </div>
-          <div class="cell_value" @click="routeToChoose">
-            <span>{{ sendData.zySskj.length == 0 ? "单位名称" : sendData.zySskj[0] }}</span>
-            <span class="cell_value_arrow">
-              <van-icon name="search" />
-            </span>
-          </div>
-        </div>
+        <!-- 受限空间所属单位 -->
+        <cell-select-department
+          title="受限空间所属单位"
+          required
+          :storeModule="storeModule"
+          storeKey="sxkjDanwei"
+          v-model="sendData.sxkjDanwei"
+        ></cell-select-department>
         <!-- 作业内容 -->
         <cell-textarea title="作业内容" required v-model="sendData.zyContent" placeholder="请输入作业内容"></cell-textarea>
         <!-- 设备名称 -->
@@ -78,6 +70,7 @@
         <cell-select-user
           title="作业部门负责人"
           required
+          :max="2"
           :storeModule="storeModule"
           storeKey="zyPrincipal"
           v-model="sendData.zyPrincipal"
@@ -86,6 +79,7 @@
         <cell-select-user
           title="作业人"
           required
+          :max="9"
           :storeModule="storeModule"
           storeKey="zyRen"
           v-model="sendData.zyRen"
@@ -94,6 +88,7 @@
         <cell-select-user
           title="监护人"
           required
+          :max="2"
           :storeModule="storeModule"
           storeKey="guardian"
           v-model="sendData.guardian"
@@ -210,7 +205,6 @@
         </div>
       </div>
     </van-skeleton>
-
     <!-- 画板Popup -->
     <van-popup
       class="popup"
@@ -220,7 +214,6 @@
     >
       <Canvas ref="signature" @save="saveCanvas" @cancel="cancelCanvas"></Canvas>
     </van-popup>
-    <!-- <div class="next" @click="Next">下一步</div> -->
     <!-- 操作Popup -->
     <van-popup v-model="isShowAction" position="bottom" class="action">
       <button @click="postData">保存</button>
@@ -235,29 +228,29 @@ import { business } from "../../../../mixin/business";
 import Canvas from "@/components/Canvas.vue";
 import Signature from "../components/Signature.vue";
 import StepperPlus from "@/components/StepperPlus.vue";
-import { send } from 'q';
 export default {
   name: "kongjian",
   mixins: [business],
+  components: {
+    Canvas,
+    Signature
+  },
   data() {
     return {
       initData: {},
       storeModule: "kongjian",
       sendData: {
         zyContent: "", //作业内容
-        id: "", // 作业票编号
         devicename: "", //设备名称
         sxkjNeurogen: "", //受限空间内原有介质
         zyOtherspecial: [], //涉及的其他特殊作业
         zywhBs: [], //危害辨识
         zyStarttime: "", //作业开始时间
         zyEndtime: "", //作业结束时间
-        zySskj: ['动力中心'], // 受限空间所属空间
+        sxkjDanwei: [], // 受限空间所属单位
         guardian: [], // 监护人
         zyPrincipal: [], // 作业部门负责人
-        zyRen: [], // 作业人
-        aqcsjl: [], // 安全措施勾选记录
-        querenman: "" // 确认人（签名）
+        zyRen: [] // 作业人
       },
       checked: [],
       isShowAction: false,
@@ -285,149 +278,6 @@ export default {
       isLoading: false
     };
   },
-  components: {
-    // DonghuoConfirm,
-    Canvas,
-    Signature
-  },
-  computed: mapState({
-    zyOtherspecial: state => state.kongjian.zyOtherspecial,
-    zywhBs: state => state.kongjian.zywhBs,
-    guardian: state => state.kongjian.guardian,
-    zyRen: state => state.kongjian.zyRen,
-    zyPrincipal: state => state.kongjian.zyPrincipal
-  }),
-  // computed: {
-  //   zypStatus() {
-  //     return this.$route.query.status
-  //   },
-  //   zypId() {
-  //     return this.$route.query.id
-  //   }
-  // },
-  beforeDestroy() {
-    this.$store.dispatch("kongjian/cleanState");
-  },
-  methods: {
-    // 显示签名
-    showSignature(index) {
-      console.log("index: ", index);
-      console.log("显示签名");
-      // console.log(this.sendData)
-      console.log(this.sendData.aqcsjl);
-      this.sendData.aqcsjl.push(index);
-      console.log(this.sendData.aqcsjl);
-      this.selectSignatureShow = index;
-      this.signatureShow = true;
-    },
-    // 取消签名
-    signatureCancel(index) {
-      console.log("index: ", index);
-      console.log("取消");
-      this.checked[index].checked = false;
-      this.checked[index].img = "";
-    },
-    // 保存画布
-    saveCanvas(e) {
-      this.signatureShow = false;
-      this.checked[this.selectSignatureShow] = {
-        checked: false,
-        img: ""
-      };
-      this.sendData.selectSignatureShow = e;
-      this.checked[this.selectSignatureShow].img = e;
-      console.log("signatureShow: ");
-    },
-    // 取消画布
-    cancelCanvas() {
-      this.checked[this.selectSignatureShow].checked = false;
-      this.checked[this.selectSignatureShow].img = "";
-      this.signatureShow = false;
-    },
-
-    pageBack() {
-      this.$router.back();
-    },
-
-    // 打开操作Popup
-    openAction() {
-      this.isShowAction = true;
-    },
-
-    // 关闭操作Popup
-    closeAction() {
-      this.isShowAction = false;
-    },
-
-    isEmpty(sendData) {
-      if(
-        sendData.zyContent == "" || 
-        sendData.devicename == "" ||
-        sendData.sxkjNeurogen == "" ||
-        sendData.zyOtherspecial == "" ||
-        sendData.zyStarttime == "" ||
-        sendData.zyEndtime == "" ||
-        sendData.zySskj == [] ||
-        sendData.guardian == [] ||
-        sendData.zyPrincipal == [] ||
-        sendData.zyRen == [] ||
-        sendData.aqcsjl == []
-      ){
-        return false
-      }
-    },
-
-    // 发送数据
-    postData() {
-      this.isLoading = true
-      const that = this;
-      let sendData = JSON.parse(JSON.stringify(this.sendData));
-      sendData.zyOtherspecial = this.stringData("zyOtherspecial", "list_1");
-      sendData.zywhBs = this.stringData("zywhBs", "list_2");
-      sendData.applyDept = this.$userInfo.officeName;
-      sendData.applyRen = this.$userInfo.userName;
-      sendData.__sid = this.$userInfo.sessionId;
-      console.log(sendData)
-      // 判断数据是否为空
-      if (this.isEmpty(sendData) == false) {
-        this.$notify('请将表单中的数据输入完整')
-        return
-      }
-      this.$api.page_3
-        .htHseSxkjzypSave(sendData)
-        .then(res => {
-          this.isLoading = false
-          console.log("res: ", res);
-          this.$Toast.success({
-            message: "提交成功",
-            onClose() {
-              that.pageBack();
-            }
-          });
-        })
-        .catch(() => {});
-    },
-
-    routeToChoose() {
-      let newArr = [];
-      this.$api.page_3
-        .bmSelect({
-          __sid: localStorage.getItem("JiaHuaSessionId")
-        })
-        .then(res => {
-          console.log(res);
-          for (let key in res) {
-            newArr.push(res[key].name);
-          }
-          this.$router.push({
-            name: "kongjian_select",
-            query: {
-              showList: newArr
-            }
-          });
-        });
-    },
-  },
   watch: {
     zyOtherspecial(res) {
       this.sendData.zyOtherspecial = res;
@@ -443,56 +293,96 @@ export default {
     },
     zyPrincipal(res) {
       this.sendData.zyPrincipal = res;
+    },
+    sxkjDanwei(res) {
+      this.sendData.sxkjDanwei = res;
     }
   },
-  
+  computed: mapState({
+    zyOtherspecial: state => state.kongjian.zyOtherspecial,
+    zywhBs: state => state.kongjian.zywhBs,
+    guardian: state => state.kongjian.guardian,
+    zyRen: state => state.kongjian.zyRen,
+    zyPrincipal: state => state.kongjian.zyPrincipal,
+    sxkjDanwei: state => state.kongjian.sxkjDanwei
+  }),
   activated() {
-    this.sendData.id = ""
-    if (this.$route.query.status == 1 && this.$route.query.moreInfo.isInitData == true) {
-      this.isLoading = true
-      this.sendData.id = this.$route.query.sxkjCode
-      console.log(111111)
-      console.log(this.$route.query.sxkjCode)
-      this.$api.page_3
-        .htHseSxkjzypListData({
-          id: this.sendData.id,
-          __sid: localStorage.getItem("JiaHuaSessionId")
-        })
-        .then(res => {
-          this.isLoading = false
-          console.log(res)
-          let content = res.list[0]
-          this.sendData.zyContent = content.zyContent
-          this.sendData.devicename = content.devicename
-          this.sendData.sxkjNeurogen = content.sxkjNeurogen
-          this.sendData.zyOtherspecial = content.zyOtherspecial
-          this.sendData.zywhBs = content.zywhBs
-          this.sendData.zyStarttime = content.zyStarttime
-          this.sendData.zyEndtime = content.zyStarttime
-          this.sendData.zyPrincipal = content.zyPrincipal
-          this.sendData.zyRen = content.zyRen
-          this.sendData.guardian = content.guardian
-        })
-    }
-    if (this.$route.query.isNew) {
-      this.sendData = {
-        zyContent: "", //作业内容
-        id: "", // 作业票编号
-        devicename: "", //设备名称
-        sxkjNeurogen: "", //受限空间内原有介质
-        zyOtherspecial: [], //涉及的其他特殊作业
-        zywhBs: [], //危害辨识
-        zyStarttime: "", //作业开始时间
-        zyEndtime: "", //作业结束时间
-        zySskj: ['动力中心'], // 受限空间所属空间
-        guardian: [], // 监护人
-        zyPrincipal: [], // 作业部门负责人
-        zyRen: [], // 作业人
-        aqcsjl: [], // 安全措施勾选记录
-        querenman: "" // 确认人（签名）
+    if (this.$route.query.id) {
+      if (this.queryId !== this.$route.query.id) {
+        this.queryId = this.$route.query.id;
+        // this.getPageData();
       }
     }
   },
+  beforeDestroy() {
+    this.$store.dispatch("kongjian/cleanState");
+  },
+  methods: {
+    // 显示签名
+    showSignature(index) {
+      this.selectSignatureShow = index;
+      this.signatureShow = true;
+    },
+    // 取消签名
+    signatureCancel(index) {
+      this.checked[index].checked = false;
+      this.checked[index].img = "";
+    },
+    // 保存画布
+    saveCanvas(e) {
+      this.signatureShow = false;
+      this.checked[this.selectSignatureShow] = {
+        checked: false,
+        img: ""
+      };
+      this.sendData.selectSignatureShow = e;
+      this.checked[this.selectSignatureShow].img = e;
+    },
+    // 取消画布
+    cancelCanvas() {
+      this.checked[this.selectSignatureShow].checked = false;
+      this.checked[this.selectSignatureShow].img = "";
+      this.signatureShow = false;
+    },
+    // 打开操作Popup
+    openAction() {
+      this.isShowAction = true;
+    },
+    // 关闭操作Popup
+    closeAction() {
+      this.isShowAction = false;
+    },
+    // 发送数据
+    postData() {
+      this.$Toast.loading({
+        message: "加载中...",
+        forbidClick: true
+      });
+      const that = this;
+      let sendData = JSON.parse(JSON.stringify(this.sendData));
+      sendData.zyOtherspecial = this.stringData("zyOtherspecial", "list_1");
+      sendData.zywhBs = this.stringData("zywhBs", "list_2");
+      sendData.guardian = this.userString(sendData.guardian, "userName");
+      sendData.zyPrincipal = this.userString(sendData.zyPrincipal, "userName");
+      sendData.zyRen = this.userString(sendData.zyRen, "userName");
+      sendData.sxkjDanwei = this.userString(sendData.sxkjDanwei, "name");
+      sendData.applyDept = this.$userInfo.officeName;
+      sendData.applyRen = this.$userInfo.userName;
+      sendData.__sid = this.$userInfo.sessionId;
+      this.$api.page_3
+        .htHseSxkjzypSave(sendData)
+        .then(res => {
+          this.$Toast.clear();
+          this.$Toast.success({
+            message: "提交成功",
+            onClose() {
+              that.pageBack();
+            }
+          });
+        })
+        .catch(() => {});
+    }
+  }
 };
 </script>
 <style lang="scss" scoped>
@@ -533,9 +423,9 @@ export default {
 </style>
 
 <style lang="scss">
-  .skeleton {
-    padding-top: 40px;
-  }
+.skeleton {
+  padding-top: 40px;
+}
 </style>
 
 <style lang="scss" scoped>

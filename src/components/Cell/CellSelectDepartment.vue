@@ -5,7 +5,7 @@
       <span class="required" v-if="required">*</span>
     </div>
     <div class="cell_value">
-      <span>{{ showNames() || "人名" }}</span>
+      <span>{{ showNames() || "请选择" }}</span>
       <span class="cell_value_arrow">
         <van-icon name="search" />
       </span>
@@ -51,7 +51,7 @@ export default {
     toSelectUser() {
       if (this.disable) return;
       this.$router.push({
-        path: "./select_user",
+        path: "./kongjian_select_department",
         query: {
           storeModule: this.storeModule,
           storeKey: this.storeKey,
@@ -64,7 +64,7 @@ export default {
       if (this.value) {
         let arr = JSON.parse(JSON.stringify(this.value));
         let newArr = arr.map(item => {
-          return item.userName;
+          return item.name;
         });
         return newArr.join(",");
       }

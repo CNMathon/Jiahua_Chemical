@@ -66,9 +66,20 @@ export const business = {
       return newArr;
     },
     // 作业票状态
-    htStatus(status){
+    htStatus(status) {
       const statusList = ['编辑','初审','有效','已验票','已终结',]
       return statusList[Number(status) - 1]
+    },
+    // 判断数据群是否为空
+    isDataEmpty() {
+      for (const key in arguments) {
+        let value = arguments[key]
+        console.log(value)
+        if (value == "" || value == null || value == undefined || JSON.stringify(value) === '{}' || JSON.stringify(value) === '[]') {
+          return true
+        }
+      }
+      return false
     }
   }
 };

@@ -5,7 +5,8 @@ const state = {
   hazardSb: [],
   dhzyPrincipal: [],
   dhzyRen: [],
-  fxRenA: [] //分析人1
+  fxRenA: [], //分析人1
+  dhSup: [] //监火人
 };
 
 // getters

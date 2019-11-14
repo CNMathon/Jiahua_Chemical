@@ -3,9 +3,10 @@ const state = {
   zyOtherspecial: [],
   otherSpecial: [],
   zywhBs: [],
-  guardian: [],
-  zyPrincipal: [],
-  zyRen: [],
+  guardian: [], //监护人
+  zyPrincipal: [], //作业部门负责人
+  zyRen: [], //作业人
+  sxkjDanwei: [] //受限空间所属单位
 };
 
 // getters

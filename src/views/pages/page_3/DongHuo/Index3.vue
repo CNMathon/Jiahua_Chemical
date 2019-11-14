@@ -202,14 +202,13 @@
         required
         disable
       ></cell-textarea>
-      <div class="signature" @click="signatureShow = true">
+      <div class="signature">
         <div class="signature__head">
           <div>签字</div>
-          <div class="signature__image" v-if="signatureA">
-            <img :src="signatureA" alt srcset />
+          <div class="signature__image">
+            <van-image width="100%" height="100%" :src="signatureA" />
           </div>
-          <div class="signature__icon" v-if="signatureA">{{signatureATime}}</div>
-          <van-icon class="signature__icon" v-else name="edit" />
+          <div class="signature__icon">{{signatureATime}}</div>
         </div>
       </div>
       <!-- 作业范围、内容、方式 -->
@@ -220,26 +219,25 @@
         <div class="cell_other">
           <div class="upload">
             <div class="upload_box">
-              <van-uploader
-                :before-read="beforeRead"
-                :before-delete="beforeDelete"
-                v-model="fileListA"
-                preview-size="5rem"
-              />
+              <van-row gutter="20">
+                <van-col span="8" v-for="(item,index) in fileListA" :key="index">
+                  <van-image width="100" height="100" :src="item" />
+                </van-col>
+              </van-row>
             </div>
           </div>
         </div>
       </div>
-      <!-- 画板Popup -->
-      <van-popup
-        class="popup"
-        v-model="signatureShow"
-        :close-on-click-overlay="false"
-        position="bottom"
-      >
-        <Canvas ref="signature" @save="saveCanvas" @cancel="cancelCanvas"></Canvas>
-      </van-popup>
-
+      <!-- 监火人 -->
+      <cell-select-user
+        title="监火人"
+        required
+        :storeModule="storeModule"
+        radio
+        :border="false"
+        storeKey="dhSup"
+        v-model="sendData.dhSup"
+      ></cell-select-user>
       <!-- 操作Popup -->
       <van-popup v-model="isShowAction" position="bottom" class="action">
         <button @click="postData">保存</button>
@@ -252,12 +250,11 @@
 <script>
 import { mapState } from "vuex";
 import { business } from "@/mixin/business";
-import { uploadFile } from "@/mixin/uploadFile";
 import Canvas from "@/components/Canvas.vue";
 import Signature from "../components/Signature.vue";
 export default {
   name: "donghuo",
-  mixins: [business, uploadFile],
+  mixins: [business],
   components: {
     Canvas,
     Signature
@@ -280,7 +277,8 @@ export default {
         fxdNameA: "", //分析点名称1
         krqbzLimitationA: null, //可燃气爆炸极限1
         fxDataA: "", //分析数据1
-        fxRenA: [] //分析人1
+        fxRenA: [], //分析人1
+        dhSup: [] //监火人
       },
       dhLevelColumns: ["制定位置特殊动火作业", "特殊", "|类", "||类"],
       krqbzLimitationAColumns: [
@@ -336,10 +334,14 @@ export default {
   watch: {
     fxRenA(res) {
       this.sendData.fxRenA = res;
+    },
+    dhSup(res) {
+      this.sendData.dhSup = res;
     }
   },
   computed: mapState({
-    fxRenA: state => state.donghuo.fxRenA
+    fxRenA: state => state.donghuo.fxRenA,
+    dhSup: state => state.donghuo.dhSup
   }),
   activated() {
     if (this.$route.query.id) {
@@ -374,18 +376,6 @@ export default {
     closeAction() {
       this.isShowAction = false;
     },
-    // 保存签名
-    saveCanvas(e) {
-      this.signatureA = e;
-      this.signatureATime = this.$dayjs(new Date()).format("YYYY-MM-DD HH:mm");
-      this.signatureShow = false;
-    },
-    // 取消签名
-    cancelCanvas() {
-      this.signatureA = "";
-      this.signatureATime = "";
-      this.signatureShow = false;
-    },
     // 动火主表查询
     getPageData() {
       this.$api.page_3
@@ -402,6 +392,8 @@ export default {
             } else if (key === "dhzyRen") {
               this.sendData[key] = this.reductionSelectUser(info[key]);
             } else if (key === "fxRenA") {
+              this.sendData[key] = this.reductionSelectUser(info[key]);
+            } else if (key === "dhSup") {
               this.sendData[key] = this.reductionSelectUser(info[key]);
             } else if (key === "dhWay") {
               if (info[key])
@@ -445,29 +437,9 @@ export default {
     // true => 输入完整
     // false => 有问题的输入
     isDataEdit() {
-      // 动火分析时间
-      if (!this.sendData.dhfxTimeA) {
-        this.$notify("请选择动火分析时间");
-        return false;
-      }
-      // 分析点名称
-      if (!this.sendData.fxdNameA) {
-        this.$notify("请输入分析点名称");
-        return false;
-      }
-      // 可燃气爆炸极限
-      if (!this.sendData.krqbzLimitationA) {
-        this.$notify("请选择可燃气爆炸极限");
-        return false;
-      }
-      // 分析数据
-      if (!this.sendData.fxDataA) {
-        this.$notify("分析数据");
-        return false;
-      }
-      // 分析人
-      if (this.sendData.fxRenA.length === 0) {
-        this.$notify("请选择分析人");
+      // 监火人
+      if (this.sendData.dhSup.length === 0) {
+        this.$notify("请选择监火人");
         return false;
       }
       return true;
@@ -488,6 +460,7 @@ export default {
       );
       sendData.dhzyRen = this.userString(sendData.dhzyRen, "userName");
       sendData.fxRenA = this.userString(sendData.fxRenA, "userName"); //分析人A
+      sendData.dhSup = this.userString(sendData.dhSup, "userName"); //监火人
       sendData.applyDept = this.$userInfo.officeName;
       sendData.applyRen = this.$userInfo.userName;
       sendData.__sid = this.$userInfo.sessionId;
@@ -533,7 +506,7 @@ export default {
   }
 }
 .signature {
-  background-color: white;
+  background-color: #f5f5f5;
   padding: 30px;
   box-sizing: border-box;
 
@@ -543,7 +516,7 @@ export default {
   }
 
   &__image {
-    margin-left: 0;
+    margin-left: 10px;
     width: 112.5px;
     height: 45px;
 
@@ -560,11 +533,13 @@ export default {
 .upload {
   padding: 30px;
   box-sizing: border-box;
+  background-color: #f5f5f5;
 }
 .fenxi {
   padding: 30px 0;
   padding-bottom: 0;
   box-sizing: border-box;
+
   &__title {
     padding: 30px;
     color: #fff;

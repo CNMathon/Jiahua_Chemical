@@ -33,7 +33,12 @@
             <div class="donghuo-list-card donghuo-list-card-nolast" @click="jumpToMorePage(item.htStatus, item.permitCode)">
               <div class="left">
                 <div class="left-line left-line-notlast">许可证编号：{{item.permitCode}}</div>
-                <div class="left-line left-line-notlast">断路原因：{{item.reason}}</div>
+                <div class="left-line left-line-notlast" v-if="item.reason == 1">断路原因：维修马路</div>
+                <div class="left-line left-line-notlast" v-if="item.reason == 2">断路原因：开挖埋设水管</div>
+                <div class="left-line left-line-notlast" v-if="item.reason == 3">断路原因：埋设电缆</div>
+                <div class="left-line left-line-notlast" v-if="item.reason == 4">断路原因：开挖沟渠</div>
+                <div class="left-line left-line-notlast" v-if="item.reason == 5">断路原因：吊装设备</div>
+                <div class="left-line left-line-notlast" v-if="item.reason == 6">断路原因：管道</div>
                 <div class="left-line left-line-notlast left-line-hor">申请部门：{{item.applyDept}}</div>
                 <div class="left-line left-line-notlast left-line-hor">申请人：{{item.applyer}}</div>
                 <div class="left-line left-line-notlast">作业开始时间：{{item.offtimeStart}}</div>

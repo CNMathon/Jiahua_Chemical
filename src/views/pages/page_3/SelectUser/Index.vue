@@ -15,7 +15,7 @@
     <div class="list">
       <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="getUserData">
         <!-- 多选 -->
-        <van-checkbox-group v-model="result" v-if="!$route.query.radio">
+        <van-checkbox-group v-model="result" v-if="!$route.query.radio" :max="$route.query.max">
           <van-cell-group>
             <van-cell v-for="(item, index) in list" clickable :key="item.id" @click="toggle(index)">
               <template slot="title">

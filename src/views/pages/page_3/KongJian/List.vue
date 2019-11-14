@@ -23,15 +23,13 @@
     </j-filter>
     <div class="list-card-area">
       <div class="app">
-        <van-skeleton
-          title
-          :row="3"
-          :loading="isLoading"
-          class="skeleton"
-        >
+        <van-skeleton title :row="3" :loading="isLoading" class="skeleton">
           <label v-for="(item, index) in listData" :key="index">
             <!-- 此处在做完AJAX后需要判断是否为最后行 - class存在判断 -->
-            <div class="donghuo-list-card donghuo-list-card-nolast" @click="jumpToMorePage(item.htStatus, item.sxkjCode)">
+            <div
+              class="donghuo-list-card donghuo-list-card-nolast"
+              @click="jumpToMorePage(item.htStatus, item.sxkjCode)"
+            >
               <div class="left">
                 <div class="left-line left-line-notlast">作业内容：{{item.sxkjNeurogen}}</div>
                 <div class="left-line left-line-notlast left-line-hor">申请部门：{{item.applyDept}}</div>
@@ -55,7 +53,6 @@
 
 <script>
 import { mixin } from "@/mixin/mixin";
-// import ListCard from "@/views/pages/page_3/components/KongJianListCard";
 export default {
   data() {
     return {
@@ -63,13 +60,13 @@ export default {
       searchValue: "",
       searchValues: "",
       zypztList: [
-        {index: -1, name: "请选择"},
-        {index: 1, name: "编辑"},
-        {index: 2, name: "初审"},
-        {index: 3, name: "审核"},
-        {index: 4, name: "审批"},
-        {index: 5, name: "有效"},
-        {index: 6, name: "终结"}
+        { index: -1, name: "请选择" },
+        { index: 1, name: "编辑" },
+        { index: 2, name: "初审" },
+        { index: 3, name: "审核" },
+        { index: 4, name: "审批" },
+        { index: 5, name: "有效" },
+        { index: 6, name: "终结" }
       ], // 作业票状态列表
       listData: [],
       isLoading: true,
@@ -79,7 +76,7 @@ export default {
   mixins: [mixin],
   methods: {
     getPageData() {
-      this.isLoading = true
+      this.isLoading = true;
       this.$api.page_3
         .htHseSxkjzypListData({
           zyContent: this.searchValue,
@@ -87,7 +84,7 @@ export default {
           __sid: localStorage.getItem("JiaHuaSessionId")
         })
         .then(res => {
-          this.isLoading = false
+          this.isLoading = false;
           this.listData = res.list;
           this.isLoading = false;
           console.log(this.listData);
@@ -95,10 +92,7 @@ export default {
     },
     onClickRight() {
       this.$router.push({
-        path: "../kongjian",
-        query: {
-          isNew: true
-        }
+        path: "../kongjian"
       });
     },
     // 跳转至详情页
@@ -113,7 +107,7 @@ export default {
               code: code,
               moreInfo: moreInfo
             }
-          })
+          });
         }
       }
 
@@ -121,24 +115,23 @@ export default {
       // 参数1 => 需要指定的 status
       // 参数2 => 跳转页面
       // 参数3 => 其他需要通过 router 传输的数据
-      todo(1, './index', {isInitData: true})
-      todo(2, './Index2', {isInitData: true})
+      todo(1, "./index", { isInitData: true });
+      todo(2, "./Index2", { isInitData: true });
     },
     confirmFilter() {},
     filterSearch() {},
     // 选择断路原因
     filterSelect_1(e) {
       if (e.index == -1) {
-        this.status = ""
+        this.status = "";
+      } else {
+        this.status = e.index;
       }
-      else {
-        this.status = e.index
-      }
-    },
+    }
   },
   created() {
-    this.getPageData()
-  },
+    this.getPageData();
+  }
 };
 </script>
 
@@ -186,7 +179,7 @@ export default {
 }
 
 .skeleton {
-  margin-bottom: 10px
+  margin-bottom: 10px;
 }
 
 .left-line-hor {
@@ -195,4 +188,58 @@ export default {
     margin-left: 50px;
   }
 }
+</style>
+
+<style lang="scss" scoped>
+	@import "@/assets/scss/cell.scss";
+
+	.mangban {
+
+		.next {
+			width: 100%;
+			height: 98px;
+			margin-top: 25px;
+			font-size: 32px;
+			text-align: center;
+			color: rgba(255, 255, 255, 1);
+			line-height: 98px;
+			background: rgba(96, 150, 248, 1);
+			box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.5);
+		}
+	}
+
+	.head {
+		display: flex;
+		text-align: center;
+		margin-bottom: 20px;
+
+		.head_1 {
+			width: 420px;
+		}
+
+		.head_2 {
+			width: 100px;
+		}
+
+		.head_3 {
+			width: 300px;
+		}
+	}
+
+	.action {
+		padding-left: 30px;
+		padding-right: 30px;
+		background-color: transparent;
+
+		button {
+			width: 100%;
+			height: 110px;
+			margin-bottom: 20px;
+			background-color: white;
+			border: none;
+			border-radius: 30px;
+			color: rgb(0, 118, 255);
+			font-size: 35px;
+		}
+	}
 </style>

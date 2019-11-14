@@ -17,19 +17,6 @@
           :name="item"
         >{{ item }}</van-checkbox>
       </van-checkbox-group>
-      <!-- <van-checkbox
-        class="checkbox"
-        checked-color="#1FC41D"
-        v-model="checkInput"
-        label-disabled
-        @change="setCheckInput"
-      >
-        <van-field
-          placeholder="自定义输入文字"
-          v-model="inputValue"
-          :disabled="!checkInput"
-        />
-      </van-checkbox>-->
     </div>
     <div class="confirm" @click="confirm">确认({{ chaeckNumber }}/{{ AllChaeckNumber }})</div>
   </div>
@@ -112,8 +99,9 @@ export default {
 <style lang="scss" scoped>
 .donghuo_select {
   width: 100vw;
-  height: 100vh;
   position: relative;
+  padding-bottom: 100px;
+  box-sizing: border-box;
   .check_box {
     padding: 20px 40px;
     .checkbox {
@@ -125,7 +113,7 @@ export default {
     }
   }
   .confirm {
-    position: absolute;
+    position: fixed;
     left: 0;
     bottom: 0;
     width: 100%;
