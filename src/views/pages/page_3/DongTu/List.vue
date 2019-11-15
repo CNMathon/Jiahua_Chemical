@@ -8,12 +8,14 @@
       left-arrow
       @click-left="pageBack"
       @click-right="onClickRight"
+      fixed
     />
     <j-filter-bar
       v-model="searchValue"
       placeholder="请输入作业地点名称"
       @search="getPageData"
       @tap="showFilter = true"
+      class="fixed"
     ></j-filter-bar>
     <j-filter v-model="showFilter" @confirm="getPageData">
       <j-filter-search v-model="searchValues" @search="filterSearch"></j-filter-search>
@@ -21,7 +23,7 @@
       <j-filter-cell title="申请部门"></j-filter-cell>
       <j-filter-cell title="申请人"></j-filter-cell>
     </j-filter>
-    <div class="list-card-area">
+    <div class="list-card-area fixed-first">
       <div class="app">
         <van-skeleton title :row="3" :loading="isLoading" class="skeleton">
           <label v-for="(item, index) in listData" :key="index">
@@ -145,6 +147,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.app {
+  padding-top: 112px !important;
+}
+
 .donghuo {
   background-color: #f5f5f5;
 }
@@ -197,6 +203,11 @@ export default {
   &:nth-child(4) {
     margin-left: 50px;
   }
+}
+
+.fixed {
+  position: fixed;
+  width: 100%;
 }
 </style>
 

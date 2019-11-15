@@ -224,6 +224,10 @@ const article = {
   //获取部门人员数据
   getUsers(params) {
     return axios.get(`${base.sq}act/core/client/getUsers`, { params: params });
+  },
+  //提交工作流
+  start(type, params) {
+    return axios.post(`${base.sq}${type}/start`, qs.stringify(params));
   }
 };
 

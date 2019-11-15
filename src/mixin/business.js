@@ -80,6 +80,10 @@ export const business = {
         }
       }
       return false
+    },
+    // 深拷贝
+    deepCopy(content) {
+      return JSON.parse(JSON.stringify(content))
     }
   }
 };

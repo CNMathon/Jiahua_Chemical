@@ -35,8 +35,7 @@ const routes = {
           name: "donghuo_index",
           component: () => import("../views/pages/page_3/DongHuo/Index.vue"),
           meta: {
-            name: "动火安全",
-            keepAlive: true //此组件需要被缓存
+            name: "动火安全"
           }
         },
         {
@@ -44,8 +43,7 @@ const routes = {
           name: "donghuo_index2",
           component: () => import("../views/pages/page_3/DongHuo/Index2.vue"),
           meta: {
-            name: "动火安全-安全员",
-            keepAlive: true //此组件需要被缓存
+            name: "动火安全-安全员"
           }
         },
         {
@@ -53,8 +51,7 @@ const routes = {
           name: "donghuo_index3",
           component: () => import("../views/pages/page_3/DongHuo/Index3.vue"),
           meta: {
-            name: "动火安全-初审人",
-            keepAlive: true //此组件需要被缓存
+            name: "动火安全-初审人"
           }
         },
         {
@@ -62,43 +59,29 @@ const routes = {
           name: "donghuo_index3",
           component: () => import("../views/pages/page_3/DongHuo/Index4.vue"),
           meta: {
-            name: "动火安全-不可编辑",
-            keepAlive: false //此组件需要被缓存
+            name: "动火安全-不可编辑"
           }
         },
         {
           path: "/page_3/donghuo/list",
           name: "donghuo_list",
-          component: () => import("../views/pages/page_3/DongHuo/List.vue"),
-          meta: {
-            keepAlive: false //此组件不需要被缓存
-          }
+          component: () => import("../views/pages/page_3/DongHuo/List.vue")
         },
         {
           path: "/page_3/donghuo/select",
           name: "donghuo_select",
           component: () =>
-            import("../views/pages/page_3/components/TagSelect.vue"),
-          meta: {
-            keepAlive: false //此组件不需要被缓存
-          }
+            import("../views/pages/page_3/components/TagSelect.vue")
         },
         {
           path: "/page_3/donghuo/select_user",
           name: "Donghuo_SelectUser",
-          component: () => import("../views/pages/page_3/SelectUser/Index.vue"),
-          meta: {
-            keepAlive: false //此组件不需要被缓存
-          }
+          component: () => import("../views/pages/page_3/SelectUser/Index.vue")
         },
         {
           path: "/page_3/donghuo/confirm",
           name: "donghuo_confirm",
-          component: () => import("../views/pages/page_3/DongHuo/Confirm.vue"),
-          meta: {
-            name: "动火安全-审批",
-            keepAlive: false //此组件不需要被缓存
-          }
+          component: () => import("../views/pages/page_3/DongHuo/Confirm.vue")
         }
       ]
     },
@@ -199,61 +182,38 @@ const routes = {
         {
           path: "/page_3/mangban/index",
           name: "mangban_index",
-          component: () => import("../views/pages/page_3/MangBan/Index.vue"),
-          meta: {
-            keepAlive: true //此组件需要被缓存
-          }
+          component: () => import("../views/pages/page_3/MangBan/Index.vue")
         },
         {
           path: "/page_3/mangban/index2",
           name: "mangban_index2",
-          component: () => import("../views/pages/page_3/MangBan/Index2.vue"),
-          meta: {
-            keepAlive: true //此组件需要被缓存
-          }
+          component: () => import("../views/pages/page_3/MangBan/Index2.vue")
         },
         {
           path: "/page_3/mangban/select_user",
           name: "Donghuo_SelectUser",
-          component: () => import("../views/pages/page_3/SelectUser/Index.vue"),
-          meta: {
-            keepAlive: false //此组件不需要被缓存
-          }
+          component: () => import("../views/pages/page_3/SelectUser/Index.vue")
         },
         {
           path: "/page_3/mangban/list",
           name: "mangban_list",
-          component: () => import("../views/pages/page_3/MangBan/List.vue"),
-          meta: {
-            keepAlive: false //此组件不需要被缓存
-          }
+          component: () => import("../views/pages/page_3/MangBan/List.vue")
         },
         {
           path: "/page_3/mangban/add_device",
           name: "mangban_add_device",
-          component: () =>
-            import("../views/pages/page_3/MangBan/AddDevice.vue"),
-          meta: {
-            keepAlive: false //此组件不需要被缓存
-          }
+          component: () => import("../views/pages/page_3/MangBan/AddDevice.vue")
         },
         {
           path: "/page_3/mangban/select",
           name: "mangban_select",
           component: () =>
-            import("../views/pages/page_3/components/TagSelect.vue"),
-          meta: {
-            keepAlive: false //此组件不需要被缓存
-          }
+            import("../views/pages/page_3/components/TagSelect.vue")
         },
         {
           path: "/page_3/mangban/confirm",
           name: "mangban_confirm",
-          component: () => import("../views/pages/page_3/MangBan/Confirm.vue"),
-          meta: {
-            name: "盲板-确认签字",
-            keepAlive: false //此组件不需要被缓存
-          }
+          component: () => import("../views/pages/page_3/MangBan/Confirm.vue")
         }
       ]
     },

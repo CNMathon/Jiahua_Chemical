@@ -482,12 +482,13 @@ export default {
       sendData.dtEndtime = this.sendData.dtEndtime;
       let htHseDtzypListData = [
         {
-
-        }
+          id: this.$route.query.id,
+          
+        },
       ]
       sendData.htHseDtzypListData = htHseDtzypListData;
       if (this.$route.query.id) {
-        sendData.id = this.$route.query.id;
+        sendData.id = this.$route.query.id
       }
       if (
         this.isDataEmpty(

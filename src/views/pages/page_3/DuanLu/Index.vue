@@ -267,6 +267,7 @@ export default {
       sendData.applyDept = this.$userInfo.officeName;
       sendData.applyer = this.$userInfo.userName;
       sendData.offExplain = offExplain.join(",");
+      sendData.workCharger = sendData.workCharger[0].userName
       sendData.__sid = this.$userInfo.sessionId;
       let List = [
         {
@@ -290,9 +291,9 @@ export default {
       ];
       console.log(List);
       if (again) {
-        List.map(item => {
-          item.zypId = zypId;
-        });
+        // List.map(item => {
+        //   item.zypId = zypId;
+        // });
         sendData.htHseDlzypSaftyList = List;
       }
       console.log("sendData: ", sendData);

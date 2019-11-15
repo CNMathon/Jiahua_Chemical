@@ -1,7 +1,7 @@
 <template>
   <div class="home">
-    <van-nav-bar title="业务管理" />
-    <div class="head">
+    <van-nav-bar title="业务管理" fixed/>
+    <div class="head fixed-first">
       <div class="head-nav">
         <div class="head-nav-image">
           <img src="./../../../../assets/images/home_0.svg" alt />
@@ -129,7 +129,6 @@ export default {
 
 <style lang="scss" scoped>
 .home {
-  height: 100vh;
   background-color: #f5f5f5;
   .head {
     width: 100%;

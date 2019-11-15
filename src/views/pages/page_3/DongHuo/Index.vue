@@ -587,6 +587,18 @@ export default {
       if (!this.$route.query.id) {
         this.$notify("请先提交保存");
         return;
+      } else if (this.oldInfo.actRuTask) {
+      } else {
+        this.$api.page_3
+          .start("dhzyp", {
+            id: this.oldInfo.id,
+            __sid: localStorage.getItem("JiaHuaSessionId")
+          })
+          .then(res => {
+            console.log("res: ", res);
+            this.$Toast.clear();
+          })
+          .catch(() => this.$Toast.clear());
       }
     }
   }

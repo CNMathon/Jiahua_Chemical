@@ -30,7 +30,7 @@
 }
 
 .fixed-first {
-  margin-top: 90px;
+  margin-top: 90px !important;
 }
 
 .readonly {

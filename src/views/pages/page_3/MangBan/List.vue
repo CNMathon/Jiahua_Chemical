@@ -24,12 +24,7 @@
     </j-filter>
     <div class="list-card-area">
       <div class="app">
-        <van-skeleton
-          title
-          :row="3"
-          :loading="isLoading"
-          class="skeleton"
-        >
+        <van-skeleton title :row="3" :loading="isLoading" class="skeleton">
           <label v-for="(item, index) in listData" :key="index">
             <!-- 此处在做完AJAX后需要判断是否为最后行 - class存在判断 -->
             <div class="donghuo-list-card donghuo-list-card-nolast">
@@ -88,6 +83,14 @@ export default {
     };
   },
   mixins: [mixin],
+  created() {
+    this.getPageData();
+    this.$store.dispatch("mangban/cleanState");
+    this.$store.commit("mangban/delete_KeepAlive", "mangbanindex");
+    this.$nextTick(() => {
+      this.$store.commit("mangban/add_KeepAlive", "mangbanindex");
+    });
+  },
   methods: {
     // 右侧文字点击文案
     onClickRight() {
@@ -98,7 +101,7 @@ export default {
 
     // 获取页面数据
     getPageData(where) {
-      this.isLoading = true
+      this.isLoading = true;
       this.$api.page_3
         .htHseMbzypListData({
           pipe: this.searchValue,
@@ -123,23 +126,10 @@ export default {
     },
     filterSearch() {},
     filterSelect_1(e) {
-      console.log(e)
-      this.searchStatus = e.index
+      console.log(e);
+      this.searchStatus = e.index;
     }
-    // selectDonghuoZyp() {
-    //   this.$api.page_3
-    //     .userSelect({
-    //       __sid: localStorage.getItem("JiaHuaSessionId")
-    //     })
-    //     .then(res => {
-    //       console.log(111111111)
-    //       console.log(res)
-    //     })
-    // }
-  },
-  created() {
-    this.getPageData();
-  },
+  }
 };
 </script>
 

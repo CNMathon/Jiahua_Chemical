@@ -1,5 +1,6 @@
 // initial state
 const state = {
+  keepAliveComponents: ["mangbanindex"],
   otherSpecial: [], // 涉及其他特殊作业
 
   scMan: null,
@@ -28,7 +29,7 @@ const state = {
   pipeBlockOperator4: [], // 堵作业人4
   pipePullOperator4: [], // 抽作业人4
   pipeBlockGuardian4: [], // 堵监护人4
-  pipePullGuardian4: [], // 抽监护人4
+  pipePullGuardian4: [] // 抽监护人4
 };
 
 // getters
@@ -63,6 +64,14 @@ const mutations = {
         state[key] = [];
       }
     }
+  },
+  add_KeepAlive(state, name) {
+    if (state.keepAliveComponents.includes(name)) return;
+    state.keepAliveComponents.push(name);
+  },
+  delete_KeepAlive(state, name) {
+    const index = state.keepAliveComponents.indexOf(name);
+    index > -1 && state.keepAliveComponents.splice(index, 1);
   }
 };
 
