@@ -504,7 +504,7 @@ export default {
         {
           text: "动力中心",
           color: "rgba(23, 193, 149, 0.1)",
-          router: "./dongli"
+          router: "./dongli?from=index"
         },
         {
           text: "烧碱",

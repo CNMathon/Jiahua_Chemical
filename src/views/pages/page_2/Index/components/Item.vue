@@ -1,23 +1,28 @@
 <template>
   <div class="guolu">
-    <div class="number">4653213</div>
-    <div class="value">
-      155
-      <span>kWh</span>
+    <div class="main" v-for="(item, index) in info" :key="index">
+      <div class="number">{{item.itemName}}</div>
+      <div class="value">
+        {{item.factory}}
+      </div>
+      <div class="proportion">{{item.value}}</div>
     </div>
-    <div class="proportion">16.44</div>
   </div>
 </template>
 <script>
 export default {
-  name: "guoLu"
+  name: "guoLu",
+  props: {
+    info: Array
+  }
 };
 </script>
 <style lang="scss" scoped>
-.guolu {
+.main {
+  margin-bottom: 15px;
   width: 100%;
   height: 126px;
-  margin: 0 auto;
+  // margin: 0 auto;
   background: rgba(96, 150, 248, 1);
   border-radius: 10px;
   box-sizing: border-box;
@@ -26,12 +31,15 @@ export default {
   align-items: center;
   justify-content: space-between;
   .number {
+    width: 33%;
     font-size: 28px;
     color: rgba(255, 255, 255, 1);
     line-height: 33px;
   }
   .value {
-    font-size: 40px;
+    width: 33%;
+    text-align: center;
+    font-size: 28px;
     font-weight: 500;
     color: rgba(255, 255, 255, 1);
     line-height: 33px;
@@ -40,6 +48,8 @@ export default {
     }
   }
   .proportion {
+    text-align: right;
+    width: 33%;
     font-size: 34px;
     font-weight: 500;
     color: rgba(255, 255, 255, 1);
