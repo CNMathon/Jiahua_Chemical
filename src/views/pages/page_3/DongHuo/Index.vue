@@ -294,13 +294,17 @@ export default {
   },
   watch: {
     dhWay(res) {
+      console.log(res)
       this.sendData.dhWay = res;
     },
     otherSpecial(res) {
+      console.log(res)
       this.sendData.otherSpecial = res;
     },
     hazardSb(res) {
+      console.log(res)
       this.sendData.hazardSb = res;
+      console.log(this.sendData)
     },
     dhzyPrincipal(res) {
       this.sendData.dhzyPrincipal = res;
@@ -317,6 +321,7 @@ export default {
     dhzyRen: state => state.donghuo.dhzyRen
   }),
   created() {
+    console.log(11111111111111)
     if (this.$route.query.id) {
       if (this.queryId !== this.$route.query.id) {
         this.queryId = this.$route.query.id;
@@ -389,6 +394,7 @@ export default {
 
     // 主表保存
     postData() {
+      console.log(this.sendData)
       // 检测到输入不完整直接退出函数
       if (!this.isDataEdit()) {
         return;
@@ -564,6 +570,7 @@ export default {
               this.sendData[key] = info[key];
             }
           }
+          console.log(res)
           // 动火子表查询
           this.mylistDataD();
         })
@@ -589,16 +596,74 @@ export default {
         return;
       } else if (this.oldInfo.actRuTask) {
       } else {
+        console.log(123456)
+        this.$Toast.loading({
+          message: "加载中...",
+          forbidClick: true
+        });
         this.$api.page_3
-          .start("dhzyp", {
-            id: this.oldInfo.id,
+          .htHseDhzypListData({
+            dhzypCode: this.queryId,
             __sid: localStorage.getItem("JiaHuaSessionId")
           })
           .then(res => {
-            console.log("res: ", res);
-            this.$Toast.clear();
+            this.$Toast.clear()
+            if(res.list[0].actRuTask){
+              console.log(1)
+              let data = {
+                'id':res.list[0].id,
+                'flowKey':'htHseDhzypService',
+                'comment':'',
+                'actRuTask.id':res.list[0].actRuTask.id,
+                'btnSubmit':'审批',
+                __sid: localStorage.getItem("JiaHuaSessionId")
+              }
+              this.$api.page_3.approve(data).then((ress)=>{
+                console.log(ress)
+                if(ress.groups){
+                  this.$router.push({name:'daibanren',query:{
+                    groups:ress.groups.join(','),
+                    taskId:ress.taskId,
+                    id:res.list[0].id,
+                    type:'htHseDhzypService'
+                  }})
+                }else{
+                  this.$router.replace({name:'donghuo_list'})
+                }
+              }).catch(() => this.$Toast.clear());
+            }else{
+              console.log(2)
+              let data = {
+                'id':res.list[0].id,
+                'flowKey':'htHseDhzypService',
+                __sid: localStorage.getItem("JiaHuaSessionId")
+              }
+              this.$api.page_3.start('dhzyp/htHseDhzyp',data).then((ress)=>{
+                console.log(ress)
+                if(ress.groups){
+                  this.$router.push({name:'daibanren',query:{
+                    groups:ress.groups.join(','),
+                    taskId:ress.taskId,
+                    id:res.list[0].id,
+                    type:'htHseDhzypService'
+                  }})
+                }else{
+                  this.$router.replace({name:'donghuo_list'})
+                }
+              }).catch(() => this.$Toast.clear());
+            }
           })
           .catch(() => this.$Toast.clear());
+        // this.$api.page_3
+        //   .start("dhzyp", {
+        //     id: this.oldInfo.id,
+        //     __sid: localStorage.getItem("JiaHuaSessionId")
+        //   })
+        //   .then(res => {
+        //     console.log("res: ", res);
+        //     this.$Toast.clear();
+        //   })
+        //   .catch(() => this.$Toast.clear());
       }
     }
   }

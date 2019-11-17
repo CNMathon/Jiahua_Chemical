@@ -1,42 +1,49 @@
 <template>
   <div class="shuju">
-    <van-nav-bar title="数据监控"></van-nav-bar>
-    <div class="content">
-      <div class="content-title">生产运行中心</div>
+    <van-nav-bar title="数据监控" fixed />
+    <!-- 生产运行指标 -->
+    <div class="content fixed-first">
+      <div class="content-title">生产运行指标 (嘉化能源)</div>
       <van-row>
-        <van-col span="6" v-for="(item, index) in nav" :key="index">
+        <!-- <van-col span="6" v-for="(item, index) in nav" :key="index">
           <div class="nav" @click="toPage(item.router)">
             <div class="nav-image">
               <img :src="require(`@/assets/images/nav_${index + 9}.svg`)" alt />
             </div>
             <div class="nav-text">{{ item.text }}</div>
           </div>
-        </van-col>
+        </van-col>-->
+        <van-row>
+          <label v-for="(item, index) in nav" :key="index">
+            <van-col span="6" v-if="index <= 2">
+              <div class="nav" @click="toPage(item.router)">
+                <div class="nav-image">
+                  <img :src="require(`@/assets/images/nav_${index + 9}.svg`)" alt />
+                </div>
+                <div class="nav-text">{{ item.text }}</div>
+              </div>
+            </van-col>
+          </label>
+        </van-row>
+        <div class="content-title">生产运行指标 (嘉福新材料)</div>
+        <van-row>
+          <label v-for="(item, index) in nav" :key="index">
+            <van-col span="6" v-if="index > 2">
+              <div class="nav" @click="toPage(item.router)">
+                <div class="nav-image">
+                  <img :src="require(`@/assets/images/nav_${index + 9}.svg`)" alt />
+                </div>
+                <div class="nav-text">{{ item.text }}</div>
+              </div>
+            </van-col>
+          </label>
+        </van-row>
       </van-row>
     </div>
-    <div class="content">
-      <div class="content-title">环保外排监控</div>
-      <van-tabs
-        color="#33A4E8"
-        title-inactive-color="#333333"
-        title-active-color="#33A4E8"
-      >
-        <van-tab v-for="index in 2" :key="index" :title="'入网口数据' + index">
-          <div class="panel-list">
-            <div class="panel-list-item" v-for="index in 6" :key="index">
-              <Panel size="big"></Panel>
-            </div>
-          </div>
-        </van-tab>
-      </van-tabs>
-    </div>
+    <!-- 重大危险源监控 -->
     <div class="content">
       <div class="content-title">重大危险源监控</div>
-      <van-tabs
-        color="#33A4E8"
-        title-inactive-color="#333333"
-        title-active-color="#33A4E8"
-      >
+      <van-tabs color="#33A4E8" title-inactive-color="#333333" title-active-color="#33A4E8">
         <div slot="nav-rights" class="nav-right" @click="toWeiHuaPage()">
           <van-icon name="bars" size="20px" />
         </div>
@@ -54,16 +61,27 @@
         </van-tab>
       </van-tabs>
     </div>
+    <!-- 环保外排监控 -->
+    <div class="content">
+      <div class="content-title">环保外排监控</div>
+      <van-tabs color="#33A4E8" title-inactive-color="#333333" title-active-color="#33A4E8">
+        <van-tab v-for="index in 2" :key="index" :title="'入网口数据' + index">
+          <div class="panel-list">
+            <div class="panel-list-item" v-for="index in 6" :key="index">
+              <Panel size="big"></Panel>
+            </div>
+          </div>
+        </van-tab>
+      </van-tabs>
+    </div>
+    <!-- 危险环境监控 -->
     <div class="content">
       <div class="content-title">危险环境监控</div>
       <van-row>
         <van-col span="6" v-for="(item, index) in navs" :key="index">
           <div class="nav" @click="toPages(item, index)">
             <div class="nav-image">
-              <img
-                :src="require(`@/assets/images/nav_${item.imageIndex}.svg`)"
-                alt
-              />
+              <img :src="require(`@/assets/images/nav_${item.imageIndex}.svg`)" alt />
             </div>
             <div class="nav-text">{{ item.text }}</div>
           </div>
@@ -95,6 +113,11 @@ export default {
           router: "/shaojian"
         },
         {
+          text: "脂肪醇",
+          color: "rgba(237, 246, 252, 1)",
+          router: "/zhifangchun"
+        },
+        {
           text: "新材料",
           color: "rgba(78,169,232,0.1)",
           router: "/gongyi"
@@ -103,11 +126,6 @@ export default {
           text: "硫酸",
           color: "rgba(96,150,248,0.1);",
           router: "/liusuan"
-        },
-        {
-          text: "脂肪醇",
-          color: "rgba(237, 246, 252, 1)",
-          router: "/zhifangchun"
         }
       ],
       navs: [
@@ -166,7 +184,7 @@ export default {
     background: #ffffff;
     .content-title {
       padding: 16px 30px;
-      font-size: 30px;
+      font-size: 27px;
       font-weight: 500;
       color: rgba(0, 0, 0, 1);
       line-height: 42px;

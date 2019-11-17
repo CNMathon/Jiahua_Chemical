@@ -74,8 +74,23 @@ export const business = {
     isDataEmpty() {
       for (const key in arguments) {
         let value = arguments[key]
-        console.log(value)
-        if (value == "" || value == null || value == undefined || JSON.stringify(value) === '{}' || JSON.stringify(value) === '[]') {
+        // 判断条件
+        let condition = (
+          value == "" ||
+          value == null ||
+          value == undefined ||
+          JSON.stringify(value) === '{}' ||
+          JSON.stringify(value) === '[]' ||
+          value == String ||
+          value == Number ||
+          value == Boolean ||
+          value == Object ||
+          value == Function ||
+          value == Date ||
+          value == Array ||
+          value == Symbol
+        )
+        if (condition) {
           return true
         }
       }

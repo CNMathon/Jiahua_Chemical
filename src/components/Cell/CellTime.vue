@@ -67,10 +67,15 @@ export default {
     },
     // 确认时间选择
     onTimeConfirm(val) {
+      console.log(val)
+      this.value = val
       this.values = val;
       this.timeShow = false;
     },
     showText() {
+      console.log(this.value
+        ? this.$dayjs(this.value).format("YYYY-MM-DD HH:mm")
+        : "点击选择")
       return this.value
         ? this.$dayjs(this.value).format("YYYY-MM-DD HH:mm")
         : "点击选择";

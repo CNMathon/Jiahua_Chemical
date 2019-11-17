@@ -207,7 +207,7 @@
     <!-- 操作Popup -->
     <van-popup v-model="isShowAction" position="bottom" class="action">
       <button @click="postData">保存</button>
-      <button>工作流提交</button>
+      <button @click="Next">工作流提交</button>
       <button @click="closeAction">取消</button>
     </van-popup>
   </div>
@@ -382,9 +382,12 @@ export default {
           __sid: localStorage.getItem("JiaHuaSessionId")
         })
         .then(res => {
+          console.log(this.sendData)
           let info = res.list[0];
           this.oldInfo = info;
+          console.log(info)
           for (const key in this.sendData) {
+            console.log(key)
             if (key === "sxkjDanwei") {
               this.sendData[key] = this.reductionSelectUser(info[key]);
             } else if (key === "zyPrincipal") {
@@ -409,9 +412,76 @@ export default {
               this.sendData[key] = info[key];
             }
           }
+          console.log(this.sendData)
           // 动火子表查询
           this.mylistDataD();
         });
+    },
+    Next() {
+      if (!this.$route.query.id) {
+        this.$notify("请先提交保存");
+        return;
+      } else if (this.oldInfo.actRuTask) {
+      } else {
+        console.log(123456)
+        this.$Toast.loading({
+          message: "加载中...",
+          forbidClick: true
+        });
+        this.$api.page_3
+          .htHseSxkjzypListData({
+            sxkjCode: this.queryId,
+            __sid: localStorage.getItem("JiaHuaSessionId")
+          })
+          .then(res => {
+            this.$Toast.clear()
+            if(res.list[0].actRuTask){
+              console.log(1)
+              let data = {
+                'id':res.list[0].id,
+                'flowKey':'htHseSxkjzypService',
+                'comment':'',
+                'actRuTask.id':res.list[0].actRuTask.id,
+                'btnSubmit':'审批',
+                __sid: localStorage.getItem("JiaHuaSessionId")
+              }
+              this.$api.page_3.approve(data).then((ress)=>{
+                console.log(ress)
+                if(ress.groups){
+                  this.$router.push({name:'daibanren',query:{
+                    groups:ress.groups.join(','),
+                    taskId:ress.taskId,
+                    id:res.list[0].id,
+                    type:'htHseSxkjzypService'
+                  }})
+                }else{
+                  this.$router.replace({name:'kongjian_list'})
+                }
+              }).catch(() => this.$Toast.clear());
+            }else{
+              console.log(2)
+              let data = {
+                'id':res.list[0].id,
+                'flowKey':'htHseSxkjzypService',
+                __sid: localStorage.getItem("JiaHuaSessionId")
+              }
+              this.$api.page_3.start('sxkjzyp/htHseSxkjzyp',data).then((ress)=>{
+                console.log(ress)
+                if(ress.groups){
+                  this.$router.push({name:'daibanren',query:{
+                    groups:ress.groups.join(','),
+                    taskId:ress.taskId,
+                    id:res.list[0].id,
+                    type:'htHseSxkjzypService'
+                  }})
+                }else{
+                  this.$router.replace({name:'kongjian_list'})
+                }
+              }).catch(() => this.$Toast.clear());
+            }
+          })
+          .catch(() => this.$Toast.clear());
+      }
     }
   }
 };

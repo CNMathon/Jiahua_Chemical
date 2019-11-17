@@ -36,8 +36,9 @@
                   <cell-value title="人员头像">
                     <div slot class="slot-header">
                       <van-image
+                        v-if="item.avatar"
                         class="header"
-                        src="https://i.loli.net/2019/10/26/VBqRoLyebM96wIN.png"
+                        :src="item.avatar"
                       ></van-image>
                     </div>
                   </cell-value>
@@ -70,69 +71,49 @@
                     title="婚姻状况"
                     :value="judgeMarriage(item.maritalStatus)"
                   ></cell-value>
-                  <cell-value title="学历" value="123344546453535"></cell-value>
+                  <cell-value title="学历"  :value="item.userEducation==0?'小学':item.userEducation==1?'初中':item.userEducation==2?'高中':item.userEducation==3?'中专':item.userEducation==4?'大专':item.userEducation==5?'本科':item.userEducation==6?'硕士研究生':item.userEducation==7?'博士研究生':''"></cell-value>
                   <cell-value
                     title="用户联系电话"
                     :value="item.userPhone"
                   ></cell-value>
-                  <cell-value title="用户邮箱" value="名称A"></cell-value>
-                  <cell-value title="家庭住址" value="名称A"></cell-value>
-                  <cell-value title="健康状态" value="名称A"></cell-value>
+                  <cell-value title="用户邮箱" :value="item.userEmil"></cell-value>
+                  <cell-value title="家庭住址" :value="item.homeAdress"></cell-value>
+                  <cell-value title="健康状态" :value="item.healthStatus==1?'健康':item.healthStatus==2?'亚健康':''"></cell-value>
                   <div class="tab-title">公司内部信息</div>
-                  <cell-value title="所属部门" value="名称A"></cell-value>
-                  <cell-value title="所属公司" value="名称A"></cell-value>
-                  <cell-value title="职务" value="名称A"></cell-value>
-                  <cell-value title="岗位" value="名称A"></cell-value>
-                  <cell-value title="工种" value="名称A"></cell-value>
-                  <cell-value title="特殊工种" value="名称A"></cell-value>
+                  <cell-value title="所属部门" :value="item.userDept"></cell-value>
+                  <cell-value title="所属公司" :value="item.userCompany"></cell-value>
+                  <cell-value title="职务" :value="item.userJob"></cell-value>
+                  <cell-value title="岗位" :value="item.post?item.post.postName:''"></cell-value>
+                  <cell-value title="工种" :value="item.workType==0?'无':item.workType==1?'金属焊接、切割作业':item.workType==3?'起重机械作业':''"></cell-value>
+                  <cell-value title="特殊工种" :value="item.specialWork==1?'是':'否'"></cell-value>
                 </label>
               </label>
               <!-- 资质材料 -->
               <label v-if="tabIndex === 1">
                 <label v-for="(item, index) in tabs.dataList" :key="index">
                   <div class="content">
-                    <cell-value title="公司" value="名称A"></cell-value>
-                    <cell-value title="部门" value="名称A"></cell-value>
-                    <cell-value title="证件类型" value="名称A"></cell-value>
-                    <cell-value title="证照号码" value="名称A"></cell-value>
-                    <cell-value title="证照颁发机构" value="名称A"></cell-value>
-                    <cell-value title="生效日期" value="名称A"></cell-value>
-                    <cell-value title="失效日期" value="名称A"></cell-value>
+                    <cell-value title="公司" :value="item.papersCompany"></cell-value>
+                    <cell-value title="部门" :value="item.dept"></cell-value>
+                    <cell-value title="证件类型" :value="item.papersType"></cell-value>
+                    <cell-value title="证照号码" :value="item.papersNum"></cell-value>
+                    <cell-value title="证照颁发机构" :value="item.papersDept"></cell-value>
+                    <cell-value title="生效日期" :value="item.starttime"></cell-value>
+                    <cell-value title="失效日期" :value="item.endtime"></cell-value>
                     <cell-value
                       title="年审日期"
-                      value="2019.09.23"
+                      :value="item.nianshenDate"
                     ></cell-value>
-                    <cell-value title="年审结果" value="名称A"></cell-value>
-                    <cell-value title="备注" value="名称A"></cell-value>
+                    <cell-value title="年审结果" :value="item.nianshenResult==1?'通过':'未通过'"></cell-value>
+                    <cell-value title="备注" :value="item.nianshenRemarks"></cell-value>
                     <cell-other title="附件">
-                      <div class="file-list">
+                      <div class="file-list" v-if="fujian[index].length > 0">
                         <div>
-                          <div class="file-item">
-                            <div class="file-name">证件详细说明.word</div>
-                            <van-icon
-                              class-prefix="iconfont"
-                              name="ziyuan"
-                              color="#6096F8"
-                            />
-                          </div>
-                          <div class="file-item">
-                            <div class="file-name">证件详细说明.jpg</div>
-                            <van-icon
-                              class-prefix="iconfont"
-                              name="ziyuan"
-                              color="#6096F8"
-                            />
-                          </div>
-                          <div class="file-item">
-                            <div class="file-name">证件详细说明.pdf</div>
-                            <van-icon
-                              class-prefix="iconfont"
-                              name="ziyuan"
-                              color="#6096F8"
-                            />
+                          <div class="file-item" v-for="(items, indexs) in fujian[index]" :key="indexs">
+                            <div @click="downLoadFile(items.fileUrl)" class="file-name">{{items.fileName}}</div>
                           </div>
                         </div>
                       </div>
+                      <div class="no-file" v-else>无附件</div>
                     </cell-other>
                   </div>
                 </label>
@@ -160,10 +141,12 @@ export default {
         {
           title: "人员证件管理"
         }
-      ]
+      ],
+      fujian:[]
     };
   },
   created() {
+    
     let { tabList } = this;
     const pageParameter = {
       dataList: [], //数据列表
@@ -214,7 +197,7 @@ export default {
       if (active === 0) {
         sendData.id = this.$route.params.id;
       } else {
-        sendData.userCode = this.$route.params.id;
+        sendData.userCode = this.$route.params.code;
       }
       this.$api.page_4[AjaxList[active]](sendData)
         .then(res => {
@@ -229,6 +212,13 @@ export default {
           this.$nextTick(() => {
             this.tabList = JSON.parse(JSON.stringify(tabList));
           });
+          if(active==1){
+            console.log(tabList[active].dataList)
+            tabList[active].dataList.forEach((item,index)=>{
+              this.getFileList(item.papersID, index);
+            })
+          }
+          
         })
         .catch(() => {
           tabList[active].error = true;
@@ -239,6 +229,28 @@ export default {
             this.tabList = JSON.parse(JSON.stringify(tabList));
           });
         });
+    },
+    downLoadFile(url){
+      window.open('http://mes1.jhec.com.cn:8080'+url)
+    },
+    getFileList(id, index) {
+      console.log("index: ", index);
+      let sendData = {
+        bizKey: id,
+        bizType: "htZxksPapers_file",
+        __sid: this.$userInfo.sessionId
+      };
+      this.$api.page_4
+        .fileList(sendData)
+        .then(res => {
+          if(res.result!='false'){
+            this.fujian.push(res)
+          }else{
+            this.fujian.push([])
+          }
+          console.log(this.fujian)
+        })
+        .catch(() => {});
     },
     // 判断用户性别
     judgeUserSex(type) {
@@ -316,7 +328,7 @@ export default {
     .file-list {
       .file-item {
         margin: 10px 0;
-        display: flex;
+        text-align: right;
         align-items: center;
         justify-content: space-between;
         .file-name {
@@ -325,6 +337,10 @@ export default {
           line-height: 28px;
         }
       }
+    }
+    .no-file {
+      font-size: 20px;
+      color: #999;
     }
   }
 }

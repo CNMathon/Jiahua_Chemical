@@ -270,7 +270,7 @@ const routes = {
           }
         },
         {
-          path: "/page_4/yuan_gong_an_quan/detail/:id",
+          path: "/page_4/yuan_gong_an_quan/detail/:id/:code",
           name: "yuanGongAnQuanDetail",
           component: () =>
             import("../views/pages/page_4/YuanGongAnQuan/Detail.vue"),

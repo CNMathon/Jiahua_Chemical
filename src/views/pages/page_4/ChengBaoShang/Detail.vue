@@ -59,7 +59,7 @@
               ></cell-value>
               <cell-value title="公司邮箱" :value="item.email"></cell-value>
               <cell-value title="成立日期" :value="item.foundDate"></cell-value>
-              <cell-value title="注册资本" :value="item.foundDate"></cell-value>
+              <cell-value title="注册资本" :value="item.registerCapital"></cell-value>
               <div class="tab-title">财务信息</div>
               <cell-value
                 title="银行信用等级"
@@ -115,21 +115,17 @@
                   title="有效日期"
                   :value="item.validDate"
                 ></cell-value>
-                <cell-textarea
+                <cell-value
                   disabled
                   :value="item.credentialsDescribe"
                   title="证件描述"
-                ></cell-textarea>
+                ></cell-value>
                 <cell-other title="附件清单">
-                  <div class="file-list" v-if="item.file.length > 0">
-                    <label v-for="(items, indexs) in item.file" :key="indexs">
+                  <div class="file-list" v-if="fujian[index].length > 0">
+                    <label v-for="(items, indexs) in fujian[index]" :key="indexs">
                       <div class="file-item">
-                        <div class="file-name">证件详细说明.word</div>
-                        <van-icon
-                          class-prefix="iconfont"
-                          name="ziyuan"
-                          color="#6096F8"
-                        />
+                        <div @click="downLoadFile(items.fileUrl)" class="file-name">{{items.fileName}}</div>
+                        
                       </div>
                     </label>
                   </div>
@@ -170,7 +166,10 @@
                   title="电子邮箱"
                   :value="item.email || '暂无邮箱'"
                 ></cell-value>
-                <cell-textarea disabled value title="备注"></cell-textarea>
+                <cell-value
+                  title="备注"
+                  :value="item.remarks"
+                ></cell-value>
               </div>
             </label>
           </van-list>
@@ -219,11 +218,16 @@ export default {
           pageSize: 20, //每页加载数量
           totalNumber: 10 //总条数
         }
-      ]
+      ],
+      fujian:[]
     };
   },
   created() {},
   methods: {
+    //下载附件
+    downLoadFile(url){
+      window.open('http://mes1.jhec.com.cn:8080'+url)
+    },
     // 承包商详情
     getDataList(refresh = false) {
       let info = this.info[this.active];
@@ -264,17 +268,16 @@ export default {
             info.finished = true;
             return;
           }
+          
+          info.list = refresh ? res.list : [...info.list, ...res.list];
+          info.totalNumber = res.count;
+          console.log(info)
           if (this.active === 1) {
-            let newList = res.list.map((element, index) => {
-              element.file = [];
-              // 资质材料-附件清单
+            res.list.map((element, index) => {
               this.getFileList(element.id, index);
               return element;
             });
-            res.list = newList;
           }
-          info.list = refresh ? res.list : [...info.list, ...res.list];
-          info.totalNumber = res.count;
         })
         .catch(() => {
           info.loading = false;
@@ -311,7 +314,8 @@ export default {
       this.$api.page_4
         .fileList(sendData)
         .then(res => {
-          console.log("res: ", res);
+          this.fujian.push(res)
+          console.log(this.fujian)
         })
         .catch(() => {});
     }
@@ -351,13 +355,13 @@ export default {
     .file-list {
       .file-item {
         margin: 10px 0;
-        display: flex;
         align-items: center;
         justify-content: space-between;
         .file-name {
           font-size: 28px;
           color: rgba(56, 117, 229, 1);
           line-height: 28px;
+          text-align:right;
         }
       }
     }

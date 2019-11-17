@@ -7,131 +7,101 @@
       left-arrow
       @click-left="pageBack"
       @click-right="openAction"
+      fixed
     />
-    <div class="cell_group">
-      <!-- 申请部门 -->
-      <cell-value title="申请部门" :value="$userInfo.officeName" disable></cell-value>
-      <!-- 申请人 -->
-      <cell-value title="申请人" :value="$userInfo.userName" disable></cell-value>
-      <!-- 作业票编号 -->
-      <cell-value title="作业票编号" :value="$route.query.id" disable></cell-value>
-      <!-- 作业票状态 -->
-      <cell-value title="作业票状态" value="初审" disable></cell-value>
-      <!-- 断路原因 -->
-      <cell-value title="作业票状态" :value="storeModule" disable></cell-value>
-      <cell-select-tag
-        required
-        title="断路原因"
-        storeKey="reason"
-        :tagList="reason"
-        :showList="list_1"
-        :storeModule="storeModule"
-      ></cell-select-tag>
-      <!-- 危害辨识 -->
-      <cell-select-tag
-        required
-        title="危害辨识"
-        storeKey="endangerSign"
-        :tagList="endangerSign"
-        :showList="list_2"
-        :storeModule="storeModule"
-      ></cell-select-tag>
-      <!-- 断路开始时间 -->
-      <cell-time v-model="sendData.offtimeStart" title="断路开始时间" required></cell-time>
-      <!-- 断路结束时间 -->
-      <cell-time v-model="sendData.powertimeEnd" title="断路结束时间" required></cell-time>
-      <!-- 作业部门 -->
-      <div class="cell">
-        <div class="cell_title">
-          <span>作业部门</span>
-        </div>
-        <div class="cell_value">
-          <span>部门名1、部门名2</span>
-          <span class="cell_value_arrow">
-            <van-icon name="search" />
-          </span>
-        </div>
-      </div>
-      <!-- 作业部门负责人 -->
-      <cell-select-user
-        title="作业部门负责人"
-        required
-        :storeModule="storeModule"
-        storeKey="workCharger"
-        v-model="sendData.workCharger"
-      ></cell-select-user>
-      <!-- 涉及部门 -->
-      <div class="cell">
-        <div class="cell_title">
-          <span>涉及部门</span>
-        </div>
-        <div class="cell_value">
-          <span>人名1、人名2</span>
-          <span class="cell_value_arrow">
-            <van-icon name="search" />
-          </span>
-        </div>
-      </div>
-      <!-- 断路地段示意图及相关说明-->
-      <cell-textarea v-model="sendData.offExplain" title="断路地段示意图及相关说明" placeholder="请输入工作内容"></cell-textarea>
-      <div class="cell border_none">
-        <div class="cell_other">
-          <div class="upload">
-            <div class="upload_icon">
-              <van-icon name="photo-o" />
-            </div>
-            <div class="upload_box">
-              <van-uploader
-                :before-read="beforeRead"
-                :before-delete="beforeDelete"
-                v-model="fileList"
-                preview-size="5rem"
-              />
+    <van-skeleton title :row="3" :loading="isLoading" class="skeleton fixed-first">
+      <div class="app">
+        <div class="cell_group">
+          <!-- 申请部门 -->
+          <cell-value title="申请部门" :value="$userInfo.officeName" disable></cell-value>
+          <!-- 申请人 -->
+          <cell-value title="申请人" :value="$userInfo.userName" disable></cell-value>
+          <!-- 作业票编号 -->
+          <cell-value title="作业票编号" :value="$route.query.code" disable></cell-value>
+          <!-- 作业票状态 -->
+          <!-- <cell-value title="作业票状态" value="初审" disable></cell-value>
+            <cell-value title="作业票状态" value="初审" disable></cell-value>
+            <cell-value title="作业票状态" value="初审" disable></cell-value>
+          <cell-value title="作业票状态" value="初审" disable></cell-value>-->
+          <cell-value title="作业票状态" value="已终结" disable></cell-value>
+          <!-- 断路原因 -->
+          <cell-value title="断路原因" value="初审" v-if="sendData.reason == 2" disable></cell-value>
+          <cell-value title="断路原因" value="审核" v-if="sendData.reason == 3" disable></cell-value>
+          <cell-value title="断路原因" value="有效" v-if="sendData.reason == 4" disable></cell-value>
+          <cell-value title="断路原因" value="已终结" v-if="sendData.reason == 5" disable></cell-value>
+          <!-- 危害辨识 -->
+          <cell-value title="危害辨识" :value="sendData.endangerSign || '无'" disable></cell-value>
+          <!-- 断路开始时间 -->
+          <cell-value title="断路开始时间" :value="String(sendData.offtimeStart) || '无'" disable></cell-value>
+          <!-- 断路结束时间 -->
+          <cell-value title="断路结束时间" :value="String(sendData.powertimeEnd) || '无'" disable></cell-value>
+          <!-- 作业部门 -->
+          <cell-value title="断路结束时间" :value="String(['部门名1', '部门名2']) || '无'" disable></cell-value>
+          <!-- 作业部门负责人 -->
+          <cell-value title="作业部门负责人" :value="String(sendData.workCharger) || '无'" disable></cell-value>
+          <!-- 涉及部门 -->
+          <cell-value title="作业部门负责人" :value="String(['人名1', '人名2']) || '无'" disable></cell-value>
+          <!-- 断路地段示意图及相关说明-->
+          <div class="cell border_none">
+            <div class="cell_other">
+              <div class="upload">
+                <!-- <div class="upload_icon">
+                    <van-icon name="photo-o" />
+                </div>-->
+                <div class="upload_box">
+                  <van-image
+                    width="5rem"
+                    height="5rem"
+                    src="https://img.yzcdn.cn/vant/cat.jpeg"
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </div>
+        <div class="head">
+          <div class="head_1">安全措施</div>
+          <div class="head_2">确认</div>
+          <div class="head_3">确认人</div>
+        </div>
+        <div class="confirm_list">
+          <Signature
+            :checked="checked[0] ? checked[0].checked : false"
+            :img="checked[0] ? checked[0].img : ''"
+            @checked="showSignature(0)"
+            @cancel="signatureCancel(0)"
+          >
+            <div slot>作业前,制定交通组织方案(附后),并已通知相关部门或单位</div>
+          </Signature>
+          <Signature
+            :checked="checked[1] ? checked[1].checked : false"
+            :img="checked[1] ? checked[1].img : ''"
+            @checked="showSignature(1)"
+            @cancel="signatureCancel(1)"
+          >
+            <div slot>作业前,在断路的路口和相关道路上设置交通警示标志,在作业区附近设置路栏、道路作业警示灯、导向标等交通警示设施</div>
+          </Signature>
+          <Signature
+            :disable="true"
+            :checked="checked[2] ? checked[2].checked : false"
+            :img="checked[2] ? checked[2].img : ''"
+            @checked="showSignature(2)"
+            @cancel="signatureCancel(2)"
+          >
+            <div slot>夜间作业设置警示红灯，并设置固定的围栏</div>
+          </Signature>
+        </div>
+
+        <!-- 其他安全措施 -->
+        <cell-textarea title="其他安全措施" required placeholder="请输入其他安全措施" disable=></cell-textarea>
+
+        <!-- 签字 -->
+        <div class="signature" @click="signatureShow = true">
+          <div>签字</div>
+          <van-icon name="edit" />
+        </div>
       </div>
-    </div>
-    <div class="confirm">
-      <div class="head">
-        <div class="head_1">安全措施</div>
-        <div class="head_2">确认</div>
-        <div class="head_3">确认人</div>
-      </div>
-      <div class="confirm_list">
-        <Signature
-          :checked="checked[0] ? checked[0].checked : false"
-          :img="checked[0] ? checked[0].img : ''"
-          @checked="showSignature(0)"
-          @cancel="signatureCancel(0)"
-        >
-          <div slot>作业前,制定交通组织方案(附后),并已通知相关部门或单位</div>
-        </Signature>
-        <Signature
-          :checked="checked[1] ? checked[1].checked : false"
-          :img="checked[1] ? checked[1].img : ''"
-          @checked="showSignature(1)"
-          @cancel="signatureCancel(1)"
-        >
-          <div slot>作业前,在断路的路口和相关道路上设置交通警示标志,在作业区附近设置路栏、道路作业警示灯、导向标等交通警示设施</div>
-        </Signature>
-        <Signature
-          :checked="checked[2] ? checked[2].checked : false"
-          :img="checked[2] ? checked[2].img : ''"
-          @checked="showSignature(2)"
-          @cancel="signatureCancel(2)"
-        >
-          <div slot>夜间作业设置警示红灯，并设置固定的围栏</div>
-        </Signature>
-      </div>
-	  
-	  <!-- 其他安全措施 -->
-	  <cell-textarea title="其他安全措施" required placeholder="请输入其他安全措施"></cell-textarea>
-	  
-	  <!-- 签字 -->
-	  <cell-input title="签字" required placeholder="请签字"></cell-input>
-	  
-    </div>
+    </van-skeleton>
     <!-- 画板Popup -->
     <van-popup
       class="popup"
@@ -148,6 +118,7 @@
       <button @click="closeAction">取消</button>
     </van-popup>
   </div>
+  <!-- </van-skeleton> -->
 </template>
 <script>
 import { mapState } from "vuex";
@@ -185,7 +156,8 @@ export default {
       list_2: ["人员受伤", "车辆伤害", "人员跌落沟渠"],
       isShowAction: false,
       signatureShow: false,
-      checked: [{ checked: false, image: "" }]
+      checked: [{ checked: false, image: "" }],
+      isLoading: false
     };
   },
   computed: mapState({
@@ -292,6 +264,62 @@ export default {
       this.checked[this.selectSignatureShow].checked = false;
       this.checked[this.selectSignatureShow].img = "";
       this.signatureShow = false;
+    },
+    // 编辑-获取页面数据
+    getListData() {
+      this.isLoading = true;
+      this.$api.page_3
+        .htHseDlzypListData({
+          dlzypCode: this.$route.query.code,
+          __sid: localStorage.getItem("JiaHuaSessionId")
+        })
+        .then(res => {
+          this.isLoading = false;
+          let info = res.list[0];
+          console.log("info: ", info);
+          this.sendData.id = info.id;
+          for (const key in this.sendData) {
+            if (key === "guardian") {
+              this.sendData[key] = this.reductionSelectUser(info[key]);
+            } else if (key === "dtMan") {
+              this.sendData[key] = this.reductionSelectUser(info[key]);
+            } else if (key === "otherSpecial") {
+              if (info[key])
+                this.sendData[key] = this.reductionSelectTag(
+                  info[key],
+                  this.list_1
+                );
+            } else if (key === "hazardSb") {
+              if (info[key])
+                this.sendData[key] = this.reductionSelectTag(
+                  info[key],
+                  this.list_2
+                );
+            } else {
+              this.sendData[key] = info[key];
+            }
+          }
+          console.log(111111111)
+          console.log("this.sendData: ", this.sendData);
+          // 获取图片
+          this.$api.page_3
+            .htHseDtzyp_file({
+              __t: Date.parse(new Date()),
+              bizKey: htHseDtzyp_file,
+              bizType: 'htHseDtzyp_file',
+              id: sendData.id,
+              __sid: localStorage.getItem("JiaHuaSessionId"),
+            })
+            .then(res => {
+              console.log('图片内容', res)
+            })
+        });
+
+    }
+  },
+  activated() {
+    if (this.$route.query.code) {
+      this.getListData();
     }
   },
   watch: {
@@ -351,5 +379,13 @@ export default {
     color: rgb(0, 118, 255);
     font-size: 35px;
   }
+}
+.signature {
+  background-color: white;
+  padding: 30px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 </style>

@@ -36,7 +36,7 @@ export default {
     };
   },
   created() {
-    console.log(this.$route.query);
+    console.log(this.$route);
     // 获取显示List序列
     this.select_list = this.$route.query.index || 1;
     // 设置显示List
@@ -53,10 +53,11 @@ export default {
         key: this.storeKey,
         value: this.result
       };
-      // console.log(obj)
-      console.log(this.storeModule);
+      
       this.$store.dispatch(`${this.storeModule}/changTag`, obj);
+      console.log(this.$store.state)
       this.$router.back();
+      
     },
     // 全选-反选
     setCheckAll() {

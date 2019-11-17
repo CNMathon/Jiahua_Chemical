@@ -64,23 +64,16 @@
             <div class="cell_title">
               <span>作业范围、内容、方式</span>
             </div>
-            <div class="cell_other">
+            <!-- <div class="cell_other">
               <textarea class="cell_textarea" placeholder="请输入工作内容" cols="30" rows="10" disabled></textarea>
-            </div>
+            </div> -->
             <div class="cell_other">
               <div class="upload">
                 <!-- <div class="upload_icon">
                 <van-icon name="photo-o" />
                 </div>-->
                 <div class="upload_box">
-                  <van-uploader
-                    :before-read="beforeRead"
-                    :before-delete="beforeDelete"
-                    v-model="fileList"
-                    preview-size="5rem"
-                    disabled
-                    deletable="false"
-                  />
+                  <van-image width="5rem" height="5rem" src="https://img.yzcdn.cn/vant/cat.jpeg" />
                 </div>
               </div>
             </div>
@@ -199,15 +192,9 @@
                   :class="waterLight.indexOf('12V') != -1 ? 'seclct_tag is_select':'seclct_tag'"
                 >12V</span>
                 <div slot>防爆型灯</div>
-                <span
-                  :class="boomLight[0] == '36V' ? 'seclct_tag is_select':'seclct_tag'"
-                >36V</span>
-                <span
-                  :class="boomLight[0] == '24V' ? 'seclct_tag is_select':'seclct_tag'"
-                >24V</span>
-                <span
-                  :class="boomLight[0] == '12V' ? 'seclct_tag is_select':'seclct_tag'"
-                >12V</span>
+                <span :class="boomLight[0] == '36V' ? 'seclct_tag is_select':'seclct_tag'">36V</span>
+                <span :class="boomLight[0] == '24V' ? 'seclct_tag is_select':'seclct_tag'">24V</span>
+                <span :class="boomLight[0] == '12V' ? 'seclct_tag is_select':'seclct_tag'">12V</span>
                 <div slot>作业人员已佩戴防护器械</div>
               </Signature>
               <Signature
@@ -272,7 +259,7 @@ export default {
         otherSpecial: [], //涉及其他作业
         hazardSb: [], //危害辨识
         guardian: [], //监护人
-        dtMan: [], //作业部门负责人
+        dtMan: [] //作业部门负责人
       },
       list_1: [
         "动火",

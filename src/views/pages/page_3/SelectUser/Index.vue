@@ -172,7 +172,10 @@ export default {
         obj.value = [];
         obj.value.push(this.list[this.radio]);
       }
+      console.log(this.storeModule)
+      console.log(obj)
       this.$store.dispatch(`${this.storeModule}/changTag`, obj);
+      console.log(this.$store.state)
       this.$router.back();
     }
   }

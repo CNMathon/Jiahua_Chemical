@@ -69,13 +69,10 @@
               <van-icon name="photo-o" />
             </div> -->
             <div class="upload_box">
-              <van-uploader
-                :before-read="beforeRead"
-                :before-delete="beforeDelete"
-                v-model="fileList"
-                preview-size="5rem"
-                disabled
-                deletable="false"
+              <van-image
+                width="100"
+                height="100"
+                src="https://img.yzcdn.cn/vant/cat.jpeg"
               />
             </div>
           </div>

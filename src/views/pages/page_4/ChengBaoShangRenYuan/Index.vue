@@ -40,7 +40,7 @@
               <div class="info">
                 <div class="left">
                   <div class="title">
-                    <div class="text">姓名：{{ item.empName }}</div>
+                    <div class="text">员工姓名：{{ item.empName }}</div>
                     <div class="text">性别：{{ judgeUserSex(item.sex) }}</div>
                   </div>
                   <div class="title">
@@ -49,14 +49,14 @@
                     </div>
                   </div>
                   <div class="title">
-                    <div class="text">承包商名称：{{ item.cbs.cbsName }}</div>
+                    <div class="text">身份证号码：{{ item.empIdnumber }}</div>
                   </div>
                 </div>
                 <div class="right">
                   <div class="btn" @click="toDetail(item.id)">查看详情</div>
                 </div>
               </div>
-              <div class="sub-title">身份证号码：{{ item.empIdnumber }}</div>
+              <div class="sub-title">承包商名称：{{ item.cbs.cbsName }}</div>
             </div>
           </div>
         </div>
@@ -132,11 +132,15 @@ export default {
         this.isLoading = false;
         return;
       }
+      if(this.searchValue!=''){
+        this.confirmSelectCbs.cbsName=undefined
+      }
+      console.log(this.confirmSelectCbs.cbsName)
       let sendData = {
-        empCompany: this.confirmSelectCbs.cbsName,
         pageNo: this.pageNow,
         pageSize: this.pageSize,
         empName: this.searchValue,
+        'cbs.cbsName':this.confirmSelectCbs.cbsName,
         __sid: this.$userInfo.sessionId
       };
       this.$api.page_4

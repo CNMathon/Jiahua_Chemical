@@ -237,7 +237,7 @@
 		<!-- 操作Popup -->
 		<van-popup v-model="showPicker" position="bottom" class="action">
 			<button @click="postData">保存</button>
-			<button>工作流提交</button>
+			<button @click="Next">工作流提交</button>
 			<button @click="closeAction">取消</button>
 		</van-popup>
 	</div>
@@ -352,7 +352,82 @@
 			...mapMutations('diaozhuang', {
 				setTag: 'setTag'
 			}),
-
+      Next() {
+        if (!this.$route.query.id) {
+          this.$notify("请先提交保存");
+          return;
+        } else if (this.oldInfo.actRuTask) {
+        } else {
+          console.log(123456)
+          this.$Toast.loading({
+            message: "加载中...",
+            forbidClick: true
+          });
+          this.$api.page_3
+            .htHseDzzypList({
+              zypcode: this.zypcode,
+              __sid: localStorage.getItem("JiaHuaSessionId")
+            })
+            .then(res => {
+              this.$Toast.clear()
+              if(res.list[0].actRuTask){
+                console.log(1)
+                let data = {
+                  'id':res.list[0].id,
+                  'flowKey':'htHseDzzypService',
+                  'comment':'',
+                  'actRuTask.id':res.list[0].actRuTask.id,
+                  'btnSubmit':'审批',
+                  __sid: localStorage.getItem("JiaHuaSessionId")
+                }
+                this.$api.page_3.approve(data).then((ress)=>{
+                  console.log(ress)
+                  if(ress.groups){
+                    this.$router.push({name:'daibanren',query:{
+                      groups:ress.groups.join(','),
+                      taskId:ress.taskId,
+                      id:res.list[0].id,
+                      type:'htHseDzzypService'
+                    }})
+                  }else{
+                    this.$router.replace({name:'diaozhuang_list'})
+                  }
+                }).catch(() => this.$Toast.clear());
+              }else{
+                console.log(2)
+                let data = {
+                  'id':res.list[0].id,
+                  'flowKey':'htHseDzzypService',
+                  __sid: localStorage.getItem("JiaHuaSessionId")
+                }
+                this.$api.page_3.start('dzzy/htHseDzzyp',data).then((ress)=>{
+                  console.log(ress)
+                  if(ress.groups){
+                    this.$router.push({name:'daibanren',query:{
+                      groups:ress.groups.join(','),
+                      taskId:ress.taskId,
+                      id:res.list[0].id,
+                      type:'htHseDzzypService'
+                    }})
+                  }else{
+                    this.$router.replace({name:'diaozhuang_list'})
+                  }
+                }).catch(() => this.$Toast.clear());
+              }
+            })
+            .catch(() => this.$Toast.clear());
+          // this.$api.page_3
+          //   .start("dhzyp", {
+          //     id: this.oldInfo.id,
+          //     __sid: localStorage.getItem("JiaHuaSessionId")
+          //   })
+          //   .then(res => {
+          //     console.log("res: ", res);
+          //     this.$Toast.clear();
+          //   })
+          //   .catch(() => this.$Toast.clear());
+        }
+      },
 			//获取详情
 			getInfo() {
 

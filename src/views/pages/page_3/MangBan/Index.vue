@@ -153,7 +153,7 @@
     <!-- 操作Popup -->
     <van-popup v-model="isShowAction" position="bottom" class="action">
       <button @click="postData">保存</button>
-      <button>工作流提交</button>
+      <button @click="Next">工作流提交</button>
       <button @click="closeAction">取消</button>
     </van-popup>
   </div>
@@ -326,8 +326,75 @@ export default {
               }
             }
           }
+          console.log(this.sendData)
         })
         .catch(() => {});
+    },
+    Next() {
+      if (!this.$route.query.id) {
+        this.$notify("请先提交保存");
+        return;
+      } else if (this.oldInfo.actRuTask) {
+      } else {
+        console.log(123456)
+        this.$Toast.loading({
+          message: "加载中...",
+          forbidClick: true
+        });
+        this.$api.page_3
+          .htHseMbzypListData({
+            id: this.infoId,
+            __sid: localStorage.getItem("JiaHuaSessionId")
+          })
+          .then(res => {
+            this.$Toast.clear()
+            if(res.list[0].actRuTask){
+              console.log(1)
+              let data = {
+                'id':res.list[0].id,
+                'flowKey':'htHseMbzypService',
+                'comment':'',
+                'actRuTask.id':res.list[0].actRuTask.id,
+                'btnSubmit':'审批',
+                __sid: localStorage.getItem("JiaHuaSessionId")
+              }
+              this.$api.page_3.approve(data).then((ress)=>{
+                console.log(ress)
+                if(ress.groups){
+                  this.$router.push({name:'daibanren',query:{
+                    groups:ress.groups.join(','),
+                    taskId:ress.taskId,
+                    id:res.list[0].id,
+                    type:'htHseMbzypService'
+                  }})
+                }else{
+                  this.$router.replace({name:'mangban_list'})
+                }
+              }).catch(() => this.$Toast.clear());
+            }else{
+              console.log(2)
+              let data = {
+                'id':res.list[0].id,
+                'flowKey':'htHseMbzypService',
+                __sid: localStorage.getItem("JiaHuaSessionId")
+              }
+              this.$api.page_3.start('mbzyp/htHseMbzyp',data).then((ress)=>{
+                console.log(ress)
+                if(ress.groups){
+                  this.$router.push({name:'daibanren',query:{
+                    groups:ress.groups.join(','),
+                    taskId:ress.taskId,
+                    id:res.list[0].id,
+                    type:'htHseMbzypService'
+                  }})
+                }else{
+                  this.$router.replace({name:'mangban_list'})
+                }
+              }).catch(() => this.$Toast.clear());
+            }
+          })
+          .catch(() => this.$Toast.clear());
+      }
     },
     filterPipeUser(info, arr) {
       info.pipeBlockOperator = this.reductionSelectUser(arr[8]);

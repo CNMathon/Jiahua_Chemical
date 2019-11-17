@@ -38,7 +38,7 @@
       <!-- 断路开始时间 -->
       <cell-time v-model="sendData.offtimeStart" title="断路开始时间" required></cell-time>
       <!-- 断路结束时间 -->
-      <cell-time v-model="sendData.powertimeEnd" title="断路结束时间" required></cell-time>
+      <cell-time v-model="sendData.offtimeEnd" title="断路结束时间" required></cell-time>
       <!-- 作业部门 -->
       <div class="cell">
         <div class="cell_title">
@@ -59,6 +59,7 @@
         storeKey="workCharger"
         v-model="sendData.workCharger"
       ></cell-select-user>
+      {{sendData.workCharger}}
       <!-- 涉及部门 -->
       <div class="cell">
         <div class="cell_title">
@@ -136,7 +137,7 @@
     <!-- 操作Popup -->
     <van-popup v-model="isShowAction" position="bottom" class="action">
       <button @click="postData">保存</button>
-      <button>工作流提交</button>
+      <button @click="Next">工作流提交</button>
       <button @click="closeAction">取消</button>
     </van-popup>
   </div>
@@ -166,7 +167,7 @@ export default {
         reason: [], //断路原因
         endangerSign: [], //危害辨识
         offtimeStart: "", //断路时间（起）
-        powertimeEnd: "", //断路时间（止）
+        offtimeEnd: "", //断路时间（止）
         workCharger: [], //作业部门负责人
         offExplain: "" //相关说明
       },
@@ -219,7 +220,7 @@ export default {
     //     reason: [], //断路原因
     //     endangerSign: [], //危害辨识
     //     offtimeStart: "", //断路时间（起）
-    //     powertimeEnd: "", //断路时间（止）
+    //     offtimeEnd: "", //断路时间（止）
     //     workCharger: [], //作业部门负责人
     //     offExplain: "" //相关说明
     //   };
@@ -233,6 +234,87 @@ export default {
     }
   },
   methods: {
+    // 工作流提交
+    workflowSubmit() {
+      if (this.$route.query.code == undefined) {
+        this.$notify('请先保存表单')
+      }
+    },
+    Next() {
+      if (!this.$route.query.code) {
+        this.$notify("请先提交保存");
+        return;
+      }else {
+        console.log(123456)
+        this.$Toast.loading({
+          message: "加载中...",
+          forbidClick: true
+        });
+        this.$api.page_3
+          .htHseDlzypListData({
+            id: this.id,
+            __sid: localStorage.getItem("JiaHuaSessionId")
+          })
+          .then(res => {
+            this.$Toast.clear()
+            if(res.list[0].actRuTask){
+              console.log(1)
+              let data = {
+                'id':res.list[0].id,
+                'flowKey':'htHseDlzypService',
+                'comment':'',
+                'actRuTask.id':res.list[0].actRuTask.id,
+                'btnSubmit':'审批',
+                __sid: localStorage.getItem("JiaHuaSessionId")
+              }
+              this.$api.page_3.approve(data).then((ress)=>{
+                console.log(ress)
+                if(ress.groups){
+                  this.$router.push({name:'daibanren',query:{
+                    groups:ress.groups.join(','),
+                    taskId:ress.taskId,
+                    id:res.list[0].id,
+                    type:'htHseDlzypService'
+                  }})
+                }else{
+                  this.$router.replace({name:'duanlu_list'})
+                }
+              }).catch(() => this.$Toast.clear());
+            }else{
+              console.log(2)
+              let data = {
+                'id':res.list[0].id,
+                'flowKey':'htHseDlzypService',
+                __sid: localStorage.getItem("JiaHuaSessionId")
+              }
+              this.$api.page_3.start('dlzyp/htHseDlzyp',data).then((ress)=>{
+                console.log(ress)
+                if(ress.groups){
+                  this.$router.push({name:'daibanren',query:{
+                    groups:ress.groups.join(','),
+                    taskId:ress.taskId,
+                    id:res.list[0].id,
+                    type:'htHseDlzypService'
+                  }})
+                }else{
+                  this.$router.replace({name:'duanlu_list'})
+                }
+              }).catch(() => this.$Toast.clear());
+            }
+          })
+          .catch(() => this.$Toast.clear());
+        // this.$api.page_3
+        //   .start("dhzyp", {
+        //     id: this.oldInfo.id,
+        //     __sid: localStorage.getItem("JiaHuaSessionId")
+        //   })
+        //   .then(res => {
+        //     console.log("res: ", res);
+        //     this.$Toast.clear();
+        //   })
+        //   .catch(() => this.$Toast.clear());
+      }
+    },
     getPageData() {
       this.$api.page_3
         .htHseDlzypListData({
@@ -264,10 +346,10 @@ export default {
       });
       sendData.reason = this.stringData("reason", "list_1");
       sendData.endangerSign = this.stringData("endangerSign", "list_2");
-      sendData.applyDept = this.$userInfo.officeName;
-      sendData.applyer = this.$userInfo.userName;
+      sendData.applyDept = this.$userInfo.officeCode;
+      sendData.applyer = this.$userInfo.userCode;
       sendData.offExplain = offExplain.join(",");
-      sendData.workCharger = sendData.workCharger[0].userName
+      sendData.workCharger = sendData.workCharger[0].userCode
       sendData.__sid = this.$userInfo.sessionId;
       let List = [
         {

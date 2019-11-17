@@ -1,6 +1,6 @@
 <template>
   <div class="shuju">
-    <van-nav-bar title="数据监控"></van-nav-bar>
+    <van-nav-bar title="信息查询"></van-nav-bar>
     <div class="content" v-for="(item, index) in nav" :key="index">
       <div class="content-title">{{ item.title }}</div>
       <van-row>

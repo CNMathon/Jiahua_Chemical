@@ -228,6 +228,17 @@ const article = {
   //提交工作流
   start(type, params) {
     return axios.post(`${base.sq}${type}/start`, qs.stringify(params));
+  },
+  // 文件列表
+  fileList(params) {
+    return axios.get(`${base.sq}file/fileList`, qs.stringify(params));
+  },
+  //提交工作流
+  approve(params) {
+    return axios.post(`${base.sq}act/core/client/approve`, qs.stringify(params));
+  },
+  claim(params){
+    return axios.post(`${base.sq}act/core/client/claim`, qs.stringify(params));
   }
 };
 

@@ -33,7 +33,15 @@
               <label v-if="tabIndex === 0">
                 <label v-for="(item, index) in tabs.dataList" :key="index">
                   <div class="tab-title">基本信息</div>
-                  <cell-value title="人员头像" value></cell-value>
+                  <cell-value title="人员头像">
+                    <div slot class="slot-header">
+                      <van-image
+                        v-if="item.avatar"
+                        class="header"
+                        :src="item.avatar"
+                      ></van-image>
+                    </div>
+                  </cell-value>
                   <cell-value
                     title="人员姓名"
                     :value="item.empName"
@@ -52,7 +60,7 @@
                     :value="item.empCompany"
                   ></cell-value>
                   <cell-value title="职务" :value="item.duty"></cell-value>
-                  <cell-value title="岗位" value></cell-value>
+                  <cell-value title="岗位" :value="item.post"></cell-value>
                   <cell-value
                     title="用工部门"
                     :value="item.ygdept"
@@ -66,17 +74,17 @@
                     title="出生日期"
                     :value="item.birthday"
                   ></cell-value>
-                  <cell-value title="电子邮箱" value></cell-value>
+                  <cell-value title="电子邮箱" :value="item.email"></cell-value>
                   <cell-value
                     title="家庭住址"
                     :value="item.adress"
                   ></cell-value>
-                  <cell-value title="婚姻状况" value></cell-value>
-                  <cell-value title="学历" value></cell-value>
-                  <cell-value title="学位" value></cell-value>
-                  <cell-value title="特殊作业" value></cell-value>
-                  <cell-value title="工种" value></cell-value>
-                  <cell-value title="是否黑名单" value></cell-value>
+                  <cell-value title="婚姻状况" :value="item.ismarry==1?'已婚':item.ismarry==2?'未婚':item.ismarry==3?'离异':''"></cell-value>
+                  <cell-value title="学历" :value="item.education==0?'小学':item.education==1?'初中':item.education==2?'高中':item.education==3?'中专':item.education==4?'大专':item.education==5?'本科':item.education==6?'硕士研究生':item.education==7?'博士研究生':''"></cell-value>
+                  <cell-value title="学位" :value="item.degree==0?'小学':item.degree==1?'初中':item.degree==2?'高中':item.degree==3?'中专':item.degree==4?'大专':item.degree==5?'本科':item.degree==6?'硕士研究生':item.degree==7?'博士研究生':''"></cell-value>
+                  <cell-value title="特殊作业" :value="item.specialWork==1?'是':'否'"></cell-value>
+                  <cell-value title="工种" :value="item.typeofworker==0?'无':item.typeofworker==1?'金属焊接、切割作业':item.typeofworker==3?'起重机械作业':''"></cell-value>
+                  <cell-value title="是否黑名单" :value="item.isblacklist==1?'是':item.isblacklist==2?'否':''"></cell-value>
                 </label>
               </label>
               <!-- 资质材料 -->
@@ -103,41 +111,19 @@
                       title="有效日期"
                       :value="item.indate"
                     ></cell-value>
-                    <cell-textarea
-                      disabled
-                      value
-                      title="证件描述"
-                      placeholder="暂无描述"
-                    ></cell-textarea>
-                    <cell-other title="用工部门">
-                      <div class="file-list">
+                    <cell-value
+                      title="备注"
+                      :value="item.remarks?item.remarks:'无'"
+                    ></cell-value>
+                    <cell-other title="附件">
+                      <div class="file-list" v-if="fujian[index].length > 0">
                         <div>
-                          <div class="file-item">
-                            <div class="file-name">证件详细说明.word</div>
-                            <van-icon
-                              class-prefix="iconfont"
-                              name="ziyuan"
-                              color="#6096F8"
-                            />
-                          </div>
-                          <div class="file-item">
-                            <div class="file-name">证件详细说明.jpg</div>
-                            <van-icon
-                              class-prefix="iconfont"
-                              name="ziyuan"
-                              color="#6096F8"
-                            />
-                          </div>
-                          <div class="file-item">
-                            <div class="file-name">证件详细说明.pdf</div>
-                            <van-icon
-                              class-prefix="iconfont"
-                              name="ziyuan"
-                              color="#6096F8"
-                            />
+                          <div class="file-item" v-for="(items, indexs) in fujian[index]" :key="indexs">
+                            <div @click="downLoadFile(items.fileUrl)" class="file-name">{{items.fileName}}</div>
                           </div>
                         </div>
                       </div>
+                      <div class="no-file" v-else>无附件</div>
                     </cell-other>
                   </div>
                 </label>
@@ -162,7 +148,7 @@
                     ></cell-value>
                     <cell-value
                       title="培训结束时间"
-                      value="2019.04.12"
+                      :value="item.trainDate.substring(0,5)+'12-31'+item.trainDate.substring(10)"
                     ></cell-value>
                     <cell-value
                       title="培训记录"
@@ -170,13 +156,16 @@
                     ></cell-value>
                     <cell-value
                       title="培训类型"
-                      :value="String(item.trainType)"
+                      :value="item.trainType==1?'承包商入厂培训':item.trainType==2?'日常培训':item.trainType==3?'违章培训':''"
                     ></cell-value>
                     <cell-value
                       title="考试得分"
                       :value="String(item.score)"
                     ></cell-value>
-                    <cell-textarea disabled title="备注" value></cell-textarea>
+                    <cell-value
+                      title="备注"
+                      :value="item.remarks?item.remarks:'无'"
+                    ></cell-value>
                   </div>
                 </label>
                 <div
@@ -216,7 +205,7 @@
                     ></cell-value>
                     <cell-value
                       title="检查人员"
-                      :value="item.user.userName"
+                      :value="item.checkuser"
                     ></cell-value>
                     <cell-value
                       title="检查时间"
@@ -228,7 +217,7 @@
                     ></cell-value>
                     <cell-value
                       title="处罚金额"
-                      :value="item.punishcash"
+                      :value="item.punishcash==0?'0':item.punishcash"
                     ></cell-value>
                   </div>
                 </label>
@@ -355,7 +344,8 @@ export default {
         {
           title: "黑名单记录"
         }
-      ]
+      ],
+      fujian:[]
     };
   },
   created() {
@@ -426,6 +416,12 @@ export default {
           this.$nextTick(() => {
             this.tabList = JSON.parse(JSON.stringify(tabList));
           });
+          if(active==1){
+            tabList[active].dataList.forEach((item,index)=>{
+              console.log(item,index)
+              this.getFileList(item.id, index);
+            })
+          }
         })
         .catch(() => {
           tabList[active].error = true;
@@ -436,6 +432,29 @@ export default {
             this.tabList = JSON.parse(JSON.stringify(tabList));
           });
         });
+    },
+    getFileList(id, index) {
+      console.log("index: ", index);
+      let sendData = {
+        bizKey: id,
+        bizType: "htCbsPeopleStuff_file",
+        __sid: this.$userInfo.sessionId
+      };
+      this.$api.page_4
+        .fileList(sendData)
+        .then(res => {
+          if(res.result!='false'){
+            this.fujian.push(res)
+          }else{
+            this.fujian.push([])
+          }
+          
+          console.log(this.fujian)
+        })
+        .catch(() => {});
+    },
+    downLoadFile(url){
+      window.open('http://mes1.jhec.com.cn:8080'+url)
     },
     // 判断用户性别
     judgeUserSex(type) {
@@ -495,15 +514,19 @@ export default {
     .file-list {
       .file-item {
         margin: 10px 0;
-        display: flex;
         align-items: center;
         justify-content: space-between;
         .file-name {
           font-size: 28px;
           color: rgba(56, 117, 229, 1);
           line-height: 28px;
+          text-align:right;
         }
       }
+    }
+    .no-file {
+      font-size: 20px;
+      color: #999;
     }
   }
 }

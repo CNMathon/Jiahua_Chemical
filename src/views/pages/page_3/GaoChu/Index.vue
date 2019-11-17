@@ -21,10 +21,10 @@
 			<!-- 登高类别 -->
 			<cell-picker title="登高类别" required v-model="sendData.heightType" :columns="heightTypeColumns"></cell-picker>
 			<!-- 涉及其他特殊作业 -->
-			<cell-select-tag required title="涉及其他特殊作业" storeKey="specialWork" :tagList="specialWork" :showList="list_1"
+			<cell-select-tag required title="涉及其他特殊作业" storeKey="specialWork" :tagList="sendData.specialWork" :showList="list_1"
 			 :storeModule="storeModule"></cell-select-tag>
 			<!-- 危害辨识 -->
-			<cell-select-tag required title="危害辨识" storeKey="harmAnalise" :tagList="harmAnalise" :showList="list_2" :storeModule="storeModule"></cell-select-tag>
+			<cell-select-tag required title="危害辨识" storeKey="harmAnalise" :tagList="sendData.harmAnalise" :showList="list_2" :storeModule="storeModule"></cell-select-tag>
 			<!-- 作业开始时间 -->
 			<cell-time v-model="sendData.startTime" title="作业开始时间" required></cell-time>
 			<!-- 作业结束时间 -->
@@ -40,7 +40,7 @@
 		<!-- 操作Popup -->
 		<van-popup v-model="showPicker" position="bottom" class="action">
 			<button @click="postData">保存</button>
-			<button>工作流提交</button>
+			<button @click="Next">工作流提交</button>
 			<button @click="closeAction">取消</button>
 		</van-popup>
 
@@ -132,7 +132,7 @@
 	import Canvas from "@/components/Canvas.vue";
 	import Signature from "../components/Signature.vue";
 	export default {
-		name: "gaochu",
+		name: "gaochuindex",
 		mixins: [business],
 		data() {
 			return {
@@ -207,16 +207,34 @@
 			Canvas,
 			StepperPlus,
 			Signature
-		},
+    },
+    watch: {
+      specialWork(res) {
+        console.log(res)
+        this.sendData.specialWork = res;
+      },
+      harmAnalise(res) {
+        this.sendData.harmAnalise = res;
+      },
+      guarder(res) {
+        console.log(1111111111111)
+        this.sendData.guarder = res;
+      },
+      workDeptLeader(res) {
+        this.sendData.workDeptLeader = res;
+      },
+      worker(res) {
+        this.sendData.worker = res;
+      }
+    },
 		computed: mapState({
 			specialWork: state => state.gaochu.specialWork,
 			harmAnalise: state => state.gaochu.harmAnalise,
 			guarder: state => state.gaochu.guarder,
 			workDeptLeader: state => state.gaochu.workDeptLeader,
 			worker: state => state.gaochu.worker
-		}),
+    }),
 		created() {
-
 			// 获取显示List序列
 			this.gczyCode = this.$route.query.gczyCode || "";
 			// 设置显示List
@@ -372,7 +390,82 @@
 
 					})
 					.catch(() => {});
-			},
+      },
+      Next() {
+        if (!this.$route.query.gczyCode) {
+          this.$notify("请先提交保存");
+          return;
+        } else {
+          console.log(123456)
+          this.$Toast.loading({
+            message: "加载中...",
+            forbidClick: true
+          });
+          this.$api.page_3
+            .htHseUpworkticketListData({
+              gczyCode : this.gczyCode,
+              __sid: localStorage.getItem("JiaHuaSessionId")
+            })
+            .then(res => {
+              this.$Toast.clear()
+              if(res.list[0].actRuTask){
+                console.log(1)
+                let data = {
+                  'id':res.list[0].id,
+                  'flowKey':'htHseUpworkticketService',
+                  'comment':'',
+                  'actRuTask.id':res.list[0].actRuTask.id,
+                  'btnSubmit':'审批',
+                  __sid: localStorage.getItem("JiaHuaSessionId")
+                }
+                this.$api.page_3.approve(data).then((ress)=>{
+                  console.log(ress)
+                  if(ress.groups){
+                    this.$router.push({name:'daibanren',query:{
+                      groups:ress.groups.join(','),
+                      taskId:ress.taskId,
+                      id:res.list[0].id,
+                      type:'htHseUpworkticketService'
+                    }})
+                  }else{
+                    this.$router.replace({name:'gaochu_list'})
+                  }
+                }).catch(() => this.$Toast.clear());
+              }else{
+                console.log(2)
+                let data = {
+                  'id':res.list[0].id,
+                  'flowKey':'htHseUpworkticketService',
+                  __sid: localStorage.getItem("JiaHuaSessionId")
+                }
+                this.$api.page_3.start('heightworkticket/htHseUpworkticket',data).then((ress)=>{
+                  console.log(ress)
+                  if(ress.groups){
+                    this.$router.push({name:'daibanren',query:{
+                      groups:ress.groups.join(','),
+                      taskId:ress.taskId,
+                      id:res.list[0].id,
+                      type:'htHseUpworkticketService'
+                    }})
+                  }else{
+                    this.$router.replace({name:'gaochu_list'})
+                  }
+                }).catch(() => this.$Toast.clear());
+              }
+            })
+            .catch(() => this.$Toast.clear());
+          // this.$api.page_3
+          //   .start("dhzyp", {
+          //     id: this.oldInfo.id,
+          //     __sid: localStorage.getItem("JiaHuaSessionId")
+          //   })
+          //   .then(res => {
+          //     console.log("res: ", res);
+          //     this.$Toast.clear();
+          //   })
+          //   .catch(() => this.$Toast.clear());
+        }
+      },
 			pageBack() {
 				this.$router.back();
 			},
@@ -666,12 +759,15 @@
 			}
 		},
 		activated() {
-			console.log(1111);
+      console.log(111111111111111111)
+			console.log(this.$store.state);
 			this.sendData.id = "";
 			let zypId = this.$route.query.id;
-			let zypStatus = this.$route.query.status;
-			let isInitData = this.$route.query.moreInfo.isInitData;
-			console.log(this.$route);
+      let zypStatus = this.$route.query.status;
+      let isInitData = false
+      if(this.$route.query.moreInfo){
+        let isInitData = this.$route.query.moreInfo.isInitData;
+      }
 			if (zypStatus == 1 && isInitData == true) {
 				this.sendData.id = zypId;
 				this.$api.page_3

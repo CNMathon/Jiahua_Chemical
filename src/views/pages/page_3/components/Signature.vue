@@ -12,11 +12,14 @@
   </div>
 </template>
 <script>
+import { business } from "@/mixin/business";
 export default {
+  mixins: [business],
   name: "signature",
   data() {
     return {
-      checked: false
+      checked: false,
+      tempChecked: Boolean
     };
   },
   props: {
@@ -31,7 +34,17 @@ export default {
   },
   watch: {
     checked(val) {
-      if (this.disable) return;
+      // this.tempChecked
+      //   this.checked = false
+      // if (this.disable) {
+      //   if (this.isDataEmpty(this.tempChecked)) {
+      //     this.tempChecked = !this.checked
+      //     console.log('tempChecked：', this.tempChecked)
+      //   }
+      //   this.checked = this.tempChecked
+      //   console.log('赋值后的checked：', this.tempChecked)
+      //   return
+      // };
       if (val) {
         this.changeChecked(val);
       } else {

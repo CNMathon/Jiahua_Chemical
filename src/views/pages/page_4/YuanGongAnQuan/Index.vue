@@ -10,7 +10,7 @@
       <j-filter-bar
         v-model="searchValue"
         @search="getPageData(true)"
-        @tap="showFilter = true"
+        @tap="setShowFilter()"
       ></j-filter-bar>
     </van-sticky>
     <j-filter v-model="showFilter" @confirm="confirmFilter">
@@ -49,7 +49,7 @@
                   </div>
                 </div>
                 <div class="right">
-                  <div class="btn" @click="toDetail(item.id)">查看详情</div>
+                  <div class="btn" @click="toDetail(item.id,item.userCode)">查看详情</div>
                 </div>
               </div>
               <div class="sub-title">身份证号码：{{ item.userIdcard }}</div>
@@ -78,7 +78,9 @@ export default {
       searchValue: "",
       showFilter: false, //显示高级筛选
       searchValues: "",
-      sheetActions: [{ name: "延期", index: 0 }, { name: "取消", index: 1 }]
+      confirmSelectCbs:{},
+      selectCbs:{},
+      sheetActions: []
     };
   },
   methods: {
@@ -100,6 +102,7 @@ export default {
         pageNo: this.pageNow,
         pageSize: this.pageSize,
         userName: this.searchValue,
+        userDept:this.confirmSelectCbs.id,
         __sid: this.$userInfo.sessionId
       };
       this.$api.page_4
@@ -132,9 +135,18 @@ export default {
     // 子组件触发事件
     filterSelect(e) {
       console.log("e: ", e);
+      this.selectCbs = e
     },
     // 确认筛选
-    confirmFilter() {},
+    confirmFilter() {
+      this.confirmSelectCbs = this.selectCbs;
+      this.showFilter = false;
+      this.$nextTick(() => {
+        console.log(11);
+        // 获取承包商人员列表
+        this.getPageData(true);
+      });
+    },
     // 获取承包商列表
     getUserList() {
       let sendData = {
@@ -153,8 +165,28 @@ export default {
         })
         .catch(() => {});
     },
-    toDetail(id) {
-      this.$router.push({ path: `./detail/${id}` });
+    getUserData() {
+      let sendData = {
+        __sid: this.$userInfo.sessionId
+      };
+      this.$api.page_3
+        .bmSelect(sendData)
+        .then(res => {
+          console.log(res)
+          this.sheetActions = res
+        })
+        .catch(() => {});
+    },
+    setShowFilter() {
+      if (this.sheetActions.length === 0) {
+        // 获取承包商列表
+        this.getUserData();
+      } else {
+        this.showFilter = true;
+      }
+    },
+    toDetail(id,code) {
+      this.$router.push({ path: `./detail/${id}/${code}` ,});
     }
   }
 };

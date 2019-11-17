@@ -16,6 +16,8 @@ const getters = {};
 // actions
 const actions = {
   changTag({ commit }, tags) {
+    console.log(3333333333333333)
+    console.log(commit)
     commit("setTag", { tags });
   },
   deleteTagItem({ commit, state }, tags) {

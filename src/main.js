@@ -29,13 +29,14 @@ import api from "./api"; // 导入api接口
 import { Toast } from "vant";
 import { Dialog } from "vant";
 import { Notify } from "vant";
-
+import echarts from 'echarts'
 // 全局注册
 Vue.prototype.$api = api; // 将api挂载到vue的原型上
 Vue.prototype.$Toast = Toast;
 Vue.prototype.$Dialog = Dialog;
 Vue.prototype.$dayjs = dayjs; //全局挂载day.js
 Vue.prototype.$Notify = Notify;
+Vue.prototype.$echarts = echarts
 Vue.prototype.$imageUrl = "http://47.96.148.87:8980/js"; // 将api挂载到vue的原型上
 Vue.use(Vant);
 Vue.use(VCharts);

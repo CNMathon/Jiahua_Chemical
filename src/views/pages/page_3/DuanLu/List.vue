@@ -48,7 +48,7 @@
               <div class="right" v-if="item.htStatus == 2">初审</div>
               <div class="right" v-if="item.htStatus == 3">审核</div>
               <div class="right" v-if="item.htStatus == 4">有效</div>
-              <div class="right" v-if="item.htStatus == 5">结束</div>
+              <div class="right" v-if="item.htStatus == 5">已终结</div>
             </div>
           </label>
         </van-skeleton>
@@ -103,7 +103,7 @@ export default {
             path: path,
             query: {
               status: status,
-              id: code,
+              code: code,
               moreInfo: moreInfo
             }
           })
@@ -116,6 +116,9 @@ export default {
       // 参数3 => 其他需要通过 router 传输的数据
       todo(1, './index', {isInitData: true})
       todo(2, './Index2', {isInitData: true})
+      todo(3, './Index2', {isInitData: true})
+      todo(4, './Index2', {isInitData: true})
+      todo(5, './Index2', {isInitData: true})
     },
 
     // 点击右侧文案事件
