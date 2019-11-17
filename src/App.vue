@@ -51,4 +51,8 @@
     width: 300px;
   }
 }
+
+.z-index-highest {
+  z-index: 999 !important;
+}
 </style>

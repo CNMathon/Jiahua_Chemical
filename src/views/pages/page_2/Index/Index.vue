@@ -1,6 +1,6 @@
 <template>
   <div class="shuju">
-    <van-nav-bar title="数据监控" fixed />
+    <van-nav-bar title="数据监控" fixed class="z-index-highest"/>
     <!-- 生产运行指标 (嘉化能源) -->
     <div class="content fixed-first">
       <div class="content-title">生产运行指标 (嘉化能源)</div>

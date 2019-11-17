@@ -1,6 +1,6 @@
 <template>
   <div class="dongli">
-    <van-nav-bar title="动力中心" left-text="返回" left-arrow @click-left="pageBack" fixed class="nav-bar" />
+    <van-nav-bar title="动力中心" left-text="返回" left-arrow @click-left="pageBack" fixed class="nav-bar z-index-highest" />
     <van-tabs
       v-model="active"
       background="#6096F8"
