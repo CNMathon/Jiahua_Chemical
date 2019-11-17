@@ -120,20 +120,6 @@ export default {
         { name: "平均1275电量", value: "1552.21", unit: "KW" },
         { name: "外供蒸汽", value: "1552.21", unit: "t" },
         { name: "外供平均蒸汽", value: "1552.21", unit: "t/h" },
-        // { name: "煤、化工段平均原水用量", value: "1552.21", unit: "t" },
-        // { name: """, value: "1552.21", unit: "KW" },
-        // { name: "均产汽合计", value: "100", unit: "t/h" },
-        // { name: "均产汽合计", value: "100", unit: "t/h" },
-        // { name: "均产汽合计", value: "100", unit: "t/h" },
-        // { name: "均产汽合计", value: "100", unit: "t/h" },
-        // { name: "均产汽合计", value: "100", unit: "t/h" },
-        // { name: "锅炉总负荷率", value: "100", unit: "%" },
-        // { name: "自用电率", value: "1552.21", unit: "" },
-        // { name: "耗煤量", value: "100", unit: "t/h" },
-        // { name: "脱盐水产量", value: "100", unit: "t/h" },
-        // { name: "汽机总负荷率", value: "100", unit: "%" },
-        // { name: "发电合计", value: "100", unit: "KW" },
-        // { name: "倒送电量", value: "100", unit: "KWh" }
       ],
       yancong: [
         {
