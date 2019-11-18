@@ -237,8 +237,11 @@ const article = {
   approve(params) {
     return axios.post(`${base.sq}act/core/client/approve`, qs.stringify(params));
   },
-  claim(params){
+  claim(params) {
     return axios.post(`${base.sq}act/core/client/claim`, qs.stringify(params));
+  },
+  getRtMonTagInfosByNames(params) {
+    return axios.get(`${base.mes2}GetRtMonTagInfosByNames`, qs.stringify(params))
   }
 };
 

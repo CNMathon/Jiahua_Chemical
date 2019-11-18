@@ -120,21 +120,21 @@ export default {
         if(res.result=='true'){
           this.$Toast.success('签收任务成功！')
           if(this.$route.query.type=='htHseDhzypService'){
-            this.$router.replace({name:'donghuo_list'})
+            this.$router.push({name:'donghuo_list'})
           }else if(this.$route.query.type=='htHseSxkjzypService'){
-            this.$router.replace({name:'kongjian_list'})
+            this.$router.push({name:'kongjian_list'})
           }else if(this.$route.query.type=='htHseMbzypService'){
-            this.$router.replace({name:'mangban_list'})
+            this.$router.push({name:'mangban_list'})
           }else if(this.$route.query.type=='htHseUpworkticketService'){
-            this.$router.replace({name:'gaochu_list'})
+            this.$router.push({name:'gaochu_list'})
           }else if(this.$route.query.type=='htHseDzzypService'){
-            this.$router.replace({name:'diaozhuang_list'})
+            this.$router.push({name:'diaozhuang_list'})
           }else if(this.$route.query.type=='htHseLsydzypService'){
-            this.$router.replace({name:'linshi_list'})
+            this.$router.push({name:'linshi_list'})
           }else if(this.$route.query.type=='htHseDtzypService'){
-            this.$router.replace({name:'dongtu_list'})
+            this.$router.push({name:'dongtu_list'})
           }else if(this.$route.query.type=='htHseDlzypService'){
-            this.$router.replace({name:'duanlu_list'})
+            this.$router.push({name:'duanlu_list'})
           }
         }else{
           this.$Toast.fail('操作失败')

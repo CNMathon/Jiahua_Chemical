@@ -176,6 +176,7 @@ export default {
       console.log(obj)
       this.$store.dispatch(`${this.storeModule}/changTag`, obj);
       console.log(this.$store.state)
+      
       this.$router.back();
     }
   }

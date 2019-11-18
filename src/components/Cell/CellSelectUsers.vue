@@ -5,7 +5,7 @@
       <span class="required" v-if="required">*</span>
     </div>
     <div class="cell_other_people">
-      <div class="cell_other_peoples" v-for="(item, index) in values" :key="index">
+      <div class="cell_other_peoples" v-if="values.length>0" v-for="(item, index) in values" :key="index">
         <div class="cell_other_peoples_header">
           <van-image round width="100%" height="100%" :src="item.avatarUrl" />
           <span class="delete" @click.stop="deleteItem(index)">
@@ -45,7 +45,12 @@ export default {
   },
   watch: {
     value(val) {
-      this.values = val;
+      console.log(val)
+      if(val.length===0){
+        this.values=[]
+      }else{
+        this.values = val;
+      }
     }
   },
   methods: {

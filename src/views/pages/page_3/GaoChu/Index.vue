@@ -199,7 +199,8 @@
 						name: "取消",
 						index: 2
 					}
-				]
+        ],
+        num:0
 			};
 		},
 		components: {
@@ -208,25 +209,6 @@
 			StepperPlus,
 			Signature
     },
-    watch: {
-      specialWork(res) {
-        console.log(res)
-        this.sendData.specialWork = res;
-      },
-      harmAnalise(res) {
-        this.sendData.harmAnalise = res;
-      },
-      guarder(res) {
-        console.log(1111111111111)
-        this.sendData.guarder = res;
-      },
-      workDeptLeader(res) {
-        this.sendData.workDeptLeader = res;
-      },
-      worker(res) {
-        this.sendData.worker = res;
-      }
-    },
 		computed: mapState({
 			specialWork: state => state.gaochu.specialWork,
 			harmAnalise: state => state.gaochu.harmAnalise,
@@ -234,18 +216,13 @@
 			workDeptLeader: state => state.gaochu.workDeptLeader,
 			worker: state => state.gaochu.worker
     }),
-		created() {
-			// 获取显示List序列
-			this.gczyCode = this.$route.query.gczyCode || "";
-			// 设置显示List
-			this.status = this.$route.query.status || 0;
-			if (this.gczyCode) {
-				this.getData();
-			}
+		mounted() {
+			
 		},
-		beforeDestroy() {
-			this.$store.dispatch("gaochu/cleanState");
-		},
+		// beforeDestroy() {
+    //   console.log('destroy')
+		// 	this.$store.dispatch("gaochu/cleanState");
+		// },
 		methods: {
 			...mapMutations('gaochu', {
 				setTag: 'setTag'
@@ -336,7 +313,7 @@
 				this.$api.page_3
 					.htHseUpworkticketListData(sendData)
 					.then(res => {
-
+            console.log(res)
 						const info = res.list[0];
 						
 						this.sendData.id=info.id;
@@ -346,9 +323,15 @@
 						this.sendData.workHeight = Number(info.workHeight);
 						this.sendData.heightType = Number(info.heightType);
 						this.sendData.startTime = info.startTime;
-						this.sendData.endTime = info.endTime;
-						this.sendData.specialWork = info.specialWork.split(",");
-						this.sendData.harmAnalise = info.harmAnalise.split(",");
+            this.sendData.endTime = info.endTime;
+            info.specialWork.split(',').forEach((item)=>{
+              console.log(item)
+              this.sendData.specialWork.push(item-1)
+            })
+						info.harmAnalise.split(',').forEach((item)=>{
+              console.log(item)
+              this.sendData.harmAnalise.push(item-1)
+            })
 						
 						let workDeptLeader=[];
 						info.workDeptLeader.split(",").map(items=>{
@@ -466,9 +449,9 @@
           //   .catch(() => this.$Toast.clear());
         }
       },
-			pageBack() {
-				this.$router.back();
-			},
+			// pageBack() {
+			// 	this.$router.back();
+			// },
 			// 发送数据
 			postData() {
 				// 检测到输入不完整直接退出函数
@@ -757,10 +740,19 @@
 			worker(res) {
 				this.sendData.worker = res;
 			}
-		},
+    },
 		activated() {
-      console.log(111111111111111111)
-			console.log(this.$store.state);
+      console.log(window.history)
+      console.log(99999999999999999)
+      // 获取显示List序列
+			this.gczyCode = this.$route.query.gczyCode || "";
+			// 设置显示List
+			this.status = this.$route.query.status || 0;
+			if (this.gczyCode&&sessionStorage.getItem('flag')==='1') {
+        console.log(999)
+        this.getData();
+        sessionStorage.removeItem('flag')
+			}
 			this.sendData.id = "";
 			let zypId = this.$route.query.id;
       let zypStatus = this.$route.query.status;

@@ -1,6 +1,6 @@
 <template>
   <div class="quexian">
-    <van-nav-bar title="缺陷" left-text="返回" left-arrow @click-left="pageBack" />
+    <van-nav-bar title="缺陷" left-text="返回" right-text="操作" left-arrow @click-left="pageBack" @click-right="openAction"/>
     <!-- 空间设备 -->
     <div class="cell_group">
       <div class="cell">
@@ -53,7 +53,11 @@
       <!-- 发现时间 -->
       <cell-time v-model="sendData.findDate" title="发现时间" required></cell-time>
     </div>
-    <div class="next" @click="Next">提交</div>
+    <!-- <div class="next" @click="Next">提交</div> -->
+    <van-popup v-model="isShowAction" position="bottom" class="action">
+      <button @click="postData">保存</button>
+      <button @click="closeAction">取消</button>
+    </van-popup>
     <!-- 缺陷类型 -->
     <van-action-sheet
       v-model="defectTypeShow"
@@ -80,6 +84,7 @@ export default {
   mixins: [business],
   data() {
     return {
+      isShowAction:false,
       storeModule: "quexian",
       sendData: {
         description: "", //缺陷内容
@@ -109,6 +114,12 @@ export default {
     findPeopleName: state => state.quexian.findPeopleName
   }),
   methods: {
+    openAction() {
+      this.isShowAction = true;
+    },
+    closeAction() {
+      this.isShowAction = false;
+    },
     // 发送数据
     postData() {
       const that = this;
@@ -179,4 +190,19 @@ export default {
     box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.5);
   }
 }
+.action {
+    padding-left: 30px;
+    padding-right: 30px;
+    background-color: transparent;
+    button {
+      width: 100%;
+      height: 110px;
+      margin-bottom: 20px;
+      background-color: white;
+      border: none;
+      border-radius: 30px;
+      color: rgb(0, 118, 255);
+      font-size: 35px;
+    }
+  }
 </style>

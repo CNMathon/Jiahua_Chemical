@@ -238,20 +238,25 @@
 			workRen: state => state.linshi.workRen
 		}),
 		created() {
-			console.log(this.$route.query);
+			
+    },
+    activated(){
+      console.log(22222222222222222222)
+      console.log(this.$route);
 			// 获取显示List序列
 			this.zypCode = this.$route.query.zypCode || "";
 			// 设置显示List
 			this.status = this.$route.query.status || 0;
 			console.log("this.zypCode: ", this.zypCode);
-			if (this.zypCode) {
-				this.getData();
+			if (this.zypCode&&sessionStorage.getItem('flag')==='1') {
+        this.getData();
+        sessionStorage.removeItem('flag')
 			}
-		},
-		beforeDestroy() {
-			this.$store.dispatch("linshi/cleanState");
-			this.$destroy("LinShi");
-		},
+    },
+		// beforeDestroy() {
+		// 	this.$store.dispatch("linshi/cleanState");
+		// 	this.$destroy("LinShi");
+		// },
 		methods: {
 			...mapMutations('linshi', {
 				setTag: 'setTag'
@@ -342,7 +347,7 @@
 				this.$api.page_3
 					.htHseLsydzypListData(sendData)
 					.then(res => {
-						
+						console.log(res)
 						this.sendData.workContent = res.list[0].workContent;
 						this.sendData.workLocation = res.list[0].workLocation;
 						this.sendData.powerType = Number(res.list[0].powerType ? res.list[0].powerType : 0);
@@ -357,7 +362,7 @@
 						
 						let hazardIdentification = [];
 						res.list[0].hazardIdentification.split(",").map(items => {
-							hazardIdentification.push(this.list_1[items]);
+							hazardIdentification.push(this.list_1[items-1]);
 						})
 						this.setTag({
 							tags: {
@@ -366,25 +371,24 @@
 							}
 						});
 						
-						
 						let connectRen = [];
-						res.list[0].connectRen || "".split(",").map(items => {
+						res.list[0].connectRen.split(",").map(items => {
 							connectRen.push({
 								userName: items
 							});
 						})
-						
-						
+
+
 						let workCharger = [];
-						res.list[0].workCharger || "".split(",").map(items => {
+						res.list[0].workCharger.split(",").map(items => {
 							workCharger.push({
 								userName: items
 							});
 						})
 						
-						
+
 						let workRen = [];
-						res.list[0].workRen || "".split(",").map(items => {
+						res.list[0].workRen.split(",").map(items => {
 							workRen.push({
 								userName: items
 							});
@@ -395,7 +399,8 @@
 						this.sendData.connectRen = connectRen;
 						this.sendData.workCharger = workCharger;
 						this.sendData.workRen = workRen; 
-						
+
+						console.log(this.sendData);
 					})
 					.catch(() => {});
 			},

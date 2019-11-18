@@ -30,8 +30,8 @@ export default {
   },
   data() {
     return {
-      color: ["#D85A38", "#1890FF", "#5DB739"],
-      title: ["培训合格率", "隐患整改率", "达标排放合格率"],
+      color: ["#D85A38", "#1890FF", "#5DB739", "#8d4bbb"],
+      title: ["培训合格率", "持证上岗率", "隐患整改率", "达标排放合格率"],
       chartSettings: {
         seriesMap: [
           {

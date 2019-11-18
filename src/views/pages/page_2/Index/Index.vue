@@ -56,16 +56,18 @@
         title-inactive-color="rgba(0, 0, 0, .65)"
         title-active-color="#33A4E8"
       >
-        <div class="item-title">
-          <div class="item-title-item">危化品</div>
-          <div class="item-title-item">分厂</div>
-          <div class="item-title-item">库存</div>
-        </div>
-        <van-tab v-for="(item, index) in dangerInfo" :key="index" :title="item.text" >
-          <div class="item-area">
-            <Item size="big" :info="item.info" />
+        <div class="danger-content">
+          <div class="item-title">
+            <div class="item-title-item">危化品</div>
+            <div class="item-title-item">分厂</div>
+            <div class="item-title-item">库存</div>
           </div>
-        </van-tab>
+          <van-tab v-for="(item, index) in dangerInfo" :key="index" :title="item.text" >
+            <div class="item-area">
+              <Item size="big" :info="item.info" />
+            </div>
+          </van-tab>
+        </div>
       </van-tabs>
     </div>
     <!-- 环保外排监控 -->
@@ -473,5 +475,9 @@ export default {
       text-align: right
     }
   }
+}
+
+.danger-content {
+  padding: 0 20px 10px 20px;
 }
 </style>

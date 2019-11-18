@@ -336,16 +336,15 @@
 			work_permit_2: state => state.diaozhuang.work_permit_2,
 			work_permit_3: state => state.diaozhuang.work_permit_3
 		}),
-		beforeDestroy() {
-			this.$store.dispatch("diaozhuang/cleanState");
-		},
+		// beforeDestroy() {
+		// 	this.$store.dispatch("diaozhuang/cleanState");
+		// },
 		created() {
-			
+      console.log(33333333)
 			if(this.$route.query.zypcode){
 				this.zypcode = this.$route.query.zypcode || 0;
 				this.getInfo();
 			}
-			
 		},
 		methods: {
 			

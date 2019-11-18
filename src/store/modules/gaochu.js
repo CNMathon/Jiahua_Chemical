@@ -14,6 +14,7 @@ const getters = {};
 // actions
 const actions = {
   changTag({ commit }, tags) {
+    console.log(33333333)
     console.log(tags)
     commit("setTag", { tags });
   },
@@ -26,6 +27,7 @@ const actions = {
     commit("setTag", { tags });
   },
   cleanState({ commit }) {
+    console.log('clean')
     commit("resetState");
   }
 };
@@ -34,8 +36,13 @@ const actions = {
 const mutations = {
   setTag(state, { tags }) {
     console.log(tags.value)
-    state[tags.key] = tags.value;
-    console.log(tags.key)
+    // tags.value.forEach((item)=>{
+    //   console.log(item)
+    //   state[tags.key].push(item)
+    // })
+    state[tags.key] =tags.value;
+    // state[tags.key] =JSON.parse(state[tags.key]);
+    // console.log(JSON.stringify(tags.value))
     console.log(state)
   },
   resetState(state) {

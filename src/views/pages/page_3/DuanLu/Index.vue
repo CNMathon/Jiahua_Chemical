@@ -59,7 +59,7 @@
         storeKey="workCharger"
         v-model="sendData.workCharger"
       ></cell-select-user>
-      {{sendData.workCharger}}
+      <!-- {{sendData.workCharger}} -->
       <!-- 涉及部门 -->
       <div class="cell">
         <div class="cell_title">

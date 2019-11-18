@@ -131,18 +131,31 @@
 		created() {
 
 			// 获取显示List序列
-			this.zypCode = this.$route.query.zypCode || 0;
+			// this.zypCode = this.$route.query.zypCode || 0;
+			// // 设置显示List
+			// this.status = this.$route.query.status || 0;
+			// console.log("this.zypCode: ", this.zypCode);
+			// if (this.$route.query.zypCode) {
+			// 	this.getData();
+			// }
+    },
+    activated(){
+      console.log(22222222222222222222)
+      console.log(this.$route);
+			// 获取显示List序列
+			this.zypCode = this.$route.query.zypCode || "";
 			// 设置显示List
 			this.status = this.$route.query.status || 0;
 			console.log("this.zypCode: ", this.zypCode);
-			if (this.$route.query.zypCode) {
-				this.getData();
+			if (this.zypCode&&sessionStorage.getItem('flag')==='1') {
+        this.getData();
+        sessionStorage.removeItem('flag')
 			}
-		},
-		beforeDestroy() {
-			this.$store.dispatch("linshi/cleanState");
-			this.$destroy("LinShi");
-		},
+    },
+		// beforeDestroy() {
+		// 	this.$store.dispatch("linshi/cleanState");
+		// 	this.$destroy("LinShi");
+		// },
 		methods: {
 
 			...mapMutations('linshi', {
@@ -261,7 +274,7 @@
 
 
 						let connectRen = [];
-						res.list[0].connectRen || "".split(",").map(items => {
+						res.list[0].connectRen.split(",").map(items => {
 							connectRen.push({
 								userName: items
 							});
@@ -269,7 +282,7 @@
 
 
 						let workCharger = [];
-						res.list[0].workCharger || "".split(",").map(items => {
+						res.list[0].workCharger.split(",").map(items => {
 							workCharger.push({
 								userName: items
 							});
@@ -277,7 +290,7 @@
 						
 
 						let workRen = [];
-						res.list[0].workRen || "".split(",").map(items => {
+						res.list[0].workRen.split(",").map(items => {
 							workRen.push({
 								userName: items
 							});
