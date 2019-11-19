@@ -101,6 +101,12 @@ const information = {
       `${base.sq}papers/htZxksPapers/sumHtZxksPapers`,
       qs.stringify(params)
     );
+  },
+  // 空间设备列表
+  spaceDeviceSelectIndexNew(params) {
+    return axios.get(`${base.sq}deviceinfo/deviceSpace/listData.json`, {
+      params: params
+    })
   }
 };
 

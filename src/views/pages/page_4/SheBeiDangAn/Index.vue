@@ -1,51 +1,33 @@
 <template>
   <div class="cheng-bao-shang-ren-yuan">
     <van-sticky>
-      <van-nav-bar
-        title="设备档案"
-        left-text="返回"
-        left-arrow
-        @click-left="pageBack"
-      />
+      <van-nav-bar title="设备档案" left-text="返回" left-arrow @click-left="pageBack" />
       <div class="tab">
         <div
           class="tab__item"
           :class="[active === 0 ? 'tab__item-active' : '']"
           @click="changeTabActive(0)"
-        >
-          全部设备
-        </div>
+        >全部设备</div>
         <div
           class="tab__item"
           :class="[active === 1 ? 'tab__item-active' : '']"
           @click="changeTabActive(1)"
-        >
-          书签设备
-        </div>
+        >书签设备</div>
       </div>
-      <j-filter-bar
-        v-model="searchValue"
-        @search="getPageData(true)"
-        @tap="showFilter = true"
-      ></j-filter-bar>
+      <j-filter-bar v-model="searchValue" @search="getPageData(true)" @tap="showFilter = true"></j-filter-bar>
     </van-sticky>
     <j-filter v-model="showFilter" @confirm="confirmFilter">
-      <j-filter-search
-        v-model="searchValues"
-        @search="filterSearch"
-      ></j-filter-search>
-      <j-filter-item
-        title="专业类别"
-        :actions="sheetActions_1"
-        @select="filterSelect_1"
-      ></j-filter-item>
-      <j-filter-item
-        title="所属分厂"
-        :actions="sheetActions_2"
-        @select="filterSelect_2"
-      ></j-filter-item>
+      <j-filter-search v-model="searchValues" @search="filterSearch"></j-filter-search>
+      <j-filter-item title="专业类别" :actions="sheetActions_1" @select="filterSelect_1"></j-filter-item>
+      <j-filter-item title="所属分厂" :actions="sheetActions_2" @select="filterSelect_2"></j-filter-item>
     </j-filter>
     <van-pull-refresh v-model="isLoading" @refresh="getPageData(true)">
+      <div class="device-head">
+        <div class="device-head__item">设备名称</div>
+        <div class="device-head__item">设备位号</div>
+        <div class="device-head__item">专业类别</div>
+        <div class="device-head__item">书签</div>
+      </div>
       <van-list
         v-model="loading"
         :finished="finished"
@@ -54,19 +36,13 @@
         finished-text="没有更多了"
         @load="getPageData()"
       >
-        <div class="device-head">
-          <div class="device-head__item">设备名称</div>
-          <div class="device-head__item">设备位号</div>
-          <div class="device-head__item">专业类别</div>
-          <div class="device-head__item">书签</div>
-        </div>
         <div v-for="(item, index) in 2" :key="index">
           <div class="device-list" v-if="index === active">
-            <div v-for="(items, indexs) in 8" :key="indexs">
-              <div class="device-item" @click="toDetail(indexs)">
-                <div class="device-item__infos">除盐蒸发器</div>
-                <div class="device-item__infos">E1091</div>
-                <div class="device-item__infos">动设备</div>
+            <div v-for="(items, indexs) in pageList" :key="indexs">
+              <div class="device-item" @click="toDetail(index)">
+                <div class="device-item__infos">{{items.deviceName}}</div>
+                <div class="device-item__infos">{{items.devicePosition}}</div>
+                <div class="device-item__infos" v-text="setSpecialtyType(items.specialtyType)"></div>
                 <div class="device-item__infos">
                   <van-icon
                     class-prefix="iconfont"
@@ -84,6 +60,7 @@
 </template>
 <script>
 import { mixin } from "@/mixin/mixin";
+import { watch } from "fs";
 export default {
   name: "cheng_bao_shang_ren_yuan_index",
   mixins: [mixin],
@@ -116,7 +93,9 @@ export default {
         { name: "水处理站", index: 3 },
         { name: "硫化厂", index: 4 },
         { name: "脂肪酸厂", index: 5 }
-      ]
+      ],
+      specialtyType: "",
+      deviceName: ""
     };
   },
   methods: {
@@ -124,18 +103,24 @@ export default {
       this.active = index;
     },
     // 过滤-搜索
-    filterSearch(e) {
-      console.log("e: ", e);
+    filterSearch() {
+      console.log(this.searchValues);
+      this.deviceName = this.searchValues;
     },
     filterSelect_1(e) {
       console.log("e: ", e);
+      this.specialtyType = e.index;
     },
     filterSelect_2(e) {
       console.log("e: ", e);
     },
     // 确认筛选
-    confirmFilter() {},
-    // 获取承包商人员列表
+    confirmFilter() {
+      console.log(123, this.deviceName, this.specialtyType);
+      this.deviceName = this.searchValues;
+      this.getPageData();
+    },
+    // 获取设备列表
     getPageData(refresh = false) {
       if (refresh) {
         this.pageNow = 1;
@@ -149,15 +134,21 @@ export default {
         this.isLoading = false;
         return;
       }
-      let sendData = {
-        pageNo: this.pageNow,
-        pageSize: this.pageSize,
-        empName: this.searchValue,
-        __sid: this.$userInfo.sessionId
-      };
+
       this.$api.page_4
-        .htCbsPersonInf(sendData)
+        .spaceDeviceSelectIndexNew({
+          pageNo: this.pageNow,
+          pageSize: this.pageSize,
+          empName: this.searchValue,
+          __sid: this.$userInfo.sessionId,
+          spaceStatus: 0,
+          spaceState: 0,
+
+          deviceName: this.deviceName,
+          specialtyType: this.specialtyType
+        })
         .then(res => {
+          console.log("res", res);
           // 加载状态结束
           this.loading = false;
           this.isLoading = false;
@@ -178,6 +169,42 @@ export default {
     },
     toDetail(id) {
       this.$router.push({ path: `./detail/${id}` });
+    },
+    //设置设备类别
+    setSpecialtyType(type) {
+      switch (type) {
+        case 0:
+          return "无";
+          break;
+        case 1:
+          return "电气";
+          break;
+        case 2:
+          return "仪表";
+          break;
+        case 3:
+          return "机械";
+          break;
+        case 4:
+          return "特种";
+          break;
+        case 5:
+          return "化验";
+          break;
+        case 6:
+          return "安全附件";
+          break;
+      }
+    },
+  },
+  created() {
+    this.getPageData();
+  },
+  watch: {
+    searchValue(val, oldVal) {
+      //普通的watch监听
+      this.specialtyType = "";
+      this.deviceName = val;
     }
   }
 };

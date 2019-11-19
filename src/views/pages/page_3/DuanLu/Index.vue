@@ -380,7 +380,7 @@ export default {
       }
       console.log("sendData: ", sendData);
       this.$api.page_3
-        .htHseDlzypSave(sendData)
+        .htHseDlzypSave(sendData, this.$userInfo.sessionId)
         .then(res => {
           console.log("res: ", res);
           if (again) {

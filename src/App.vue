@@ -51,7 +51,14 @@
     width: 300px;
   }
 }
-
+.home {
+  min-height: 100vh;
+  position: relative;
+  }
+.list-card-area {
+  width: 90%;
+  margin: 0 auto;
+}
 .z-index-highest {
   z-index: 999 !important;
 }

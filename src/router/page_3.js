@@ -23,6 +23,49 @@ const routes = {
       name: "daibanren",
       component: SelectDaiBanRen
     },
+    // 我发起的
+    {
+      path: "/page_3/wofaqi/index",
+      name: "WoFaqi_Index",
+      component: () => import("../views/pages/page_3/WoFaQi/Index.vue")
+    },
+    // 我处理的
+    {
+      path: "/page_3/wochuli/index",
+      name: "WoChuLi_Index",
+      component: () => import("../views/pages/page_3/WoChuLi/Index.vue")
+    },
+    // 热力机械管理
+    {
+      path: "/page_3/relijixie",
+      name: "ReLiJiXie",
+      redirect: "/page_3/relijixie/index",
+      component: () => import("../views/pages/page_3/ReLiJiXie/Home.vue"),
+      children: [
+        {
+          path: "/page_3/relijixie/index",
+          name: "ReLiJiXie_Index",
+          component: () => import("../views/pages/page_3/ReLiJiXie/Index.vue"),
+          meta: {
+            name: "热力机械"
+          }
+        },
+        {
+          path: "/page_3/relijixie/details",
+          name: "relijixie_Details",
+          component: () => import("../views/pages/page_3/ReLiJiXie/Details.vue"),
+          meta: {
+            name: "热力机械-详情"
+          }
+        },
+      ]
+    },
+    // 工单管理
+    {
+      path: "/page_3/gongdanguanli/index",
+      name: "GongDanGuanLi_Index",
+      component: () => import("../views/pages/page_3/GongDanGuanLi/Index.vue")
+    },
     // 动火安全
     {
       path: "/page_3/donghuo",
@@ -79,10 +122,10 @@ const routes = {
           component: () => import("../views/pages/page_3/SelectUser/Index.vue")
         },
         {
-          path: "/page_3/donghuo/confirm",
-          name: "donghuo_confirm",
-          component: () => import("../views/pages/page_3/DongHuo/Confirm.vue")
-        }
+          path: "/page_3/donghuo/list",
+          name: "donghuo_list",
+          component: () => import("../views/pages/page_3/DongHuo/List.vue")
+        },
       ]
     },
     {

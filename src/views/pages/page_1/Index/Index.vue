@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <van-nav-bar title="首页" fixed="true" class="navbar">
+    <van-nav-bar title="首页" fixed class="navbar">
       <div slot="left" class="sign-out" @click="signOut">退出</div>
       <van-icon
         slot="right"
@@ -50,76 +50,14 @@
               </van-col>
               <van-col span="6"></van-col>
             </van-row>
+            <!-- 数据面板 -->
             <div class="rongliang">
-              <div class="box">
+              <div class="box" v-for="(item, index) in dataPanel" :key="index">
                 <p class="p1">
-                  15511.1
-                  <span>t/h</span>
+                  <span>{{item.value}}</span>
+                  <span>{{item.unit}}</span>
                 </p>
-                <p class="p2">总产汽</p>
-              </div>
-              <div class="box">
-                <p class="p1">
-                  15511.1
-                  <span>t/h</span>
-                </p>
-                <p class="p2">外供蒸汽</p>
-              </div>
-              <div class="box">
-                <p class="p1">
-                  15511.1
-                  <span>t/h</span>
-                </p>
-                <p class="p2">外销蒸汽</p>
-              </div>
-              <div class="box">
-                <p class="p1">
-                  15511.1
-                  <span>t/h</span>
-                </p>
-                <p class="p2">烧碱A套电流</p>
-              </div>
-              <div class="box">
-                <p class="p1">
-                  15511.1
-                  <span>t/h</span>
-                </p>
-                <p class="p2">烧碱B套电流</p>
-              </div>
-              <div class="box">
-                <p class="p1">
-                  15511.1
-                  <span>t/h</span>
-                </p>
-                <p class="p2">淳进酸流量</p>
-              </div>
-              <div class="box">
-                <p class="p1">
-                  15511.1
-                  <span>t/h</span>
-                </p>
-                <p class="p2">算蒸馏流量</p>
-              </div>
-              <div class="box">
-                <p class="p1">
-                  15511.1
-                  <span>t/h</span>
-                </p>
-                <p class="p2">酸水解流量</p>
-              </div>
-              <div class="box">
-                <p class="p1">
-                  15511.1
-                  <span>t/h</span>
-                </p>
-                <p class="p2">硫酸分机转速</p>
-              </div>
-              <div class="box">
-                <p class="p1">
-                  15511.1
-                  <span>t/h</span>
-                </p>
-                <p class="p2">新材料甲苯</p>
+                <p class="p2">{{item.text}}</p>
               </div>
               <div style="clear:both"></div>
             </div>
@@ -128,46 +66,16 @@
         <van-tab title="安全" class="tabs-box">
           <div class="safeMsg">
             <van-row class="tip">
-              <van-col span="11">当日承包商数量：50</van-col>
-              <van-col style="text-align:right" span="13">当日承包商人员数量：483</van-col>
+              <van-col span="11">当日承包商数量：{{this.cbsCount.cbscount}}</van-col>
+              <van-col style="text-align:right" span="13">当日承包商人员数量：{{cbsCount.cbsrycount}}</van-col>
             </van-row>
           </div>
           <div class="tszyBox">
             <div class="title">当日公司特殊作业</div>
             <van-row class="tip">
-              <van-col span="6">
-                <p>动火作业</p>
-                <p>10</p>
-              </van-col>
-              <van-col span="6">
-                <p>盲板抽堵</p>
-                <p>10</p>
-              </van-col>
-              <van-col span="6">
-                <p>受限空间</p>
-                <p>10</p>
-              </van-col>
-              <van-col span="6">
-                <p>高处作业</p>
-                <p>10</p>
-              </van-col>
-            </van-row>
-            <van-row class="tip">
-              <van-col span="6">
-                <p>动土作业</p>
-                <p>10</p>
-              </van-col>
-              <van-col span="6">
-                <p>断路作业</p>
-                <p>10</p>
-              </van-col>
-              <van-col span="6">
-                <p>临时用电</p>
-                <p>10</p>
-              </van-col>
-              <van-col span="6">
-                <p>吊装作业</p>
-                <p>10</p>
+              <van-col span="6" v-for="(item, index) in spWork" :key="index">
+                <p>{{item.text}}</p>
+                <p>{{item.value}}</p>
               </van-col>
             </van-row>
           </div>
@@ -405,7 +313,9 @@ import ActionBar from "../components/ActionBar";
 import SelectTime from "./components/SelectTime";
 import LineChart from "./components/LineChart";
 import LineCharts from "./components/LineCharts";
+import { business } from "@/mixin/business";
 export default {
+  mixins: [business],
   name: "home",
   components: {
     Liquidfill,
@@ -418,7 +328,7 @@ export default {
   },
   data() {
     return {
-      isLoading: false,
+      isLoading: true,
       nav1: [
         {
           text: "动力中心",
@@ -448,56 +358,232 @@ export default {
           router: "./liusuan"
         }
       ],
+      dataPanel: [
+        {
+          text: "总产汽",
+          enText: "DLZX_ZCQ",
+          value: "",
+          unit: "t/h"
+        },
+        {
+          text: "外供蒸汽",
+          enText: "DLZX_WGZQ",
+          value: "",
+          unit: "t/h"
+        },
+        {
+          text: "外销蒸汽",
+          enText: "DLZX_WXZQ",
+          value: "",
+          unit: "t/h"
+        },
+        {
+          text: "烧碱A套电流",
+          enText: "SJC_ADL",
+          value: "",
+          unit: "KA"
+        },
+        {
+          text: "烧碱B套电流",
+          enText: "SJC_BDL",
+          value: "",
+          unit: "KA"
+        },
+        {
+          text: "醇进酸流量",
+          enText: "ZFCC_FIC1325",
+          value: "",
+          unit: "kg/h"
+        },
+        {
+          text: "酸蒸馏流量",
+          enText: "ZFCC_FIC0501",
+          value: "",
+          unit: "kg/h"
+        },
+        {
+          text: "酸水解流量",
+          enText: "ZFCC_ZFCCSSJ",
+          value: "",
+          unit: "kg/h"
+        },
+        {
+          text: "硫酸分机转速",
+          enText: "LSC_SITS_1701",
+          value: "",
+          unit: "rpm"
+        },
+        {
+          text: "新材料甲苯",
+          enText: "XCLC_XCLCJBZL",
+          value: "",
+          unit: "kg/h"
+        }
+      ],
+      chartPanel: [
+        {
+          id: "dongli",
+          text: "动力中心",
+          enText: "DLZX_DLZXFH",
+          value: 0,
+          level: ""
+        },
+        {
+          id: "liusuan",
+          text: "硫酸厂",
+          enText: "LSC_LSCFH",
+          value: 0,
+          level: ""
+        },
+        {
+          id: "shaojian",
+          text: "烧碱厂",
+          enText: "SJC_SJCFH",
+          value: 0,
+          level: ""
+        },
+        {
+          id: "xincailiao",
+          text: "新材料厂",
+          enText: "XCLC_XCLCFH",
+          value: 0,
+          level: ""
+        },
+        {
+          id: "chunjinsuan",
+          text: "淳进酸",
+          enText: "ZFCC_ZFCCCJSFH",
+          value: 0,
+          level: ""
+        },
+        {
+          id: "suanshuijie",
+          text: "酸水解",
+          enText: "ZFCC_ZFCCSSJFH",
+          value: 0,
+          level: ""
+        },
+        {
+          id: "suanzhengliu",
+          text: "酸蒸馏",
+          enText: "ZFCC_ZFCCSZLFH",
+          value: 0,
+          level: ""
+        }
+      ],
+      envChartPanel: [
+        {
+          id: "so2",
+          text: "2#排放口SO2",
+          enText: "HB_2SO2PJZ",
+          value: 0,
+          level: "35mg/Nm³"
+        },
+        {
+          id: "nox",
+          text: "3#排放口NOX",
+          enText: "HB_3NOXPJZ",
+          value: 0,
+          level: "50mg/Nm³"
+        },
+        {
+          id: "yanchen",
+          text: "4#排放口烟尘",
+          enText: "HB_4FCPJZ",
+          value: 0,
+          level: "20mg/Nm³"
+        },
+        {
+          id: "cod",
+          text: "污水口COD排放",
+          enText: "HB_CODPJZ",
+          value: 0,
+          level: "500mg/Nm³"
+        },
+        {
+          id: "andan",
+          text: "污水口氨氮排放",
+          enText: "HB_ADPJZ",
+          value: 0,
+          level: "35mg/L"
+        },
+        {
+          id: "ph",
+          text: "污水口PH排放",
+          enText: "HB_PHPJZ",
+          value: 0,
+          level: "6-9"
+        },
+        {
+          id: "voc",
+          text: "三废VOC(NMHC)",
+          enText: "HB_VOCPJZ",
+          value: 0,
+          level: "120"
+        }
+      ],
+      spWork: [
+        {
+          text: "动火作业",
+          value: 0
+        },
+        {
+          text: "盲板抽堵",
+          value: 0
+        },
+        {
+          text: "受限空间",
+          value: 0
+        },
+        {
+          text: "高处作业",
+          value: 0
+        },
+        {
+          text: "动土作业",
+          value: 0
+        },
+        {
+          text: "断路作业",
+          value: 0
+        },
+        {
+          text: "临时用电",
+          value: 0
+        },
+        {
+          text: "吊装作业",
+          value: 0
+        }
+      ],
+      cbsCount: {
+        cbscount: 0,
+        cbsrycount: 0
+      },
       date_1: new Date(),
       date_2: new Date()
     };
   },
-  mounted() {
-    this.$nextTick(() => {
-      let dongli = this.$echarts.init(document.getElementById("dongli"));
-      this.drawRing(dongli, "动力中心", "73.32%");
-      let liusuan = this.$echarts.init(document.getElementById("liusuan"));
-      this.drawRing(liusuan, "硫酸厂", "73.32%");
-      let shaojian = this.$echarts.init(document.getElementById("shaojian"));
-      this.drawRing(shaojian, "烧碱厂", "73.32%");
-      let xincailiao = this.$echarts.init(
-        document.getElementById("xincailiao")
-      );
-      this.drawRing(xincailiao, "新材料厂", "73.32%");
-      let chunjinsuan = this.$echarts.init(
-        document.getElementById("chunjinsuan")
-      );
-      this.drawRing(chunjinsuan, "淳进酸", "73.32%");
-      let suanshuijie = this.$echarts.init(
-        document.getElementById("suanshuijie")
-      );
-      this.drawRing(suanshuijie, "酸水解", "73.32%");
-      let suanzhengliu = this.$echarts.init(
-        document.getElementById("suanzhengliu")
-      );
-      this.drawRing(suanzhengliu, "酸蒸馏", "73.32%");
-    });
-  },
+  mounted() {},
   methods: {
+    // chartPanel 初始化
+    // => 参数1 => chartPanel数据结构 => Array
+    echartDrawRing(arr) {
+      console.log("arr", arr);
+      arr.map(item => {
+        this.$nextTick(() =>
+          this.drawRing(
+            this.$echarts.init(document.getElementById(item.id)),
+            item.text,
+            this.toPercent(item.value / 100, 2),
+            item.level
+          )
+        );
+      });
+    },
     changeTab(e) {
       if (e == 2) {
-        this.$nextTick(() => {
-          let so2 = this.$echarts.init(document.getElementById("so2"));
-          this.drawRing(so2, "2#排放口SO2", "10.94%", "35mg/Nm³");
-          let nox = this.$echarts.init(document.getElementById("nox"));
-          this.drawRing(nox, "3#排放口NOX", "35.23%", "50mg/Nm³");
-          let yanchen = this.$echarts.init(document.getElementById("yanchen"));
-          this.drawRing(yanchen, "4#排放口烟尘", "2.48%", "20mg/Nm³");
-          let cod = this.$echarts.init(document.getElementById("cod"));
-          this.drawRing(cod, "污水口COD排放", "421.38", "500mg/Nm³");
-
-          let andan = this.$echarts.init(document.getElementById("andan"));
-          this.drawRing(andan, "污水口氨氮排放", "1.42", "35mg/L");
-          let ph = this.$echarts.init(document.getElementById("ph"));
-          this.drawRing(ph, "污水口PH排放", "8.31", "6-9");
-          let voc = this.$echarts.init(document.getElementById("voc"));
-          this.drawRing(voc, "三废VOC(NMHC)", "98", "120");
-        });
+        this.echartDrawRing(this.envChartPanel, true);
       }
     },
     drawRing(obj, title, value, level) {
@@ -560,7 +646,7 @@ export default {
             startAngle: "0",
             name: "访问来源",
             type: "pie",
-            animation: false,
+            animation: true,
             radius: ["65%", "80%"],
             avoidLabelOverlap: false,
             label: {
@@ -575,23 +661,24 @@ export default {
               }
             },
             data: [
+              // 1.20
               {
-                value: 150,
-                name: "直接访问",
+                value: 0.125,
+                name: "剩余值",
                 itemStyle: {
                   color: "#979797"
                 }
               },
               {
-                value: 300,
-                name: "邮件营销",
+                value: 0.25,
+                name: "模拟空白",
                 itemStyle: {
                   color: "#ffffff"
                 }
               },
               {
-                value: 750,
-                name: "邮件营销",
+                value: 0.625,
+                name: "有效值",
                 itemStyle: {
                   color: "#3C54CA"
                 }
@@ -600,9 +687,6 @@ export default {
           }
         ]
       });
-      // let option={
-
-      // }
     },
     // 退出
     signOut() {
@@ -628,13 +712,82 @@ export default {
       this.$router.push({ path: router });
     },
     getPageList() {
-      this.isLoading = false
+      let tagNames = [];
+      let finishCount = 0;
+      this.isLoading = false;
+
+      // let promise = new Promise((resolve, reject) => {
+      //   if (finishCount == 3) {
+      //     resolve(); // pending ——> resolved 参数将传递给对应的回调方法
+      //   } else {
+      //     reject(); // pending ——> rejectd
+      //   }
+      // });
+
+      // promise.then(() => console.log('ok'))
+
+      // 拼接查询参数
+      this.dataPanel.map(item => tagNames.push(item.enText));
+      this.chartPanel.map(item => tagNames.push(item.enText));
+      this.envChartPanel.map(item => tagNames.push(item.enText));
+
+      console.log(tagNames);
+      console.log(String(tagNames));
+
       this.$api.page_1
-        .getRtMonTagInfosByNames()
+        .getRtMonTagInfosByNames({
+          tagNames: String(tagNames)
+        })
+        .then(res => {
+          console.log(res);
+          finishCount++
+          let res_dataPanel = res.filter((item, index) => index <= 9);
+          let res_chartPanel = res.filter(
+            (item, index) => index > 9 && index <= 16
+          );
+          let res_envChartPanel = res.filter((item, index) => index > 16);
+          console.log("res_dataPanel", res_dataPanel);
+          console.log("res_chartPanel", res_chartPanel);
+          console.log("res_envChartPanel", res_envChartPanel);
+
+          res_dataPanel.map(
+            (item, index) =>
+              (this.dataPanel[index].value = item.Value.toFixed(2))
+          );
+          res_chartPanel.map(
+            (item, index) =>
+              (this.chartPanel[index].value = item.Value.toFixed(2))
+          );
+          res_envChartPanel.map(
+            (item, index) =>
+              (this.envChartPanel[index].value = item.Value.toFixed(2))
+          );
+          this.echartDrawRing(this.chartPanel);
+        });
+      this.$api.page_1.hsezyCount().then(res => {
+        finishCount++
+        console.log("res_zyCount", res);
+        this.spWork[0].value = res.dhzyCount;
+        this.spWork[1].value = res.mbzyCount;
+        this.spWork[2].value = res.sxkjCount;
+        this.spWork[3].value = res.gczyCount;
+        this.spWork[4].value = res.dtzyCount;
+        this.spWork[5].value = res.dlzyCount;
+        this.spWork[6].value = res.lsydCount;
+        this.spWork[7].value = res.dzzyCount;
+      });
+
+      this.$api.page_1.hseCBSCount().then(res => {
+        finishCount++
+        console.log("res_CBSCount", res);
+        this.cbsCount.cbscount = res.cbscount;
+        this.cbsCount.cbsrycount = res.cbsrycount;
+      });
+
     }
   },
   created() {
-    this.getPageList()
+    this.getPageList();
   }
 };
 </script>
@@ -796,12 +949,17 @@ export default {
       margin: 0;
     }
     .p1 {
+      display: flex;
+      justify-content: space-between;
       font-size: 40px;
       font-weight: bold;
-      span {
-        font-size: 14px;
+      span:nth-child(1) {
+        font-size: 30px;
+        font-weight: bold;
+      }
+      span:nth-child(2) {
+        font-size: 20px;
         font-weight: normal;
-        margin-left: 5px;
       }
     }
     .p2 {

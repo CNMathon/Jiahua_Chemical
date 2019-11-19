@@ -918,7 +918,7 @@
 				};
 
 				this.$api.page_3
-					.htHseDzzypSave(sendData)
+					.htHseDzzypSave(sendData, this.$userInfo.sessionId)
 					.then(res => {
 						console.log("res: ", res);
 						messageId = res.message;

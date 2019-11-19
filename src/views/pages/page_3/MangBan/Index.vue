@@ -473,9 +473,9 @@ export default {
           dataStrArr[i] = `|||||||||||&|&`;
           continue;
         }
-        dataStrArr[i] = `${pipe[i].pipeName}|${pipe[i].pipeMedium}|${
+        dataStrArr[i] = `${pipe[i].pipeName}|${pipe[i].pipeMedium}|${pipe[i].pipeTemp}|${
           pipe[i].pipePressure
-        }|${formatMaterial(pipe[i].pipeMaterial)}|${pipe[i].pipeSpec}|${
+        }|${pipe[i].pipeMaterial}|${pipe[i].pipeSpec}|${
           pipe[i].pipeNumber
         }|${pipe[i].pipeBlockTime}|${pipe[i].pipePullTime}|${
           pipe[i].pipeBlockOperator[0].userName
@@ -506,7 +506,7 @@ export default {
         return obj;
       });
       console.log("finSendData: ", finSendData);
-      this.$api.page_3.htHseMbzypSave(finSendData).then(res => {});
+      this.$api.page_3.htHseMbzypSave(finSendData, this.$userInfo.sessionId).then(res => {});
     },
 
     // 材质选择取消

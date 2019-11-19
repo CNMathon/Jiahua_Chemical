@@ -1,10 +1,10 @@
 <template>
-  <div class="confirm_item BGblue">
+  <div class="confirm_item BGblue" >
     <div class="confirm_item_content">
       <slot></slot>
     </div>
     <div class="confirm_item_check success">
-      <van-checkbox v-model="checked" checked-color="#07c160" @click="showSignature(0)"></van-checkbox>
+      <van-checkbox v-model="localChecked" checked-color="#07c160" @click="showSignature(0)" :disabled="disable"></van-checkbox>
     </div>
     <div class="confirm_item_signature" v-if="img">
       <van-image width="100%" height="100%" fit="scale-down" :src="img" />
@@ -18,7 +18,7 @@ export default {
   name: "signature",
   data() {
     return {
-      checked: false,
+      localChecked: this.checked,
       tempChecked: Boolean
     };
   },
@@ -27,13 +27,17 @@ export default {
       type: String,
       default: ""
     },
+    checked: {
+      type: Boolean,
+      default: false
+    },
     disable: {
       type: Boolean,
       default: false
     }
   },
   watch: {
-    checked(val) {
+    localChecked(val) {
       // this.tempChecked
       //   this.checked = false
       // if (this.disable) {

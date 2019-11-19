@@ -1,12 +1,12 @@
 <template>
-  <div class="cell" :class="[border ? 'border' : '',disable? 'disable': '']">
+  <div class="cell" :class="[border ? 'border' : '',disable? 'disable': '']" @click="showPicker()">
     <div class="cell_title">
       <span>{{ title }}</span>
       <span class="required" v-if="required">*</span>
     </div>
-    <div class="cell_value" @click="showPicker()">{{ showText() }}</div>
+    <div class="cell_value" >{{ showText() }}</div>
     <van-icon name="arrow" />
-    <van-popup v-model="pickerShow" position="bottom">
+    <van-popup v-model="pickerShow" position="bottom" @click.stop>
       <van-picker
         show-toolbar
         :title="title"

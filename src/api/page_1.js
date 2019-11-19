@@ -8,7 +8,19 @@ import qs from "qs"; // 根据需求是否导入qs模块
 
 const article = {
   getRtMonTagInfosByNames(params) {
-    return axios.get(`${base.mes2}GetRtMonTagInfosByNames`, qs.stringify(params))
+    return axios.get(`${base.mes2}GetRtMonTagInfosByNames`, {
+    	params: params
+    })
+  },
+  hsezyCount(params) {
+  	return axios.get(`${base.sqsta}dp/hsezyCount`, {
+    	params: params
+    })
+  },
+  hseCBSCount(params) {
+  	return axios.get(`${base.sqsta}dp/hseCBSCount`, {
+    	params: params
+    })
   }
 };
 

@@ -124,8 +124,10 @@ export default {
     this.getPageData();
     this.$store.dispatch("donghuo/cleanState");
     this.$store.commit("donghuo/delete_KeepAlive", "donghuoindex");
+    this.$store.commit("donghuo/delete_KeepAlive", "donghuoindex2");
     this.$nextTick(() => {
       this.$store.commit("donghuo/add_KeepAlive", "donghuoindex");
+      this.$store.commit("donghuo/add_KeepAlive", "donghuoindex2");
     });
   },
   methods: {

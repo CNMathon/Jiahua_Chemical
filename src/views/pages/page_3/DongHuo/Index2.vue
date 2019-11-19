@@ -87,81 +87,70 @@
           <div class="head_2">确认</div>
           <div class="head_3">确认人</div>
         </div>
-        <div class="confirm_list">
+        <div class="confirm_list" v-if="childrenData[0]">
           <Signature
-            :checked="checked[0] ? checked[0].checked : false"
-            :img="checked[0] ? checked[0].img : ''"
+            :checked="childrenData[0].safetyStatus === 1"
+            disable
+            :img="childrenData[0].affirmRen"
           >
             <span slot>动火设备内部构件清理干净,蒸汽吹扫或水洗合格,达到用火条件。</span>
           </Signature>
           <Signature
-            :checked="checked[1] ? checked[1].checked : false"
-            :img="checked[1] ? checked[1].img : ''"
+            :checked="childrenData[1].safetyStatus === 1"
+            disable
+            :img="childrenData[1].affirmRen"
           >
-            <span slot>断开与动火设备相连接的所有管线,加盲板</span>
-            <span>
-              <van-stepper :min="0" v-model="manbanNumber" />
-            </span>
-            <span slot>块</span>
+            <span slot>{{childrenData[1].safetyCs}}</span>
           </Signature>
           <Signature
-            :checked="checked[2] ? checked[2].checked : false"
-            :img="checked[2] ? checked[2].img : ''"
+            :checked="childrenData[2].safetyStatus === 1"
+            disable
+            :img="childrenData[2].affirmRen"
           >
             <div slot>动火点周围的下水井、地漏、地沟、电缆沟等已清除易燃物,并已采取覆盖、铺沙、水封等手段进行隔离</div>
           </Signature>
           <Signature
-            :checked="checked[3] ? checked[3].checked : false"
-            :img="checked[3] ? checked[3].img : ''"
+            :checked="childrenData[3].safetyStatus === 1"
+            disable
+            :img="childrenData[3].affirmRen"
           >
             <div slot>罐区内动火点同一围堰内和防火间距内的油罐不同时进行脱水作业</div>
           </Signature>
           <Signature
-            :checked="checked[4] ? checked[4].checked : false"
-            :img="checked[4] ? checked[4].img : ''"
+            :checked="childrenData[4].safetyStatus === 1"
+            disable
+            :img="childrenData[4].affirmRen"
           >
             <div slot>高处作业已采取防火花飞溅措施</div>
           </Signature>
           <Signature
-            :checked="checked[5] ? checked[5].checked : false"
-            :img="checked[5] ? checked[5].img : ''"
+            :checked="childrenData[5].safetyStatus === 1"
+            disable
+            :img="childrenData[5].affirmRen"
           >
             <div slot>动火点周围易燃物已清除</div>
           </Signature>
           <Signature
-            :checked="checked[6] ? checked[6].checked : false"
-            :img="checked[6] ? checked[6].img : ''"
+            :checked="childrenData[6].safetyStatus === 1"
+            disable
+            :img="childrenData[6].affirmRen"
           >
             <div slot>电焊回路线已接在焊件上,把线未穿过下水井或与其他设备搭接</div>
           </Signature>
           <Signature
-            :checked="checked[7] ? checked[7].checked : false"
-            :img="checked[7] ? checked[7].img : ''"
+            :checked="childrenData[7].safetyStatus === 1"
+            disable
+            :img="childrenData[7].affirmRen"
           >
             <div slot>乙炔气瓶(直立放置)、氧气瓶间距大于5米，与火源间的距离大于10米</div>
           </Signature>
           <Signature
-            :checked="checked[8] ? checked[8].checked : false"
-            :img="checked[8] ? checked[8].img : ''"
+            :checked="childrenData[8].safetyStatus === 1"
+            disable
+            :img="childrenData[8].affirmRen"
           >
             <div slot>
-              <span>现场配备消防水带</span>
-              <span>
-                <van-stepper :min="0" v-model="fangshuidaiNumber" />
-              </span>
-              <span>根，灭火器</span>
-              <span>
-                <van-stepper :min="0" v-model="miehuoqiNumber" />
-              </span>
-              <span>台，铁锹</span>
-              <span>
-                <van-stepper :min="0" v-model="tieqiuNumber" />
-              </span>
-              <span>把，灭火毯</span>
-              <span>
-                <van-stepper :min="0" v-model="miehuotanNumber" />
-              </span>
-              <span>块</span>
+              {{childrenData[8].safetyCs}}
             </div>
           </Signature>
         </div>
@@ -191,6 +180,62 @@
           storeKey="fxRenA"
           v-model="sendData.fxRenA"
         ></cell-select-user>
+      </div>
+      <div class="fenxi" v-if="sendData.dhfxTimeB !== undefined">
+        <div class="fenxi__title">动火分析2</div>
+        <!-- 动火分析时间 -->
+        <cell-time v-model="sendData.dhfxTimeB" title="动火分析时间" required></cell-time>
+        <!-- 分析点名称 -->
+        <cell-input v-model="sendData.fxdNameB" title="分析点名称" required placeholder="手工录入"></cell-input>
+        <!-- 可燃气体爆炸极限 -->
+        <cell-picker
+          title="可燃气体爆炸极限"
+          required
+          :value="sendData.krqbzLimitationB"
+          @change= "updatakrqbzLimitation('krqbzLimitationB', $event)"
+          :columns="krqbzLimitationAColumns"
+        ></cell-picker>
+        <!-- 分析数据 -->
+        <cell-input v-model="sendData.fxDataB" title="分析数据" required placeholder="手工录入"></cell-input>
+        <!-- 分析人 -->
+        <cell-select-user
+          title="分析人"
+          required
+          :storeModule="storeModule"
+          radio
+          storeKey="fxRenB"
+          v-model="sendData.fxRenB"
+        ></cell-select-user>
+      </div>
+      <div class="fenxi"  v-if="sendData.dhfxTimeC !== undefined">
+        <div class="fenxi__title">动火分析3</div>
+        <!-- 动火分析时间 -->
+        <cell-time v-model="sendData.dhfxTimeC" title="动火分析时间" required></cell-time>
+        <!-- 分析点名称 -->
+        <cell-input v-model="sendData.fxdNameC" title="分析点名称" required placeholder="手工录入"></cell-input>
+        <!-- 可燃气体爆炸极限 -->
+        <cell-picker
+          title="可燃气体爆炸极限"
+          required
+          :value="sendData.krqbzLimitationC"
+          @change= "updatakrqbzLimitation('krqbzLimitationC', $event)"
+          :columns="krqbzLimitationAColumns"
+        ></cell-picker>
+        <!-- 分析数据 -->
+        <cell-input v-model="sendData.fxDataC" title="分析数据" required placeholder="手工录入"></cell-input>
+        <!-- 分析人 -->
+        <cell-select-user
+          title="分析人"
+          required
+          :storeModule="storeModule"
+          radio
+          storeKey="fxRenC"
+          v-model="sendData.fxRenC"
+        ></cell-select-user>
+      </div>
+      
+      <div class="adddonghuofenxi" @click="addFenxi">
+        <van-icon name="plus" />
       </div>
       <!-- 其他安全措施 -->
       <cell-textarea title="其他安全措施" required placeholder="请输入其他安全措施" v-model="sendData.otherSafety"></cell-textarea>
@@ -248,7 +293,7 @@ import { uploadFile } from "@/mixin/uploadFile";
 import Canvas from "@/components/Canvas.vue";
 import Signature from "../components/Signature.vue";
 export default {
-  name: "donghuo",
+  name: "donghuoindex2",
   mixins: [business, uploadFile],
   components: {
     Canvas,
@@ -272,7 +317,7 @@ export default {
         fxdNameA: "", //分析点名称1
         krqbzLimitationA: null, //可燃气爆炸极限1
         fxDataA: "", //分析数据1
-        fxRenA: [] //分析人1
+        fxRenA: [], //分析人1
       },
       dhLevelColumns: ["制定位置特殊动火作业", "特殊", "|类", "||类"],
       krqbzLimitationAColumns: [
@@ -327,25 +372,76 @@ export default {
   },
   watch: {
     fxRenA(res) {
+      console.log('index2 fxRenA', res);
       this.sendData.fxRenA = res;
+    },
+    fxRenB(res) {
+      this.sendData.fxRenB = res;
+    },
+    fxRenC(res) {
+      this.sendData.fxRenC = res;
     }
   },
   computed: mapState({
-    fxRenA: state => state.donghuo.fxRenA
+    fxRenA: state => state.donghuo.fxRenA,
+    fxRenB: state => state.donghuo.fxRenB,
+    fxRenC: state => state.donghuo.fxRenC,
   }),
+  created() {
+    console.log("created =================", this.$route.query);
+    this.pageInit();
+  },
   activated() {
-    if (this.$route.query.id) {
-      if (this.queryId !== this.$route.query.id) {
-        this.queryId = this.$route.query.id;
-        this.getPageData();
-      }
-    }
+    console.log("activated=================", this.$route.query);
+    // this.pageInit();
   },
   beforeDestroy() {
     this.queryId = "";
     this.$store.dispatch("dongtu/cleanState");
   },
   methods: {
+    updatakrqbzLimitation (name,val) {
+      this.$set(this.sendData, name, val+'');
+      this.$forceUpdate();
+    },
+    addFenxi () {
+      let fenxiB = {
+        dhfxTimeB: "", //动火分析时间1
+        fxdNameB: "", //分析点名称1
+        krqbzLimitationB: null, //可燃气爆炸极限1
+        fxDataB: "", //分析数据1
+        fxRenB: [], //分析人1
+      };
+      let fenxiC = {
+        dhfxTimeC: "", //动火分析时间1
+        fxdNameC: "", //分析点名称1
+        krqbzLimitationC: null, //可燃气爆炸极限1
+        fxDataC: "", //分析数据1
+        fxRenC: [] //分析人1
+      }
+      if (this.sendData.dhfxTimeB === undefined) {
+        Object.assign(this.sendData, fenxiB);
+        this.$forceUpdate();
+        console.log('this.sendData', this.sendData);
+        return;
+      }
+      if (this.sendData.dhfxTimeC === undefined) {
+        Object.assign(this.sendData, fenxiC);
+        this.$forceUpdate();
+        return;
+      }
+      this.$Toast.fail({
+            message: "最多添加三个",
+          });
+    },
+    pageInit() {
+      if (this.$route.query.id) {
+        if (this.queryId !== this.$route.query.id) {
+          this.queryId = this.$route.query.id;
+          this.getPageData();
+        }
+      }
+    },
     // 清除所有数据
     clearData() {
       this.sendData.siteContent = ""; //动火地点及内容
@@ -397,29 +493,36 @@ export default {
               this.sendData[key] = this.reductionSelectUser(info[key]);
             } else if (key === "dhzyRen") {
               this.sendData[key] = this.reductionSelectUser(info[key]);
-            } else if (key === "fxRenA") {
-              this.sendData[key] = this.reductionSelectUser(info[key]);
+            } else if (key === "fxRenA"||key === "fxRenB"||key === "fxRenC") {
+               if (info[key]) {
+                  this.sendData[key] = this.reductionSelectUser(info[key]);
+               }
             } else if (key === "dhWay") {
-              if (info[key])
+              if (info[key]) {
                 this.sendData[key] = this.reductionSelectTag(
                   info[key],
                   this.list_1
                 );
+              }    
             } else if (key === "otherSpecial") {
-              if (info[key])
+              if (info[key]) {
                 this.sendData[key] = this.reductionSelectTag(
                   info[key],
                   this.list_2
                 );
+              }
+                
             } else if (key === "hazardSb") {
-              if (info[key])
+              if (info[key]) {
                 this.sendData[key] = this.reductionSelectTag(
                   info[key],
                   this.list_3
                 );
+              } 
             } else {
               this.sendData[key] = info[key];
             }
+            console.log("const key in this.sendData", key);
           }
           // 动火子表查询
           this.mylistDataD();
@@ -432,10 +535,11 @@ export default {
     mylistDataD() {
       this.$api.page_3
         .mylistDataD({
-          id: this.oldInfo.id,
+          zypId: this.oldInfo.id,
           __sid: localStorage.getItem("JiaHuaSessionId")
         })
         .then(res => {
+          console.log("mylistDataD=======", res);
           this.childrenData = res;
           this.$Toast.clear();
         })
@@ -526,6 +630,7 @@ export default {
 .head {
   display: flex;
   text-align: center;
+  margin-bottom: 30px;
   .head_1 {
     width: 420px;
     // background-color: red
@@ -588,7 +693,18 @@ export default {
     padding: 30px;
     color: #fff;
     box-sizing: border-box;
-    background-color: blue;
+    background-color: #6096F8;
   }
+}
+.adddonghuofenxi{
+  text-align: right;
+  padding: 30px;
+  cursor: pointer;
+}
+.adddonghuofenxi .van-icon{
+  font-size: 18px;
+}
+.confirm{
+  padding: 30px;
 }
 </style>

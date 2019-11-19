@@ -1,12 +1,14 @@
 // initial state
 const state = {
-  keepAliveComponents: ["donghuoindex"],
+  keepAliveComponents: ["donghuoindex", "donghuoindex2"],
   dhWay: [],
   otherSpecial: [],
   hazardSb: [],
   dhzyPrincipal: [],
   dhzyRen: [],
   fxRenA: [], //分析人1
+  fxRenB: [], //分析人1
+  fxRenC: [], //分析人1
   dhSup: [] //监火人
 };
 

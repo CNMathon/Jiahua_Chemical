@@ -321,7 +321,6 @@ export default {
     dhzyRen: state => state.donghuo.dhzyRen
   }),
   created() {
-    console.log(11111111111111)
     if (this.$route.query.id) {
       if (this.queryId !== this.$route.query.id) {
         this.queryId = this.$route.query.id;

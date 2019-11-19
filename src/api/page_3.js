@@ -54,7 +54,7 @@ const article = {
     );
   },
   // 吊装作业票主表保存
-  htHseDzzypSave(params) {
+  htHseDzzypSave(params, __sid) {
     return axios.post(`${base.sq}dzzy/htHseDzzyp/save`, qs.stringify(params));
   },
   // 吊装作业票子表保存
@@ -145,8 +145,13 @@ const article = {
     );
   },
   // 断路作业票保存、修改
-  htHseDlzypSave(params) {
-    return axios.post(`${base.sq}dlzyp/htHseDlzyp/save`, qs.stringify(params));
+  htHseDlzypSave(params, __sid) {
+    return axios.post(`${base.sq}dlzyp/htHseDlzyp/save`, params, {
+      headers: {
+        "Content-Type": "application/json",
+        __sid: __sid
+      }
+    });
   },
   // 设备缺陷保存
   htDeviceDefectSave(params) {
@@ -156,8 +161,13 @@ const article = {
     );
   },
   // 盲板作业票新增和修改（表单提交）
-  htHseMbzypSave(params) {
-    return axios.post(`${base.sq}mbzyp/htHseMbzyp/save`, qs.stringify(params));
+  htHseMbzypSave(params, __sid) {
+    return axios.post(`${base.sq}mbzyp/htHseMbzyp/save2`, params, {
+      headers: {
+        "Content-Type": "application/json",
+        __sid: __sid
+      }
+    });
   },
   // 盲板作业票新增和修改
   htHseMbzypListData(params) {

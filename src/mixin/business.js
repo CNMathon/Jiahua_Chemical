@@ -99,6 +99,14 @@ export const business = {
     // 深拷贝
     deepCopy(content) {
       return JSON.parse(JSON.stringify(content))
+    },
+    // 小数转化为百分数
+    // => num => 传入数值 => Number => 必填
+    // => dec => 保留小数位数 => Number => 选填（默认为1）
+    toPercent(num, dec = 1) {
+      let res = Number(num*100).toFixed(dec)
+      res += '%'
+      return res
     }
   }
 };
