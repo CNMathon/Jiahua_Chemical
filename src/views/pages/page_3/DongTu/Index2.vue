@@ -60,24 +60,18 @@
             disable
           ></cell-select-user>
           <!-- 作业范围、内容、方式 -->
-          <div class="cell border_none">
+          <!-- <div class="cell border_none">
             <div class="cell_title">
               <span>作业范围、内容、方式</span>
             </div>
-            <!-- <div class="cell_other">
-              <textarea class="cell_textarea" placeholder="请输入工作内容" cols="30" rows="10" disabled></textarea>
-            </div> -->
             <div class="cell_other">
               <div class="upload">
-                <!-- <div class="upload_icon">
-                <van-icon name="photo-o" />
-                </div>-->
                 <div class="upload_box">
                   <van-image width="5rem" height="5rem" src="https://img.yzcdn.cn/vant/cat.jpeg" />
                 </div>
               </div>
             </div>
-          </div>
+          </div> -->
           <!-- 安全措施 -->
           <div class="confirm">
             <div class="head">
@@ -89,58 +83,68 @@
               <Signature
                 :checked="checked[0] ? checked[0].checked : false"
                 :img="checked[0] ? checked[0].img : ''"
+                :disable="true"
               >
                 <div slot>作业人员已进行了安全教育</div>
               </Signature>
               <Signature
                 :checked="checked[1] ? checked[1].checked : false"
                 :img="checked[1] ? checked[1].img : ''"
+                :disable="true"
               >
                 <div slot>作业地点处于易燃易爆场所，需要动火时已办理动火证</div>
               </Signature>
               <Signature
                 :checked="checked[2] ? checked[2].checked : false"
                 :img="checked[2] ? checked[2].img : ''"
+                :disable="true"
               >
                 <div slot>地下电力点啦已确认保护措施已落实</div>
               </Signature>
               <Signature
                 :checked="checked[2] ? checked[2].checked : false"
                 :img="checked[2] ? checked[2].img : ''"
+                :disable="true"
               >
                 <div slot>地下通讯电（光）缆、局域网络电（光）缆已确认保护措施已落实</div>
               </Signature>
               <Signature
                 :checked="checked[2] ? checked[2].checked : false"
                 :img="checked[2] ? checked[2].img : ''"
+                :disable="true"
               >
                 <div slot>地下供排水、消防管道、工艺管道已确认保护措施已落实。</div>
               </Signature>
               <Signature
+                :disable="true"
                 :checked="checked[2] ? checked[2].checked : false"
                 :img="checked[2] ? checked[2].img : ''"
               >
                 <div slot>已按作业方案图划线和立绘</div>
               </Signature>
               <Signature
+                :disable="true"
                 :checked="checked[2] ? checked[2].checked : false"
                 :img="checked[2] ? checked[2].img : ''"
               >
                 <div slot>动土地点有电线、管道等地下设施，已向作业单位交代并派人监护；作业时情挖做使用铁棒、铁镐或抓斗等机械工具。</div>
               </Signature>
               <Signature
+                :disable="true"
                 :checked="checked[2] ? checked[2].checked : false"
                 :img="checked[2] ? checked[2].img : ''"
               >
                 <div slot>作业现场围栏、警戒线、告示牌、夜间照明、警示灯已按要求设置</div>
               </Signature>
               <Signature
+                :disable="true"
                 :checked="checked[2] ? checked[2].checked : false"
                 :img="checked[2] ? checked[2].img : ''"
               >
                 <div slot>已进行放坡处理和固壁支撑</div>
               </Signature>
               <Signature
+                :disable="true"
                 :checked="checked[2] ? checked[2].checked : false"
                 :img="checked[2] ? checked[2].img : ''"
               >
@@ -155,6 +159,7 @@
                 >修坡道</span>
               </Signature>
               <Signature
+                :disable="true"
                 :checked="checked[2] ? checked[2].checked : false"
                 :img="checked[2] ? checked[2].img : ''"
               >
@@ -177,6 +182,7 @@
                 >公司调度</span>
               </Signature>
               <Signature
+                :disable="true"
                 :checked="checked[2] ? checked[2].checked : false"
                 :img="checked[2] ? checked[2].img : ''"
               >
@@ -198,6 +204,7 @@
                 <div slot>作业人员已佩戴防护器械</div>
               </Signature>
               <Signature
+                :disable="true"
                 :checked="checked[2] ? checked[2].checked : false"
                 :img="checked[2] ? checked[2].img : ''"
               >
@@ -215,19 +222,13 @@
         >
           <Canvas ref="signature" @save="saveCanvas" @cancel="cancelCanvas"></Canvas>
         </van-popup>
-        <cell-textarea v-model="sendData.dznr" title="其他安全措施" required placeholder="请输入其他安全措施"></cell-textarea>
-        <!-- 画板Popup -->
-        <van-popup
-          class="popup"
-          v-model="signatureShow"
-          :close-on-click-overlay="false"
-          position="bottom"
-        >
-          <Canvas ref="signature" @save="saveCanvas" @cancel="cancelCanvas"></Canvas>
-        </van-popup>
+        <cell-textarea v-model="sendData.otherSafety" title="其他安全措施" required placeholder="请输入其他安全措施"></cell-textarea>
         <div class="signature" @click="signatureShow = true">
-          <div>签字</div>
-          <van-icon name="edit" />
+          <span>签字</span>
+          <van-image v-if="sendData.othercsComplier" style="width:40px;margin-left:30px" :src="sendData.othercsComplier"></van-image>
+          <van-icon style="float:right" name="edit" />
+          <span style="float:right;font-size:14px;margin-right:30px">{{sendData.othercsTime}}</span>
+          
         </div>
         <!-- 操作Popup -->
         <van-popup v-model="isShowAction" position="bottom" class="action">
@@ -259,7 +260,11 @@ export default {
         otherSpecial: [], //涉及其他作业
         hazardSb: [], //危害辨识
         guardian: [], //监护人
-        dtMan: [] //作业部门负责人
+        dtDept:[],
+        otherSafety:'',
+        dtMan: [], //作业部门负责人
+        othercsComplier:'',//签名
+        othercsTime:''
       },
       list_1: [
         "动火",
@@ -361,6 +366,7 @@ export default {
       if (this.$route.query.code) {
         sendData.code = this.$route.query.code;
       }
+      console.log(sendData)
       this.$api.page_3
         .htHseDtzypSave(sendData)
         .then(() => {
@@ -391,6 +397,8 @@ export default {
               this.sendData[key] = this.reductionSelectUser(info[key]);
             } else if (key === "dtMan") {
               this.sendData[key] = this.reductionSelectUser(info[key]);
+            } else if (key === "dtDept") {
+              this.sendData[key] = info[key];
             } else if (key === "otherSpecial") {
               if (info[key])
                 this.sendData[key] = this.reductionSelectTag(
@@ -410,11 +418,24 @@ export default {
           console.log("this.sendData: ", this.sendData);
         });
     },
+    reductionSelectDept(data) {
+      console.log(data)
+      let newArr = [];
+      let arr = data.split(",");
+      arr.forEach(element => {
+        let obj = {};
+        obj.name = element;
+        newArr.push(obj);
+      });
+      return newArr;
+    },
     // 保存签名
     saveCanvas(e) {
-      // console.log(123)
+      console.log(123)
       console.log("e: ", e);
       this.signatureShow = false;
+      this.sendData.othercsComplier = e;
+      this.sendData.othercsTime = this.$dayjs(new Date()).format("YYYY-MM-DD HH:mm")
     },
     // 取消签名
     cancelCanvas() {
@@ -479,7 +500,6 @@ export default {
   background-color: white;
   padding: 30px;
   box-sizing: border-box;
-  display: flex;
   align-items: center;
   justify-content: space-between;
 }

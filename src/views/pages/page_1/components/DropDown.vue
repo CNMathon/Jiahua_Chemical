@@ -1,7 +1,7 @@
 <template>
   <div class="dropdown van-hairline--surround" :class="classPosition">
     <van-dropdown-menu :overlay="false">
-      <van-dropdown-item v-model="value" :options="option" />
+      <van-dropdown-item v-model="value" :options="values||option"  />
     </van-dropdown-menu>
   </div>
 </template>
@@ -12,7 +12,9 @@ export default {
     position: {
       type: String,
       default: "left"
-    }
+    },
+    values: Array,
+    width: String,
   },
   data() {
     return {
@@ -36,7 +38,7 @@ export default {
 </script>
 <style lang="scss">
 .dropdown {
-  width: 170px;
+  width: 28vw;
   height: 62px;
   border-radius: 4px;
   box-sizing: border-box;
@@ -51,7 +53,7 @@ export default {
       }
     }
     .van-popup--top {
-      width: 5.34375rem;
+      width: 28vw;
       .van-dropdown-item__option {
         background: rgba(246, 246, 246, 1);
         .van-cell__title {

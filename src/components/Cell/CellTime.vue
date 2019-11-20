@@ -4,7 +4,7 @@
       <span>{{ title }}</span>
       <span class="required" v-if="required">*</span>
     </div>
-    <div class="cell_value">{{ showText() }}</div>
+    <div class="cell_value" @click="showTime()">{{ showText() }}</div>
     <van-icon name="arrow" />
     <!-- 时间选择 -->
     <van-popup v-model="timeShow" position="bottom">
@@ -12,7 +12,7 @@
         ref="van-datetime-picker"
         v-model="selectTime"
         type="datetime"
-        :min-date="new Date()"
+        :min-date="minDate"
         @cancel="timeShow = false"
         @confirm="onTimeConfirm"
       />
@@ -48,14 +48,19 @@ export default {
     return {
       values: "",
       timeShow: false,
+      minDate:new Date(),
       selectTime: new Date(),
       pickerTime: ""
     };
   },
   methods: {
     showTime() {
-      if (this.disable) return;
-      this.timeShow = true;
+      console.log(this.disable)
+      if (!this.disable){
+        console.log(this.timeShow)
+        this.timeShow = true;
+      }
+      
     },
     // 补零
     addZero: function(str) {
@@ -73,12 +78,12 @@ export default {
       this.timeShow = false;
     },
     showText() {
-      console.log(this.value
-        ? this.$dayjs(this.value).format("YYYY-MM-DD HH:mm")
-        : "点击选择")
-      return this.value
-        ? this.$dayjs(this.value).format("YYYY-MM-DD HH:mm")
-        : "点击选择";
+        console.log(this.value
+          ? this.$dayjs(this.value).format("YYYY-MM-DD HH:mm")
+          : "点击选择")
+        return this.value
+          ? this.$dayjs(this.value).format("YYYY-MM-DD HH:mm")
+          : "点击选择";
     }
   },
   watch: {

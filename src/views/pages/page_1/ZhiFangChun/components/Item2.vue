@@ -1,56 +1,28 @@
 <template>
   <div>
-    <div class="item">
+    <div class="item" v-for="(item, index) in value" :key="index">
       <div class="guolu">
-        <div class="value">级别名称</div>
-        <div class="value">甲酯进氢化温度</div>
+        <div class="value">{{item.text}}</div>
+        <div class="value entext">{{item.enText}}</div>
         <div class="number">
-          65
-          <div class="unit">°C</div>
+          {{item.value}}
+          <div class="unit">{{item.unit}}</div>
         </div>
       </div>
     </div>
-
-    <div class="item">
-      <div class="guolu">
-        <div class="value">级别名称</div>
-        <div class="value">氢化反应器进口温度</div>
-        <div class="number">
-          65
-          <div class="unit">Mpa</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="item">
-      <div class="guolu">
-        <div class="value">级别名称</div>
-        <div class="value">氢化反应器温差</div>
-        <div class="number">
-          65
-          <div class="unit">L/h</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="item">
-      <div class="guolu">
-        <div class="value">级别名称</div>
-        <div class="value">L1201进口压力</div>
-        <div class="number">
-          65
-          <div class="unit">mg/m<sup>3</sup></div>
-        </div>
-      </div>
-    </div>
-
   </div>
   
   
 </template>
 <script>
 export default {
-  name: "guoLu"
+  name: "guoLu",
+  props: {
+    value: Array
+  },
+  // methods: {
+    
+  // }
 };
 </script>
 <style lang="scss" scoped>
@@ -65,17 +37,27 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  // * {
+  //   width: 33%;
+  // }
+  .entext {
+    text-align: center;
+  }
   .value {
     font-size: 28px;
     font-weight: 400;
     color: rgba(255, 255, 255, 1);
+    width: 35%;
   }
   .number {
-    font-size: 40px;
-    font-weight: 500;
+    font-size: 35px;
+    font-weight: bold;
+    text-align: right;
     color: rgba(255, 255, 255, 1);
+    width: 20%;
     .unit {
       font-size: 28px;
+      text-align: right;
     }
   }
 }

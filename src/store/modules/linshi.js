@@ -3,7 +3,8 @@ const state = {
   hazardIdentification: [],
   connectRen: [], //接线人
   workCharger: [], //施工现场负责人
-  workRen: [] //作业人
+  workRen: [], //作业人
+  workDept:[]
 };
 
 // getters

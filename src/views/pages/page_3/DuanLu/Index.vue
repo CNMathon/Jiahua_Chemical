@@ -156,8 +156,9 @@ export default {
     Canvas
   },
   created() {
-    this.id = this.$route.query.id || 0;
-    this.getPageData();
+    // console.log(this.$route.query.id)
+    // this.id = this.$route.query.id || 0;
+    // this.getPageData();
   },
   data() {
     return {
@@ -168,8 +169,8 @@ export default {
         endangerSign: [], //危害辨识
         offtimeStart: "", //断路时间（起）
         offtimeEnd: "", //断路时间（止）
-        workCharger: [], //作业部门负责人
-        offExplain: "" //相关说明
+        workCharger: [] //作业部门负责人
+        //offExplain: "" //相关说明
       },
       fileList: [], // 图片列表
       list_1: [
@@ -319,7 +320,7 @@ export default {
       this.$api.page_3
         .htHseDlzypListData({
           __sid: localStorage.getItem("JiaHuaSessionId"),
-          id: this.id
+          permitCode: this.$route.query.code
         })
         .then(res => {
           this.listData = res.list;
@@ -348,7 +349,7 @@ export default {
       sendData.endangerSign = this.stringData("endangerSign", "list_2");
       sendData.applyDept = this.$userInfo.officeCode;
       sendData.applyer = this.$userInfo.userCode;
-      sendData.offExplain = offExplain.join(",");
+      //sendData.offExplain = offExplain.join(",");
       sendData.workCharger = sendData.workCharger[0].userCode
       sendData.__sid = this.$userInfo.sessionId;
       let List = [

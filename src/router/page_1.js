@@ -43,9 +43,33 @@ const routes = {
       }
     },
     {
-      path: "/page_1/liusuan",
+      path: "/page_1/xincailiao_1",
+      name: "xincailiao",
+      component: () => import("../views/pages/page_1/XinCaiLiao/Index1.vue"),
+      meta: {
+        name: "首页-新材料"
+      }
+    },
+    {
+      path: "/page_1/xincailiao_2",
+      name: "xincailiao",
+      component: () => import("../views/pages/page_1/XinCaiLiao/Index2.vue"),
+      meta: {
+        name: "首页-新材料"
+      }
+    },
+    {
+      path: "/page_1/liusuan_1",
       name: "liusuan",
-      component: () => import("../views/pages/page_1/LiuSuan/Index.vue"),
+      component: () => import("../views/pages/page_1/LiuSuan/Index1.vue"),
+      meta: {
+        name: "首页-硫酸"
+      }
+    },
+    {
+      path: "/page_1/liusuan_2",
+      name: "liusuan",
+      component: () => import("../views/pages/page_1/LiuSuan/Index2.vue"),
       meta: {
         name: "首页-硫酸"
       }

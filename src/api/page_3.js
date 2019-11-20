@@ -145,7 +145,7 @@ const article = {
   },
   // 断路作业票保存、修改
   htHseDlzypSave(params, __sid) {
-    return axios.post(`${base.sq}dlzyp/htHseDlzyp/save`, params, {
+    return axios.post(`${base.sq}dlzyp/htHseDlzyp/appSave`, params, {
       headers: {
         "Content-Type": "application/json",
         __sid: __sid

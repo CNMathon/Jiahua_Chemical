@@ -35,17 +35,13 @@
 			<cell-select-user title="接线人" :value="sendData.connectRen" required :storeModule="storeModule" storeKey="connectRen"
 			 v-model="sendData.connectRen"></cell-select-user>
 			<!-- 施工作业部门 -->
-			<div class="cell">
-				<div class="cell_title">
-					<span>施工作业部门</span>
-				</div>
-				<div class="cell_value">
-					<span>人名</span>
-					<span class="cell_value_arrow">
-						<van-icon name="search" />
-					</span>
-				</div>
-			</div>
+			<cell-select-department
+              title="施工作业部门"
+              required
+              :storeModule="storeModule"
+              storeKey="workDept"
+              v-model="sendData.workDept"
+            ></cell-select-department>
 			<!-- 施工现场负责人 -->
 			<cell-select-user title="施工现场负责人" required :storeModule="storeModule" storeKey="workCharger" v-model="sendData.workCharger"></cell-select-user>
 			<!-- 作业人 -->
@@ -89,7 +85,8 @@
 					powertimeEnd: "", //申请用电时间（止）
 					connectRen: [], //接线人
 					workCharger: [], //施工现场负责人
-					workRen: [], //作业人
+          workRen: [], //作业人
+          workDept:[],
 					licenseCode: "" //电工证号
 				},
 				powerTypeColumns: ["插座", "接线"], //用电方式
@@ -126,7 +123,8 @@
 			hazardIdentification: state => state.linshi.hazardIdentification,
 			connectRen: state => state.linshi.connectRen,
 			workCharger: state => state.linshi.workCharger,
-			workRen: state => state.linshi.workRen
+      workRen: state => state.linshi.workRen,
+      workDept:state=>state.linshi.workDept
 		}),
 		created() {
 
@@ -140,8 +138,8 @@
 			// }
     },
     activated(){
-      console.log(22222222222222222222)
-      console.log(this.$route);
+      console.log(sessionStorage.getItem('flag'))
+      console.log(this.zypCode);
 			// 获取显示List序列
 			this.zypCode = this.$route.query.zypCode || "";
 			// 设置显示List
@@ -150,7 +148,26 @@
 			if (this.zypCode&&sessionStorage.getItem('flag')==='1') {
         this.getData();
         sessionStorage.removeItem('flag')
-			}
+			}else if(this.zypCode==''&&sessionStorage.getItem('flag')==='1'){
+        console.log(123)
+        this.sendData={
+					workContent: "", //作业内容
+					workLocation: "", //作业地点
+					powerType: 0, //用电方式
+					jworkVoltage: 0, //工作电压
+					publicArea: 0, //公共区域
+					devicePower: "", //用电设备及功率
+					hazardIdentification: [], //危害辨识
+					powertimeStart: "", //申请用电时间（起）
+					powertimeEnd: "", //申请用电时间（止）
+					connectRen: [], //接线人
+					workCharger: [], //施工现场负责人
+          workRen: [], //作业人
+          workDept:[],
+					licenseCode: "" //电工证号
+        }
+        sessionStorage.removeItem('flag')
+      }
     },
 		// beforeDestroy() {
 		// 	this.$store.dispatch("linshi/cleanState");
@@ -287,7 +304,12 @@
 								userName: items
 							});
 						})
-						
+            let workDept = []
+            res.list[0].workDept.split(",").map(items => {
+							workDept.push({
+								name: items
+							});
+						})
 
 						let workRen = [];
 						res.list[0].workRen.split(",").map(items => {
@@ -297,7 +319,7 @@
 						})
 						
 						console.log(this.sendData);
-						
+						this.sendData.workDept = workDept;
 						this.sendData.connectRen = connectRen;
 						this.sendData.workCharger = workCharger;
 						this.sendData.workRen = workRen; 
@@ -317,7 +339,8 @@
 				);
 				sendData.connectRen = this.userString(sendData.connectRen, "userName");
 				sendData.workCharger = this.userString(sendData.workCharger, "userName");
-				sendData.workRen = this.userString(sendData.workRen, "userName");
+        sendData.workRen = this.userString(sendData.workRen, "userName");
+        sendData.workDept = this.userString(sendData.workDept, "name");
 				sendData.apprDept = this.$userInfo.officeName;
 				sendData.apprRen = this.$userInfo.userName;
 				sendData.__sid = this.$userInfo.sessionId;
@@ -362,7 +385,11 @@
 			},
 			workRen(res) {
 				this.sendData.workRen = res;
-			}
+      },
+      workDept(res) {
+        console.log(res)
+				this.sendData.workDept = res;
+      }
 		}
 	};
 </script>

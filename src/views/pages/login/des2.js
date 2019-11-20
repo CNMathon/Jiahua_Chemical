@@ -9,14 +9,11 @@
  * });
  * @author ThinkGem
  */
-export const DesUtils = function() {
-	
-	this.DesUtils = function(){};
 	
 	/**
 	 * 加密（secretKey代表3个key，用逗号分隔）
 	 */
-	this.DesUtils.encode = function(data, secretKey){
+	export const encode=(data,secretKey)=>{
 		if (data && secretKey){
 			var ks = secretKey.split(',');
 			if (ks.length >= 3){
@@ -25,12 +22,12 @@ export const DesUtils = function() {
 			return strEnc(data, secretKey, '', '');
 		}
 		return '';
-	},
+	}
 	
 	/**
 	 * 解密（secretKey代表3个key，用逗号分隔）
 	 */
-	this.DesUtils.decode = function(data, secretKey){
+	export const decode=(data,secretKey)=>{
 		if (data && secretKey){
 			var ks = secretKey.split(',');
 			if (ks.length >= 3){
@@ -46,7 +43,6 @@ export const DesUtils = function() {
 	 * return the encrypted string
 	 */
 	function strEnc(data,firstKey,secondKey,thirdKey){
-	
 	 var leng = data.length;
 	 var encData = "";
 	 var firstKeyBt,secondKeyBt,thirdKeyBt,firstLength,secondLength,thirdLength;
@@ -62,7 +58,6 @@ export const DesUtils = function() {
 	   thirdKeyBt = getKeyBytes(thirdKey);
 	   thirdLength = thirdKeyBt.length;
 	 }  
-	 
 	 if(leng > 0){
 	   if(leng < 4){
 	     var bt = strToBt(data);      
@@ -79,7 +74,7 @@ export const DesUtils = function() {
 	       }
 	       for(z = 0;z < thirdLength ;z ++){
 	         tempBt = enc(tempBt,thirdKeyBt[z]);
-	       }        
+         }        
 	       encByte = tempBt;        
 	     }else{
 	       if(firstKey != null && firstKey !="" && secondKey != null && secondKey != ""){
@@ -406,11 +401,11 @@ export const DesUtils = function() {
 	*/
 	function byteToString(byteData){
 	 var str="";
-	 for(i = 0;i<4;i++){
+	 for(let i = 0;i<4;i++){
 	   var count=0;
-	   for(j=0;j<16;j++){        
+	   for(let j=0;j<16;j++){        
 	     var pow=1;
-	     for(m=15;m>j;m--){
+	     for(let m=15;m>j;m--){
 	       pow*=2;
 	     }              
 	     count+=byteData[16*i+j]*pow;
@@ -424,9 +419,9 @@ export const DesUtils = function() {
 	
 	function bt64ToHex(byteData){
 	 var hex = "";
-	 for(i = 0;i<16;i++){
+	 for(let i = 0;i<16;i++){
 	   var bt = "";
-	   for(j=0;j<4;j++){    
+	   for(let j=0;j<4;j++){    
 	     bt += byteData[i*4+j];
 	   }    
 	   hex+=bt4ToHex(bt);
@@ -436,7 +431,7 @@ export const DesUtils = function() {
 	
 	function hexToBt64(hex){
 	 var binary = "";
-	 for(i = 0;i<16;i++){
+	 for(let i = 0;i<16;i++){
 	   binary+=hexToBt4(hex.substring(i,i+1));
 	 }
 	 return binary;
@@ -447,27 +442,27 @@ export const DesUtils = function() {
 	*/
 	
 	function enc(dataByte,keyByte){  
-	 var keys = generateKeys(keyByte);    
-	 var ipByte   = initPermute(dataByte);  
+   var keys = generateKeys(keyByte);  
+   var ipByte   = initPermute(dataByte);  
 	 var ipLeft   = new Array(32);
 	 var ipRight  = new Array(32);
 	 var tempLeft = new Array(32);
-	 var i = 0,j = 0,k = 0,m = 0, n = 0;
-	 for(k = 0;k < 32;k ++){
+	//  var i = 0,j = 0,k = 0,m = 0, n = 0;
+	 for(let k = 0;k < 32;k ++){
 	   ipLeft[k] = ipByte[k];
 	   ipRight[k] = ipByte[32+k];
 	 }    
-	 for(i = 0;i < 16;i ++){
-	   for(j = 0;j < 32;j ++){
+	 for(let i = 0;i < 16;i ++){
+	   for(let j = 0;j < 32;j ++){
 	     tempLeft[j] = ipLeft[j];
 	     ipLeft[j] = ipRight[j];      
 	   }  
 	   var key = new Array(48);
-	   for(m = 0;m < 48;m ++){
+	   for(let m = 0;m < 48;m ++){
 	     key[m] = keys[i][m];
 	   }
 	   var  tempRight = xor(pPermute(sBoxPermute(xor(expandPermute(ipRight),key))), tempLeft);      
-	   for(n = 0;n < 32;n ++){
+	   for(let n = 0;n < 32;n ++){
 	     ipRight[n] = tempRight[n];
 	   }  
 	   
@@ -475,7 +470,7 @@ export const DesUtils = function() {
 	 
 	 
 	 var finalData =new Array(64);
-	 for(i = 0;i < 32;i ++){
+	 for(let i = 0;i < 32;i ++){
 	   finalData[i] = ipRight[i];
 	   finalData[32+i] = ipLeft[i];
 	 }
@@ -520,8 +515,8 @@ export const DesUtils = function() {
 	
 	function initPermute(originalData){
 	 var ipByte = new Array(64);
-	 for (i = 0, m = 1, n = 0; i < 4; i++, m += 2, n += 2) {
-	   for (j = 7, k = 0; j >= 0; j--, k++) {
+	 for (let i = 0, m = 1, n = 0; i < 4; i++, m += 2, n += 2) {
+	   for (let j = 7, k = 0; j >= 0; j--, k++) {
 	     ipByte[i * 8 + k] = originalData[j * 8 + m];
 	     ipByte[i * 8 + k + 32] = originalData[j * 8 + n];
 	   }
@@ -531,7 +526,7 @@ export const DesUtils = function() {
 	
 	function expandPermute(rightData){  
 	 var epByte = new Array(48);
-	 for (i = 0; i < 8; i++) {
+	 for (let i = 0; i < 8; i++) {
 	   if (i == 0) {
 	     epByte[i * 6 + 0] = rightData[31];
 	   } else {
@@ -552,7 +547,7 @@ export const DesUtils = function() {
 	
 	function xor(byteOne,byteTwo){  
 	 var xorByte = new Array(byteOne.length);
-	 for(i = 0;i < byteOne.length; i ++){      
+	 for(let i = 0;i < byteOne.length; i ++){      
 	   xorByte[i] = byteOne[i] ^ byteTwo[i];
 	 }  
 	 return xorByte;
@@ -616,7 +611,7 @@ export const DesUtils = function() {
 	       [7, 11, 4, 1, 9, 12, 14, 2, 0, 6, 10, 13, 15, 3, 5, 8],
 	       [2, 1, 14, 7, 4, 10, 8, 13, 15, 12, 9, 0, 3, 5, 6, 11]];
 	   
-	   for(m=0;m<8;m++){
+	   for(let m=0;m<8;m++){
 	   var i=0,j=0;
 	   i = expandByte[m*6+0]*2+expandByte[m*6+5];
 	   j = expandByte[m * 6 + 1] * 2 * 2 * 2 
@@ -812,7 +807,7 @@ export const DesUtils = function() {
 	 var loop = [1,1,2,2,2,2,2,2,1,2,2,2,2,2,2,1];
 	
 	 for(i=0;i<7;i++){
-	   for(j=0,k=7;j<8;j++,k--){
+	   for(let j=0,k=7;j<8;j++,k--){
 	     key[i*8+j]=keyByte[8*k+i];
 	   }
 	 }    
@@ -821,10 +816,10 @@ export const DesUtils = function() {
 	 for(i = 0;i < 16;i ++){
 	   var tempLeft=0;
 	   var tempRight=0;
-	   for(j = 0; j < loop[i];j ++){          
+	   for(let j = 0; j < loop[i];j ++){          
 	     tempLeft = key[0];
 	     tempRight = key[28];
-	     for(k = 0;k < 27 ;k ++){
+	     for(let k = 0;k < 27 ;k ++){
 	       key[k] = key[k+1];
 	       key[28+k] = key[29+k];
 	     }  
@@ -881,25 +876,23 @@ export const DesUtils = function() {
 	   tempKey[46] = key[28];
 	   tempKey[47] = key[31];
 	   switch(i){
-	     case 0: for(m=0;m < 48 ;m++){ keys[ 0][m] = tempKey[m]; } break;
-	     case 1: for(m=0;m < 48 ;m++){ keys[ 1][m] = tempKey[m]; } break;
-	     case 2: for(m=0;m < 48 ;m++){ keys[ 2][m] = tempKey[m]; } break;
-	     case 3: for(m=0;m < 48 ;m++){ keys[ 3][m] = tempKey[m]; } break;
-	     case 4: for(m=0;m < 48 ;m++){ keys[ 4][m] = tempKey[m]; } break;
-	     case 5: for(m=0;m < 48 ;m++){ keys[ 5][m] = tempKey[m]; } break;
-	     case 6: for(m=0;m < 48 ;m++){ keys[ 6][m] = tempKey[m]; } break;
-	     case 7: for(m=0;m < 48 ;m++){ keys[ 7][m] = tempKey[m]; } break;
-	     case 8: for(m=0;m < 48 ;m++){ keys[ 8][m] = tempKey[m]; } break;
-	     case 9: for(m=0;m < 48 ;m++){ keys[ 9][m] = tempKey[m]; } break;
-	     case 10: for(m=0;m < 48 ;m++){ keys[10][m] = tempKey[m]; } break;
-	     case 11: for(m=0;m < 48 ;m++){ keys[11][m] = tempKey[m]; } break;
-	     case 12: for(m=0;m < 48 ;m++){ keys[12][m] = tempKey[m]; } break;
-	     case 13: for(m=0;m < 48 ;m++){ keys[13][m] = tempKey[m]; } break;
-	     case 14: for(m=0;m < 48 ;m++){ keys[14][m] = tempKey[m]; } break;
-	     case 15: for(m=0;m < 48 ;m++){ keys[15][m] = tempKey[m]; } break;
+	     case 0: for(let m=0;m < 48 ;m++){ keys[ 0][m] = tempKey[m]; } break;
+	     case 1: for(let m=0;m < 48 ;m++){ keys[ 1][m] = tempKey[m]; } break;
+	     case 2: for(let m=0;m < 48 ;m++){ keys[ 2][m] = tempKey[m]; } break;
+	     case 3: for(let m=0;m < 48 ;m++){ keys[ 3][m] = tempKey[m]; } break;
+	     case 4: for(let m=0;m < 48 ;m++){ keys[ 4][m] = tempKey[m]; } break;
+	     case 5: for(let m=0;m < 48 ;m++){ keys[ 5][m] = tempKey[m]; } break;
+	     case 6: for(let m=0;m < 48 ;m++){ keys[ 6][m] = tempKey[m]; } break;
+	     case 7: for(let m=0;m < 48 ;m++){ keys[ 7][m] = tempKey[m]; } break;
+	     case 8: for(let m=0;m < 48 ;m++){ keys[ 8][m] = tempKey[m]; } break;
+	     case 9: for(let m=0;m < 48 ;m++){ keys[ 9][m] = tempKey[m]; } break;
+	     case 10: for(let m=0;m < 48 ;m++){ keys[10][m] = tempKey[m]; } break;
+	     case 11: for(let m=0;m < 48 ;m++){ keys[11][m] = tempKey[m]; } break;
+	     case 12: for(let m=0;m < 48 ;m++){ keys[12][m] = tempKey[m]; } break;
+	     case 13: for(let m=0;m < 48 ;m++){ keys[13][m] = tempKey[m]; } break;
+	     case 14: for(let m=0;m < 48 ;m++){ keys[14][m] = tempKey[m]; } break;
+	     case 15: for(let m=0;m < 48 ;m++){ keys[15][m] = tempKey[m]; } break;
 	   }
 	 }
 	 return keys;  
 	}
-	
-};

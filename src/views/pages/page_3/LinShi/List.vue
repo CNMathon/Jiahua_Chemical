@@ -149,6 +149,7 @@ export default {
     },
     confirmFilter() {},
     onClickRight() {
+      sessionStorage.setItem('flag','1')
       this.$router.push({
         path: "../linshi"
       });

@@ -34,9 +34,9 @@
           <!-- 断路开始时间 -->
           <cell-value title="断路开始时间" :value="String(sendData.offtimeStart) || '无'" disable></cell-value>
           <!-- 断路结束时间 -->
-          <cell-value title="断路结束时间" :value="String(sendData.powertimeEnd) || '无'" disable></cell-value>
+          <cell-value title="断路结束时间" :value="String(sendData.offtimeEnd) || '无'" disable></cell-value>
           <!-- 作业部门 -->
-          <cell-value title="断路结束时间" :value="String(['部门名1', '部门名2']) || '无'" disable></cell-value>
+          <cell-value title="作业部门" :value="String(['部门名1', '部门名2']) || '无'" disable></cell-value>
           <!-- 作业部门负责人 -->
           <cell-value title="作业部门负责人" :value="String(sendData.workCharger) || '无'" disable></cell-value>
           <!-- 涉及部门 -->
@@ -140,9 +140,9 @@ export default {
         reason: [], //断路原因
         endangerSign: [], //危害辨识
         offtimeStart: "", //断路时间（起）
-        powertimeEnd: "", //断路时间（止）
-        workCharger: [], //作业部门负责人
-        offExplain: "" //相关说明
+        offtimeEnd: "", //断路时间（止）
+        workCharger: [] //作业部门负责人
+        //offExplain: "" //相关说明
       },
       fileList: [], // 图片列表
       list_1: [
@@ -188,7 +188,7 @@ export default {
       sendData.endangerSign = this.stringData("endangerSign", "list_2");
       sendData.applyDept = this.$userInfo.officeName;
       sendData.applyer = this.$userInfo.userName;
-      sendData.offExplain = offExplain.join(",");
+      //sendData.offExplain = offExplain.join(",");
       sendData.__sid = this.$userInfo.sessionId;
       let List = [
         {
@@ -270,7 +270,7 @@ export default {
       this.isLoading = true;
       this.$api.page_3
         .htHseDlzypListData({
-          dlzypCode: this.$route.query.code,
+          permitCode: this.$route.query.code,
           __sid: localStorage.getItem("JiaHuaSessionId")
         })
         .then(res => {

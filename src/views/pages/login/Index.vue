@@ -32,8 +32,8 @@
   </div>
 </template>
 <script>
-  import { DesUtils} from "./DES.js";
-  //import { DesUtils} from "./des2.js";
+  // import { DesUtils} from "./DES.js";
+  import { encode } from "./des2.js";
   
 export default {
   name: "login",
@@ -50,13 +50,12 @@ export default {
     tapLogin() {
       const that = this;
       this.loading = true;
-    //var secretKey =`thinkgem,jeesite,com`;
+    var secretKey =`thinkgem,jeesite,com`;
     // var secretKey =`yingzhifu,taihui,nanjing`;
-	  // var tname =encryptDes(this.username,secretKey) ;//加密
-    // var pwd = encryptDes(this.password,secretKey) ;//加密
 
-    // var tname = DesUtils.encode(this.username, secretKey); 
-    // var pwd = DesUtils.encode(this.password, secretKey); 
+    // console.log(encode)
+    // var tname = encode(this.username, secretKey); //加密
+    // var pwd = encode(this.password, secretKey); //加密
     // console.log('&username=' + tname + '&password=' + pwd); 
 
      var tname =this.username ;

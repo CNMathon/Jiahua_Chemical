@@ -142,7 +142,6 @@
 import Panel from "../../page_1/components/Panel";
 import Item from "./components/Item";
 export default {
-  name: "shuJu",
   components: {
     Panel,
     Item
@@ -245,12 +244,12 @@ export default {
         {
           text: "新材料",
           color: "rgba(78,169,232,0.1)",
-          router: "/gongyi"
+          router: "/xincailiao_1"
         },
         {
           text: "硫酸",
           color: "rgba(96,150,248,0.1);",
-          router: "/liusuan"
+          router: "/liusuan_1"
         }
       ],
       navs: [

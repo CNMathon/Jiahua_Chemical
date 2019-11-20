@@ -7,7 +7,7 @@
           <div class="header">
             <img
               class="header-img"
-              src="https://i.loli.net/2019/09/28/48HGoZeNtW3hjlw.png"
+              :src="require(`@/assets/images/gen_${gender}.svg`)"
               alt
               srcset
             />
@@ -137,6 +137,7 @@ export default {
       current: 0,
       tabActive_1: 0,
       tabActive_2: 0,
+      gender: 0,
       nav: [
         {
           text: "资料库",

@@ -10,7 +10,7 @@
         <van-icon name="notes-o" size="1.125rem" color="#C7C7C7" />
       </div>
     </div>
-    <div class="show-type van-hairline--surround">
+    <div class="show-type van-hairline--surround" v-if="!nodrop">
       <van-dropdown-menu :overlay="false">
         <van-dropdown-item v-model="value1" :options="option1" />
       </van-dropdown-menu>
@@ -20,6 +20,9 @@
 <script>
 export default {
   name: "actionBar",
+  props: {
+    nodrop: Boolean
+  },
   data() {
     return {
       value1: 0,

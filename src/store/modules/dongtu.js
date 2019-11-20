@@ -3,7 +3,8 @@ const state = {
   otherSpecial: [],
   hazardSb: [],
   guardian: [], //监护人
-  dtMan: [] //作业部门负责人
+  dtMan: [], //作业部门负责人
+  dtDept:[]
 };
 
 // getters
@@ -30,6 +31,7 @@ const actions = {
 // mutations
 const mutations = {
   setTag(state, { tags }) {
+    console.log(tags)
     state[tags.key] = tags.value;
   },
   resetState(state) {

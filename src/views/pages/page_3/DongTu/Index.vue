@@ -22,17 +22,13 @@
             <!-- 作业票状态 -->
             <cell-value title="作业票状态" value="编辑" disable></cell-value>
             <!-- 作业部门 -->
-            <div class="cell">
-              <div class="cell_title">
-                <span>作业部门</span>
-              </div>
-              <div class="cell_value">
-                <span>部门名1、部门名2</span>
-                <span class="cell_value_arrow">
-                  <van-icon name="search" />
-                </span>
-              </div>
-            </div>
+            <cell-select-department
+              title="作业部门"
+              required
+              :storeModule="storeModule"
+              storeKey="dtDept"
+              v-model="sendData.dtDept"
+            ></cell-select-department>
             <!-- 作业地点 -->
             <cell-input v-model="sendData.dtSite" title="作业地点" required placeholder="手工录入"></cell-input>
             <!-- 涉及其他特殊作业 -->
@@ -306,6 +302,7 @@ export default {
         otherSpecial: [], //涉及其他作业
         hazardSb: [], //危害辨识
         guardian: [], //监护人
+        dtDept:[],
         dtMan: [] //作业部门负责人
       },
       list_1: [
@@ -343,7 +340,8 @@ export default {
     otherSpecial: state => state.dongtu.otherSpecial,
     hazardSb: state => state.dongtu.hazardSb,
     guardian: state => state.dongtu.guardian,
-    dtMan: state => state.dongtu.dtMan
+    dtMan: state => state.dongtu.dtMan,
+    dtDept: state=> state.dongtu.dtDept
   }),
   beforeRouteLeave(to, from, next) {
     if (to.name === "dongtu_list") {
@@ -364,6 +362,10 @@ export default {
     }
   },
   activated() {
+    // console.log(this.$store.state)
+    // if(this.$store.state.dongtu.dtDept&&this.$store.state.dongtu.dtDept.length>0){
+    //   this.sendData.dtDept = this.$store.state.dongtu.dtDept
+    // }
     console.log("code:", this.$route.query.code);
     if (this.$route.query.code) {
       if (this.queryId !== this.$route.query.code) {
@@ -547,6 +549,7 @@ export default {
       sendData.hazardSb = this.stringData("hazardSb", "list_2");
       sendData.guardian = this.userString(sendData.guardian, "userName");
       sendData.dtMan = this.userString(sendData.dtMan, "userName");
+      sendData.dtDept = this.userString(sendData.dtDept, "name");
       sendData.applyDept = this.$userInfo.officeName;
       sendData.applyer = this.$userInfo.userName;
       sendData.dtSite = this.sendData.dtSite; // 作业地点
@@ -611,6 +614,8 @@ export default {
               this.sendData[key] = this.reductionSelectUser(info[key]);
             } else if (key === "dtMan") {
               this.sendData[key] = this.reductionSelectUser(info[key]);
+            } else if (key === "dtDept") {
+              this.sendData[key] = this.reductionSelectDept(info[key]);
             } else if (key === "otherSpecial") {
               if (info[key])
                 this.sendData[key] = this.reductionSelectTag(
@@ -629,7 +634,17 @@ export default {
           }
           console.log("this.sendData: ", this.sendData);
         });
-    }
+    },
+    reductionSelectDept(data) {
+      let newArr = [];
+      let arr = data.split(",");
+      arr.forEach(element => {
+        let obj = {};
+        obj.name = element;
+        newArr.push(obj);
+      });
+      return newArr;
+    },
   },
   watch: {
     otherSpecial(res) {
@@ -642,7 +657,13 @@ export default {
       this.sendData.guardian = res;
     },
     dtMan(res) {
+      console.log(222222222222222)
       this.sendData.dtMan = res;
+    },
+    dtDept(res){
+      console.log(222222222222222)
+      console.log(res)
+      this.sendData.dtDept = res
     }
   }
 };

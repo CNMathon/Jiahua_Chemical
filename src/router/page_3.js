@@ -60,6 +60,31 @@ const routes = {
         },
       ]
     },
+    // 工单管理
+    {
+      path: "/page_3/gongdanguanli",
+      name: "GongDanGuanLi_Index",
+      redirect: "/page_3/gongdanguanli/index",
+      component: () => import("../views/pages/page_3/GongDanGuanLi/Home.vue"),
+      children: [
+        {
+          path: "/page_3/gongdanguanli/index",
+          name: "gongdanguanli_Index",
+          component: () => import("../views/pages/page_3/GongDanGuanLi/Index.vue"),
+          meta: {
+            name: "工单列表"
+          }
+        },
+        {
+          path: "/page_3/gongdanguanli/details",
+          name: "gongdanguanli_Details",
+          component: () => import("../views/pages/page_3/GongDanGuanLi/Details.vue"),
+          meta: {
+            name: "新增工单"
+          }
+        },
+      ]
+    },
     // 电气第一种工作票
     {
       path: "/page_3/dianqi",
@@ -142,12 +167,7 @@ const routes = {
         }
       ]
     },
-    // 工单管理
-    {
-      path: "/page_3/gongdanguanli/index",
-      name: "GongDanGuanLi_Index",
-      component: () => import("../views/pages/page_3/GongDanGuanLi/Index.vue")
-    },
+    
     // 动火安全
     {
       path: "/page_3/donghuo",

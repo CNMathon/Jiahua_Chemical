@@ -15,6 +15,7 @@ import weizhang from "./modules/weizhang";
 import relijixie from "./modules/relijixie";
 import dianqi from "./modules/dianqi";
 import dianqi2 from "./modules/dianqi2";
+import gongdanguanli from "./modules/gongdanguanli";
 
 Vue.use(Vuex);
 
@@ -22,6 +23,7 @@ const debug = process.env.NODE_ENV !== 'production';
 
 export default new Vuex.Store({
   modules: {
+    gongdanguanli,
     selectUser,
     donghuo,
     diaozhuang,

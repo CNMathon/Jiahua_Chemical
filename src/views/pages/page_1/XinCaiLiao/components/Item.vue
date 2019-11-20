@@ -1,10 +1,11 @@
 <template>
   <div class="guolu">
-    <div class="values desc">{{desc}}</div>
-    <div class="values id">{{id}}</div>
-    <div class="number value">
-      <div>{{value}}</div>
-      <div class="unit">{{unit}}</div>
+    <div class="value title">{{info.title}}</div>
+    <div class="values name">{{info.name}}</div>
+    <div class="values key">{{info.key}}</div>
+    <div class="number">
+      {{info.value}}
+      <div class="unit">{{info.unit}}</div>
     </div>
   </div>
 </template>
@@ -12,12 +13,9 @@
 export default {
   name: "guoLu",
   props: {
-    desc: String,
-    id: String,
-    value: String,
-    unit: String
+    info: Object
   }
-}
+};
 </script>
 <style lang="scss" scoped>
 .guolu {
@@ -31,32 +29,34 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  .desc {
-    text-align: left;
-    width: 30%;
+  .title {
+    width: 20%;
   }
-  .id {
-    width: 40%;
-    text-align: center;
+  .key{
+    text-align: right;
   }
-  .value {
-    width: 30%;
+  .name {
+    width: 25%;
   }
   .value,
   .values {
     // flex: 1;
-    font-size: 28px;
+    font-size: 18px;
     font-weight: 400;
     color: rgba(255, 255, 255, 1);
   }
+  .values {
+    // flex: 2;
+    text-align: center;
+  }
   .number {
-    font-size: 40px;
+    font-size: 32px;
     font-weight: 500;
-    color: rgba(255, 255, 255, 1);
+    width: 15%;
     text-align: right;
+    color: rgba(255, 255, 255, 1);
     .unit {
       font-size: 28px;
-      text-align: right;
     }
   }
 }

@@ -47,11 +47,14 @@ export default {
     },
     max: 0
   },
+  mounted(){
+    
+  },
   methods: {
     toSelectUser() {
       if (this.disable) return;
       this.$router.push({
-        path: "./kongjian_select_department",
+        path: "/page_3/kongjian/kongjian_select_department",
         query: {
           storeModule: this.storeModule,
           storeKey: this.storeKey,
@@ -61,6 +64,8 @@ export default {
       });
     },
     showNames() {
+      console.log(789)
+      console.log(this.value)
       if (this.value) {
         let arr = JSON.parse(JSON.stringify(this.value));
         let newArr = arr.map(item => {
