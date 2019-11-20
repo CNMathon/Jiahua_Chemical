@@ -52,7 +52,7 @@
   }
 }
 .home {
-  min-height: 100vh;
+  // min-height: 100vh;
   position: relative;
   }
 .list-card-area {

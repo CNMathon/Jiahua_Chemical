@@ -36,7 +36,9 @@ export default {
     }
   },
   methods: {
-    onSearch() {},
+    onSearch() {
+      
+    },
     changeValue(val) {
       this.$emit("input", val);
     }

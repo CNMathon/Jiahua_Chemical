@@ -492,6 +492,8 @@ export default {
       };
       sendData.applyDept = this.$userInfo.officeName;
       sendData.applyer = this.$userInfo.userName;
+      finSendData.applyDept = this.$userInfo.officeCode;//正式用
+      finSendData.applyer = this.$userInfo.userCode;//正式用
       finSendData.scMan = this.userString(sendData.scMan, "userName");
       finSendData.zyMan = this.userString(sendData.zyMan, "userName");
       finSendData.otherSpecial = this.stringData("otherSpecial", "list_1");

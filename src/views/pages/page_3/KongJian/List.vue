@@ -31,9 +31,9 @@
               @click="jumpToMorePage(item.htStatus, item.sxkjCode)"
             >
               <div class="left">
-                <div class="left-line left-line-notlast">作业内容：{{item.sxkjNeurogen}}</div>
-                <div class="left-line left-line-notlast left-line-hor">申请部门：{{item.applyDept}}</div>
-                <div class="left-line left-line-notlast left-line-hor">申请人：{{item.applyRen}}</div>
+                <div class="left-line left-line-notlast">作业内容：{{item.zyContent}}</div>
+                <div class="left-line left-line-notlast left-line-hor">申请部门：{{item.office==null?'':item.office.officeName}}</div>
+                <div class="left-line left-line-notlast left-line-hor">申请人：{{item.user==null?'':item.user.userName}}</div>
                 <div class="left-line left-line-notlast">作业开始时间：{{item.zyStarttime}}</div>
                 <div class="left-line">作业结束时间：{{item.zyEndtime}}</div>
               </div>
@@ -79,8 +79,10 @@ export default {
     this.getPageData();
     this.$store.dispatch("kongjian/cleanState");
     this.$store.commit("kongjian/delete_KeepAlive", "kongjianindex");
+    this.$store.commit("kongjian/delete_KeepAlive", "kongjianindex2");
     this.$nextTick(() => {
       this.$store.commit("kongjian/add_KeepAlive", "kongjianindex");
+      this.$store.commit("kongjian/add_KeepAlive", "kongjianindex2");
     });
   },
   methods: {
@@ -107,11 +109,13 @@ export default {
     // 跳转至详情页
     jumpToMorePage(status, code) {
       if (Number(status) === 1) {
+        // this.$store.commit("kongjian/add_KeepAlive", "kongjianindex");
         this.$router.push({
           path: "../kongjian",
           query: { id: code }
         });
       } else if (Number(status) === 2) {
+        // this.$store.commit("kongjian/add_KeepAlive", "kongjianindex2");
         this.$router.push({
           path: "../kongjian/index2",
           query: { id: code }

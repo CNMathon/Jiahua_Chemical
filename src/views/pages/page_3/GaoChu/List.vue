@@ -43,8 +43,8 @@
                   <div class="left-line left-line-notlast">作业内容：{{ item.workContent }}</div>
                   <div class="left-line left-line-notlast">作业地点：{{ item.workAddress }}</div>
                   <div class="left-line left-line-notlast">登高类别：{{ item.heightType }}</div>
-                  <div class="left-line left-line-notlast">申请部门：{{ item.applyDept }}</div>
-                  <div class="left-line left-line-notlast">申请人：{{ item.applicant }}</div>
+                  <div class="left-line left-line-notlast">申请部门：{{item.office==null?'':item.office.officeName}}</div>
+                  <div class="left-line left-line-notlast">申请人：{{item.user==null?'':item.user.userName}}</div>
                   <div class="left-line left-line-notlast">作业开始时间：{{ item.startTime }}</div>
                   <div class="left-line">作业结束时间：{{ item.endTime }}</div>
                 </div>

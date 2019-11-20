@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <van-nav-bar title="业务管理" fixed/>
+    <van-nav-bar title="业务管理" fixed />
     <div class="head fixed-first">
       <div class="head-nav" @click="toPage('./wochuli/index')">
         <div class="head-nav-image">
@@ -34,9 +34,9 @@
         </van-col>
       </van-row>
     </div>
-    <div class="content" >
+    <div class="content">
       <div class="content-title">其他</div>
-      <van-row type="flex"  class="content-list">
+      <van-row type="flex" class="content-list">
         <van-col span="6" v-for="(item, index) in other" :key="index">
           <div class="nav" @click="toPage(item.router)">
             <div class="nav-image">
@@ -59,85 +59,91 @@ export default {
         {
           text: "热力机械工作票",
           color: "rgba(23, 193, 149, 0.1)",
-          icon: 'ticket',
+          icon: "ticket",
           router: "./relijixie/index"
         },
         {
-          text: "工作票",
+          text: "电气第一种工作票",
           color: "rgba(23, 193, 149, 0.1)",
-          icon: 'ticket',
-          router: ""
+          icon: "ticket",
+          router: "./dianqi/index"
+        },
+        {
+          text: "电气第二种工作票",
+          color: "rgba(23, 193, 149, 0.1)",
+          icon: "ticket",
+          router: "./dianqi_2/index"
         },
         {
           text: "工单管理",
           color: "rgba(23, 193, 149, 0.1)",
-          icon: 'ticket',
+          icon: "ticket",
           router: "./gongdanguanli/index"
         },
- 
+
         {
           text: "动火安全",
           color: "rgba(238, 116, 95, 0.1)",
-          icon: 'donghuo',
+          icon: "donghuo",
           router: "./donghuo/List"
         },
         {
           text: "受限空间安全",
           color: "rgba(78,169,232,0.1)",
-          icon: 'shouxian',
+          icon: "shouxian",
           router: "./kongjian/list"
         },
         {
           text: "盲板抽堵安全",
           color: "rgba(96,150,248,0.1);",
-          icon: 'mangban',
+          icon: "mangban",
           router: "./mangban/list"
         },
         {
           text: "高处安全",
           color: "rgba(237, 246, 252, 1)",
-          icon: 'gaochu',
+          icon: "gaochu",
           router: "./gaochu/list"
         },
         {
           text: "吊装安全",
           color: "rgba(239, 244, 254, 1)",
-          icon: 'diaozhuang',
+          icon: "diaozhuang",
           router: "./diaozhuang/list"
         },
         {
           text: "临时用电",
           color: "rgba(231, 248, 244, 1)",
-          icon: 'lingshi',
+          icon: "lingshi",
           router: "./linshi/list"
         },
         {
           text: "动土安全",
           color: "rgba(237, 246, 252, 1)",
-          icon: 'dongtu',
+          icon: "dongtu",
           router: "./dongtu/list"
         },
         {
           text: "断路安全",
           color: "rgba(245, 166, 35, 0.14)",
-          icon: 'duanlu',
+          icon: "duanlu",
           router: "./duanlu/list"
         }
       ],
       other: [
         {
           text: "隐患",
-          icon: '',
+          icon: "",
           router: "./yinhuan/list"
         },
         {
           text: "违章",
-          icon: '',
+          icon: "",
           router: "./weizhang/list"
         },
         {
           text: "缺陷",
-          icon: '',
+          icon: "",
           router: "./quexian/list"
         }
       ]
@@ -187,7 +193,7 @@ export default {
     width: 100%;
     margin-top: 24px;
     background: rgba(255, 255, 255, 1);
-    .content-list{
+    .content-list {
       width: 100%;
       flex-wrap: wrap;
     }

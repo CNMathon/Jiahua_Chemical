@@ -109,7 +109,8 @@ const routes = {
           }
         },
         {
-          path: "/page_4/she_bei_dang_an/detail/:id",
+          path: "/page_4/she_bei_dang_an/detail",
+          redirect: "/page_4/she_bei_dang_an/detail/index",
           name: "sheBeiDangAnDetailHome",
           component: () =>
             import("../views/pages/page_4/SheBeiDangAn/Detail/Home.vue"),
@@ -117,10 +118,9 @@ const routes = {
             name: "设备详情",
             keepAlive: false //此组件需要被缓存
           },
-          redirect: "/page_4/she_bei_dang_an/detail/index/:id",
           children: [
             {
-              path: "/page_4/she_bei_dang_an/detail/index/:id",
+              path: "/page_4/she_bei_dang_an/detail/index",
               name: "sheBeiDangAnDetail",
               component: () =>
                 import("../views/pages/page_4/SheBeiDangAn/Detail/Index.vue"),
@@ -131,7 +131,7 @@ const routes = {
               props: true
             },
             {
-              path: "/page_4/she_bei_dang_an/detail/qushitu/:id",
+              path: "/page_4/she_bei_dang_an/detail/qushitu",
               name: "sheBeiDangAnQuShiTu",
               component: () =>
                 import("../views/pages/page_4/SheBeiDangAn/Detail/QuShiTu.vue"),
@@ -142,7 +142,7 @@ const routes = {
               props: true
             },
             {
-              path: "/page_4/she_bei_dang_an/detail/baojing/:id",
+              path: "/page_4/she_bei_dang_an/detail/baojing",
               name: "sheBeiDangAnQuBaoJing",
               component: () =>
                 import("../views/pages/page_4/SheBeiDangAn/Detail/BaoJing.vue"),

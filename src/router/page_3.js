@@ -60,6 +60,88 @@ const routes = {
         },
       ]
     },
+    // 电气第一种工作票
+    {
+      path: "/page_3/dianqi",
+      name: "DianQi",
+      redirect: "/page_3/dianqi/index",
+      component: () => import("../views/pages/page_3/DianQi/Home.vue"),
+      children: [
+        {
+          path: "/page_3/dianqi/index",
+          name: "DianQi_Index",
+          component: () => import("../views/pages/page_3/DianQi/Index.vue"),
+          meta: {
+            name: "电气第一种工作票"
+          }
+        },
+        {
+          path: "/page_3/dianqi/details",
+          name: "DianQi_Details",
+          component: () => import("../views/pages/page_3/DianQi/Details.vue"),
+          meta: {
+            name: "电气第一种工作票-详情"
+          }
+        },
+        {
+          path: "/page_3/dianqi/yijian",
+          name: "DianQi_YiJian",
+          component: () => import("../views/pages/page_3/DianQi/YiJian.vue"),
+          meta: {
+            name: "填写审批意见"
+          }
+        },
+        {
+          path: "/page_3/dianqi/liucheng",
+          name: "DianQi_LiuCheng",
+          component: () => import("../views/pages/page_3/DianQi/LiuCheng.vue"),
+          meta: {
+            name: "查看流程记录"
+          }
+        }
+      ]
+    },
+    //电气第二种工作票
+    {
+      path: "/page_3/dianqi_2",
+      name: "DianQi_2",
+      redirect: "/page_3/dianqi_2/index",
+      component: () => import("../views/pages/page_3/DianQi_2/Home.vue"),
+      children: [
+        {
+          path: "/page_3/dianqi_2/index",
+          name: "DianQi_2_Index",
+          component: () => import("../views/pages/page_3/DianQi_2/Index.vue"),
+          meta: {
+            name: "电气第二种工作票"
+          }
+        },
+        {
+          path: "/page_3/dianqi_2/details",
+          name: "DianQi_2_Details",
+          component: () => import("../views/pages/page_3/DianQi_2/Details.vue"),
+          meta: {
+            name: "电气第二种工作票-详情"
+          }
+        },
+        {
+          path: "/page_3/dianqi_2/yijian",
+          name: "DianQi_2_YiJian",
+          component: () => import("../views/pages/page_3/DianQi_2/YiJian.vue"),
+          meta: {
+            name: "填写审批意见"
+          }
+        },
+        {
+          path: "/page_3/dianqi_2/liucheng",
+          name: "DianQi_2_LiuCheng",
+          component: () => import("../views/pages/page_3/DianQi_2/LiuCheng.vue"),
+          meta: {
+            name: "查看流程记录"
+          }
+        }
+      ]
+    },
     // 工单管理
     {
       path: "/page_3/gongdanguanli/index",
@@ -331,7 +413,7 @@ const routes = {
           name: "diaozhuang_index",
           component: () => import("../views/pages/page_3/DiaoZhuang/Index.vue"),
           meta: {
-            keepAlive: true //此组件需要被缓存
+            keepAlive: false //此组件需要被缓存
           }
         },
         {

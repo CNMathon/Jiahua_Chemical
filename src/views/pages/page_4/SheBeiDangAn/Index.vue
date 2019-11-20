@@ -14,7 +14,7 @@
           @click="changeTabActive(1)"
         >书签设备</div>
       </div>
-      <j-filter-bar v-model="searchValue" @search="getPageData(true)" @tap="showFilter = true"></j-filter-bar>
+      <j-filter-bar v-model="searchValue" @search="search" @tap="showFilter = true"></j-filter-bar>
     </van-sticky>
     <j-filter v-model="showFilter" @confirm="confirmFilter">
       <j-filter-search v-model="searchValues" @search="filterSearch"></j-filter-search>
@@ -39,7 +39,7 @@
         <div v-for="(item, index) in 2" :key="index">
           <div class="device-list" v-if="index === active">
             <div v-for="(items, indexs) in pageList" :key="indexs">
-              <div class="device-item" @click="toDetail(index)">
+              <div class="device-item" @click="toDetail(items.id)">
                 <div class="device-item__infos">{{items.deviceName}}</div>
                 <div class="device-item__infos">{{items.devicePosition}}</div>
                 <div class="device-item__infos" v-text="setSpecialtyType(items.specialtyType)"></div>
@@ -62,7 +62,7 @@
 import { mixin } from "@/mixin/mixin";
 import { watch } from "fs";
 export default {
-  name: "cheng_bao_shang_ren_yuan_index",
+  name: "she-bei-dang-an",
   mixins: [mixin],
   data() {
     return {
@@ -79,20 +79,22 @@ export default {
       searchValue: "",
       searchValues: "",
       sheetActions_1: [
-        { name: "电器", index: 0 },
-        { name: "仪表", index: 1 },
-        { name: "机械", index: 2 },
-        { name: "特种", index: 3 },
-        { name: "化验", index: 4 },
-        { name: "安全附件", index: 5 }
+        { name: "请选择", id: -1 },
+        { name: "电气", id: 1 },
+        { name: "仪表", id: 2 },
+        { name: "机械", id: 3 },
+        { name: "特种", id: 4 },
+        { name: "化验", id: 5 },
+        { name: "安全附件", id: 6 }
       ],
       sheetActions_2: [
-        { name: "烧碱", index: 0 },
-        { name: "新材料", index: 1 },
-        { name: "动力中心", index: 2 },
-        { name: "水处理站", index: 3 },
-        { name: "硫化厂", index: 4 },
-        { name: "脂肪酸厂", index: 5 }
+        { name: "请选择", id: -1 },
+        { name: "烧碱", id: 1 },
+        { name: "新材料", id: 2 },
+        { name: "动力中心", id: 3 },
+        { name: "水处理站", id: 4 },
+        { name: "硫化厂", id: 5 },
+        { name: "脂肪酸厂", id: 6 }
       ],
       specialtyType: "",
       deviceName: ""
@@ -105,20 +107,19 @@ export default {
     // 过滤-搜索
     filterSearch() {
       console.log(this.searchValues);
-      this.deviceName = this.searchValues;
     },
     filterSelect_1(e) {
-      console.log("e: ", e);
-      this.specialtyType = e.index;
+      console.log("e: ", e,e.id,e.name);
+      this.specialtyType = e.id === -1 ? "" : e.id;
     },
     filterSelect_2(e) {
       console.log("e: ", e);
     },
     // 确认筛选
     confirmFilter() {
-      console.log(123, this.deviceName, this.specialtyType);
       this.deviceName = this.searchValues;
-      this.getPageData();
+      console.log(123, this.deviceName, this.specialtyType);
+      this.getPageData(true);
     },
     // 获取设备列表
     getPageData(refresh = false) {
@@ -139,7 +140,7 @@ export default {
         .spaceDeviceSelectIndexNew({
           pageNo: this.pageNow,
           pageSize: this.pageSize,
-          empName: this.searchValue,
+          empName: "",
           __sid: this.$userInfo.sessionId,
           spaceStatus: 0,
           spaceState: 0,
@@ -168,7 +169,8 @@ export default {
         });
     },
     toDetail(id) {
-      this.$router.push({ path: `./detail/${id}` });
+      console.log(id);
+      this.$router.push({ path: `./detail?id=${id}` });
     },
     //设置设备类别
     setSpecialtyType(type) {
@@ -196,16 +198,17 @@ export default {
           break;
       }
     },
+    search(searchName) {
+      console.log(searchName);
+      this.specialtyType = "";
+      if (searchName) {
+        this.deviceName = searchName;
+        this.getPageData(true);
+      }
+    }
   },
   created() {
     this.getPageData();
-  },
-  watch: {
-    searchValue(val, oldVal) {
-      //普通的watch监听
-      this.specialtyType = "";
-      this.deviceName = val;
-    }
   }
 };
 </script>

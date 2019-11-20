@@ -18,22 +18,21 @@
           :row="3"
           :loading="isLoading"
           class="skeleton"
-          v-for="(item, index) in 3"
-          :key="index"
-        ></van-skeleton>
-        <label v-for="(item, index) in listData" :key="index">
-          <!-- 此处在做完AJAX后需要判断是否为最后行 - class存在判断 -->
-          <div class="donghuo-list-card donghuo-list-card-nolast">
-            <div class="left">
-              <div class="left-line left-line-notlast">违章类型：{{item.breakrulename}}</div>
-              <div class="left-line left-line-notlast">发生地点：{{item.occursite}}</div>
-              <div class="left-line left-line-notlast">发生时间：{{item.occurtime}}</div>
+        >
+          <label v-for="(item, index) in listData" :key="index">
+            <!-- 此处在做完AJAX后需要判断是否为最后行 - class存在判断 -->
+            <div class="donghuo-list-card donghuo-list-card-nolast">
+              <div class="left">
+                <div class="left-line left-line-notlast">违章类型：{{item.breakrulename}}</div>
+                <div class="left-line left-line-notlast">发生地点：{{item.occursite}}</div>
+                <div class="left-line left-line-notlast">发生时间：{{item.occurtime}}</div>
+              </div>
+              <div class="right">
+                <button>查看详情</button>
+              </div>
             </div>
-            <div class="right">
-              <button>查看详情</button>
-            </div>
-          </div>
-        </label>
+          </label>
+        </van-skeleton>
       </div>
     </div>
   </div>

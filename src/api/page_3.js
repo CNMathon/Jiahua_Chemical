@@ -57,6 +57,10 @@ const article = {
   htHseDzzypSave(params, __sid) {
     return axios.post(`${base.sq}dzzy/htHseDzzyp/save`, qs.stringify(params));
   },
+  //吊装安全作业子表
+  getDzaqInfo(params){
+	  return axios.get(`${base.sq}dzzy/htHseDzzyp/alllistHtHseDzzypAqcs.json?${qs.stringify(params)}`,{} );
+  },
   // 吊装作业票子表保存
   htHseDzzypSaveLit(params, __sid) {
     return axios.post(
@@ -102,12 +106,7 @@ const article = {
   },
   // 受限空间作业票保存
   htHseSxkjzypSave(params, __sid) {
-    return axios.post(`${base.sq}sxkjzyp/htHseSxkjzyp/save`, params, {
-      headers: {
-        "Content-Type": "application/json",
-        __sid: __sid
-      }
-    });
+    return axios.post(`${base.sq}sxkjzyp/htHseSxkjzyp/save`, qs.stringify(params));
   },
   // 受限空间作业票查询
   htHseSxkjzypListData(params) {

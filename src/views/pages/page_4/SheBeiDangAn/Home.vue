@@ -20,6 +20,6 @@ export default {
   width: 100vw;
   height: 100vh;
   overflow-x: hidden;
-  background-color: #f6f6f6;
+  // background-color: #f6f6f6;
 }
 </style>

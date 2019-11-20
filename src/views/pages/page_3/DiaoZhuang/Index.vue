@@ -5,11 +5,11 @@
 		</van-sticky>
 		<div class="cell_group">
 			<!-- 申请部门 -->
-			<cell-value title="申请部门" :value="$userInfo.officeName" disable></cell-value>
+			<cell-value title="申请部门" :value="sendData.sqbm || $userInfo.officeName" disable></cell-value>
 			<!-- 申请人 -->
-			<cell-value title="申请人" :value="$userInfo.userName" disable></cell-value>
+			<cell-value title="申请人" :value="sendData.sqr || $userInfo.userName" disable></cell-value>
 			<!-- 作业票编号 -->
-			<cell-value title="作业票编号" value disable></cell-value>
+			<cell-value title="作业票编号" :value="sendData.zypcode" disable></cell-value>
 			<!-- 作业票状态 -->
 			<cell-value title="作业票状态" value="编辑" disable></cell-value>
 			<!-- 吊装内容 -->
@@ -50,7 +50,7 @@
 					</span>
 				</div>
 				<div class="cell_value" @click="selectUser('work_permit_3')">
-					<span>{{ work_permit_3.name || "点击选择" }}</span>
+					<span>{{ sendData.dzzhjtsgzzyzh || work_permit_3.name || "点击选择" }}</span>
 					<span class="cell_value_arrow">
 						<van-icon name="arrow" />
 					</span>
@@ -340,93 +340,118 @@
 		// 	this.$store.dispatch("diaozhuang/cleanState");
 		// },
 		created() {
-      console.log(33333333)
-			if(this.$route.query.zypcode){
+			if (this.$route.query.zypcode) {
 				this.zypcode = this.$route.query.zypcode || 0;
 				this.getInfo();
+				
 			}
 		},
 		methods: {
-			
+
 			...mapMutations('diaozhuang', {
 				setTag: 'setTag'
 			}),
-      Next() {
-        if (!this.$route.query.id) {
-          this.$notify("请先提交保存");
-          return;
-        } else if (this.oldInfo.actRuTask) {
-        } else {
-          console.log(123456)
-          this.$Toast.loading({
-            message: "加载中...",
-            forbidClick: true
-          });
-          this.$api.page_3
-            .htHseDzzypList({
-              zypcode: this.zypcode,
-              __sid: localStorage.getItem("JiaHuaSessionId")
-            })
-            .then(res => {
-              this.$Toast.clear()
-              if(res.list[0].actRuTask){
-                console.log(1)
-                let data = {
-                  'id':res.list[0].id,
-                  'flowKey':'htHseDzzypService',
-                  'comment':'',
-                  'actRuTask.id':res.list[0].actRuTask.id,
-                  'btnSubmit':'审批',
-                  __sid: localStorage.getItem("JiaHuaSessionId")
-                }
-                this.$api.page_3.approve(data).then((ress)=>{
-                  console.log(ress)
-                  if(ress.groups){
-                    this.$router.push({name:'daibanren',query:{
-                      groups:ress.groups.join(','),
-                      taskId:ress.taskId,
-                      id:res.list[0].id,
-                      type:'htHseDzzypService'
-                    }})
-                  }else{
-                    this.$router.replace({name:'diaozhuang_list'})
-                  }
-                }).catch(() => this.$Toast.clear());
-              }else{
-                console.log(2)
-                let data = {
-                  'id':res.list[0].id,
-                  'flowKey':'htHseDzzypService',
-                  __sid: localStorage.getItem("JiaHuaSessionId")
-                }
-                this.$api.page_3.start('dzzy/htHseDzzyp',data).then((ress)=>{
-                  console.log(ress)
-                  if(ress.groups){
-                    this.$router.push({name:'daibanren',query:{
-                      groups:ress.groups.join(','),
-                      taskId:ress.taskId,
-                      id:res.list[0].id,
-                      type:'htHseDzzypService'
-                    }})
-                  }else{
-                    this.$router.replace({name:'diaozhuang_list'})
-                  }
-                }).catch(() => this.$Toast.clear());
-              }
-            })
-            .catch(() => this.$Toast.clear());
-          // this.$api.page_3
-          //   .start("dhzyp", {
-          //     id: this.oldInfo.id,
-          //     __sid: localStorage.getItem("JiaHuaSessionId")
-          //   })
-          //   .then(res => {
-          //     console.log("res: ", res);
-          //     this.$Toast.clear();
-          //   })
-          //   .catch(() => this.$Toast.clear());
-        }
-      },
+			Next() {
+				if (!this.$route.query.id) {
+					this.$notify("请先提交保存");
+					return;
+				} else if (this.oldInfo.actRuTask) {} else {
+					this.$Toast.loading({
+						message: "加载中...",
+						forbidClick: true
+					});
+					this.$api.page_3
+						.htHseDzzypList({
+							zypcode: this.zypcode,
+							__sid: localStorage.getItem("JiaHuaSessionId")
+						})
+						.then(res => {
+							this.$Toast.clear()
+							if (res.list[0].actRuTask) {
+								let data = {
+									'id': res.list[0].id,
+									'flowKey': 'htHseDzzypService',
+									'comment': '',
+									'actRuTask.id': res.list[0].actRuTask.id,
+									'btnSubmit': '审批',
+									__sid: localStorage.getItem("JiaHuaSessionId")
+								}
+								this.$api.page_3.approve(data).then((ress) => {
+									console.log(ress)
+									if (ress.groups) {
+										this.$router.push({
+											name: 'daibanren',
+											query: {
+												groups: ress.groups.join(','),
+												taskId: ress.taskId,
+												id: res.list[0].id,
+												type: 'htHseDzzypService'
+											}
+										})
+									} else {
+										this.$router.replace({
+											name: 'diaozhuang_list'
+										})
+									}
+								}).catch(() => this.$Toast.clear());
+							} else {
+								console.log(2)
+								let data = {
+									'id': res.list[0].id,
+									'flowKey': 'htHseDzzypService',
+									__sid: localStorage.getItem("JiaHuaSessionId")
+								}
+								this.$api.page_3.start('dzzy/htHseDzzyp', data).then((ress) => {
+									console.log(ress)
+									if (ress.groups) {
+										this.$router.push({
+											name: 'daibanren',
+											query: {
+												groups: ress.groups.join(','),
+												taskId: ress.taskId,
+												id: res.list[0].id,
+												type: 'htHseDzzypService'
+											}
+										})
+									} else {
+										this.$router.replace({
+											name: 'diaozhuang_list'
+										})
+									}
+								}).catch(() => this.$Toast.clear());
+							}
+						})
+						.catch(() => this.$Toast.clear());
+					// this.$api.page_3
+					//   .start("dhzyp", {
+					//     id: this.oldInfo.id,
+					//     __sid: localStorage.getItem("JiaHuaSessionId")
+					//   })
+					//   .then(res => {
+					//     console.log("res: ", res);
+					//     this.$Toast.clear();
+					//   })
+					//   .catch(() => this.$Toast.clear());
+				}
+			},
+			//获取签名信息
+			qianming(id){
+				let sendData = {};
+				sendData.__sid = this.$userInfo.sessionId;
+				sendData['dzzypId.id'] = id;
+				var param ={"dzzypId.id":id,__sid: this.$userInfo.sessionId}
+				this.$api.page_3.getDzaqInfo(param).then(res=>{
+					var _this =this;
+					_this.checked =[];
+					res.forEach((item,inx)=>{
+						if(item.qrr && item.qrr!="0"){
+							_this.checked.push({checked:true,img:item.qrr})
+						}else{
+							_this.checked.push({checked:false,img:""})
+						}
+					})
+				})
+			},
 			//获取详情
 			getInfo() {
 
@@ -436,39 +461,53 @@
 				this.$api.page_3
 					.htHseDzzypList(sendData)
 					.then(res => {
-						
-						const info=res.list[0];
-						
-						this.sendData.dznr=info.dznr;
-						this.sendData.dzdd=info.dzdd;
-						this.sendData.dzgjmc=info.dzgjmc;
-						this.sendData.qdzwzl=info.qdzwzl;
-						this.sendData.zyksDate=info.zyksDate;
-						this.sendData.zyjsDate=info.zyjsDate;
-						this.sendData.id=info.id;
-						
-						let zyfzr=[];
-						info.zyfzr.split(",").map(items=>{
+
+						const info = res.list[0];
+
+						this.sendData.dznr = info.dznr;
+						this.sendData.dzdd = info.dzdd;
+						this.sendData.dzgjmc = info.dzgjmc;
+						this.sendData.qdzwzl = info.qdzwzl;
+						this.sendData.zyksDate = info.zyksDate;
+						this.sendData.zyjsDate = info.zyjsDate;
+						this.sendData.sqbm = info.sqbm;
+						this.sendData.sqr = info.sqr;
+						this.sendData.zypcode = info.zypcode;
+						this.sendData.dzryjtsgzzyzh = info.dzryjtsgzzyzh;
+						this.work_permit_1.name = info.dzryjtsgzzyzh.split(",")[0];
+						this.work_permit_2.name = info.dzryjtsgzzyzh.split(",")[1];
+
+						this.sendData.dzzhjtsgzzyzh = info.dzzhjtsgzzyzh;
+						this.sendData.id = info.id;
+
+						let zyfzr = [];
+						info.zyfzr.split(",").map(items => {
 							zyfzr.push({
-								userName:items
+								userName: items
 							});
 						})
-						this.sendData.zyfzr=zyfzr;
-						
-						let jhr=[];
-						info.jhr.split(",").map(items=>{
+						this.sendData.zyfzr = zyfzr;
+						console.log(333);
+						console.log(this.sendData)
+						let jhr = [];
+						info.jhr.split(",").map(items => {
 							jhr.push({
-								userName:items
+								userName: items
 							});
 						})
-						this.sendData.jhr=jhr;
-						
-						let whsb=[];
-						info.whsb.split(",").map(items=>{
+						this.sendData.jhr = jhr;
+
+						let whsb = [];
+						info.whsb.split(",").map(items => {
 							whsb.push(this.list_1[items]);
 						})
-						this.setTag({tags:{key:"whsb",value:whsb}});
-						
+						this.setTag({
+							tags: {
+								key: "whsb",
+								value: whsb
+							}
+						});
+						this.qianming(info.id);
 					})
 					.catch(() => {
 
@@ -552,8 +591,10 @@
 				sendData.jhr = this.userString(sendData.jhr, "userName");
 				sendData.dzryjtsgzzyzh = dzryjtsgzzyzh.join(",");
 				sendData.dzzhjtsgzzyzh = this.work_permit_3.id || "";
-				sendData.sqbm = this.$userInfo.officeName;
-				sendData.sqr_code = this.$userInfo.refCode;
+				//sendData.sqbm = this.$userInfo.officeName;
+				sendData.sqbm = this.$userInfo.officeCode;
+				sendData.sqr_code = this.$userInfo.userCode;
+				sendData.sqr = this.$userInfo.userName;
 				sendData.__sid = this.$userInfo.sessionId;
 
 				let messageId; // 主表查询返回的ID

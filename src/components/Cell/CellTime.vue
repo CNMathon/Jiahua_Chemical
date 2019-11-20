@@ -4,7 +4,7 @@
       <span>{{ title }}</span>
       <span class="required" v-if="required">*</span>
     </div>
-    <div class="cell_value" @click="showTime()">{{ showText() }}</div>
+    <div class="cell_value">{{ showText() }}</div>
     <van-icon name="arrow" />
     <!-- 时间选择 -->
     <van-popup v-model="timeShow" position="bottom">

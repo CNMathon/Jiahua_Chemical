@@ -149,26 +149,26 @@
               <div slot>检查受限空间进出口通道,无阻碍人员进出的障碍物。</div>
             </Signature>
             <Signature
-              :checked="checked[6] ? checked[6].checked : false"
-              :img="checked[6] ? checked[6].img : ''"
-              @checked="showSignature(6)"
-              @cancel="signatureCancel(6)"
+              :checked="checked[7] ? checked[7].checked : false"
+              :img="checked[7] ? checked[7].img : ''"
+              @checked="showSignature(7)"
+              @cancel="signatureCancel(7)"
             >
               <div slot>分析盛装过可燃有毒液体、气体的受限空间内的可燃、有毒有害气体含量。</div>
             </Signature>
             <Signature
-              :checked="checked[6] ? checked[6].checked : false"
-              :img="checked[6] ? checked[6].img : ''"
-              @checked="showSignature(6)"
-              @cancel="signatureCancel(6)"
+              :checked="checked[8] ? checked[8].checked : false"
+              :img="checked[8] ? checked[8].img : ''"
+              @checked="showSignature(8)"
+              @cancel="signatureCancel(8)"
             >
               <div slot>作业人员清楚受限空间内存在的其他危险因素,如内部附件、集渣坑等。</div>
             </Signature>
             <Signature
-              :checked="checked[6] ? checked[6].checked : false"
-              :img="checked[6] ? checked[6].img : ''"
-              @checked="showSignature(6)"
-              @cancel="signatureCancel(6)"
+              :checked="checked[9] ? checked[9].checked : false"
+              :img="checked[9] ? checked[9].img : ''"
+              @checked="showSignature(9)"
+              @cancel="signatureCancel(9)"
             >
               <div slot>作业监护措施:消防器材</div>
               <div>
@@ -184,10 +184,10 @@
               </div>
             </Signature>
             <Signature
-              :checked="checked[6] ? checked[6].checked : false"
-              :img="checked[6] ? checked[6].img : ''"
-              @checked="showSignature(6)"
-              @cancel="signatureCancel(6)"
+              :checked="checked[10] ? checked[10].checked : false"
+              :img="checked[10] ? checked[10].img : ''"
+              @checked="showSignature(10)"
+              @cancel="signatureCancel(10)"
             >
               <div slot>检查受限空间进出口通道,无阻碍人员进出的障碍物。</div>
             </Signature>
@@ -297,15 +297,28 @@ export default {
       this.sendData.sxkjDanwei = res;
     }
   },
+  created() {
+    this.initPage();
+  },
+  beforeDestroy() {
+    this.queryId = "";
+    this.$store.dispatch("kongjian/cleanState");
+  },
   activated() {
-    if (this.$route.query.id) {
-      if (this.queryId !== this.$route.query.id) {
-        this.queryId = this.$route.query.id;
-        this.getPageData();
-      }
-    }
+    this.initPage();
+  },
+  deactivated() {
+    // this.$store.dispatch("kongjian/cleanState");
   },
   methods: {
+    initPage() {
+      if (this.$route.query.id) {
+        if (this.queryId !== this.$route.query.id) {
+          this.queryId = this.$route.query.id;
+          this.getPageData();
+        }
+      }
+    },
     // 显示签名
     showSignature(index) {
       this.selectSignatureShow = index;
@@ -350,12 +363,14 @@ export default {
       let sendData = JSON.parse(JSON.stringify(this.sendData));
       sendData.zyOtherspecial = this.stringData("zyOtherspecial", "list_1");
       sendData.zywhBs = this.stringData("zywhBs", "list_2");
-      sendData.guardian = this.userString(sendData.guardian, "userCode");
-      sendData.zyPrincipal = this.userString(sendData.zyPrincipal, "userCode");
-      sendData.zyRen = this.userString(sendData.zyRen, "userCode");
-      sendData.sxkjDanwei = this.userString(sendData.sxkjDanwei, "id");
-      sendData.applyDept = this.$userInfo.officeName;
-      sendData.applyRen = this.$userInfo.userName;
+      sendData.guardian = this.userString(sendData.guardian, "userName");
+      sendData.zyPrincipal = this.userString(sendData.zyPrincipal, "userName");
+      sendData.zyRen = this.userString(sendData.zyRen, "userName");
+      sendData.sxkjDanwei = this.userString(sendData.sxkjDanwei, "name");
+      //sendData.applyDept = this.$userInfo.officeName;
+      //sendData.applyRen = this.$userInfo.userName;
+      sendData.applyDept = this.$userInfo.officeCode;
+      sendData.applyRen = this.$userInfo.userCode;
       sendData.__sid = this.$userInfo.sessionId;
       if (this.$route.query.id) {
         sendData.id = this.oldInfo.id;
@@ -372,49 +387,69 @@ export default {
             }
           });
         })
-        .catch(() => {});
+        .catch(() => {
+          this.$Toast.clear();
+        });
+    },
+    reductionSelectDept(data) {
+      let newArr = [];
+      let arr = data.split(",");
+      arr.forEach(element => {
+        let obj = {};
+        obj.name = element;
+        newArr.push(obj);
+      });
+      return newArr;
     },
     // 空间主表查询
     getPageData() {
+      this.$Toast.loading({
+        message: "加载中...",
+        forbidClick: true
+      });
       this.$api.page_3
         .htHseSxkjzypListData({
           sxkjCode: this.queryId,
           __sid: localStorage.getItem("JiaHuaSessionId")
         })
         .then(res => {
-          console.log(this.sendData)
           let info = res.list[0];
           this.oldInfo = info;
-          console.log(info)
           for (const key in this.sendData) {
-            console.log(key)
             if (key === "sxkjDanwei") {
-              this.sendData[key] = this.reductionSelectUser(info[key]);
-            } else if (key === "zyPrincipal") {
-              this.sendData[key] = this.reductionSelectUser(info[key]);
-            } else if (key === "guardian") {
-              this.sendData[key] = this.reductionSelectUser(info[key]);
-            } else if (key === "zyRen") {
-              this.sendData[key] = this.reductionSelectUser(info[key]);
-            } else if (key === "zyOtherspecial") {
               if (info[key])
+                this.sendData[key] = this.reductionSelectDept(info[key]);
+            } else if (key === "guardian") {
+              if (info[key])
+                this.sendData[key] = this.reductionSelectUser(info[key]);
+            } else if (key === "zyRen") {
+              if (info[key])
+                this.sendData[key] = this.reductionSelectUser(info[key]);
+            } else if (key === "zyOtherspecial") {
+              if (info[key]) {
                 this.sendData[key] = this.reductionSelectTag(
                   info[key],
                   this.list_1
                 );
+              }
             } else if (key === "zywhBs") {
-              if (info[key])
+              if (info[key]) {
                 this.sendData[key] = this.reductionSelectTag(
                   info[key],
                   this.list_2
                 );
+              }
+            } else if (key === "zyPrincipal") {
+              if (info[key])
+                this.sendData[key] = this.reductionSelectUser(info[key]);
             } else {
               this.sendData[key] = info[key];
             }
           }
-          console.log(this.sendData)
-          // 动火子表查询
-          this.mylistDataD();
+          this.$Toast.clear();
+        })
+        .catch(() => {
+          this.$Toast.clear();
         });
     },
     Next() {
@@ -423,7 +458,6 @@ export default {
         return;
       } else if (this.oldInfo.actRuTask) {
       } else {
-        console.log(123456)
         this.$Toast.loading({
           message: "加载中...",
           forbidClick: true
@@ -434,53 +468,67 @@ export default {
             __sid: localStorage.getItem("JiaHuaSessionId")
           })
           .then(res => {
-            this.$Toast.clear()
-            if(res.list[0].actRuTask){
-              console.log(1)
+            this.$Toast.clear();
+            if (res.list[0].actRuTask) {
               let data = {
-                'id':res.list[0].id,
-                'flowKey':'htHseSxkjzypService',
-                'comment':'',
-                'actRuTask.id':res.list[0].actRuTask.id,
-                'btnSubmit':'审批',
+                id: res.list[0].id,
+                flowKey: "htHseSxkjzypService",
+                comment: "",
+                "actRuTask.id": res.list[0].actRuTask.id,
+                btnSubmit: "审批",
                 __sid: localStorage.getItem("JiaHuaSessionId")
-              }
-              this.$api.page_3.approve(data).then((ress)=>{
-                console.log(ress)
-                if(ress.groups){
-                  this.$router.push({name:'daibanren',query:{
-                    groups:ress.groups.join(','),
-                    taskId:ress.taskId,
-                    id:res.list[0].id,
-                    type:'htHseSxkjzypService'
-                  }})
-                }else{
-                  this.$router.replace({name:'kongjian_list'})
-                }
-              }).catch(() => this.$Toast.clear());
-            }else{
-              console.log(2)
+              };
+              this.$api.page_3
+                .approve(data)
+                .then(ress => {
+                  if (ress.groups) {
+                    this.$router.push({
+                      name: "daibanren",
+                      query: {
+                        groups: ress.groups.join(","),
+                        taskId: ress.taskId,
+                        id: res.list[0].id,
+                        type: "htHseSxkjzypService"
+                      }
+                    });
+                  } else {
+                    this.$router.replace({ name: "kongjian_list" });
+                  }
+                })
+                .catch(() => {
+                  this.$Toast.clear();
+                });
+            } else {
               let data = {
-                'id':res.list[0].id,
-                'flowKey':'htHseSxkjzypService',
+                id: res.list[0].id,
+                flowKey: "htHseSxkjzypService",
                 __sid: localStorage.getItem("JiaHuaSessionId")
-              }
-              this.$api.page_3.start('sxkjzyp/htHseSxkjzyp',data).then((ress)=>{
-                console.log(ress)
-                if(ress.groups){
-                  this.$router.push({name:'daibanren',query:{
-                    groups:ress.groups.join(','),
-                    taskId:ress.taskId,
-                    id:res.list[0].id,
-                    type:'htHseSxkjzypService'
-                  }})
-                }else{
-                  this.$router.replace({name:'kongjian_list'})
-                }
-              }).catch(() => this.$Toast.clear());
+              };
+              this.$api.page_3
+                .start("sxkjzyp/htHseSxkjzyp", data)
+                .then(ress => {
+                  if (ress.groups) {
+                    this.$router.push({
+                      name: "daibanren",
+                      query: {
+                        groups: ress.groups.join(","),
+                        taskId: ress.taskId,
+                        id: res.list[0].id,
+                        type: "htHseSxkjzypService"
+                      }
+                    });
+                  } else {
+                    this.$router.replace({ name: "kongjian_list" });
+                  }
+                })
+                .catch(() => {
+                  this.$Toast.clear();
+                });
             }
           })
-          .catch(() => this.$Toast.clear());
+          .catch(() => {
+            this.$Toast.clear();
+          });
       }
     }
   }

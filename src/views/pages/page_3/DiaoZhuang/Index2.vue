@@ -271,8 +271,9 @@
 		},
 		
 		created() {
-      console.log(22222)
+			console.log(22222)
 			this.zypcode = this.$route.query.zypcode || 0;
+			console.log("111"+this.zypcode)
 			this.getInfo();
 		},
 

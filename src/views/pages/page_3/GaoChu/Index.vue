@@ -638,8 +638,10 @@
 					]
 				};
 
-				sendData.applyDept = this.$userInfo.officeName;
-				sendData.applyRen = this.$userInfo.userName;
+				//sendData.applyDept = this.$userInfo.officeName;
+				//sendData.applyRen = this.$userInfo.userName;
+				sendData.applyDept = this.$userInfo.officeCode;
+				sendData.applicant = this.$userInfo.userCode;
 				sendData.__sid = this.$userInfo.sessionId;
 				console.log(111111);
 				console.log(sendData);

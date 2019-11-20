@@ -31,8 +31,8 @@
               <div class="left">
                 <div class="left-line left-line-notlast">设备管道名称：{{item.pipe}}</div>
                 <div class="left-line left-line-notlast">盲板抽堵编号：{{item.mbzypCode}}</div>
-                <div class="left-line left-line-notlast left-line-hor">申请部门：{{item.applyDept}}</div>
-                <div class="left-line left-line-notlast left-line-hor">申请人：{{item.applyer}}</div>
+                <div class="left-line left-line-notlast left-line-hor">申请部门：{{item.office==null?'':item.office.officeName}}</div>
+                <div class="left-line left-line-notlast left-line-hor">申请人：{{item.user==null?'':item.user.userName}}</div>
                 <div class="left-line left-line-notlast">生活部门产品负责人：{{item.scMan}}</div>
                 <div class="left-line">作业部门负责人：{{item.zyMan}}</div>
               </div>

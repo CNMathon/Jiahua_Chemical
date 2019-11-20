@@ -8,12 +8,7 @@
         @click-left="pageBack"
         @click-right="tapBaoJing"
       >
-        <van-icon
-          class-prefix="iconfont"
-          name="baojing"
-          color="#FC942C"
-          slot="right"
-        />
+        <van-icon class-prefix="iconfont" name="baojing" color="#FC942C" slot="right" />
       </van-nav-bar>
     </van-sticky>
     <van-tabs
@@ -23,140 +18,120 @@
       :offset-top="46"
       color="#6096F8"
       title-inactive-color="#6096F8"
+      @click="getPageData"
     >
       <div v-for="(tabs, tabIndex) in tabList" :key="tabIndex">
         <van-tab :title="tabs.title">
-          <van-pull-refresh
-            v-model="tabs.isLoading"
-            @refresh="getDataList(true)"
-          >
-            <van-list
-              v-model="tabs.loading"
-              :finished="tabs.finished"
-              :error.sync="tabs.error"
-              error-text="请求失败，点击重新加载"
-              @load="getDataList()"
-            >
-              <!-- 综合信息 -->
-              <div v-if="tabIndex === 0">
-                <!-- <div v-for="(item, index) in tabs.dataList" :key="index"> -->
-                <div v-for="(item, index) in 1" :key="index">
-                  <div class="content Information">
-                    <cell-value title="设备编码" value="26532"></cell-value>
-                    <cell-value title="设备名称" value="名称A"></cell-value>
+          <van-skeleton title :row="3" :loading="isLoading">
+            <!-- 综合信息 -->
+            <div v-if="tabIndex === 0">
+              <!-- <div v-for="(item, index) in tabs.dataList" :key="index"> -->
+              <div v-for="(item, index) in 1" :key="index">
+                <div class="content Information">
+                  <label v-for="(item, index) in pageList" :key="index">
                     <cell-value
-                      title="上级树位置"
-                      value="位置名称"
+                      :title="item.title"
+                      :value="String(item.value)"
+                      v-if="item.title != '描述'"
                     ></cell-value>
-                    <cell-value title="设备类别" value="类别名称"></cell-value>
-                    <cell-value title="设备位号" value="56665"></cell-value>
-                    <cell-value title="设备类型" value="名称A"></cell-value>
-                    <cell-value title="所属部门" value="部门名称"></cell-value>
-                    <cell-value title="专业类别" value="类别名称"></cell-value>
-                    <cell-value title="设备位置" value="位置名称"></cell-value>
-                    <cell-value title="有效状态" value="有效"></cell-value>
-                    <cell-textarea disabled title="描述" value></cell-textarea>
+                    <cell-textarea disable :title="item.title" :value="item.value" v-else></cell-textarea>
+                  </label>
+                  <label></label>
+                </div>
+              </div>
+            </div>
+            <!-- 设备实时 -->
+            <div v-if="tabIndex === 1">
+              <!-- <div v-for="(item, index) in tabs.dataList" :key="index"> -->
+              <div v-for="(item, index) in 1" :key="index">
+                <div class="status">
+                  <div class="status-head">
+                    <div class="status-head__item">点名</div>
+                    <div class="status-head__item">点值</div>
+                    <div class="status-head__item">单位</div>
+                    <div class="status-head__item">状态</div>
+                    <div class="status-head__item">趋势图</div>
+                  </div>
+                  <div class="status-item" v-for="(items, indexs) in 8" :key="indexs">
+                    <div class="status-item__item">除盐蒸发器</div>
+                    <div class="status-item__item">E1091</div>
+                    <div class="status-item__item">动设备</div>
+                    <div class="status-item__item">异常</div>
+                    <div class="status-item__item" @click="toQuShiTu(indexs)">
+                      <van-icon
+                        class-prefix="iconfont"
+                        name="qushitubiao"
+                        color="#FFFC27"
+                        size="1.3rem"
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
-              <!-- 设备实时 -->
-              <div v-if="tabIndex === 1">
-                <!-- <div v-for="(item, index) in tabs.dataList" :key="index"> -->
-                <div v-for="(item, index) in 1" :key="index">
-                  <div class="status">
-                    <div class="status-head">
-                      <div class="status-head__item">点名</div>
-                      <div class="status-head__item">点值</div>
-                      <div class="status-head__item">单位</div>
-                      <div class="status-head__item">状态</div>
-                      <div class="status-head__item">趋势图</div>
-                    </div>
+              <!-- <div class="no-data" v-if="tabs.dataList.length === 0 && !tabs.loading">暂无资质材料</div> -->
+            </div>
+            <!-- 技术参数 -->
+            <div v-if="tabIndex === 2" class="tab-content">
+              <div>
+                <van-tabs
+                  type="card"
+                  v-model="actives"
+                  color="#6096F8"
+                  title-inactive-color="#6096F8"
+                  @click="getTechPara"
+                >
+                  <van-tab title="设备参数">
                     <div
-                      class="status-item"
-                      v-for="(items, indexs) in 8"
-                      :key="indexs"
+                      class="tab-content__contenter van-hairline--surround"
+                      v-for="(item, index) in sbcsList"
+                      :key="index"
                     >
-                      <div class="status-item__item">除盐蒸发器</div>
-                      <div class="status-item__item">E1091</div>
-                      <div class="status-item__item">动设备</div>
-                      <div class="status-item__item">异常</div>
-                      <div class="status-item__item" @click="toQuShiTu(indexs)">
-                        <van-icon
-                          class-prefix="iconfont"
-                          name="qushitubiao"
-                          color="#FFFC27"
-                          size="1.3rem"
-                        />
+                      <div class="tabs-head">
+                        <div class="tabs-head__item">项目名称</div>
+                        <div class="tabs-head__item">功能参数</div>
+                        <div class="tabs-head__item">备注</div>
+                      </div>
+                      <div class="tabs-list">
+                        <div class="tabs-list__item">{{item.projectName || '空'}}</div>
+                        <div class="tabs-list__item">{{item.functionInfo || '空'}}</div>
+                        <div class="tabs-list__item">{{item.rmearks || '空'}}</div>
                       </div>
                     </div>
-                  </div>
-                </div>
-                <!-- <div class="no-data" v-if="tabs.dataList.length === 0 && !tabs.loading">暂无资质材料</div> -->
+                  </van-tab>
+                  <van-tab title="运行判异">
+                    <div class="tab-content__contenter van-hairline--surround" v-for="(item, index) in sbcsList" :key="index">
+                      <div class="tabs-head">
+                        <div class="tabs-head__item">部位</div>
+                        <div class="tabs-head__item">项目名称</div>
+                        <div class="tabs-head__item">判断标准</div>
+                        <div class="tabs-head__item">备注</div>
+                      </div>
+                      <div class="tabs-list">
+                        <div class="tabs-list__item">{{item.position || '空'}}</div>
+                        <div class="tabs-list__item">{{item.projectName || '空'}}</div>
+                        <div class="tabs-list__item">{{item.judgement || '空'}}</div>
+                        <div class="tabs-list__item">{{item.rmearks || '空'}}</div>
+                      </div>
+                    </div>
+                  </van-tab>
+                  <van-tab title="检修标准">
+                    <div class="tab-content__contenter van-hairline--surround" v-for="(item, index) in yxpyList" :key="index">
+                      <div class="tabs-head">
+                        <div class="tabs-head__item">项目名称</div>
+                        <div class="tabs-head__item">功能参数</div>
+                        <div class="tabs-head__item">备注</div>
+                      </div>
+                      <div class="tabs-list">
+                        <div class="tabs-list__item">{{item.projectName || '空'}}</div>
+                        <div class="tabs-list__item">{{item.functionInfo || '空'}}</div>
+                        <div class="tabs-list__item">{{item.rmearks || '空'}}</div>
+                      </div>
+                    </div>
+                  </van-tab>
+                </van-tabs>
               </div>
-              <!-- 技术参数 -->
-              <div v-if="tabIndex === 2" class="tab-content">
-                <div>
-                  <van-tabs
-                    type="card"
-                    v-model="actives"
-                    color="#6096F8"
-                    title-inactive-color="#6096F8"
-                  >
-                    <van-tab title="设备参数">
-                      <div
-                        class="tab-content__contenter van-hairline--surround"
-                      >
-                        <div class="tabs-head">
-                          <div class="tabs-head__item">项目名称</div>
-                          <div class="tabs-head__item">功能参数</div>
-                          <div class="tabs-head__item">备注</div>
-                        </div>
-                        <div class="tabs-list">
-                          <div class="tabs-list__item">1</div>
-                          <div class="tabs-list__item">1</div>
-                          <div class="tabs-list__item">1</div>
-                        </div>
-                      </div>
-                    </van-tab>
-                    <van-tab title="运行判异">
-                      <div
-                        class="tab-content__contenter van-hairline--surround"
-                      >
-                        <div class="tabs-head">
-                          <div class="tabs-head__item">部位</div>
-                          <div class="tabs-head__item">项目名称</div>
-                          <div class="tabs-head__item">判断标准</div>
-                          <div class="tabs-head__item">备注</div>
-                        </div>
-                        <div class="tabs-list">
-                          <div class="tabs-list__item">1</div>
-                          <div class="tabs-list__item">1</div>
-                          <div class="tabs-list__item">1</div>
-                          <div class="tabs-list__item">1</div>
-                        </div>
-                      </div>
-                    </van-tab>
-                    <van-tab title="检修标准">
-                      <div
-                        class="tab-content__contenter van-hairline--surround"
-                      >
-                        <div class="tabs-head">
-                          <div class="tabs-head__item">项目名称</div>
-                          <div class="tabs-head__item">功能参数</div>
-                          <div class="tabs-head__item">备注</div>
-                        </div>
-                        <div class="tabs-list">
-                          <div class="tabs-list__item">1</div>
-                          <div class="tabs-list__item">1</div>
-                          <div class="tabs-list__item">1</div>
-                        </div>
-                      </div>
-                    </van-tab>
-                  </van-tabs>
-                </div>
-              </div>
-            </van-list>
-          </van-pull-refresh>
+            </div>
+          </van-skeleton>
         </van-tab>
       </div>
     </van-tabs>
@@ -169,6 +144,7 @@ export default {
   mixins: [mixin],
   data() {
     return {
+      isLoading: false,
       active: 0,
       actives: 0,
       tabList: [
@@ -181,10 +157,88 @@ export default {
         {
           title: "技术参数"
         }
-      ]
+      ],
+      pageList: [
+        {
+          title: "设备编码",
+          value: ""
+        },
+        {
+          title: "设备名称",
+          value: ""
+        },
+        {
+          title: "上级树位置",
+          value: ""
+        },
+        {
+          title: "设备类别",
+          value: ""
+        },
+        {
+          title: "设备位号",
+          value: ""
+        },
+        {
+          title: "设备类型",
+          value: ""
+        },
+        {
+          title: "所属部门",
+          value: ""
+        },
+        {
+          title: "专业类别",
+          value: ""
+        },
+        {
+          title: "设备位置",
+          value: ""
+        },
+        {
+          title: "有效状态",
+          value: ""
+        },
+        {
+          title: "描述",
+          value: "123"
+        }
+      ],
+      loadingStat: [
+        {
+          text: "设备参数",
+          isLoading: false
+        },
+        {
+          text: "设备实时",
+          isLoading: false
+        },
+        {
+          text: "技术参数",
+          isLoading: false,
+          children: [
+            {
+              text: "设备参数",
+              isLoading: false
+            },
+            {
+              text: "运行判异",
+              isLoading: false
+            },
+            {
+              text: "检修标准",
+              isLoading: false
+            }
+          ]
+        }
+      ],
+      sbcsList: [],
+      yxpyList: []
     };
   },
   created() {
+    console.log("id:", this.$route.query.id);
+    this.getGenInfo();
     let { tabList } = this;
     const pageParameter = {
       dataList: [], //数据列表
@@ -203,73 +257,187 @@ export default {
     this.tabList = newTabList;
   },
   methods: {
-    getDataList(refresh = false) {
-      let { tabList, active } = this;
-      tabList = JSON.parse(JSON.stringify(tabList));
-      active = JSON.parse(JSON.stringify(active));
-      const AjaxList = [
-        "htCbsPersonInf",
-        "_stuffList",
-        "_trainList",
-        "_wzList",
-        "_rclcList",
-        "_backListPage"
-      ];
-      if (refresh) {
-        tabList[active].loading = true;
-        tabList[active].pageNow = 1;
-        tabList[active].finished = false;
-        this.$nextTick(() => {
-          this.tabList = JSON.parse(JSON.stringify(tabList));
-        });
+    // 判断数据是否首次加载
+    // 参数n => itemName => 依次传入N个项目名，注意按层级关系排列 => String
+    checkFirstLoad(itemName) {
+      // const args = [...arguments]
+      // console.log(args)
+      // let position = null
+      // function a() {
+      // }
+      // if (this.loadingStat == ) {}
+      // if(this.loadedContent.indexOf(e) == -1) {
+      //   this.loadedContent.push(e)
+      //   return true
+      // }
+      // else {
+      //   return false
+      // }
+    },
+    getPageData(name, title) {
+      // 获取综合信息
+      if (name == 0) {
+        this.getGenInfo();
       }
-      // 数据全部加载完成
-      else if (tabList[active].dataList.length >= tabList[active].totalNumber) {
-        tabList[active].loading = false;
-        tabList[active].isLoading = false;
-        tabList[active].finished = true;
-        this.$nextTick(() => {
-          this.tabList = JSON.parse(JSON.stringify(tabList));
-        });
-        return;
+      // 获取设备实时
+      if (name == 1) {
+        this.getRealtime();
       }
-      let sendData = {
-        pageNo: this.cbspageNow,
-        pageSize: this.cbspageSize,
-        id: this.$route.params.id,
-        __sid: this.$userInfo.sessionId
-      };
-      this.$api.page_4[AjaxList[active]](sendData)
-        .then(res => {
-          tabList[active].totalNumber = res.count;
-          tabList[active].pageNow = tabList[active].pageNow + 1;
-          tabList[active].dataList = refresh
-            ? res.list
-            : [...tabList[active].dataList, ...res.list];
-          tabList[active].error = false;
-          tabList[active].loading = false;
-          tabList[active].isLoading = false;
-          this.$nextTick(() => {
-            this.tabList = JSON.parse(JSON.stringify(tabList));
-          });
+      // 获取技术参数
+      if (name == 2) {
+        this.getTechPara(0);
+        this.getTechPara(1);
+        this.getTechPara(2);
+      }
+    },
+    // 获取数据 - 综合信息
+    getGenInfo() {
+      // if ( !this.checkFirstLoad(0) ) { return }
+      const that = this;
+      this.isLoading = true;
+      this.$api.page_4
+        .spaceDeviceSelectIndexNew({
+          id: this.$route.query.id,
+          __sid: localStorage.JiaHuaSessionId
         })
-        .catch(() => {
-          tabList[active].error = true;
-          tabList[active].loading = false;
-          tabList[active].finished = false;
-          tabList[active].isLoading = false;
-          this.$nextTick(() => {
-            this.tabList = JSON.parse(JSON.stringify(tabList));
-          });
+        .then(res => {
+          // 请求结束后的页面内容赋值
+          // => 参数1 => filterTitle => 筛选内容title值
+          // => 参数2 => opeValue => 筛选内容新value值
+          function filterAss(filterTitle, opeValue) {
+            that.pageList.filter(
+              item => item.title == filterTitle
+            )[0].value = opeValue;
+          }
+
+          let resMain = res.list[0];
+          filterAss("设备编码", resMain.devicePosition);
+          filterAss("设备名称", resMain.deviceName);
+          // filterAss('上级树位置', resMain.)
+          filterAss("设备类别", resMain.deviceCategory);
+          filterAss("设备位号", resMain.devicePosition);
+          filterAss("设备类型", resMain.deviceType);
+          filterAss("所属部门", resMain.spaceDept);
+          filterAss("专业类别", resMain.specialtyType);
+          filterAss("设备位置", resMain.deviceLocation);
+          filterAss("有效状态", resMain.spaceState == 0 ? "有效" : "无效");
+          console.log("GenInfo:", resMain);
+          this.isLoading = false;
+        });
+    },
+    // 获取数据 - 设备实时
+    getRealtime() {
+      // if ( !this.checkFirstLoad(1) ) { return }
+      this.isLoading = true;
+      const that = this;
+      this.$api.page_4
+        .deviceSpaceRealTime({
+          // deviceId: this.$route.query.id,
+          "deviceId": "6050000000000000800",
+          __sid: localStorage.JiaHuaSessionId
+        })
+        .then(res => {
+          // 请求结束后的页面内容赋值
+          // => 参数1 => filterTitle => 筛选内容title值
+          // => 参数2 => opeValue => 筛选内容新value值
+          // function filterAss(filterTitle, opeValue) {
+          //   that.pageList.filter(
+          //     item => item.title == filterTitle
+          //   )[0].value = opeValue;
+          // }
+
+          // let resMain = res.list[0];
+          // filterAss("设备编码", resMain.devicePosition);
+          // filterAss("设备名称", resMain.deviceName);
+          // // filterAss('上级树位置', resMain.)
+          // // filterAss('设备类别', resMain.)
+          // filterAss("设备位号", resMain.devicePosition);
+          // filterAss("设备类型", resMain.deviceType);
+          // filterAss("所属部门", resMain.spaceDept);
+          // filterAss("专业类别", resMain.specialtyType);
+          // filterAss("设备位置", resMain.deviceLocation);
+          // filterAss("有效状态", resMain.spaceState == 0 ? "有效" : "无效");
+          console.log("Realtime:", res);
+          this.isLoading = false;
+        });
+    },
+    // 获取数据 - 技术参数
+    // => 参数1 => parTytpe => 技术参数类型 => Number => 1(设备参数)/2(运行判异)/3(检修标准)
+    getTechPara(parTytpe = 0) {
+      // if ( !this.checkFirstLoad(2) ) { return }
+      this.isLoading = true;
+      const that = this;
+      this.$api.page_4
+        .deviceInfoListDeviceParameter({
+          // 'deviceId.id': String(this.$route.query.id),
+          "deviceId.id": "6050000000000000800",
+          parTytpe: parTytpe,
+          __sid: localStorage.JiaHuaSessionId
+        })
+        .then(res => {
+          let resMain = res.list;
+          // 请求结束后的页面内容赋值
+          // => 参数1 => filterTitle => 筛选内容title值
+          // => 参数2 => opeValue => 筛选内容新value值
+          // function filterAss(filterTitle, opeValue) {
+          //   that.pageList.filter(
+          //     item => item.title == filterTitle
+          //   )[0].value = opeValue;
+          // }
+
+          // let resMain = res.list[0];
+          // filterAss("设备编码", resMain.devicePosition);
+          // filterAss("设备名称", resMain.deviceName);
+          // // filterAss('上级树位置', resMain.)
+          // // filterAss('设备类别', resMain.)
+          // filterAss("设备位号", resMain.devicePosition);
+          // filterAss("设备类型", resMain.deviceType);
+          // filterAss("所属部门", resMain.spaceDept);
+          // filterAss("专业类别", resMain.specialtyType);
+          // filterAss("设备位置", resMain.deviceLocation);
+          // filterAss("有效状态", resMain.spaceState == 0 ? "有效" : "无效");
+          console.log(`parTytpe-${parTytpe}:`, resMain);
+          this.sbcsList = [];
+          switch (parTytpe) {
+            case 0:
+              resMain.map((item, index) => {
+                this.sbcsList.push({
+                  projectName: item.projectName,
+                  functionInfo: item.functionInfo,
+                  rmearks: item.rmearks
+                });
+              });
+              break;
+            case 1:
+              resMain.map((item, index) => {
+                this.sbcsList.push({
+                  position: item.position,
+                  projectName: item.projectName,
+                  judgement: item.judgement,
+                  rmearks: item.rmearks
+                });
+              });
+              break;
+            case 2:
+              resMain.map((item, index) => {
+                this.yxpyList.push({
+                  projectName: item.projectName,
+                  functionInfo: item.functionInfo,
+                  rmearks: item.rmearks
+                });
+              });
+              break;
+          }
+          this.isLoading = false;
         });
     },
     // 跳转到趋势图
     toQuShiTu(index) {
-      this.$router.push({ path: `../qushitu/${index}` });
+      this.$router.push({ path: `./qushitu?id=${index}` });
     },
     // 跳转到报警页面
     tapBaoJing() {
-      this.$router.push({ path: `../baojing/${2}` });
+      this.$router.push({ path: `./baojing?id=${2}` });
     }
   }
 };

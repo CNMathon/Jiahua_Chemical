@@ -107,6 +107,16 @@ const information = {
     return axios.get(`${base.sq}deviceinfo/deviceSpace/listData.json`, {
       params: params
     })
+  },
+  deviceSpaceRealTime(params) {
+    return axios.get(`${base.sq}deviceinfo/deviceSpace/realTime.json`, {
+      params: params
+    })
+  },
+  deviceInfoListDeviceParameter(params) {
+    return axios.get(`${base.sq}deviceinfo/deviceInfo/listDeviceParameter.json`, {
+      params: params
+    })
   }
 };
 

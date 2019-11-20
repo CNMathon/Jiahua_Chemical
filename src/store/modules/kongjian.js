@@ -1,6 +1,6 @@
 // initial state
 const state = {
-  keepAliveComponents: ["kongjianindex"],
+  keepAliveComponents: ["kongjianindex", "kongjianindex2"],
   zyOtherspecial: [],
   otherSpecial: [],
   zywhBs: [],

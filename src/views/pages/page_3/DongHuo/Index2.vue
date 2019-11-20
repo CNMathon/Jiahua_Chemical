@@ -393,7 +393,7 @@ export default {
   },
   activated() {
     console.log("activated=================", this.$route.query);
-    // this.pageInit();
+    this.pageInit();
   },
   beforeDestroy() {
     this.queryId = "";
@@ -488,6 +488,7 @@ export default {
         .then(res => {
           let info = res.list[0];
           this.oldInfo = info;
+          console.log("const key in this.sendData", res);
           for (const key in this.sendData) {
             if (key === "dhzyPrincipal") {
               this.sendData[key] = this.reductionSelectUser(info[key]);
@@ -522,7 +523,6 @@ export default {
             } else {
               this.sendData[key] = info[key];
             }
-            console.log("const key in this.sendData", key);
           }
           // 动火子表查询
           this.mylistDataD();

@@ -22,7 +22,7 @@
 									<div class="left-line left-line-notlast">吊装内容：{{ item.dznr }}</div>
 									<div class="left-line left-line-notlast">吊装地点：{{ item.dzdd }}</div>
 									<div class="left-line left-line-notlast">起吊重物质量：{{ item.qdzwzl }}</div>
-									<div class="left-line left-line-notlast">申请部门：{{ item.sqbm }}</div>
+									<div class="left-line left-line-notlast">申请部门：{{ item.sqbmDept.officeName }}</div>
 									<div class="left-line left-line-notlast">申请人：{{ item.sqr }}</div>
 									<div class="left-line left-line-notlast">作业开始时间：{{ item.zyksDate }}</div>
 									<div class="left-line">作业结束时间：{{ item.zyjsDate }}</div>

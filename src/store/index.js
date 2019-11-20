@@ -13,6 +13,8 @@ import yinhuan from './modules/yinhuan';
 import mangban from './modules/mangban';
 import weizhang from "./modules/weizhang";
 import relijixie from "./modules/relijixie";
+import dianqi from "./modules/dianqi";
+import dianqi2 from "./modules/dianqi2";
 
 Vue.use(Vuex);
 
@@ -32,7 +34,9 @@ export default new Vuex.Store({
     yinhuan,
     mangban,
     relijixie,
-	weizhang
+    dianqi,
+    dianqi2,
+	  weizhang
   },
   strict: debug
 });
