@@ -72,128 +72,129 @@
 					<div class="head_2">确认</div>
 					<div class="head_3">确认人</div>
 				</div>
+				<div></div>
 				<div class="confirm_list">
-					<Signature :checked="checked[0] ? checked[0].checked : false" :img="checked[0] ? checked[0].img : ''" @checked="showSignature(0)"
-					 @cancel="signatureCancel(0)">
+					<Signature  :checked="checked[0] ? checked[0].checked : false" :img="checked[0] ? checked[0].img : ''"
+					 @checked="showSignature(0)" @cancel="signatureCancel(0)">
 						<div slot>吊装质量大于等于40t的重物和土建工程主体结构;吊装物体虽不足40t,但形状复杂、刚度小、长径比大、精密贵重,作业条件特殊,已编制吊装作业方案,且经作业主管部门和安全管理部门审查,报主管(主管安全生产副总/总工程师批准)</div>
 					</Signature>
-					<Signature :checked="checked[1] ? checked[1].checked : false" :img="checked[1] ? checked[1].img : ''" @checked="showSignature(1)"
-					 @cancel="signatureCancel(1)">
+					<Signature  :checked="checked[1] ? checked[1].checked : false" :img="checked[1] ? checked[1].img : ''"
+					 @checked="showSignature(1)" @cancel="signatureCancel(1)">
 						<div slot>指派专人监护,并监守岗位,非作业人员禁止入内</div>
 					</Signature>
-					<Signature :checked="checked[2] ? checked[2].checked : false" :img="checked[2] ? checked[2].img : ''" @checked="showSignature(2)"
-					 @cancel="signatureCancel(2)">
+					<Signature  :checked="checked[2] ? checked[2].checked : false" :img="checked[2] ? checked[2].img : ''"
+					 @checked="showSignature(2)" @cancel="signatureCancel(2)">
 						<div slot>作业人员已按规定佩戴防护器具和个体防护用品</div>
 					</Signature>
-					<Signature :checked="checked[3] ? checked[3].checked : false" :img="checked[3] ? checked[3].img : ''" @checked="showSignature(3)"
-					 @cancel="signatureCancel(3)">
+					<Signature  :checked="checked[3] ? checked[3].checked : false" :img="checked[3] ? checked[3].img : ''"
+					 @checked="showSignature(3)" @cancel="signatureCancel(3)">
 						<div slot>已与分厂(车间)负责人取得联系,建立联系信号</div>
 					</Signature>
-					<Signature :checked="checked[4] ? checked[4].checked : false" :img="checked[4] ? checked[4].img : ''" @checked="showSignature(4)"
-					 @cancel="signatureCancel(4)">
+					<Signature  :checked="checked[4] ? checked[4].checked : false" :img="checked[4] ? checked[4].img : ''"
+					 @checked="showSignature(4)" @cancel="signatureCancel(4)">
 						<div slot>已在吊装现场设置安全警戒标志,无关人员不许进入作业现场；</div>
 					</Signature>
-					<Signature :checked="checked[5] ? checked[5].checked : false" :img="checked[5] ? checked[5].img : ''" @checked="showSignature(5)"
-					 @cancel="signatureCancel(5)">
+					<Signature  :checked="checked[5] ? checked[5].checked : false" :img="checked[5] ? checked[5].img : ''"
+					 @checked="showSignature(5)" @cancel="signatureCancel(5)">
 						<div slot>室外作业遇到(大雪/暴雨/大雾/六级以上大风),已停止作业</div>
 					</Signature>
-					<Signature :checked="checked[6] ? checked[6].checked : false" :img="checked[6] ? checked[6].img : ''" @checked="showSignature(6)"
-					 @cancel="signatureCancel(6)">
+					<Signature  :checked="checked[6] ? checked[6].checked : false" :img="checked[6] ? checked[6].img : ''"
+					 @checked="showSignature(6)" @cancel="signatureCancel(6)">
 						<div slot>检查起重吊装设备、钢丝绳、揽风绳、链条、吊钩等各种机具,保证安全可靠</div>
 					</Signature>
-					<Signature :checked="checked[7] ? checked[7].checked : false" :img="checked[7] ? checked[7].img : ''" @checked="showSignature(7)"
-					 @cancel="signatureCancel(7)">
+					<Signature  :checked="checked[7] ? checked[7].checked : false" :img="checked[7] ? checked[7].img : ''"
+					 @checked="showSignature(7)" @cancel="signatureCancel(7)">
 						<div slot>明确分工、坚守岗位,并按规定的联络信号,统一指挥</div>
 					</Signature>
-					<Signature :checked="checked[8] ? checked[8].checked : false" :img="checked[8] ? checked[8].img : ''" @checked="showSignature(8)"
-					 @cancel="signatureCancel(8)">
+					<Signature  :checked="checked[8] ? checked[8].checked : false" :img="checked[8] ? checked[8].img : ''"
+					 @checked="showSignature(8)" @cancel="signatureCancel(8)">
 						<div slot>将建筑物、构筑物作为锚点,需经土建工程部门审查核算并批准</div>
 					</Signature>
-					<Signature :checked="checked[9] ? checked[9].checked : false" :img="checked[9] ? checked[9].img : ''" @checked="showSignature(9)"
-					 @cancel="signatureCancel(9)">
+					<Signature  :checked="checked[9] ? checked[9].checked : false" :img="checked[9] ? checked[9].img : ''"
+					 @checked="showSignature(9)" @cancel="signatureCancel(9)">
 						<div slot>吊装绳索、揽风绳、拖拉绳等避免同带电线路接触,并保持安全距离</div>
 					</Signature>
-					<Signature :checked="checked[10] ? checked[10].checked : false" :img="checked[10] ? checked[10].img : ''" @checked="showSignature(10)"
-					 @cancel="signatureCancel(10)">
+					<Signature  :checked="checked[10] ? checked[10].checked : false" :img="checked[10] ? checked[10].img : ''"
+					 @checked="showSignature(10)" @cancel="signatureCancel(10)">
 						<div slot>人员随同吊装重物或吊装机械升降,应采取可靠的安全措施,并经过现场指挥人员批准</div>
 					</Signature>
-					<Signature :checked="checked[11] ? checked[11].checked : false" :img="checked[11] ? checked[11].img : ''" @checked="showSignature(11)"
-					 @cancel="signatureCancel(11)">
+					<Signature  :checked="checked[11] ? checked[11].checked : false" :img="checked[11] ? checked[11].img : ''"
+					 @checked="showSignature(11)" @cancel="signatureCancel(11)">
 						<div slot>利用管道、管架、电杆、机电设备等作吊装锚点,不准吊装</div>
 					</Signature>
-					<Signature :checked="checked[12] ? checked[12].checked : false" :img="checked[12] ? checked[12].img : ''" @checked="showSignature(12)"
-					 @cancel="signatureCancel(12)">
+					<Signature  :checked="checked[12] ? checked[12].checked : false" :img="checked[12] ? checked[12].img : ''"
+					 @checked="showSignature(12)" @cancel="signatureCancel(12)">
 						<div slot>悬吊重物下方站人、通行和工作,不准吊装</div>
 					</Signature>
-					<Signature :checked="checked[13] ? checked[13].checked : false" :img="checked[13] ? checked[13].img : ''" @checked="showSignature(13)"
-					 @cancel="signatureCancel(13)">
+					<Signature  :checked="checked[13] ? checked[13].checked : false" :img="checked[13] ? checked[13].img : ''"
+					 @checked="showSignature(13)" @cancel="signatureCancel(13)">
 						<div slot>超负荷或重物质量不明,不准吊装</div>
 					</Signature>
-					<Signature :checked="checked[14] ? checked[14].checked : false" :img="checked[14] ? checked[14].img : ''" @checked="showSignature(14)"
-					 @cancel="signatureCancel(14)">
+					<Signature  :checked="checked[14] ? checked[14].checked : false" :img="checked[14] ? checked[14].img : ''"
+					 @checked="showSignature(14)" @cancel="signatureCancel(14)">
 						<div slot>斜拉重物、重物埋在地下或重物坚固不牢,绳打结、绳不齐,不准吊装</div>
 					</Signature>
-					<Signature :checked="checked[15] ? checked[15].checked : false" :img="checked[15] ? checked[15].img : ''" @checked="showSignature(15)"
-					 @cancel="signatureCancel(15)">
+					<Signature  :checked="checked[15] ? checked[15].checked : false" :img="checked[15] ? checked[15].img : ''"
+					 @checked="showSignature(15)" @cancel="signatureCancel(15)">
 						<div slot>棱角重物没有衬垫措施,不准吊装</div>
 					</Signature>
-					<Signature :checked="checked[16] ? checked[16].checked : false" :img="checked[16] ? checked[16].img : ''" @checked="showSignature(16)"
-					 @cancel="signatureCancel(16)">
+					<Signature  :checked="checked[16] ? checked[16].checked : false" :img="checked[16] ? checked[16].img : ''"
+					 @checked="showSignature(16)" @cancel="signatureCancel(16)">
 						<div slot>安全装置失灵,不准吊装</div>
 					</Signature>
-					<Signature :checked="checked[17] ? checked[17].checked : false" :img="checked[17] ? checked[17].img : ''" @checked="showSignature(17)"
-					 @cancel="signatureCancel(17)">
+					<Signature  :checked="checked[17] ? checked[17].checked : false" :img="checked[17] ? checked[17].img : ''"
+					 @checked="showSignature(17)" @cancel="signatureCancel(17)">
 						<div slot>用定型起重吊装机械(履带、轮胎、轿式吊车等)进行吊装作业,遵守该定型机械的操作规程</div>
 					</Signature>
-					<Signature :checked="checked[18] ? checked[18].checked : false" :img="checked[18] ? checked[18].img : ''" @checked="showSignature(18)"
-					 @cancel="signatureCancel(18)">
+					<Signature  :checked="checked[18] ? checked[18].checked : false" :img="checked[18] ? checked[18].img : ''"
+					 @checked="showSignature(18)" @cancel="signatureCancel(18)">
 						<div slot>作业现场出现危险品泄漏,立即停止作业,撤离人员</div>
 					</Signature>
-					<Signature :checked="checked[19] ? checked[19].checked : false" :img="checked[19] ? checked[19].img : ''" @checked="showSignature(19)"
-					 @cancel="signatureCancel(19)">
+					<Signature  :checked="checked[19] ? checked[19].checked : false" :img="checked[19] ? checked[19].img : ''"
+					 @checked="showSignature(19)" @cancel="signatureCancel(19)">
 						<div slot>作业完成后现场杂物已清理</div>
 					</Signature>
-					<Signature :checked="checked[20] ? checked[20].checked : false" :img="checked[20] ? checked[20].img : ''" @checked="showSignature(20)"
-					 @cancel="signatureCancel(20)">
+					<Signature  :checked="checked[20] ? checked[20].checked : false" :img="checked[20] ? checked[20].img : ''"
+					 @checked="showSignature(20)" @cancel="signatureCancel(20)">
 						<div slot>吊装作业人员持有法定的有效的证件</div>
 					</Signature>
-					<Signature :checked="checked[21] ? checked[21].checked : false" :img="checked[21] ? checked[21].img : ''" @checked="showSignature(21)"
-					 @cancel="signatureCancel(21)">
+					<Signature  :checked="checked[21] ? checked[21].checked : false" :img="checked[21] ? checked[21].img : ''"
+					 @checked="showSignature(21)" @cancel="signatureCancel(21)">
 						<div slot>地下通讯、网络电(光)缆、排水沟盖板,承重吊装机械的负重量已确认,保护措施已落实</div>
 					</Signature>
-					<Signature :checked="checked[22] ? checked[22].checked : false" :img="checked[22] ? checked[22].img : ''" @checked="showSignature(22)"
-					 @cancel="signatureCancel(22)">
+					<Signature  :checked="checked[22] ? checked[22].checked : false" :img="checked[22] ? checked[22].img : ''"
+					 @checked="showSignature(22)" @cancel="signatureCancel(22)">
 						<div slot>
 							起吊物的质量
 							<van-stepper v-model="value" />吨经确认,在吊装机械的承重范围；
 						</div>
 					</Signature>
-					<Signature :checked="checked[23] ? checked[23].checked : false" :img="checked[23] ? checked[23].img : ''" @checked="showSignature(23)"
-					 @cancel="signatureCancel(23)">
+					<Signature  :checked="checked[23] ? checked[23].checked : false" :img="checked[23] ? checked[23].img : ''"
+					 @checked="showSignature(23)" @cancel="signatureCancel(23)">
 						<div slot>在吊装高度的管线、电缆桥架已做好防护措施</div>
 					</Signature>
-					<Signature :checked="checked[24] ? checked[24].checked : false" :img="checked[24] ? checked[24].img : ''" @checked="showSignature(24)"
-					 @cancel="signatureCancel(24)">
+					<Signature  :checked="checked[24] ? checked[24].checked : false" :img="checked[24] ? checked[24].img : ''"
+					 @checked="showSignature(24)" @cancel="signatureCancel(24)">
 						<div slot>作业现场围栏、警戒线、警告牌、夜间警示灯已按要求设置</div>
 					</Signature>
-					<Signature :checked="checked[25] ? checked[25].checked : false" :img="checked[25] ? checked[25].img : ''" @checked="showSignature(25)"
-					 @cancel="signatureCancel(25)">
+					<Signature  :checked="checked[25] ? checked[25].checked : false" :img="checked[25] ? checked[25].img : ''"
+					 @checked="showSignature(25)" @cancel="signatureCancel(25)">
 						<div slot>吊装作业人员持有法定的有效的证件</div>
 					</Signature>
-					<Signature :checked="checked[26] ? checked[26].checked : false" :img="checked[26] ? checked[26].img : ''" @checked="showSignature(26)"
-					 @cancel="signatureCancel(26)">
+					<Signature  :checked="checked[26] ? checked[26].checked : false" :img="checked[26] ? checked[26].img : ''"
+					 @checked="showSignature(26)" @cancel="signatureCancel(26)">
 						<div slot>作业高度和转臂范围内,无架空线路</div>
 					</Signature>
-					<Signature :checked="checked[27] ? checked[27].checked : false" :img="checked[27] ? checked[27].img : ''" @checked="showSignature(27)"
-					 @cancel="signatureCancel(27)">
+					<Signature  :checked="checked[27] ? checked[27].checked : false" :img="checked[27] ? checked[27].img : ''"
+					 @checked="showSignature(27)" @cancel="signatureCancel(27)">
 						<span>
 							人员出入口和撤离安全措施已落实:
 							<span :class="mask[0] == 1 ? 'seclct_tag is_select':'seclct_tag'" @click="changeMask(0)">指示牌</span>
 							<span :class="mask[1] == 1 ? 'seclct_tag is_select':'seclct_tag'" @click="changeMask(1)">指示灯</span>
 						</span>
 					</Signature>
-					<Signature :checked="checked[28] ? checked[28].checked : false" :img="checked[28] ? checked[28].img : ''" @checked="showSignature(28)"
-					 @cancel="signatureCancel(28)">
+					<Signature  :checked="checked[28] ? checked[28].checked : false" :img="checked[28] ? checked[28].img : ''"
+					 @checked="showSignature(28)" @cancel="signatureCancel(28)">
 						<div slot>
 							<span>夜间作业采用足够、充足照明，</span>
 							<span>
@@ -210,12 +211,12 @@
 							</span>
 						</div>
 					</Signature>
-					<Signature :checked="checked[29] ? checked[29].checked : false" :img="checked[29] ? checked[29].img : ''" @checked="showSignature(29)"
-					 @cancel="signatureCancel(29)">
+					<Signature  :checked="checked[29] ? checked[29].checked : false" :img="checked[29] ? checked[29].img : ''"
+					 @checked="showSignature(29)" @cancel="signatureCancel(29)">
 						<div slot>作业人员已佩戴防护器具</div>
 					</Signature>
-					<Signature :checked="checked[30] ? checked[30].checked : false" :img="checked[30] ? checked[30].img : ''" @checked="showSignature(30)"
-					 @cancel="signatureCancel(30)">
+					<Signature  :checked="checked[30] ? checked[30].checked : false" :img="checked[30] ? checked[30].img : ''"
+					 @checked="showSignature(30)" @cancel="signatureCancel(30)">
 						<div slot>
 							其他安全措施:
 							<div class="content_lang_input">
@@ -263,7 +264,7 @@
 		mixins: [business],
 		data() {
 			return {
-				zypcode: 0, //详情编号
+				zypcode: "0", //详情编号
 				storeModule: "diaozhuang",
 				sendData: {
 					dznr: "", //吊装内容
@@ -341,9 +342,9 @@
 		// },
 		created() {
 			if (this.$route.query.zypcode) {
-				this.zypcode = this.$route.query.zypcode || 0;
+				this.zypcode = this.$route.query.zypcode || "0";
 				this.getInfo();
-				
+
 			}
 		},
 		methods: {
@@ -435,21 +436,35 @@
 				}
 			},
 			//获取签名信息
-			qianming(id){
+			qianming(id) {
 				let sendData = {};
 				sendData.__sid = this.$userInfo.sessionId;
 				sendData['dzzypId.id'] = id;
-				var param ={"dzzypId.id":id,__sid: this.$userInfo.sessionId}
-				this.$api.page_3.getDzaqInfo(param).then(res=>{
-					var _this =this;
-					_this.checked =[];
-					res.forEach((item,inx)=>{
-						if(item.qrr && item.qrr!="0"){
-							_this.checked.push({checked:true,img:item.qrr})
-						}else{
-							_this.checked.push({checked:false,img:""})
+				var param = {
+					"dzzypId.id": id,
+					__sid: this.$userInfo.sessionId
+				}
+				this.$api.page_3.getDzaqInfo(param).then(res => {
+					var _this = this;
+					_this.checked = [];
+					console.log("qianming")
+					res.forEach((item, inx) => {
+						if (item.qrr && item.qrr != "0") {
+							_this.checked[inx] = {
+								checked: true,
+								img: item.qrr,
+								id: item.id
+							}
+						} else {
+							_this.checked[inx] = {
+								checked: false,
+								img: "",
+								id: item.id
+							}
 						}
 					})
+					_this.checked = JSON.parse(JSON.stringify(this.checked));
+					this.$forceUpdate()
 				})
 			},
 			//获取详情
@@ -947,17 +962,17 @@
 						`吊装作业人员持有法定的有效的证件`,
 						`作业高度和转臂范围内,无架空线路`,
 						`人员出入口和撤离安全措施已落实:  ${
-            this.mask[0] == 1 ? "指示牌" : ""
-          }, ${this.mask[1] == 1 ? "指示灯" : ""}`,
-						`夜间作业采用足够、充足照明，A防水型灯${
-            this.Alight == 0 ? "36V" : this.Alight == 1 ? "24V" : "12V"
-          }, 防爆型灯:  ${
-            this.light == 0 ? "36V" : this.light == 1 ? "24V" : "12V"
-          }`,
+							this.mask[0] == 1 ? "指示牌" : ""
+						  }, ${this.mask[1] == 1 ? "指示灯" : ""}`,
+										`夜间作业采用足够、充足照明，A防水型灯${
+							this.Alight == 0 ? "36V" : this.Alight == 1 ? "24V" : "12V"
+						  }, 防爆型灯:  ${
+							this.light == 0 ? "36V" : this.light == 1 ? "24V" : "12V"
+						  }`,
 						`作业人员已佩戴防护器具`
 					]
 				};
-
+				console.log(sendData)
 				this.$api.page_3
 					.htHseDzzypSave(sendData, this.$userInfo.sessionId)
 					.then(res => {

@@ -1,6 +1,6 @@
 // Mine的子组件 用户中心
 const SelectDaiBanRen = () =>
-  import("../views/pages/page_3/DaiBanRen/index.vue");
+  import ("../views/pages/page_3/DaiBanRen/index.vue");
 const routes = {
   path: "/page_3",
   name: "page_3",
@@ -201,7 +201,7 @@ const routes = {
         },
         {
           path: "/page_3/donghuo/index4",
-          name: "donghuo_index3",
+          name: "donghuo_index4",
           component: () => import("../views/pages/page_3/DongHuo/Index4.vue"),
           meta: {
             name: "动火安全-不可编辑"
@@ -223,11 +223,6 @@ const routes = {
           name: "Donghuo_SelectUser",
           component: () => import("../views/pages/page_3/SelectUser/Index.vue")
         },
-        {
-          path: "/page_3/donghuo/list",
-          name: "donghuo_list",
-          component: () => import("../views/pages/page_3/DongHuo/List.vue")
-        },
       ]
     },
     {
@@ -240,33 +235,21 @@ const routes = {
           path: "/page_3/kongjian/index",
           name: "kongjian_index",
           component: () => import("../views/pages/page_3/KongJian/Index.vue"),
-          meta: {
-            keepAlive: true //此组件需要被缓存
-          }
         },
         {
           path: "/page_3/kongjian/index2",
           name: "kongjian_index2",
           component: () => import("../views/pages/page_3/KongJian/Index2.vue"),
-          meta: {
-            keepAlive: true //此组件需要被缓存
-          }
         },
         {
           path: "/page_3/kongjian/select_user",
           name: "DongTu_SelectUser",
           component: () => import("../views/pages/page_3/SelectUser/Index.vue"),
-          meta: {
-            keepAlive: false //此组件不需要被缓存
-          }
         },
         {
           path: "/page_3/kongjian/list",
           name: "kongjian_list",
           component: () => import("../views/pages/page_3/KongJian/List.vue"),
-          meta: {
-            keepAlive: false //此组件不需要被缓存
-          }
         },
         {
           path: "/page_3/kongjian/analysis",
@@ -275,7 +258,6 @@ const routes = {
             import("../views/pages/page_3/KongJian/Analysis.vue"),
           meta: {
             name: "受限空间-安全分析",
-            keepAlive: true //此组件不需要被缓存
           }
         },
         {
@@ -285,7 +267,6 @@ const routes = {
             import("../views/pages/page_3/KongJian/AddAnalysis.vue"),
           meta: {
             name: "受限空间-安全分析",
-            keepAlive: false //此组件不需要被缓存
           }
         },
         {
@@ -294,7 +275,6 @@ const routes = {
           component: () =>
             import("../views/pages/page_3/components/TagSelect.vue"),
           meta: {
-            keepAlive: false //此组件不需要被缓存
           }
         },
         {
@@ -303,7 +283,6 @@ const routes = {
           component: () =>
             import("../views/pages/page_3/SelectDepartment/Index.vue"),
           meta: {
-            keepAlive: false //此组件不需要被缓存
           }
         },
         {
@@ -312,7 +291,6 @@ const routes = {
           component: () => import("../views/pages/page_3/KongJian/Confirm.vue"),
           meta: {
             name: "受限空间-确认签字",
-            keepAlive: false //此组件不需要被缓存
           }
         }
       ]
@@ -336,7 +314,7 @@ const routes = {
         },
         {
           path: "/page_3/mangban/select_user",
-          name: "Donghuo_SelectUser",
+          name: "mangban_SelectUser",
           component: () => import("../views/pages/page_3/SelectUser/Index.vue")
         },
         {
@@ -432,9 +410,7 @@ const routes = {
           path: "/page_3/diaozhuang/index",
           name: "diaozhuang_index",
           component: () => import("../views/pages/page_3/DiaoZhuang/Index.vue"),
-          meta: {
-            keepAlive: false //此组件需要被缓存
-          }
+          
         },
         {
           path: "/page_3/diaozhuang/index2",
@@ -445,6 +421,7 @@ const routes = {
             keepAlive: true //此组件需要被缓存
           }
         },
+		
         {
           path: "/page_3/diaozhuang/list",
           name: "diaozhuang_list",

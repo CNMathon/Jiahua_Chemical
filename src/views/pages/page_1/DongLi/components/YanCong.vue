@@ -39,6 +39,7 @@ export default {
     font-size: 28px;
     color: rgba(255, 255, 255, 1);
     line-height: 33px;
+    width: 30%;
   }
   .value {
     font-size: 40px;

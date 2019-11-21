@@ -109,13 +109,11 @@ export default {
     // 跳转至详情页
     jumpToMorePage(status, code) {
       if (Number(status) === 1) {
-        // this.$store.commit("kongjian/add_KeepAlive", "kongjianindex");
         this.$router.push({
           path: "../kongjian",
           query: { id: code }
         });
       } else if (Number(status) === 2) {
-        // this.$store.commit("kongjian/add_KeepAlive", "kongjianindex2");
         this.$router.push({
           path: "../kongjian/index2",
           query: { id: code }

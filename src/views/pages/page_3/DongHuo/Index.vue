@@ -328,6 +328,8 @@ export default {
       }
     }
   },
+  activated() {
+  },
   methods: {
     // 打开操作Popup
     openAction() {

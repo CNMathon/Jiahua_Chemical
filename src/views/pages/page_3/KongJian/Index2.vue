@@ -97,160 +97,104 @@
       ></cell-select-user>
       <!-- 安全措施 -->
       <div class="confirm">
-        <div class="head">
-          <div class="head_1">安全措施</div>
-          <div class="head_2">确认</div>
-          <div class="head_3">确认人</div>
+          <div class="head">
+            <div class="head_1">安全措施</div>
+            <div class="head_2">确认</div>
+            <div class="head_3">确认人</div>
+          </div>
+          <div class="confirm_list">
+            <Signature
+              :checked="checked[0] ? checked[0].checked : false"
+              :img="checked[0] && checked[0].checked ? signatureImg : ''"
+              disable
+            >
+              <span slot>对进入受限空间危险性进行分析。</span>
+            </Signature>
+            <Signature
+              :checked="checked[1] ? checked[1].checked : false"
+              :img="checked[1] && checked[1].checked ? signatureImg : ''"
+              disable
+            >
+              <span slot>与受限空间有联系的阀门管线加盲板隔离，列出盲板清单，落实抽堵盲板责任人。</span>
+            </Signature>
+            <Signature
+              :checked="checked[2] ? checked[2].checked : false"
+              :img="checked[2] && checked[2].checked ? signatureImg : ''"
+              disable
+            >
+              <div slot>设备经过置换、吹扫、蒸煮。</div>
+            </Signature>
+            <Signature
+              :checked="checked[3] ? checked[3].checked : false"
+              :img="checked[3] && checked[3].checked ? signatureImg : ''"
+              disable
+            >
+              <div slot>设备打开通风孔进行自然通风,温度适宜人员作业;必要时采用强制通风或佩戴空气呼吸器,但严禁用通氧气或富氧空气的方法补充氧。</div>
+            </Signature>
+            <Signature
+              :checked="checked[4] ? checked[4].checked : false"
+              :img="checked[4] && checked[4].checked ? signatureImg : ''"
+              disable
+            >
+              <div slot>相关设备进行处理,带搅拌机的设备要切断电源,电源开关处加锁或挂“禁止合闸”标志牌,设专人监护。</div>
+            </Signature>
+            <Signature
+              :checked="checked[5] ? checked[5].checked : false"
+              :img="checked[5] && checked[5].checked ? signatureImg : ''"
+              disable
+            >
+              <div slot>检查受限空间内部已具备作业条件,清罐时(无需用/已采用)防爆工具。</div>
+            </Signature>
+            <Signature
+              :checked="checked[6] ? checked[6].checked : false"
+              :img="checked[6] && checked[6].checked ? signatureImg : ''"
+              disable
+            >
+              <div slot>检查受限空间进出口通道,无阻碍人员进出的障碍物。</div>
+            </Signature>
+            <Signature
+              :checked="checked[7] ? checked[7].checked : false"
+              :img="checked[7] && checked[7].checked ? signatureImg : ''"
+              disable
+            >
+              <div slot>分析盛装过可燃有毒液体、气体的受限空间内的可燃、有毒有害气体含量。</div>
+            </Signature>
+            <Signature
+              :checked="checked[8] ? checked[8].checked : false"
+              :img="checked[8] && checked[8].checked ? signatureImg : ''"
+              disable
+            >
+              <div slot>作业人员清楚受限空间内存在的其他危险因素,如内部附件、集渣坑等。</div>
+            </Signature>
+            <Signature
+              :checked="checked[9] ? checked[9].checked : false"
+              :img="checked[9] && checked[9].checked ? signatureImg : ''"
+              disable
+            >
+              <div slot>作业监护措施{{checked[9].checked}}
+              <span>
+                消防器材： <van-stepper :min="0" v-model="fireCount" />
+              </span>
+              <!-- <div>、救生绳</div> -->
+              <span>
+              救生绳<van-stepper :min="0" v-model="lifelineCount"/>
+              </span>
+              <!-- <div>、气防装备</div> -->
+              <span>
+               气防装备： <van-stepper :min="0" v-model="gasCount"/>
+              </span>
+              </div>
+              <!-- fireCount lifelineCount  gasCount-->
+            </Signature>
+            <Signature
+              :checked="checked[10] ? checked[10].checked : false"
+              :img="checked[10] && checked[10].checked ? signatureImg : ''"
+              disable
+            >
+              <div slot>检查受限空间进出口通道,无阻碍人员进出的障碍物。</div>
+            </Signature>
+          </div>
         </div>
-        <div class="confirm_list">
-          <Signature
-            :checked="checked[0] ? checked[0].checked : false"
-            :img="checked[0] ? checked[0].img : ''"
-            @checked="showSignature(0)"
-            @cancel="signatureCancel(0)"
-            disable
-          >
-            <span slot>对进入受限空间危险性进行分析。</span>
-          </Signature>
-          <Signature
-            :checked="checked[1] ? checked[1].checked : false"
-            :img="checked[1] ? checked[1].img : ''"
-            @checked="showSignature(1)"
-            @cancel="signatureCancel(1)"
-            disable
-          >
-            <span slot>与受限空间有联系的阀门管线加盲板隔离，列出盲板清单，落实抽堵盲板责任人。</span>
-          </Signature>
-          <Signature
-            :checked="checked[2] ? checked[2].checked : false"
-            :img="checked[2] ? checked[2].img : ''"
-            @checked="showSignature(2)"
-            @cancel="signatureCancel(2)"
-            disable
-          >
-            <div slot>设备经过置换、吹扫、蒸煮。</div>
-          </Signature>
-          <Signature
-            :checked="checked[3] ? checked[3].checked : false"
-            :img="checked[3] ? checked[3].img : ''"
-            @checked="showSignature(3)"
-            @cancel="signatureCancel(3)"
-            disable
-          >
-            <div slot>设备打开通风孔进行自然通风,温度适宜人员作业;必要时采用强制通风或佩戴空气呼吸器,但严禁用通氧气或富氧空气的方法补充氧。</div>
-          </Signature>
-          <Signature
-            :checked="checked[4] ? checked[4].checked : false"
-            :img="checked[4] ? checked[4].img : ''"
-            @checked="showSignature(4)"
-            @cancel="signatureCancel(4)"
-            disable
-          >
-            <div slot>相关设备进行处理,带搅拌机的设备要切断电源,电源开关处加锁或挂“禁止合闸”标志牌,设专人监护。</div>
-          </Signature>
-          <Signature
-            :checked="checked[5] ? checked[5].checked : false"
-            :img="checked[5] ? checked[5].img : ''"
-            @checked="showSignature(5)"
-            @cancel="signatureCancel(5)"
-            disable
-          >
-            <div slot>检查受限空间内部已具备作业条件,清罐时(无需用/已采用)防爆工具。</div>
-          </Signature>
-          <Signature
-            :checked="checked[6] ? checked[6].checked : false"
-            :img="checked[6] ? checked[6].img : ''"
-            @checked="showSignature(6)"
-            @cancel="signatureCancel(6)"
-            disable
-          >
-            <div slot>检查受限空间进出口通道,无阻碍人员进出的障碍物。</div>
-          </Signature>
-          <Signature
-            :checked="checked[7] ? checked[7].checked : false"
-            :img="checked[7] ? checked[7].img : ''"
-            @checked="showSignature(7)"
-            @cancel="signatureCancel(7)"
-            disable
-          >
-            <div slot>分析盛装过可燃有毒液体、气体的受限空间内的可燃、有毒有害气体含量。</div>
-          </Signature>
-          <Signature
-            :checked="checked[8] ? checked[8].checked : false"
-            :img="checked[8] ? checked[8].img : ''"
-            @checked="showSignature(8)"
-            @cancel="signatureCancel(8)"
-            disable
-          >
-            <div slot>作业人员清楚受限空间内存在的其他危险因素,如内部附件、集渣坑等。</div>
-          </Signature>
-          <Signature
-            :checked="checked[9] ? checked[9].checked : false"
-            :img="checked[9] ? checked[9].img : ''"
-            @checked="showSignature(9)"
-            @cancel="signatureCancel(9)"
-            disable
-          >
-            <div slot>作业监护措施:消防器材</div>
-            <div>
-              <input type="text" />
-            </div>
-            <div>、救生绳</div>
-            <div>
-              <input type="text" />
-            </div>
-            <div>、气防装备</div>
-            <div>
-              <input type="text" />
-            </div>
-          </Signature>
-          <Signature
-            :checked="checked[10] ? checked[10].checked : false"
-            :img="checked[10] ? checked[10].img : ''"
-            @checked="showSignature(10)"
-            @cancel="signatureCancel(10)"
-            disable
-          >
-            <div slot>检查受限空间进出口通道,无阻碍人员进出的障碍物。</div>
-          </Signature>
-        </div>
-      </div>
-      <!-- fenxidata: [
-          {
-            title: "有毒有害物质",
-            standard: {
-              one: 1,
-              two: 1
-            },
-            data: {
-              one: "",
-              two: "",
-            }
-          },
-          {
-            title: "可燃气",
-            standard: {
-              one: 1,
-              two: 1
-            },
-            data: {
-              one: "",
-              two: "",
-            }
-          },
-          {
-            title: "氧含量",
-            standard: {
-              one: "18%-23.5%"
-            },
-            data: {
-              one: "",
-            }
-          }
-        ],
-        fenxiTime: "", // 数据
-        fenxiren: "", // 分析人
-        fenxiParts: "" // 部位 -->
       <!-- 分析 -->
       <div class="fenxi" v-for="(fx, index) in fenxi" :key="index">
         <div class="fenxi__title">分析项目{{index+1}}</div>
@@ -330,6 +274,9 @@ export default {
     return {
       initData: {},
       storeModule: "kongjian",
+      fireCount: 0, // 消防数量
+      lifelineCount: 0, // 救生绳
+      gasCount: 0, // 气防装备
       sendData: {
         zyContent: "", //作业内容
         id: this.zypId, // 作业票编号
@@ -368,6 +315,7 @@ export default {
         "高处坠落"
       ],
       selectSignatureShow: Number,
+      signatureImg: '', // 只保存一个签名
       signatureShow: false,
       fenxi: []
     };
@@ -406,15 +354,22 @@ export default {
     }
   },
   created() {
+    this.initChecked();
     this.initPage();
   },
   activated() {
     this.initPage();
   },
   deactivated() {
-    // this.queryId = "";
+    this.queryId = "";
   },
   methods: {
+    initChecked () {
+      for (let i =0; i < 11; i ++) {
+        let obj = {checked: false};
+        this.checked.push(obj);
+      }
+    },
     updataFenxi(ffindex,findex,index,name, value) {
       this.fenxi[ffindex].fenxidata[findex][name][index] = value;
       console.log('value',  this.fenxi[ffindex].fenxidata[findex][name][index] );
@@ -468,6 +423,9 @@ export default {
       this.$Toast.fail({
         message: "最多添加三个"
       });
+    },
+    selectChecked (index) {
+      this.checked[index].checked = true;
     },
     // 显示签名
     showSignature(index) {
@@ -543,11 +501,17 @@ export default {
       let sendData = JSON.parse(JSON.stringify(this.sendData));
       sendData.zyOtherspecial = this.stringData("zyOtherspecial", "list_1");
       sendData.zywhBs = this.stringData("zywhBs", "list_2");
+      sendData.guardian = this.userString(sendData.guardian, "userName");
+      sendData.zyPrincipal = this.userString(sendData.zyPrincipal, "userName");
+      sendData.zyRen = this.userString(sendData.zyRen, "userName");
+      sendData.sxkjDanwei = this.userString(sendData.sxkjDanwei, "name");
+      
       sendData.applyDept = this.$userInfo.officeName;
       sendData.applyRen = this.$userInfo.userName;
       sendData.__sid = this.$userInfo.sessionId;
       console.log(sendData);
       // 判断数据是否为空
+      // 分析数据 创建
       if (this.isEmpty(sendData) == false) {
         this.$notify("请将表单中的数据输入完整");
         return;
@@ -610,31 +574,47 @@ export default {
           let info = res.list[0];
           this.oldInfo = info;
           for (const key in this.sendData) {
-            if (key === "guardian") {
-              if (info[key])
-                this.sendData[key] = this.reductionSelectUser(info[key]);
-            } else if (key === "zyRen") {
-              if (info[key])
-                this.sendData[key] = this.reductionSelectUser(info[key]);
-            } else if (key === "zyOtherspecial") {
-              if (info[key]) {
-                this.sendData[key] = this.reductionSelectTag(
+            switch (key) {
+              case "guardian":
+                if (info[key])this.sendData[key] = this.reductionSelectUser(info[key]);
+                break;
+              case "zyRen":
+                if (info[key])this.sendData[key] = this.reductionSelectDept(info[key]);
+                break;
+              case "zyPrincipal":
+                if (info[key])this.sendData[key] = this.reductionSelectUser(info[key]);
+                break;
+              case "querenman":
+                if (info[key])this.signatureImg = info[key];
+              break;
+                // 安装措施
+              case "aqcsjl":
+                if (info[key])info[key].split(',').forEach((item) => {
+                  this.selectChecked(item - 1)
+                });
+                // 作业监护措施
+              case "zyjhcs":
+                if (info[key])info[key].split(',').forEach((item,index) => {
+                  if (index === 0) this.fireCount = item;
+                  if (index === 1) this.lifelineCount = item;
+                  if (index === 2) this.gasCount = item;
+                });;
+                break;
+              case "zyOtherspecial":
+                if (info[key])this.sendData[key] = this.reductionSelectTag(
                   info[key],
                   this.list_1
                 );
-              }
-            } else if (key === "zywhBs") {
-              if (info[key]) {
-                this.sendData[key] = this.reductionSelectTag(
+                break;
+              case "zywhBs":
+                if (info[key])this.sendData[key] = this.reductionSelectTag(
                   info[key],
                   this.list_2
                 );
-              }
-            } else if (key === "zyPrincipal") {
-              if (info[key])
-                this.sendData[key] = this.reductionSelectUser(info[key]);
-            } else {
-              this.sendData[key] = info[key];
+                break;
+              default:
+                this.sendData[key] = info[key];
+                break;
             }
           }
           this.$Toast.clear();

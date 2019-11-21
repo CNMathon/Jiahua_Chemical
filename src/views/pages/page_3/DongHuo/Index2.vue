@@ -372,7 +372,6 @@ export default {
   },
   watch: {
     fxRenA(res) {
-      console.log('index2 fxRenA', res);
       this.sendData.fxRenA = res;
     },
     fxRenB(res) {
@@ -388,11 +387,9 @@ export default {
     fxRenC: state => state.donghuo.fxRenC,
   }),
   created() {
-    console.log("created =================", this.$route.query);
     this.pageInit();
   },
   activated() {
-    console.log("activated=================", this.$route.query);
     this.pageInit();
   },
   beforeDestroy() {
@@ -422,7 +419,6 @@ export default {
       if (this.sendData.dhfxTimeB === undefined) {
         Object.assign(this.sendData, fenxiB);
         this.$forceUpdate();
-        console.log('this.sendData', this.sendData);
         return;
       }
       if (this.sendData.dhfxTimeC === undefined) {

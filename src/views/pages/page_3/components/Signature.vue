@@ -39,6 +39,9 @@ export default {
   mounted(){
   },
   watch: {
+    checked (val) {
+      this.localChecked = val;
+    },
     localChecked(val) {
       // this.tempChecked
       //   this.checked = false

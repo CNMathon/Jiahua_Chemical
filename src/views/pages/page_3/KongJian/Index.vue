@@ -94,7 +94,7 @@
           <div class="confirm_list">
             <Signature
               :checked="checked[0] ? checked[0].checked : false"
-              :img="checked[0] ? checked[0].img : ''"
+              :img="checked[0] && checked[0].checked ? signatureImg : ''"
               @checked="showSignature(0)"
               @cancel="signatureCancel(0)"
             >
@@ -102,7 +102,7 @@
             </Signature>
             <Signature
               :checked="checked[1] ? checked[1].checked : false"
-              :img="checked[1] ? checked[1].img : ''"
+              :img="checked[1] && checked[1].checked ? signatureImg : ''"
               @checked="showSignature(1)"
               @cancel="signatureCancel(1)"
             >
@@ -110,7 +110,7 @@
             </Signature>
             <Signature
               :checked="checked[2] ? checked[2].checked : false"
-              :img="checked[2] ? checked[2].img : ''"
+              :img="checked[2] && checked[2].checked ? signatureImg : ''"
               @checked="showSignature(2)"
               @cancel="signatureCancel(2)"
             >
@@ -118,7 +118,7 @@
             </Signature>
             <Signature
               :checked="checked[3] ? checked[3].checked : false"
-              :img="checked[3] ? checked[3].img : ''"
+              :img="checked[3] && checked[3].checked ? signatureImg : ''"
               @checked="showSignature(3)"
               @cancel="signatureCancel(3)"
             >
@@ -126,7 +126,7 @@
             </Signature>
             <Signature
               :checked="checked[4] ? checked[4].checked : false"
-              :img="checked[4] ? checked[4].img : ''"
+              :img="checked[4] && checked[4].checked ? signatureImg : ''"
               @checked="showSignature(4)"
               @cancel="signatureCancel(4)"
             >
@@ -134,7 +134,7 @@
             </Signature>
             <Signature
               :checked="checked[5] ? checked[5].checked : false"
-              :img="checked[5] ? checked[5].img : ''"
+              :img="checked[5] && checked[5].checked ? signatureImg : ''"
               @checked="showSignature(5)"
               @cancel="signatureCancel(5)"
             >
@@ -142,7 +142,7 @@
             </Signature>
             <Signature
               :checked="checked[6] ? checked[6].checked : false"
-              :img="checked[6] ? checked[6].img : ''"
+              :img="checked[6] && checked[6].checked ? signatureImg : ''"
               @checked="showSignature(6)"
               @cancel="signatureCancel(6)"
             >
@@ -150,7 +150,7 @@
             </Signature>
             <Signature
               :checked="checked[7] ? checked[7].checked : false"
-              :img="checked[7] ? checked[7].img : ''"
+              :img="checked[7] && checked[7].checked ? signatureImg : ''"
               @checked="showSignature(7)"
               @cancel="signatureCancel(7)"
             >
@@ -158,7 +158,7 @@
             </Signature>
             <Signature
               :checked="checked[8] ? checked[8].checked : false"
-              :img="checked[8] ? checked[8].img : ''"
+              :img="checked[8] && checked[8].checked ? signatureImg : ''"
               @checked="showSignature(8)"
               @cancel="signatureCancel(8)"
             >
@@ -166,26 +166,28 @@
             </Signature>
             <Signature
               :checked="checked[9] ? checked[9].checked : false"
-              :img="checked[9] ? checked[9].img : ''"
+              :img="checked[9] && checked[9].checked ? signatureImg : ''"
               @checked="showSignature(9)"
               @cancel="signatureCancel(9)"
             >
-              <div slot>作业监护措施:消防器材</div>
-              <div>
-                <input type="text" />
+              <div slot>作业监护措施
+              <span>
+                消防器材： <van-stepper :min="0" v-model="fireCount" />
+              </span>
+              <!-- <div>、救生绳</div> -->
+              <span>
+              救生绳<van-stepper :min="0" v-model="lifelineCount"/>
+              </span>
+              <!-- <div>、气防装备</div> -->
+              <span>
+               气防装备： <van-stepper :min="0" v-model="gasCount"/>
+              </span>
               </div>
-              <div>、救生绳</div>
-              <div>
-                <input type="text" />
-              </div>
-              <div>、气防装备</div>
-              <div>
-                <input type="text" />
-              </div>
+              <!-- fireCount lifelineCount  gasCount-->
             </Signature>
             <Signature
               :checked="checked[10] ? checked[10].checked : false"
-              :img="checked[10] ? checked[10].img : ''"
+              :img="checked[10] && checked[10].checked ? signatureImg : ''"
               @checked="showSignature(10)"
               @cancel="signatureCancel(10)"
             >
@@ -237,6 +239,9 @@ export default {
     return {
       initData: {},
       storeModule: "kongjian",
+      fireCount: 0, // 消防数量
+      lifelineCount: 0, // 救生绳
+      gasCount: 0, // 气防装备
       sendData: {
         zyContent: "", //作业内容
         devicename: "", //设备名称
@@ -248,7 +253,10 @@ export default {
         sxkjDanwei: [], // 受限空间所属单位
         guardian: [], // 监护人
         zyPrincipal: [], // 作业部门负责人
-        zyRen: [] // 作业人
+        zyRen: [], // 作业人
+        aqcsjl: [],
+        zyjhcs: [], // 作业监护措施
+        querenman: ""
       },
       checked: [],
       isShowAction: false,
@@ -272,6 +280,7 @@ export default {
         "高处坠落"
       ],
       selectSignatureShow: Number,
+      signatureImg: '', // 只保存一个签名
       signatureShow: false,
       isLoading: false,
       oldInfo: {}
@@ -298,6 +307,8 @@ export default {
     }
   },
   created() {
+    console.log('created this.checked=========',  JSON.parse(JSON.stringify(this.checked)));
+    this.initChecked();
     this.initPage();
   },
   beforeDestroy() {
@@ -307,10 +318,13 @@ export default {
   activated() {
     this.initPage();
   },
-  deactivated() {
-    // this.$store.dispatch("kongjian/cleanState");
-  },
   methods: {
+    initChecked () {
+      for (let i =0; i < 11; i ++) {
+        let obj = {checked: false};
+        this.checked.push(obj);
+      }
+    },
     initPage() {
       if (this.$route.query.id) {
         if (this.queryId !== this.$route.query.id) {
@@ -321,28 +335,38 @@ export default {
     },
     // 显示签名
     showSignature(index) {
+      if (this.signatureImg === "") {
+        this.signatureShow = true;
+      }
+      this.selectChecked(index);
       this.selectSignatureShow = index;
-      this.signatureShow = true;
+    },
+    selectChecked (index) {
+      this.checked[index].checked = true;
     },
     // 取消签名
     signatureCancel(index) {
       this.checked[index].checked = false;
-      this.checked[index].img = "";
+      // 如果所有的数据都为false 那么清除签名
+      if (this.checked.every((item) => {return !item.checked})) {
+        this.signatureImg = '';
+      }
     },
     // 保存画布
     saveCanvas(e) {
       this.signatureShow = false;
-      this.checked[this.selectSignatureShow] = {
-        checked: false,
-        img: ""
-      };
-      this.sendData.selectSignatureShow = e;
-      this.checked[this.selectSignatureShow].img = e;
+      // this.checked[this.selectSignatureShow] = {
+      //   checked: true,
+      //   img: ""
+      // };
+      this.signatureImg = e;
+      // this.sendData.selectSignatureShow = e;
+      // this.checked[this.selectSignatureShow].img = e;
+      
     },
     // 取消画布
-    cancelCanvas() {
+    cancelCanvas(index) {
       this.checked[this.selectSignatureShow].checked = false;
-      this.checked[this.selectSignatureShow].img = "";
       this.signatureShow = false;
     },
     // 打开操作Popup
@@ -376,6 +400,24 @@ export default {
         sendData.id = this.oldInfo.id;
         sendData.sxkjCode = this.oldInfo.sxkjCode;
       }
+      //  储存 安装措施 aqcsjl zyjhcs 作业监护措施
+      sendData.aqcsjl = [];
+      sendData.zyjhcs = [this.fireCount, // 消防数量
+      this.lifelineCount, // 救生绳
+      this.gasCount, // 气防装备;
+      ];
+      //  获得勾选记录
+      this.checked.forEach((item, index) => {
+        //  安全勾选记录
+        if (item.checked) {
+          sendData.aqcsjl.push(index + 1);
+        }
+        if (sendData.querenman=== '' && item.checked) {
+          sendData.querenman = this.signatureImg;
+        }
+      });
+      sendData.aqcsjl = sendData.aqcsjl.join(',');
+      sendData.zyjhcs = sendData.zyjhcs.join(',');
       this.$api.page_3
         .htHseSxkjzypSave(sendData, this.$userInfo.sessionId)
         .then(res => {
@@ -415,35 +457,55 @@ export default {
         .then(res => {
           let info = res.list[0];
           this.oldInfo = info;
+          console.log('获得服务器数据', info);
+          // 安装措施 aqcsjl zyjhcs 作业监护措施 querenman 签名
           for (const key in this.sendData) {
-            if (key === "sxkjDanwei") {
-              if (info[key])
-                this.sendData[key] = this.reductionSelectDept(info[key]);
-            } else if (key === "guardian") {
-              if (info[key])
-                this.sendData[key] = this.reductionSelectUser(info[key]);
-            } else if (key === "zyRen") {
-              if (info[key])
-                this.sendData[key] = this.reductionSelectUser(info[key]);
-            } else if (key === "zyOtherspecial") {
-              if (info[key]) {
-                this.sendData[key] = this.reductionSelectTag(
+            switch (key) {
+              case "sxkjDanwei":
+                if (info[key])this.sendData[key] = this.reductionSelectDept(info[key]);
+                break;
+              case "guardian":
+                if (info[key])this.sendData[key] = this.reductionSelectUser(info[key]);
+                break;
+              case "zyRen":
+                if (info[key])this.sendData[key] = this.reductionSelectDept(info[key]);
+                break;
+              case "zyPrincipal":
+                if (info[key])this.sendData[key] = this.reductionSelectUser(info[key]);
+                break;
+              case "querenman":
+                if (info[key])this.signatureImg = info[key];
+              break;
+                // 安装措施
+              case "aqcsjl":
+                console.log("aqcsjl info[key]=================", info[key]);
+                if (info[key])info[key].split(',').forEach((item) => {
+                  console.log("aqcsjl=================", item);
+                  this.selectChecked(item - 1);
+                });
+                // 作业监护措施
+              case "zyjhcs":
+                if (info[key])info[key].split(',').forEach((item,index) => {
+                  if (index === 0) this.fireCount = item;
+                  if (index === 1) this.lifelineCount = item;
+                  if (index === 2) this.gasCount = item;
+                });;
+                break;
+              case "zyOtherspecial":
+                if (info[key])this.sendData[key] = this.reductionSelectTag(
                   info[key],
                   this.list_1
                 );
-              }
-            } else if (key === "zywhBs") {
-              if (info[key]) {
-                this.sendData[key] = this.reductionSelectTag(
+                break;
+              case "zywhBs":
+                if (info[key])this.sendData[key] = this.reductionSelectTag(
                   info[key],
                   this.list_2
                 );
-              }
-            } else if (key === "zyPrincipal") {
-              if (info[key])
-                this.sendData[key] = this.reductionSelectUser(info[key]);
-            } else {
-              this.sendData[key] = info[key];
+                break;
+              default:
+                this.sendData[key] = info[key];
+                break;
             }
           }
           this.$Toast.clear();

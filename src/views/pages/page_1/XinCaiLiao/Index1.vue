@@ -1,21 +1,23 @@
 <template>
   <div class="gongyi">
-    <van-nav-bar title="新材料" left-text="返回" left-arrow @click-left="pageBack" />
-    <Search></Search>
-    <ActionBar nodrop />
-    <div class="head">
-      <div>
-        <DropDown position="left" :values="dropDownValue"/>
+    <van-nav-bar title="新材料" left-text="返回" left-arrow @click-left="pageBack" fixed/>
+    <van-skeleton title :row="3" :loading="isLoading" class="fixed-first">
+      <Search></Search>
+      <ActionBar nodrop />
+      <div class="head">
+        <div>
+          <DropDown position="left" :values="dropDownValue" />
+        </div>
+        <div>卡片名称</div>
+        <div>位号</div>
+        <div>值</div>
       </div>
-      <div>卡片名称</div>
-      <div>位号</div>
-      <div>值</div>
-    </div>
-    <div class="list">
-      <div class="item" v-for="(item,index) in list" :key="index">
-        <Item :info="item"></Item>
+      <div class="list">
+        <div class="item" v-for="(item,index) in list" :key="index">
+          <Item :info="item"></Item>
+        </div>
       </div>
-    </div>
+    </van-skeleton>
   </div>
 </template>
 <script>
@@ -55,102 +57,102 @@ export default {
         //   unit: "",
         // },
         {
-          title: '磺化工艺',
-          name: '配料温度',
-          key: 'XCLC_TI_V0106',
+          title: "磺化工艺",
+          name: "配料温度",
+          key: "XCLC_TI_V0106",
           value: "",
-          unit: "",
+          unit: ""
         },
         {
-          title: '磺化工艺',
-          name: '1#混合泵A出口温度',
-          key: 'XCLC_TIA_P0105A',
+          title: "磺化工艺",
+          name: "1#混合泵A出口温度",
+          key: "XCLC_TIA_P0105A",
           value: "",
-          unit: "",
+          unit: ""
         },
         {
-          title: '磺化工艺',
-          name: '1#混合泵B出口温度',
-          key: 'XCLC_TIA_P0105B',
+          title: "磺化工艺",
+          name: "1#混合泵B出口温度",
+          key: "XCLC_TIA_P0105B",
           value: "",
-          unit: "",
+          unit: ""
         },
         {
-          title: '磺化工艺',
-          name: '2#混合泵A出口温度',
-          key: 'XCLC_TIA_P0105C',
+          title: "磺化工艺",
+          name: "2#混合泵A出口温度",
+          key: "XCLC_TIA_P0105C",
           value: "",
-          unit: "",
+          unit: ""
         },
         {
-          title: '磺化工艺',
-          name: '2#混合泵B出口温度',
-          key: 'XCLC_TIA_P0105D',
+          title: "磺化工艺",
+          name: "2#混合泵B出口温度",
+          key: "XCLC_TIA_P0105D",
           value: "",
-          unit: "",
+          unit: ""
         },
         {
-          title: '磺化工艺',
-          name: '磺化釜温度',
-          key: 'XCLC_TISA_V0108',
+          title: "磺化工艺",
+          name: "磺化釜温度",
+          key: "XCLC_TISA_V0108",
           value: "",
-          unit: "",
+          unit: ""
         },
         {
-          title: '磺化工艺',
-          name: '氯化釜温度A',
-          key: 'XCLC_TIA_0101A',
+          title: "磺化工艺",
+          name: "氯化釜温度A",
+          key: "XCLC_TIA_0101A",
           value: "",
-          unit: "",
+          unit: ""
         },
         {
-          title: '磺化工艺',
-          name: '氯化釜温度B',
-          key: 'XCLC_TIA_0101B',
+          title: "磺化工艺",
+          name: "氯化釜温度B",
+          key: "XCLC_TIA_0101B",
           value: "",
-          unit: "",
+          unit: ""
         },
         {
-          title: '磺化工艺',
-          name: '分解釜温度1',
-          key: 'XCLC_TIA_0103',
+          title: "磺化工艺",
+          name: "分解釜温度1",
+          key: "XCLC_TIA_0103",
           value: "",
-          unit: "",
+          unit: ""
         },
         {
-          title: '磺化工艺',
-          name: '分解釜温度2',
-          key: 'XCLC_TIA_R0140',
+          title: "磺化工艺",
+          name: "分解釜温度2",
+          key: "XCLC_TIA_R0140",
           value: "",
-          unit: "",
+          unit: ""
         },
         {
-          title: '磺化工艺',
-          name: '配料釜压力',
-          key: 'XCLC_PI_V0106',
+          title: "磺化工艺",
+          name: "配料釜压力",
+          key: "XCLC_PI_V0106",
           value: "",
-          unit: "",
+          unit: ""
         },
         {
-          title: '磺化工艺',
-          name: '分解压力',
-          key: 'XCLC_PIC_V0111',
+          title: "磺化工艺",
+          name: "分解压力",
+          key: "XCLC_PIC_V0111",
           value: "",
-          unit: "",
+          unit: ""
         },
         {
-          title: '磺化工艺',
-          name: '氯化釜压力',
-          key: 'XCLC_PI_V0109',
+          title: "磺化工艺",
+          name: "氯化釜压力",
+          key: "XCLC_PI_V0109",
           value: "",
-          unit: "",
+          unit: ""
         },
         {
-          title: '磺化工艺',
-          name: '尾气总管压力',
-          key: 'XCLC_PIA_T0201',
+          title: "磺化工艺",
+          name: "尾气总管压力",
+          key: "XCLC_PIA_T0201",
           value: "",
-          unit: "",
+          unit: ""
         },
         // {
         //   title: '还原工艺',
@@ -160,25 +162,25 @@ export default {
         //   unit: "",
         // },
         {
-          title: '还原工艺',
-          name: '还原温度1',
-          key: 'XCLC_TI_21047A',
+          title: "还原工艺",
+          name: "还原温度1",
+          key: "XCLC_TI_21047A",
           value: "",
-          unit: "",
+          unit: ""
         },
         {
-          title: '还原工艺',
-          name: '还原温度2',
-          key: 'XCLC_TI_21047B',
+          title: "还原工艺",
+          name: "还原温度2",
+          key: "XCLC_TI_21047B",
           value: "",
-          unit: "",
+          unit: ""
         },
         {
-          title: '还原工艺',
-          name: '碱洗塔压力',
-          key: 'XCLC_PIA_T0203',
+          title: "还原工艺",
+          name: "碱洗塔压力",
+          key: "XCLC_PIA_T0203",
           value: "",
-          unit: "",
+          unit: ""
         },
         // {
         //   title: '甲砜工艺',
@@ -188,18 +190,18 @@ export default {
         //   unit: "",
         // },
         {
-          title: '甲砜工艺',
-          name: '甲基化反应温度',
-          key: 'XCLC_TIC_1055',
+          title: "甲砜工艺",
+          name: "甲基化反应温度",
+          key: "XCLC_TIC_1055",
           value: "",
-          unit: "",
+          unit: ""
         },
         {
-          title: '甲砜工艺',
-          name: '甲基化釜压力',
-          key: 'XCLC_PIAS_1055',
+          title: "甲砜工艺",
+          name: "甲基化釜压力",
+          key: "XCLC_PIAS_1055",
           value: "",
-          unit: "",
+          unit: ""
         },
         // {
         //   title: '邻硝基工艺',
@@ -223,67 +225,67 @@ export default {
         //   unit: "",
         // },
         {
-          title: '邻硝基工艺',
-          name: '混酸配制温度1',
-          key: 'XCLC_TICA_1001A',
+          title: "邻硝基工艺",
+          name: "混酸配制温度1",
+          key: "XCLC_TICA_1001A",
           value: "",
-          unit: "",
+          unit: ""
         },
         {
-          title: '邻硝基工艺',
-          name: '混酸配制温度2',
-          key: 'XCLC_TICA_1001B',
+          title: "邻硝基工艺",
+          name: "混酸配制温度2",
+          key: "XCLC_TICA_1001B",
           value: "",
-          unit: "",
+          unit: ""
         },
         {
-          title: '邻硝基工艺',
-          name: '预冷水温度1',
-          key: 'XCLC_TI_V1017A',
+          title: "邻硝基工艺",
+          name: "预冷水温度1",
+          key: "XCLC_TI_V1017A",
           value: "",
-          unit: "",
+          unit: ""
         },
         {
-          title: '邻硝基工艺',
-          name: '预冷水温度2',
-          key: 'XCLC_TI_V1017B',
+          title: "邻硝基工艺",
+          name: "预冷水温度2",
+          key: "XCLC_TI_V1017B",
           value: "",
-          unit: "",
+          unit: ""
         },
         {
-          title: '邻硝基工艺',
-          name: '硝化反应温度1',
-          key: 'XCLC_TICA_1001A',
+          title: "邻硝基工艺",
+          name: "硝化反应温度1",
+          key: "XCLC_TICA_1001A",
           value: "",
-          unit: "",
+          unit: ""
         },
         {
-          title: '邻硝基工艺',
-          name: '硝化反应温度2',
-          key: 'XCLC_TICA_1001B',
+          title: "邻硝基工艺",
+          name: "硝化反应温度2",
+          key: "XCLC_TICA_1001B",
           value: "",
-          unit: "",
+          unit: ""
         },
         {
-          title: '邻硝基工艺',
-          name: '水析温度1',
-          key: 'XCLC_TISA_1003A',
+          title: "邻硝基工艺",
+          name: "水析温度1",
+          key: "XCLC_TISA_1003A",
           value: "",
-          unit: "",
+          unit: ""
         },
         {
-          title: '邻硝基工艺',
-          name: '水析温度2',
-          key: 'XCLC_TISA_1003A',
+          title: "邻硝基工艺",
+          name: "水析温度2",
+          key: "XCLC_TISA_1003A",
           value: "",
-          unit: "",
+          unit: ""
         },
         {
-          title: '邻硝基工艺',
-          name: '水析温度3',
-          key: 'XCLC_TISA_1003C',
+          title: "邻硝基工艺",
+          name: "水析温度3",
+          key: "XCLC_TISA_1003C",
           value: "",
-          unit: "",
+          unit: ""
         },
         // {
         //   title: 'BA工艺',
@@ -293,47 +295,47 @@ export default {
         //   unit: "",
         // },
         {
-          title: 'BA工艺',
-          name: 'R2101A温度2',
-          key: 'XCL_TI_21004A3',
+          title: "BA工艺",
+          name: "R2101A温度2",
+          key: "XCL_TI_21004A3",
           value: "",
-          unit: "",
+          unit: ""
         },
         {
-          title: 'BA工艺',
-          name: 'R2101A温度3',
-          key: 'XCL_TI_21004A4',
+          title: "BA工艺",
+          name: "R2101A温度3",
+          key: "XCL_TI_21004A4",
           value: "",
-          unit: "",
+          unit: ""
         },
         {
-          title: 'BA工艺',
-          name: 'R2101A温度4',
-          key: 'XCL_TI_21004A8',
+          title: "BA工艺",
+          name: "R2101A温度4",
+          key: "XCL_TI_21004A8",
           value: "",
-          unit: "",
+          unit: ""
         },
         {
-          title: 'BA工艺',
-          name: 'R2101A压力1',
-          key: 'XCL_PI_21004A',
+          title: "BA工艺",
+          name: "R2101A压力1",
+          key: "XCL_PI_21004A",
           value: "",
-          unit: "",
+          unit: ""
         },
         {
-          title: 'BA工艺',
-          name: 'R2101A原料液流量',
-          key: 'XCL_FI_21009A',
+          title: "BA工艺",
+          name: "R2101A原料液流量",
+          key: "XCL_FI_21009A",
           value: "",
-          unit: "",
+          unit: ""
         },
         {
-          title: 'BA工艺',
-          name: '尾气排放中氮氧化物含量',
-          key: 'XCL_AI_21004',
+          title: "BA工艺",
+          name: "尾气排放中氮氧化物含量",
+          key: "XCL_AI_21004",
           value: "",
-          unit: "",
-        },
+          unit: ""
+        }
       ],
       dropDownValue: [
         { text: "工段", value: 0 },
@@ -341,8 +343,9 @@ export default {
         { text: "还原工艺", value: 2 },
         { text: "甲砜工艺", value: 3 },
         { text: "邻硝基工艺", value: 4 },
-        { text: "BA工艺", value: 5 },
-      ]
+        { text: "BA工艺", value: 5 }
+      ],
+      isLoading: false
     };
   },
   methods: {
@@ -352,7 +355,7 @@ export default {
     getPageList() {
       let tagNames = [];
       // let finishCount = 0;
-      // this.isLoading = false;
+      this.isLoading = true;
 
       // 拼接查询参数
       this.list.map(item => tagNames.push(item.key));
@@ -373,11 +376,12 @@ export default {
               : (this.list[index].value = "空");
             this.list[index].unit = item.Unit;
           });
+          this.isLoading = false
         });
     }
   },
   created() {
-    this.getPageList()
+    this.getPageList();
   }
 };
 </script>

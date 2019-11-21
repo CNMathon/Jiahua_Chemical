@@ -55,6 +55,7 @@
       <van-tabs color="#33A4E8"
         title-inactive-color="rgba(0, 0, 0, .65)"
         title-active-color="#33A4E8"
+                v-on:click="toDetail"
       >
         <div class="danger-content">
           <div class="item-title">
@@ -62,9 +63,9 @@
             <div class="item-title-item">分厂</div>
             <div class="item-title-item">库存</div>
           </div>
-          <van-tab v-for="(item, index) in dangerInfo" :key="index" :title="item.text" >
+          <van-tab v-for="(item, index) in dangerInfo" :key="index" :title="item.text">
             <div class="item-area">
-              <Item size="big" :info="item.info" />
+              <Item size="big" :info="item.info"/>
             </div>
           </van-tab>
         </div>
@@ -367,6 +368,11 @@ export default {
     },
     toWeiHuaPage() {
       this.$router.push({ path: "./weihua" });
+    },
+    toDetail:function(name,title) {
+      if(name==2){
+        this.$router.push({path:'/page_2/sjjk_dlzx'})
+      }
     }
   }
 };

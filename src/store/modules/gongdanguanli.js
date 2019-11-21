@@ -1,13 +1,6 @@
 // initial state
 const state = {
-  keepAliveComponents: ["kongjianindex", "kongjianindex2"],
-  zyOtherspecial: [],
-  otherSpecial: [],
-  zywhBs: [],
-  guardian: [], //监护人
-  zyPrincipal: [], //作业部门负责人
-  zyRen: [], //作业人
-  sxkjDanwei: [] //受限空间所属单位
+  keepAliveComponents: ['gongdanguanli_list']
 };
 
 // getters
@@ -50,8 +43,6 @@ const mutations = {
   delete_KeepAlive(state, name) {
     const index = state.keepAliveComponents.indexOf(name);
     index > -1 && state.keepAliveComponents.splice(index, 1);
-    console.log("state.keepAliveComponents", state.keepAliveComponents);
-    console.log("state.keepAliveComponents.splice(index, 1);", state.keepAliveComponents.splice(index, 1));
   }
 };
 

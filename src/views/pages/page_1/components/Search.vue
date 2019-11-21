@@ -1,6 +1,6 @@
 <template>
   <div class="search van-hairline--bottom">
-    <van-search placeholder="搜索客户" v-model="value" shape="round" />
+    <van-search placeholder="搜索" v-model="value" shape="round" />
   </div>
 </template>
 <script>

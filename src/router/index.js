@@ -35,6 +35,18 @@ const router = new VueRouter({
   }
 });
 router.beforeEach((to, _from, next) => {
+	 if ((to.name == "diaozhuang_index" && _from.name == "diaozhuang_select") || (to.name == "diaozhuang_index" && _from.name == "DiaoZhuang_SelectUser") || (to.name == "diaozhuang_index" && _from.name =="diaozhuang_select_work_permit")) {
+		 to.meta.keepAlive = false;
+		 console.log(to.name,_from.name)
+	 }
+	 if(to.name == "DiaoZhuang_SelectUser" && _from.name == "diaozhuang_index" || _from.name == "diaozhuang_index" && to.name =="diaozhuang_select_work_permit"){
+		 _from.meta.keepAlive = true;
+		 to.meta.keepAlive = true;
+	 }
+	 if (to.name == "diaozhuang_index" && _from.name == "diaozhuang_list") {
+	 		 to.meta.keepAlive = false;
+	 }
+	 
   if (to.name === "login") {
     next();
     return;
