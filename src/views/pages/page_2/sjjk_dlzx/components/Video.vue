@@ -6,7 +6,7 @@
       controls
       preload="auto"
     >
-      <source src="http://vjs.zencdn.net/v/oceans.mp4" type="video/mp4" />
+      <source :src="vSrc" type="video/mp4" />
     </video>
   </div>
 </template>
@@ -16,9 +16,25 @@ import "videojs-contrib-hls";
 export default {
   name: "video",
   data() {
-    return {};
+    return {
+      vSrc:'http://vjs.zencdn.net/v/oceans.mp4'
+    };
   },
   mounted() {
+    var videoPlayer = document.getElementById('my-video');
+    if (typeof (videoPlayer) != "undefined") {
+      var myPlayer = videojs('my-video');
+      myPlayer.dispose();
+    }
+    let vArea=document.getElementById('videoArea');
+    vArea.innerHTML=`<video
+      id="my-video"
+      class="video-js vjs-default-skin"
+      controls
+      preload="auto"
+    >
+      <source src=${this.vSrc} type="video/mp4" />
+    </video>`
     videojs("my-video", {
       autoplay: false,
       aspectRatio: "16:9",

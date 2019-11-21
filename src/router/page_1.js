@@ -97,6 +97,14 @@ const routes = {
       meta: {
         name: "首页-设备分类"
       }
+    },
+    {
+      path: "/page_1/guanjianzhuangtai",
+      name: "guanjianzhuangtai",
+      component: () => import("../views/pages/page_1/GuanJianZhuangTai/Index.vue"),
+      meta: {
+        name: "首页-关键状态"
+      }
     }
   ]
 };

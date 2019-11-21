@@ -107,6 +107,15 @@ export const business = {
       let res = Number(num*100).toFixed(dec)
       res += '%'
       return res
-    }
+    },
+    // 路由跳转
+    // 参数1 => url => 跳转路径 => String
+    // 参数2 => query => 路由传参 => Object
+    jumpTo(path, query) {
+      this.$router.push({
+        path: path,
+        query: query
+      })
+    },
   }
 };

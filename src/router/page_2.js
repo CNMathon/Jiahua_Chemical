@@ -30,7 +30,16 @@ const routes = {
       meta: {
         name: "危化品库存"
       }
-    },{
+    },
+    {
+      path: "/page_2/weihuakucun",
+      name: "weihuakucun",
+      component: () => import("../views/pages/page_2/WeiHuaKuCun/Index.vue"),
+      meta: {
+        name: "危化品库存"
+      }
+    },
+    {
       path:'/page_2/sjjk_dlzx',
       name:'dlzx',
       component:() => import('../views/pages/page_2/sjjk_dlzx/Index.vue')

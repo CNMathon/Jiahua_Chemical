@@ -64,7 +64,7 @@
             <div class="item-title-item">库存</div>
           </div>
           <van-tab v-for="(item, index) in dangerInfo" :key="index" :title="item.text">
-            <div class="item-area">
+            <div class="item-area" @click="jumpTo('/page_2/weihuakucun')">
               <Item size="big" :info="item.info"/>
             </div>
           </van-tab>
@@ -92,7 +92,7 @@
       </van-tabs>
     </div>
     <!-- 危险环境监控 -->
-    <div class="content">
+    <!-- <div class="content">
       <div class="content-title">危险环境监控</div>
       <van-row>
         <van-col span="6" v-for="(item, index) in navs" :key="index">
@@ -104,16 +104,16 @@
           </div>
         </van-col>
       </van-row>
-    </div>
+    </div> -->
     <!-- 主要关键设备状态 (嘉化能源) -->
     <div class="content">
       <div class="content-title">主要关键设备状态 (嘉化能源)</div>
       <van-row>
-        <label v-for="(item, index) in nav" :key="index">
-          <van-col span="6" v-if="index <= 2">
-            <div class="nav" @click="toPage(item.router)">
+        <label v-for="(item, index) in nav1" :key="index">
+          <van-col span="6" v-if="index <= 1">
+            <div class="nav" @click="toPage(item.router,item.text)">
               <div class="nav-image">
-                <img :src="require(`@/assets/images/nav_${index + 9}.svg`)" alt />
+                <img :src="require(`@/assets/images/nav_${index + 10}.svg`)" alt />
               </div>
               <div class="nav-text">{{ item.text }}</div>
             </div>
@@ -125,11 +125,11 @@
     <div class="content">
       <van-row>
         <div class="content-title">主要关键设备状态 (嘉福新材料)</div>
-        <label v-for="(item, index) in nav" :key="index">
-          <van-col span="6" v-if="index > 2">
-            <div class="nav" @click="toPage(item.router)">
+        <label v-for="(item, index) in nav1" :key="index">
+          <van-col span="6" v-if="index > 1">
+            <div class="nav" @click="toPage(item.router,item.text)">
               <div class="nav-image">
-                <img :src="require(`@/assets/images/nav_${index + 9}.svg`)" alt />
+                <img :src="require(`@/assets/images/nav_${index + 10}.svg`)" alt />
               </div>
               <div class="nav-text">{{ item.text }}</div>
             </div>
@@ -142,11 +142,13 @@
 <script>
 import Panel from "../../page_1/components/Panel";
 import Item from "./components/Item";
+import { business } from "@/mixin/business";
 export default {
   components: {
     Panel,
     Item
   },
+  mixins: [business],
   data() {
     return {
       dangerInfo: [
@@ -253,6 +255,28 @@ export default {
           router: "/liusuan_1"
         }
       ],
+      nav1: [
+        {
+          text: "烧碱",
+          color: "rgba(238, 116, 95, 0.1)",
+          router: "/guanjianzhuangtai"
+        },
+        {
+          text: "脂肪醇",
+          color: "rgba(237, 246, 252, 1)",
+          router: "/guanjianzhuangtai"
+        },
+        {
+          text: "新材料",
+          color: "rgba(78,169,232,0.1)",
+          router: "/guanjianzhuangtai"
+        },
+        {
+          text: "硫酸",
+          color: "rgba(96,150,248,0.1);",
+          router: "/guanjianzhuangtai"
+        }
+      ],
       navs: [
         {
           text: "柴油库",
@@ -354,8 +378,12 @@ export default {
     };
   },
   methods: {
-    toPage(router) {
-      this.$router.push({ path: `/page_1${router}` });
+    testme() {
+      console.log(123)
+      // this.jumpTo('/')
+    },
+    toPage(router,text) {
+      this.$router.push({ path: `/page_1${router}` ,query: { text:text }});
     },
     toPages(item, index) {
       this.$router.push({
@@ -374,7 +402,7 @@ export default {
         this.$router.push({path:'/page_2/sjjk_dlzx'})
       }
     }
-  }
+  },
 };
 </script>
 <style lang="scss">
@@ -387,7 +415,6 @@ export default {
     .content-title {
       padding: 16px 30px;
       font-size: 27px;
-      font-weight: 500;
       color: #666;
       font-weight: bold;
       line-height: 42px;
@@ -448,6 +475,20 @@ export default {
       }
       .panel-list-item:nth-child(3n + 3) {
         margin-right: auto;
+      }
+      .big{
+        height: 200px;
+        width: 200px;
+        .panel-value{
+          font-size: 36px;
+          font-weight: 500;
+        }
+        .panel-unit{
+          font-size: 26px;
+        }
+        .panel-icon{
+          display: none;
+        }
       }
     }
     .list {
