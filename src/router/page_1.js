@@ -105,6 +105,11 @@ const routes = {
       meta: {
         name: "首页-关键状态"
       }
+    },
+    {
+      path:'/page_1/keranyoudu',
+      name:'KeRanYouDu',
+      component:() => import('../views/pages/page_1/KeRanYouDu/Index.vue')
     }
   ]
 };

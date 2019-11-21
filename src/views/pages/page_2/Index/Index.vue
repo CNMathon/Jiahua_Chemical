@@ -1,6 +1,6 @@
 <template>
   <div class="shuju">
-    <van-nav-bar title="数据监控" fixed class="z-index-highest"/>
+    <van-nav-bar title="数据监控" fixed class="z-index-highest" />
     <!-- 生产运行指标 (嘉化能源) -->
     <div class="content fixed-first">
       <div class="content-title">生产运行指标 (嘉化能源)</div>
@@ -52,10 +52,11 @@
     <!-- 危化品监控 -->
     <div class="content">
       <div class="content-title">危化品监控</div>
-      <van-tabs color="#33A4E8"
+      <van-tabs
+        color="#33A4E8"
         title-inactive-color="rgba(0, 0, 0, .65)"
         title-active-color="#33A4E8"
-                v-on:click="toDetail"
+        @click="toDetail"
       >
         <div class="danger-content">
           <div class="item-title">
@@ -64,8 +65,8 @@
             <div class="item-title-item">库存</div>
           </div>
           <van-tab v-for="(item, index) in dangerInfo" :key="index" :title="item.text">
-            <div class="item-area" @click="jumpTo('/page_2/weihuakucun')">
-              <Item size="big" :info="item.info"/>
+            <div class="item-area" @click="jumpTo(item.route)">
+              <Item size="big" :info="item.info" />
             </div>
           </van-tab>
         </div>
@@ -104,7 +105,7 @@
           </div>
         </van-col>
       </van-row>
-    </div> -->
+    </div>-->
     <!-- 主要关键设备状态 (嘉化能源) -->
     <div class="content">
       <div class="content-title">主要关键设备状态 (嘉化能源)</div>
@@ -154,34 +155,40 @@ export default {
       dangerInfo: [
         {
           text: "危化品库存监控",
+          route: "/page_2/weihuakucun",
           info: [
             {
               itemName: "硫磺",
+              enName: "LSC_LH_VV026",
               factory: "硫酸厂",
-              value: "89"
+              value: "..."
             },
             {
               itemName: "发烟硫酸",
+              enName: "LSC_FYLS_VV014A",
               factory: "硫酸厂",
-              value: "70"
+              value: "..."
             },
             {
               itemName: "氯磺酸",
+              enName: "LSC_LHS",
               factory: "硫酸厂",
-              value: "86"
+              value: "..."
             },
             {
               itemName: "盐酸",
+              enName: "SJC_YS",
               factory: "烧碱厂",
-              value: "71"
-            },
+              value: "..."
+            }
           ]
         },
         {
           text: "可燃有毒气体",
+          route: "/page_1/keranyoudu",
           info: [
             {
-              itemName: "硫磺",
+              itemName: "硫磺123",
               factory: "硫酸厂",
               value: "89"
             },
@@ -199,11 +206,12 @@ export default {
               itemName: "盐酸",
               factory: "烧碱厂",
               value: "71"
-            },
+            }
           ]
         },
         {
           text: "动力中心柴油库",
+          route: "/page_2/weihuakucun",
           info: [
             {
               itemName: "硫磺",
@@ -224,9 +232,9 @@ export default {
               itemName: "盐酸",
               factory: "烧碱厂",
               value: "71"
-            },
+            }
           ]
-        },
+        }
       ],
       nav: [
         {
@@ -378,12 +386,32 @@ export default {
     };
   },
   methods: {
-    testme() {
-      console.log(123)
-      // this.jumpTo('/')
+    getWeihuaData() {
+      this.isLoading = true;
+      let tagNames = [];
+
+      // 拼接查询参数
+      this.dangerInfo[0].info.map(item => tagNames.push(item.enName));
+
+      console.log(tagNames);
+      console.log(String(tagNames));
+
+      this.$api.page_1
+        .getRtMonTagInfosByNames({
+          tagNames: String(tagNames)
+        })
+        .then(res => {
+          console.log("res", res);
+
+          res.map((item, index) => {
+            this.dangerInfo[0].info[index].value = item.Value.toFixed(2);
+            // this.listData[index].unit = item.Unit;
+          });
+          this.isLoading = false;
+        });
     },
-    toPage(router,text) {
-      this.$router.push({ path: `/page_1${router}` ,query: { text:text }});
+    toPage(router, text) {
+      this.$router.push({ path: `/page_1${router}`, query: { text: text } });
     },
     toPages(item, index) {
       this.$router.push({
@@ -397,12 +425,15 @@ export default {
     toWeiHuaPage() {
       this.$router.push({ path: "./weihua" });
     },
-    toDetail:function(name,title) {
-      if(name==2){
-        this.$router.push({path:'/page_2/sjjk_dlzx'})
+    toDetail: function(name, title) {
+      if (name == 2) {
+        this.$router.push({ path: "/page_2/sjjk_dlzx" });
       }
     }
   },
+  created() {
+    this.getWeihuaData()
+  }
 };
 </script>
 <style lang="scss">
@@ -476,17 +507,17 @@ export default {
       .panel-list-item:nth-child(3n + 3) {
         margin-right: auto;
       }
-      .big{
+      .big {
         height: 200px;
         width: 200px;
-        .panel-value{
+        .panel-value {
           font-size: 36px;
           font-weight: 500;
         }
-        .panel-unit{
+        .panel-unit {
           font-size: 26px;
         }
-        .panel-icon{
+        .panel-icon {
           display: none;
         }
       }
@@ -503,7 +534,6 @@ export default {
   }
 }
 
-
 .item-title {
   margin-top: 20px !important;
   margin-bottom: 20px;
@@ -515,10 +545,10 @@ export default {
     font-size: 28px;
     width: 33%;
     &:nth-child(2) {
-      text-align: center
+      text-align: center;
     }
     &:nth-child(3) {
-      text-align: right
+      text-align: right;
     }
   }
 }

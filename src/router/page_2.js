@@ -43,7 +43,7 @@ const routes = {
       path:'/page_2/sjjk_dlzx',
       name:'dlzx',
       component:() => import('../views/pages/page_2/sjjk_dlzx/Index.vue')
-    }
+    },
   ]
 };
 

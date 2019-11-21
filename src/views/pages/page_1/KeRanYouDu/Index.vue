@@ -1,16 +1,18 @@
 <template>
   <div class="gongyi">
-    <van-nav-bar title="关键状态" left-text="返回" left-arrow @click-left="pageBack" />
+    <van-nav-bar title="可燃有毒气体" left-text="返回" left-arrow @click-left="pageBack" />
+
     <div>
-      <van-tabs v-model="activeName">
-        <van-tab v-for="(item,index) in tabList" :key="index" :title="item" :name="item"></van-tab>
+      <van-tabs v-model="activeName" type="card" color="#6096f8">
+        <van-tab v-for="(item,index) in tabList" :key="index" :title="item" :name="item">
+          123
+        </van-tab>
       </van-tabs>
     </div>
 
-    <Search></Search>
     <div class="list">
       <div class="item" v-for="(item,index) in list" :key="index">
-        <div>{{item}}</div>
+        <div class="data-item">{{item}}</div>
       </div>
     </div>
   </div>
@@ -31,7 +33,7 @@ export default {
   data() {
     return {
       list: ['焚硫炉','转化器','公用酸循环槽','脱盐水预热器','公用酸循环泵','火管废热锅炉'],
-      tabList:['硫酸','烧碱','新材料','脂肪醇'],
+      tabList:['动力中心','烧碱厂','新材料','脂肪醇'],
       activeName:'硫酸'
     };
   },
@@ -64,25 +66,20 @@ export default {
   .list {
     box-sizing: border-box;
     padding: 30px;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: space-between;
     .item {
-      width: 47%;
-      height: 80px;
-      margin: 0 auto;
-      background: rgba(96, 150, 248, 1);
-      border-radius: 10px;
-      box-sizing: border-box;
-      color: white;
-      text-align: center;
-      line-height: 80px;
-      margin-bottom: 16px;
-      &:after{
-        content: ""; width: 47%;display: block; height:0;
-      }
+      margin-bottom: 10px;
     }
+  }
+  .data-item{
+    width: 100%;
+    height: 126px;
+    margin: 0 auto;
+    background: rgba(96, 150, 248, 1);
+    border-radius: 10px;
+    box-sizing: border-box;
+    color: white;
+    text-align: center;
+    line-height: 126px;
   }
 }
 </style>
