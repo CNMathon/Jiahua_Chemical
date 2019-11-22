@@ -7,6 +7,7 @@
       left-arrow
       @click-left="pageBack"
       @click-right="isShowAction=true"
+      class="van-nav-bar--fixed"
     />
     <div class="cell_group">
       <!-- 修改 -->
@@ -20,21 +21,21 @@
         title="检察人员"
         required
         :storeModule="storeModule"
-        storeKey="dhzyPrincipal"
+        storeKey="jcry"
         v-model="sendData.jcry"
       />
 			<cell-select-user
         title="违章人员"
         required
         :storeModule="storeModule"
-        storeKey="dhzyPrincipal"
+        storeKey="wzry"
         v-model="sendData.wzry"
       />
 			<cell-select-tag
         title="违章考核标准"
         required
         :storeModule="storeModule"
-        storeKey="dhzyPrincipal"
+        storeKey="wzry"
         v-model="sendData.wzry"
       />
 			<!-- 修改 -->
@@ -43,7 +44,7 @@
         title="违章类型"
         required
         :storeModule="storeModule"
-        storeKey="dhzyPrincipal"
+        storeKey="wzlx"
         v-model="sendData.wzlx"
       />
 			<!-- 修改 -->
@@ -69,6 +70,7 @@
         </div>
       </div>
     </div>
+    <button @click="testme">testme</button>
     <!-- 时间选择 -->
     <van-popup v-model="timeShow" position="bottom">
       <van-datetime-picker
@@ -90,6 +92,7 @@
   </div>
 </template>
 <script>
+import { mapState } from "vuex";
 import { Toast } from "vant";
 import Canvas from "@/components/Canvas.vue";
 import { uploadFile } from "@/mixin/uploadFile";
@@ -128,8 +131,38 @@ export default {
       signatureShow: false
     };
   },
-  created() {},
+  watch:{
+    jcry(res){
+      this.sendData.jcry = res
+    },
+    wzry(res){
+      this.sendData.wzry = res
+    },
+    wzlx(res){
+      this.sendData.wzlx = res
+    },
+    wzkhbz(res){
+      this.sendData.wzkhbz = res
+    }
+  },
+  computed: mapState({
+    jcry: state => state.weizhang.jcry,
+    wzry: state => state.weizhang.wzry,
+    wzlx: state => state.weizhang.wzlx,
+    wzkhbz: state => state.weizhang.wzkhbz,
+  }),
+  created() {
+    // console.log(this.sendData)
+    // this.sendData.jcry 
+    // this.$store.weizhang.jcry.map(item => {
+    //   this.sendData.jcry += item.username
+    // })
+    // console.log(this.sendData.jcry)
+  },
   methods: {
+    testme() {
+      console.log(this.jcry)
+    },
     Next() {
 			this.sendData.__sid = localStorage.JiaHuaSessionId
 			console.log(this.sendData);
@@ -176,6 +209,10 @@ export default {
 .weizhang {
   min-height: 100vh;
   background-color: #f5f5f5;
+
+  .cell_group{
+    margin-top: 92px;
+  }
 
   .confirm_action {
     width: 100vw;

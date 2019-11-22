@@ -1,21 +1,16 @@
 <template>
   <div class="quexian">
-    <van-nav-bar title="缺陷" left-text="返回" right-text="操作" left-arrow @click-left="pageBack" @click-right="openAction"/>
-    <!-- 空间设备 -->
+    <van-nav-bar
+      title="缺陷"
+      left-text="返回"
+      right-text="操作"
+      left-arrow
+      @click-left="pageBack"
+      @click-right="openAction"
+    />
     <div class="cell_group">
-      <div class="cell">
-        <div class="cell_title">
-          <span>空间设备</span>
-        </div>
-        <div class="cell_value">
-          <div class="cell_input">
-            <input type="text" placeholder="输入设备名" />
-          </div>
-          <span class="cell_value_arrow">
-            <van-icon name="search" />
-          </span>
-        </div>
-      </div>
+      <!-- 空间设备 -->
+      <cell-input v-model="sendData.dtSite" title="空间设备" required placeholder="输入设备名" />
       <!-- 发现人 -->
       <cell-select-user
         title="发现人"
@@ -23,11 +18,18 @@
         :storeModule="storeModule"
         storeKey="findPeopleName"
         v-model="sendData.findPeopleName"
-      ></cell-select-user>
+      />
       <!-- 缺陷描述 -->
-      <cell-textarea required v-model="sendData.description" title="缺陷描述" placeholder="请输入缺陷描述"></cell-textarea>
+      <cell-textarea required v-model="sendData.description" title="缺陷描述" placeholder="请输入缺陷描述" />
       <!-- 缺陷类型 -->
-      <div class="cell">
+      <cell-picker
+        v-model="sendData.defectType"
+        title="缺陷类型"
+        required
+        :columns="defectTypeColumnsName"
+      />
+      <!-- 缺陷类型 => Old Version -->
+      <!-- <div class="cell">
         <div class="cell_title">
           <span>缺陷类型</span>
         </div>
@@ -37,9 +39,18 @@
             <img src="./../../../../assets/images/select.svg" alt />
           </div>
         </div>
-      </div>
+      </div>-->
+
       <!-- 缺陷类别 -->
-      <div class="cell">
+      <cell-picker
+        v-model="sendData.category"
+        title="缺陷类别"
+        required
+        :columns="categoryColumnsName"
+      />
+
+      <!-- 缺陷类别 => Old Version -->
+      <!-- <div class="cell">
         <div class="cell_title">
           <span>缺陷类别</span>
         </div>
@@ -49,10 +60,13 @@
             <img src="./../../../../assets/images/select.svg" alt />
           </div>
         </div>
-      </div>
+      </div>-->
       <!-- 发现时间 -->
-      <cell-time v-model="sendData.findDate" title="发现时间" required></cell-time>
+      <cell-time v-model="sendData.findDate" title="发现时间" />
+      <!-- 上传图片 -->
+      <cell-image :value="fileList" :afterRead="afterRead" />
     </div>
+
     <!-- <div class="next" @click="Next">提交</div> -->
     <van-popup v-model="isShowAction" position="bottom" class="action">
       <button @click="postData">保存</button>
@@ -84,7 +98,7 @@ export default {
   mixins: [business],
   data() {
     return {
-      isShowAction:false,
+      isShowAction: false,
       storeModule: "quexian",
       sendData: {
         description: "", //缺陷内容
@@ -107,13 +121,25 @@ export default {
         { name: "一类缺陷", index: 0 },
         { name: "二类缺陷", index: 1 },
         { name: "三类缺陷", index: 2 }
-      ]
+      ],
+      fileList: []
     };
   },
   computed: mapState({
     findPeopleName: state => state.quexian.findPeopleName
   }),
+  computed: {
+    defectTypeColumnsName() {
+      return this.defectTypeColumns.map(res => res.name);
+    },
+    categoryColumnsName() {
+      return this.categoryColumns.map(res => res.name);
+    }
+  },
   methods: {
+    afterRead(file) {
+      console.log(file)
+    },
     openAction() {
       this.isShowAction = true;
     },
@@ -191,18 +217,18 @@ export default {
   }
 }
 .action {
-    padding-left: 30px;
-    padding-right: 30px;
-    background-color: transparent;
-    button {
-      width: 100%;
-      height: 110px;
-      margin-bottom: 20px;
-      background-color: white;
-      border: none;
-      border-radius: 30px;
-      color: rgb(0, 118, 255);
-      font-size: 35px;
-    }
+  padding-left: 30px;
+  padding-right: 30px;
+  background-color: transparent;
+  button {
+    width: 100%;
+    height: 110px;
+    margin-bottom: 20px;
+    background-color: white;
+    border: none;
+    border-radius: 30px;
+    color: rgb(0, 118, 255);
+    font-size: 35px;
   }
+}
 </style>

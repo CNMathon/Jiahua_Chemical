@@ -83,6 +83,12 @@ const routes = {
             name: "新增工单"
           }
         },
+        {
+          path: "/page_3/gongdanguanli/select",
+          name: "donghuo_select",
+          component: () =>
+            import("../views/pages/page_3/components/TagSelect.vue")
+        },
       ]
     },
     // 电气第一种工作票
@@ -719,8 +725,19 @@ const routes = {
           name: "weizhang_index",
           component: () => import("../views/pages/page_3/WeiZhang/Index.vue"),
           meta: {
-            keepAlive: false //此组件需要被缓存
+            keepAlive: true //此组件需要被缓存
           }
+        },
+        {
+          path: "/page_3/weizhang/select_user",
+          name: "weizhang_SelectUser",
+          component: () => import("../views/pages/page_3/SelectUser/Index.vue")
+        },
+        {
+          path: "/page_3/weizhang/select",
+          name: "weizhang_select",
+          component: () =>
+            import("../views/pages/page_3/components/TagSelect.vue")
         },
         {
           path: "/page_3/weizhang/list",

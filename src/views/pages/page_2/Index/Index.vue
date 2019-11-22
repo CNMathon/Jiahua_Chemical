@@ -23,7 +23,7 @@
         <div class="content-title">生产运行指标 (嘉福新材料)</div>
         <label v-for="(item, index) in nav" :key="index">
           <van-col span="6" v-if="index > 2">
-            <div class="nav" @click="toPage(item.router)">
+            <div class="nav" @click="jumpTo(item.router, item.query)">
               <div class="nav-image">
                 <img :src="require(`@/assets/images/nav_${index + 9}.svg`)" alt />
               </div>
@@ -143,13 +143,11 @@
 <script>
 import Panel from "../../page_1/components/Panel";
 import Item from "./components/Item";
-import { business } from "@/mixin/business";
 export default {
   components: {
     Panel,
     Item
   },
-  mixins: [business],
   data() {
     return {
       dangerInfo: [
@@ -240,27 +238,34 @@ export default {
         {
           text: "动力中心",
           color: "rgba(23, 193, 149, 0.1)",
-          router: "/dongli"
+          router: "../page_1/dongli",
+          query: {}
         },
         {
           text: "烧碱",
           color: "rgba(238, 116, 95, 0.1)",
-          router: "/shaojian"
+          router: "../page_1/shaojian",
+          query: {}
         },
         {
           text: "脂肪醇",
           color: "rgba(237, 246, 252, 1)",
-          router: "/zhifangchun"
+          router: "../page_1/zhifangchun",
+          query: {}
         },
         {
           text: "新材料",
           color: "rgba(78,169,232,0.1)",
-          router: "/xincailiao_1"
+          router: "../page_1/xincailiao_1",
+          query: {}
         },
         {
           text: "硫酸",
           color: "rgba(96,150,248,0.1);",
-          router: "/liusuan_1"
+          router: "../page_1/liusuan_1",
+          query: {
+            mode: 1
+          }
         }
       ],
       nav1: [

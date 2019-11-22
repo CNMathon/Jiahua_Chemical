@@ -29,24 +29,24 @@
                 <div style="width:100%;height:100px" id="dongli"></div>
               </van-col>
               <van-col span="6">
-                <div style="width:100%;height:100px" id="liusuan"></div>
-              </van-col>
-              <van-col span="6">
                 <div style="width:100%;height:100px" id="shaojian"></div>
               </van-col>
-              <van-col span="6">
-                <div style="width:100%;height:100px" id="xincailiao"></div>
-              </van-col>
-            </van-row>
-            <van-row>
               <van-col span="6">
                 <div style="width:100%;height:100px" id="chunjinsuan"></div>
               </van-col>
               <van-col span="6">
                 <div style="width:100%;height:100px" id="suanshuijie"></div>
               </van-col>
+            </van-row>
+            <van-row>
               <van-col span="6">
                 <div style="width:100%;height:100px" id="suanzhengliu"></div>
+              </van-col>
+              <van-col span="6">
+                <div style="width:100%;height:100px" id="liusuan"></div>
+              </van-col>
+              <van-col span="6">
+                <div style="width:100%;height:100px" id="xincailiao"></div>
               </van-col>
               <van-col span="6"></van-col>
             </van-row>
@@ -235,7 +235,7 @@
         <div class="content-title">生产运行 (嘉福新材料)</div>
         <van-row>
           <van-col span="6" v-for="(item, index) in nav2" :key="index">
-            <div class="nav" @click="toPage(item.router)">
+            <div class="nav" @click="jumpTo(item.router, item.query)">
               <div class="nav-image">
                 <img :src="require(`@/assets/images/nav_${index}.svg`)" alt />
               </div>
@@ -350,12 +350,16 @@ export default {
         {
           text: "新材料",
           color: "rgba(78,169,232,0.1)",
-          router: "./gongyi"
+          router: "./gongyi",
+          query: {}
         },
         {
           text: "硫酸",
           color: "rgba(96,150,248,0.1);",
-          router: "./liusuan"
+          router: "./liusuan_1",
+          query: {
+            mode: 2
+          }
         }
       ],
       dataPanel: [
@@ -396,14 +400,14 @@ export default {
           unit: "kg/h"
         },
         {
-          text: "酸蒸馏流量",
-          enText: "ZFCC_FIC0501",
+          text: "酸水解流量",
+          enText: "ZFCC_ZFCCSSJ",
           value: "",
           unit: "kg/h"
         },
         {
-          text: "酸水解流量",
-          enText: "ZFCC_ZFCCSSJ",
+          text: "酸蒸馏流量",
+          enText: "ZFCC_FIC0501",
           value: "",
           unit: "kg/h"
         },
@@ -429,13 +433,6 @@ export default {
           level: ""
         },
         {
-          id: "liusuan",
-          text: "硫酸厂",
-          enText: "LSC_LSCFH",
-          value: 0,
-          level: ""
-        },
-        {
           id: "shaojian",
           text: "烧碱厂",
           enText: "SJC_SJCFH",
@@ -443,15 +440,8 @@ export default {
           level: ""
         },
         {
-          id: "xincailiao",
-          text: "新材料厂",
-          enText: "XCLC_XCLCFH",
-          value: 0,
-          level: ""
-        },
-        {
           id: "chunjinsuan",
-          text: "淳进酸",
+          text: "醇进酸",
           enText: "ZFCC_ZFCCCJSFH",
           value: 0,
           level: ""
@@ -467,6 +457,20 @@ export default {
           id: "suanzhengliu",
           text: "酸蒸馏",
           enText: "ZFCC_ZFCCSZLFH",
+          value: 0,
+          level: ""
+        },
+        {
+          id: "liusuan",
+          text: "硫酸厂",
+          enText: "LSC_LSCFH",
+          value: 0,
+          level: ""
+        },
+        {
+          id: "xincailiao",
+          text: "新材料厂",
+          enText: "XCLC_XCLCFH",
           value: 0,
           level: ""
         }
@@ -589,13 +593,14 @@ export default {
     drawRing(obj, title, value, level) {
       let graphic = [];
       if (level) {
+        let str=value.replace(/%/g,'')
         graphic = [
           {
             type: "text",
             left: "center",
             top: "35%",
             style: {
-              text: value + "\n标准值:\n" + level,
+              text: str + "\n标准值:\n" + level,
               textAlign: "center",
               fill: "#000",
               font: '0.6em "STHeiti", sans-serif'

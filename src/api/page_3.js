@@ -58,8 +58,13 @@ const article = {
     return axios.post(`${base.sq}dzzy/htHseDzzyp/save`, qs.stringify(params));
   },
   //吊装安全作业子表
-  getDzaqInfo(params){
-	  return axios.get(`${base.sq}dzzy/htHseDzzyp/alllistHtHseDzzypAqcs.json?${qs.stringify(params)}`,{} );
+  getDzaqInfo(params) {
+    return axios.get(
+      `${base.sq}dzzy/htHseDzzyp/alllistHtHseDzzypAqcs.json?${qs.stringify(
+        params
+      )}`,
+      {}
+    );
   },
   // 吊装作业票子表保存
   htHseDzzypSaveLit(params, __sid) {
@@ -106,7 +111,10 @@ const article = {
   },
   // 受限空间作业票保存
   htHseSxkjzypSave(params, __sid) {
-    return axios.post(`${base.sq}sxkjzyp/htHseSxkjzyp/save`, qs.stringify(params));
+    return axios.post(
+      `${base.sq}sxkjzyp/htHseSxkjzyp/save`,
+      qs.stringify(params)
+    );
   },
   // 受限空间作业票查询
   htHseSxkjzypListData(params) {
@@ -244,13 +252,29 @@ const article = {
   },
   //提交工作流
   approve(params) {
-    return axios.post(`${base.sq}act/core/client/approve`, qs.stringify(params));
+    return axios.post(
+      `${base.sq}act/core/client/approve`,
+      qs.stringify(params)
+    );
   },
   claim(params) {
     return axios.post(`${base.sq}act/core/client/claim`, qs.stringify(params));
   },
   getRtMonTagInfosByNames(params) {
-    return axios.get(`${base.mes2}GetRtMonTagInfosByNames`, qs.stringify(params))
+    return axios.get(
+      `${base.mes2}GetRtMonTagInfosByNames`,
+      qs.stringify(params)
+    );
+  },
+  // 热力机械工作票
+  // 作业列表
+  getJobs(params) {
+    return axios.get(`${base.mes3}GetJobs`, qs.stringify(params));
+  },
+  // 获取作业详情
+  getTaskById(params) {
+    console.log("params: ", params);
+    return axios.get(`${base.mes3}GetTaskById?${qs.stringify(params)}`);
   }
 };
 

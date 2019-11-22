@@ -46,6 +46,7 @@
         required
         title="危害辨识"
         storeKey="hazardSb"
+        :tagList="hazardSb"
         :showList="list_3"
         :storeModule="storeModule"
       ></cell-select-tag>
@@ -58,7 +59,8 @@
 </template>
 
 <script>
-import { business } from "@/mixin/business";
+  import { mapState } from "vuex";
+  import { business } from "@/mixin/business";
 export default {
   name: "gongdanguanli_details",
   mixins: [business],
@@ -66,6 +68,9 @@ export default {
   },
   data () {
     return {
+      sendData: {
+        hazardSb: [], //危害辨识
+      },
       list_3: [
         "火灾、爆炸",
         "中度和窒息",
@@ -81,8 +86,21 @@ export default {
       shebeiList:[1,2,3],
       dhLevelColumns: [],
       isShowAction: false,
+      tagList1: ['触电','化学灼伤','中毒和窒息','高处坠落','机械伤害']
     }
   },
+  watch:{
+    hazardSb: {
+      handler(cval, oval) {
+        console.log('--------')
+        console.log(cval, oval)
+      },
+      deep: true
+    },
+  },
+  computed: mapState({
+    hazardSb: state => state.gongdanguanli.hazardSb
+  }),
   methods : {
     // 打开操作Popup
     openAction() {

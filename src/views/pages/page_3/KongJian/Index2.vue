@@ -212,29 +212,31 @@
             <div class="kongjianFenxi-title">{{fxData.title}}</div>
             <div class="kongjianFenxi-standard">
               <div  v-for="(fxStandard, standardindex) in fxData.standard" :key="standardindex + 'fxStandard'">
-                <van-field :value="fxStandard" @input="updataFenxi(index,fxindex, standardindex,'standard', $event)" placeholder="standardindex" />
+                <van-field  readonly clickable 
+                :value="fxStandard"
+                placeholder="选择分析"
+                @click="setFenxiSelect(index,fxindex, standardindex,fxData.title)"
+                v-if="fxData.title !== '氧含量'"
+                />
+                <span v-if="fxData.title === '氧含量'">{{fxStandard}}</span>
               </div>
             </div>
             <div class="kongjianFenxi-data">
               <div  v-for="(fxDataData, datadataindex) in fxData.data" :key="datadataindex + 'fxDataData'">
-                  <van-field :value="fxDataData" @input="updataFenxi(index,fxindex, datadataindex, 'data', $event)" placeholder="请输入用户名" />
+                  <van-field :value="fxDataData" @input="updataFenxi(index,fxindex, datadataindex, 'data', $event)" placeholder="请输入分析数据" />
               </div>
             </div>    
           </div>
         </div>
         <!-- 分析时间 -->
-        <cell-time v-model="fx.fenxiTime" title="动火分析时间" required></cell-time>
+        <cell-time v-model="fx.fenxiTime" title="动火分析时间" disable></cell-time>
         <!-- 分析点名称 -->
         <cell-input v-model="fx.fenxiParts" title="分析部位" required placeholder="手工录入"></cell-input>
         <!-- 分析人 -->
-        <cell-select-user
-          title="分析人"
-          required
-          :storeModule="storeModule"
-          radio
-          storeKey="fenxiren"
-          v-model="fx.fenxiren"
-        ></cell-select-user>
+        <div class="kongjianFenxiRen" @click="showFenxiRensignature(index)">
+          <div>分析人<span class="redColor">*</span></div>
+          <div><img :src="fx.fenxiren" class="kongjianFenxiRen-img"></div>
+        </div>
       </div>
 
       <div class="adddonghuofenxi" @click="addFenxi">
@@ -258,6 +260,15 @@
       <button>工作流提交</button>
       <button @click="closeAction">取消</button>
     </van-popup>
+    <!--  分析选择 -->
+    <van-popup v-model="showFenxiSelect" position="bottom">
+      <van-picker
+        show-toolbar
+        :columns="columns"
+        @cancel="showFenxiSelect = false"
+        @confirm="onConfirm"
+      />
+    </van-popup>
   </div>
 </template>
 <script>
@@ -273,10 +284,14 @@ export default {
   data() {
     return {
       initData: {},
+      columns: [],
       storeModule: "kongjian",
+      youduyouhai: [1,2,3],
+      keranqiti: ['甲醇（6~36.5)','乙醇（3.3~19）','氯苯（1.3~11）','氢气（4.1~75）','甲苯（1.2~7)'],
       fireCount: 0, // 消防数量
       lifelineCount: 0, // 救生绳
       gasCount: 0, // 气防装备
+      showFenxiSelect: false,
       sendData: {
         zyContent: "", //作业内容
         id: this.zypId, // 作业票编号
@@ -317,7 +332,9 @@ export default {
       selectSignatureShow: Number,
       signatureImg: '', // 只保存一个签名
       signatureShow: false,
-      fenxi: []
+      fenxi: [],
+      fenxiCallBack: () => {},
+      fenxiSignatureCallBack: () => {},
     };
   },
   components: {
@@ -330,7 +347,10 @@ export default {
     zywhBs: state => state.kongjian.zywhBs,
     guardian: state => state.kongjian.guardian,
     zyRen: state => state.kongjian.zyRen,
-    zyPrincipal: state => state.kongjian.zyPrincipal
+    zyPrincipal: state => state.kongjian.zyPrincipal,
+    // fxRen1: state => state.kongjian.fxRen1,
+    // fxRen2: state => state.kongjian.fxRen2,
+    // fxRen3: state => state.kongjian.fxRen3,
   }),
   beforeDestroy() {
     this.queryId = "";
@@ -351,7 +371,16 @@ export default {
     },
     zyPrincipal(res) {
       this.sendData.zyPrincipal = res;
-    }
+    },
+    // fxRen1(res) {
+    //   this.fenxi[0].fenxiren = res;
+    // },
+    // fxRen2(res) {
+    //   this.fenxi[1].fenxiren = res;
+    // },
+    // fxRen3(res) {
+    //   this.fenxi[2].fenxiren = res;
+    // }
   },
   created() {
     this.initChecked();
@@ -364,6 +393,39 @@ export default {
     this.queryId = "";
   },
   methods: {
+    //  展示分析人的签名
+    showFenxiRensignature (index) {
+      this.signatureShow = true;
+      this.fenxiSignatureCallBack = this.updatefenxiSignature(index);
+    },
+    updatefenxiSignature (index) {
+      return (img) => {
+        this.fenxi[index].fenxiren = img;
+      };
+    },
+    setFenxiSelect (ffindex,findex,index,name) {
+      console.log('name===========', name);
+      switch (name) {
+        case '有毒有害物质':
+          this.columns = this.youduyouhai;
+          break;
+        case '可燃气':
+          this.columns = this.keranqiti;
+          break;
+      }
+      this.showFenxiSelect = true;
+      this.fenxiCallBack = this.selectCachFun(ffindex,findex,index);
+    },
+    selectCachFun (ffindex,findex,index) {
+      return (value) => {
+        this.fenxi[ffindex].fenxidata[findex]['standard'][index] = value;
+      }
+    },
+    onConfirm (value) {
+      console.log('选择的数据', value);
+      this.showFenxiSelect = false;
+      this.fenxiCallBack(value);
+    },
     initChecked () {
       for (let i =0; i < 11; i ++) {
         let obj = {checked: false};
@@ -375,30 +437,139 @@ export default {
       console.log('value',  this.fenxi[ffindex].fenxidata[findex][name][index] );
       // this.$forceUpdate();
     },
-    addFenxi() {
-      // fenxi fenxidata fenxiren
-      let fenxiObj = {
+    //  格式化 分析 把数据设置为 fenxiobj
+// fenxi// 分析标准// String// 必填// 字典数据，保存用逗号隔开
+// fenxidata// 第一行分析数据// String// 必填// 每个单元格数据用英文逗号隔开
+    fenxiParse (data) {
+      let {fenxidata, twofenxidata, threefenxidata, fenxiren} = data;
+      let nulldata = ['','','','','','','','','',''];
+         console.log('this.fenxi[0]', fenxiren);
+         console.log('this.fenxi[0]', fenxiren);
+         console.log('this.fenxi[0]', fenxiren.split(',')[0]);
+      console.log('this.fenxi[0]', this.fenxi);
+      let img = fenxiren.split(',');
+      if (fenxidata) this.fenxi[0] = this.setfenxiObj(fenxidata.split(',') || nulldata, fenxiren, data.updateDate);
+      if (twofenxidata) this.fenxi[1] = this.setfenxiObj(twofenxidata.split(',') || nulldata,fenxiren, data.updateDate);
+      if (threefenxidata) this.fenxi[2] = this.setfenxiObj(threefenxidata.split(',') || nulldata, fenxiren, data.updateDate);
+   
+    },
+    //   反格式化 分析 把分析obj  设置成sendDate
+    fenxiDeserialization (sendData) {
+      let fenxi1 = [], fenxi2 = [], fenxi3 = [];
+      let fenxiren = [];
+      let fenxidata = [];  // 第一行数据
+      let twofenxidata = []; // 第二行数据
+      let threefenxidata = []; // 第三行数据
+      //  获取最外层的数据
+      for (let i =0; i < this.fenxi.length; i++) {
+        fenxiren.push(this.fenxi[i].fenxiren);
+        switch (i) {
+          case 0:
+            fenxi1 = this.fenxi[i].fenxidata;
+            //  部位 加入最后一位
+            fenxidata[9] = this.fenxi[i].fenxiParts;
+            break;
+          case 1:
+            fenxi2 = this.fenxi[i].fenxidata;
+            //  部位 加入最后一位
+            twofenxidata[9] = this.fenxi[i].fenxiParts;
+            break;
+          case 2:
+            fenxi3 = this.fenxi[i].fenxidata;
+            //  部位 加入最后一位
+            threefenxidata[9] = this.fenxi[i].fenxiParts;
+            break;
+        }
+      }
+ 
+      fenxi1.forEach((item) => {
+        switch (item.title) {
+          case "有毒有害物质":
+            fenxidata[0] = item.standard.one;
+            fenxidata[1] = item.standard.two;
+            fenxidata[2] = item.data.one;
+            fenxidata[3] = item.data.two;
+            break;
+          case "可燃气":
+            fenxidata[4] = item.standard.one;
+            fenxidata[5] = item.standard.two;
+            fenxidata[6] = item.data.one;
+            fenxidata[7] = item.data.two;
+            break;
+          case "氧含量":
+            fenxidata[8] = item.data.one;
+            break;
+        }
+      });
+  
+      fenxi2.forEach((item) => {
+        switch (item.title) {
+          case "有毒有害物质":
+            twofenxidata[0] = item.standard.one;
+            twofenxidata[1] = item.standard.two;
+            twofenxidata[2] = item.data.one;
+            twofenxidata[3] = item.data.two;
+            break;
+          case "可燃气":
+           twofenxidata[4] = item.standard.one;
+           twofenxidata[5] = item.standard.two;
+           twofenxidata[6] = item.data.one;
+           twofenxidata[7] = item.data.two;
+            break;
+          case "氧含量":
+            twofenxidata[8] = item.data.one;
+            break;
+        }
+      });
+      fenxi3.forEach((item) => {
+        switch (item.title) {
+          case "有毒有害物质":
+            threefenxidata[0] = item.standard.one;
+            threefenxidata[1] = item.standard.two;
+            threefenxidata[2] = item.data.one;
+            threefenxidata[3] = item.data.two;
+            break;
+          case "可燃气":
+            threefenxidata[4] = item.standard.one;
+            threefenxidata[5] = item.standard.two;
+            threefenxidata[6] = item.data.one;
+            threefenxidata[7] = item.data.two;
+            break;
+          case "氧含量":
+            threefenxidata[8] = item.data.one;
+            break;
+        }
+      });
+      //  加入到发送数据
+      sendData.threefenxidata = threefenxidata.join(',')
+      sendData.twofenxidata = twofenxidata.join(',');
+      sendData.fenxidata = fenxidata.join(',');
+      sendData.fenxiren = fenxiren.join(',');
+      return sendData;
+    },
+    setfenxiObj (data, fenxiren, fenxiTime)  {
+      let obj = {
         fenxidata: [
           {
             title: "有毒有害物质",
             standard: {
-              one: 1,
-              two: 1
+              one: data[0],
+              two: data[1]
             },
             data: {
-              one: "",
-              two: "",
+              one: data[2],
+              two: data[3],
             }
           },
           {
             title: "可燃气",
             standard: {
-              one: 1,
-              two: 1
+              one: data[4],
+              two: data[5]
             },
             data: {
-              one: "",
-              two: "",
+              one: data[6],
+              two: data[7],
             }
           },
           {
@@ -407,15 +578,19 @@ export default {
               one: "18%-23.5%"
             },
             data: {
-              one: "",
+              one: data[8],
             }
           }
         ],
-        fenxiTime: "", // 数据
-        fenxiren: [], // 分析人
-        fenxiParts: "" // 部位
+        fenxiTime: fenxiTime || '', // 数据
+        fenxiren: fenxiren || '', // 分析人
+        fenxiParts: data[9] // 部位
       };
-
+      return obj;
+    },
+    addFenxi() {
+      // fenxi fenxidata fenxiren
+      let fenxiObj = this.setfenxiObj(['','','','','','','','','',''], '', '');
       if (this.fenxi.length < 3) {
         this.fenxi.push(fenxiObj);
         return;
@@ -427,34 +602,16 @@ export default {
     selectChecked (index) {
       this.checked[index].checked = true;
     },
-    // 显示签名
-    showSignature(index) {
-      console.log("index: ", index);
-      console.log("显示签名");
-      // console.log(this.sendData)
-      console.log(this.sendData.aqcsjl);
-      this.sendData.aqcsjl.push(index);
-      console.log(this.sendData.aqcsjl);
-      this.selectSignatureShow = index;
-      this.signatureShow = true;
-    },
     // 取消签名
     signatureCancel(index) {
       console.log("index: ", index);
       console.log("取消");
-      this.checked[index].checked = false;
-      this.checked[index].img = "";
+      this.fenxiSignatureCallBack("");
     },
     // 保存画布
     saveCanvas(e) {
       this.signatureShow = false;
-      this.checked[this.selectSignatureShow] = {
-        checked: false,
-        img: ""
-      };
-      this.sendData.selectSignatureShow = e;
-      this.checked[this.selectSignatureShow].img = e;
-      console.log("signatureShow: ");
+      this.fenxiSignatureCallBack(e);
     },
     // 取消画布
     cancelCanvas() {
@@ -504,14 +661,35 @@ export default {
       sendData.guardian = this.userString(sendData.guardian, "userName");
       sendData.zyPrincipal = this.userString(sendData.zyPrincipal, "userName");
       sendData.zyRen = this.userString(sendData.zyRen, "userName");
-      sendData.sxkjDanwei = this.userString(sendData.sxkjDanwei, "name");
-      
-      sendData.applyDept = this.$userInfo.officeName;
-      sendData.applyRen = this.$userInfo.userName;
+      sendData.sxkjDanwei = sendData.sxkjDanwei;
+      sendData.applyDept = this.$userInfo.officeCode;
+      sendData.applyRen = this.$userInfo.userCode;
       sendData.__sid = this.$userInfo.sessionId;
       console.log(sendData);
       // 判断数据是否为空
+
+      //  储存 安装措施 aqcsjl zyjhcs 作业监护措施
+      sendData.aqcsjl = [];
+      sendData.zyjhcs = [this.fireCount, // 消防数量
+      this.lifelineCount, // 救生绳
+      this.gasCount, // 气防装备;
+      ];
+      //  获得勾选记录
+      this.checked.forEach((item, index) => {
+        //  安全勾选记录
+        if (item.checked) {
+          sendData.aqcsjl.push(index + 1);
+        }
+        if (sendData.querenman=== '' && item.checked) {
+          sendData.querenman = this.signatureImg;
+        }
+      });
+      sendData.aqcsjl = sendData.aqcsjl.join(',');
+      sendData.zyjhcs = sendData.zyjhcs.join(',');
       // 分析数据 创建
+      
+      sendData = this.fenxiDeserialization(sendData);
+      console.log('sendData', sendData);
       if (this.isEmpty(sendData) == false) {
         this.$notify("请将表单中的数据输入完整");
         return;
@@ -573,32 +751,33 @@ export default {
         .then(res => {
           let info = res.list[0];
           this.oldInfo = info;
+          console.log('info', info);
           for (const key in this.sendData) {
             switch (key) {
               case "guardian":
                 if (info[key])this.sendData[key] = this.reductionSelectUser(info[key]);
                 break;
               case "zyRen":
-                if (info[key])this.sendData[key] = this.reductionSelectDept(info[key]);
+                if (info[key])this.sendData[key] = this.reductionSelectUser(info[key]);
                 break;
               case "zyPrincipal":
                 if (info[key])this.sendData[key] = this.reductionSelectUser(info[key]);
                 break;
               case "querenman":
-                if (info[key])this.signatureImg = info[key];
+                if (info[key])this.signatureImg = info[key];this.sendData[key] = info[key];
               break;
                 // 安装措施
               case "aqcsjl":
                 if (info[key])info[key].split(',').forEach((item) => {
                   this.selectChecked(item - 1)
-                });
+                });this.sendData[key] = info[key];
                 // 作业监护措施
               case "zyjhcs":
                 if (info[key])info[key].split(',').forEach((item,index) => {
                   if (index === 0) this.fireCount = item;
                   if (index === 1) this.lifelineCount = item;
                   if (index === 2) this.gasCount = item;
-                });;
+                });
                 break;
               case "zyOtherspecial":
                 if (info[key])this.sendData[key] = this.reductionSelectTag(
@@ -616,6 +795,9 @@ export default {
                 this.sendData[key] = info[key];
                 break;
             }
+          }
+          if (info.fenxiren) {
+            this.fenxiParse(info);
           }
           this.$Toast.clear();
         })
@@ -696,7 +878,7 @@ export default {
   background-color: #f5f5f5 !important;
 }
 .fenxi {
-  padding: 30px 0;
+  padding: 30px  0;
   box-sizing: border-box;
   &__title {
     padding: 30px;
@@ -714,6 +896,10 @@ export default {
 }
 .adddonghuofenxi .van-icon {
   font-size: 18px;
+}
+.kongjianFenxi{
+  padding: 0  1.25rem;
+  font-size: 0.875rem;
 }
 .kongjianFenxi-box{
   display: flex;
@@ -742,4 +928,23 @@ export default {
     padding: 2% 1%;
   }
 }
+.kongjianFenxiRen{
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.9375rem 1.25rem;
+  position: relative;
+  font-size: 0.875rem;
+  background-color: #ffff;
+}
+.redColor {
+  color: #cf2323;
+}
+.kongjianFenxiRen-img{
+  width: 4.0625rem;
+  height: 2.0625rem;
+  background: white;
+}
+// 1.25rem
 </style>

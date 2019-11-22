@@ -6,6 +6,7 @@ import Vant from "vant";
 import "vant/lib/index.css";
 import VCharts from "v-charts";
 import CellInput from "./components/Cell/CellInput.vue";
+import CellImage from "./components/Cell/CellImage.vue";
 import CellValue from "./components/Cell/CellValue.vue";
 import CellTime from "./components/Cell/CellTime.vue";
 import CellPicker from "./components/Cell/CellPicker.vue";
@@ -30,6 +31,7 @@ import { Toast } from "vant";
 import { Dialog } from "vant";
 import { Notify } from "vant";
 import echarts from 'echarts'
+import Mixin from './mixin' // Mixin
 // 全局注册
 Vue.prototype.$api = api; // 将api挂载到vue的原型上
 Vue.prototype.$Toast = Toast;
@@ -42,6 +44,7 @@ Vue.use(Vant);
 Vue.use(VCharts);
 Vue.config.productionTip = false;
 Vue.component("cell-input", CellInput);
+Vue.component("cell-image", CellImage);
 Vue.component("cell-value", CellValue);
 Vue.component("cell-time", CellTime);
 Vue.component("cell-sheet", CellSheet);
@@ -58,6 +61,7 @@ Vue.component("j-filter-item", JFilterItem);
 Vue.component("j-filter-cell", FilterCell);
 Vue.component("j-filter-time", FilterTime);
 Vue.component("j-filter-search", FilterSearch);
+Vue.mixin(Mixin); // Mixin
 // Vue.component('Action', Action);
 
 new Vue({

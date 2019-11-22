@@ -1,13 +1,13 @@
 <template>
-  <div class="relijixie-list" :class="{'complete': complete}" @click="goDetails">
+  <div class="relijixie-list" @click="goDetails(info.Id)">
     <div class="relijixie-list-content">
       <div>
-        <span>作业名称：隐患整改单</span>
+        <span>作业名称：{{info.Name}}</span>
       </div>
-      <div>负责人：王大锤</div>
-      <div>开始时间：2019-0923 17:33:00</div>
+      <div>负责人：{{info.Principal}}</div>
+      <div>开始时间：{{info.PlanStartTime}}</div>
     </div>
-    <div class="relijixie-list-auditBtn">{{zypztList[1].name}}</div>
+    <div class="relijixie-list-auditBtn">{{zypztList[info.State].name}}</div>
   </div>
 </template>
 
@@ -15,10 +15,7 @@
 export default {
   name: "relijixie-list",
   props: {
-    complete: {
-      type: Boolean,
-      default: false
-    }
+    info: {}
   },
   data() {
     return {
@@ -59,9 +56,12 @@ export default {
     };
   },
   methods: {
-    goDetails() {
-      this.$router.push({ path: "../relijixie/details" });
-    },
+    goDetails(Id) {
+      this.$router.push({
+        path: "../relijixie/details",
+        query: { id: Id }
+      });
+    }
   }
 };
 </script>

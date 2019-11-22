@@ -8,6 +8,7 @@
       left-arrow
       @click-left="pageBack"
       @click-right="onClickRight"
+      class="van-nav-bar--fixed"
     />
     <j-filter-bar v-model="searchValue" @search="getPageData(true)" @tap="showFilter = true"></j-filter-bar>
 
@@ -80,6 +81,9 @@ export default {
 <style lang="scss" scoped>
 .donghuo {
   background-color: #f5f5f5;
+}
+.filter{
+    margin-top: 92px;
 }
 
 .list-card-area {

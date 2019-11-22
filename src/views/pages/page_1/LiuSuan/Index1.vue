@@ -60,11 +60,25 @@ export default {
           });
           this.isLoading = false;
         });
+    },
+    listInit() {
+      switch (this.$route.query.mode) {
+        case 1:
+          this.list = this.deepCopy(this.list1)
+          break;
+        case 2:
+          this.list = this.deepCopy(this.list2)
+          break;
+        default:
+          this.$router.go(-1)
+          break;
+      }
     }
   },
   data() {
     return {
-      list: [
+      list:[], // 实际遍历数组
+      list1: [
         {
           title: "汽轮机",
           key: "LSC_SI-1601",
@@ -330,11 +344,136 @@ export default {
           unit: ""
         }
       ],
+      list2: [
+          {
+            title: '汽轮机',
+            key: 'LSC_SI-1601',
+            value: '',
+            unit: '',
+          },
+          {
+            title: '电风机转速',
+            key: 'LSC_SITS_1701',
+            value: '',
+            unit: '',
+          },
+          {
+            title: '焚硫炉出口炉气温度',
+            key: 'LSC_TIAS_1201',
+            value: '',
+            unit: '',
+          },
+          {
+            title: '焚硫炉出口炉气温度',
+            key: 'LSC_TIAS_1202',
+            value: '',
+            unit: '',
+          },
+          {
+            title: '中压蒸汽流量',
+            key: 'LSC_FIQ1503',
+            value: '',
+            unit: '',
+          },
+          {
+            title: '尾气SO2浓度',
+            key: 'LSC_AI-2209',
+            value: '',
+            unit: '',
+          },
+          {
+            title: '液硫储罐液位',
+            key: 'LSC_LIAS_1103',
+            value: '',
+            unit: '',
+          },
+          {
+            title: '98%硫酸储罐A液位',
+            key: 'LSC_LIAS_1401',
+            value: '',
+            unit: '',
+          },
+          {
+            title: '98%硫酸储罐B液位',
+            key: 'LSC_LIAS_1402',
+            value: '',
+            unit: '',
+          },
+          {
+            title: '氯磺酸储罐A液位',
+            key: 'LSC_LI-1403',
+            value: '',
+            unit: '',
+          },
+          {
+            title: '氯磺酸储罐B液位',
+            key: 'LSC_LI-1404',
+            value: '',
+            unit: '',
+          },
+          {
+            title: '氯磺酸储罐C液位',
+            key: 'LSC_LI-1405',
+            value: '',
+            unit: '',
+          },
+          {
+            title: '精制98%硫酸储罐液位',
+            key: 'LSC_LIAS_1408',
+            value: '',
+            unit: '',
+          },
+          {
+            title: '96%硫酸储罐A液位',
+            key: 'LSC_LIAS_1409A',
+            value: '',
+            unit: '',
+          },
+          {
+            title: '96%硫酸储罐B液位',
+            key: 'LSC_LIAS_1409B',
+            value: '',
+            unit: '',
+          },
+          {
+            title: 'AR硫酸储罐A液位',
+            key: 'LSC_LIAS_1410A',
+            value: '',
+            unit: '',
+          },
+          {
+            title: 'AR硫酸储罐B液位',
+            key: 'LSC_LIAS_1410B',
+            value: '',
+            unit: '',
+          },
+          {
+            title: '200m3精制98%硫酸储罐液位',
+            key: 'LSC_LIAS_1411',
+            value: '',
+            unit: '',
+          },
+          {
+            title: '22%发烟硫酸储罐液位',
+            key: 'LSC_LIAS_1406',
+            value: '',
+            unit: '',
+          },
+          {
+            title: '副产硫酸储罐液位',
+            key: 'LSC_LIAS_1407',
+            value: '',
+            unit: '',
+          },
+
+      ],
       isLoading: true
     };
   },
   created() {
-    this.getPageList();
+    console.log('mode:', this.$route.query.mode)
+    this.listInit()
+    this.getPageList()
   }
 };
 </script>
@@ -358,7 +497,8 @@ export default {
     box-sizing: border-box;
     padding: 30px;
     .item {
-      margin-bottom: 10px;
+      // margin-bottom: 10px;
+      padding: 10px;
     }
   }
 }

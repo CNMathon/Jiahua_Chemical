@@ -90,6 +90,7 @@ export default {
     this.storeModule = this.$route.query.storeModule;
     this.storeKey = this.$route.query.storeKey;
     this.results = this.$store.state[this.storeModule][this.storeKey];
+    // console.log(this.storeKey)
   },
   methods: {
     // 搜索

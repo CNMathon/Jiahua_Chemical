@@ -1,4 +1,4 @@
-export const business = {
+const mixin = {
   data() {
     return {};
   },
@@ -119,3 +119,5 @@ export const business = {
     },
   }
 };
+
+export default mixin

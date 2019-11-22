@@ -1,30 +1,27 @@
 <template>
   <div class="home">
-    <van-nav-bar title="热力机械工作票" left-text="返回" left-arrow @click-left="pageBack" />
-    <j-filter-bar
-      v-model="searchValue"
-      placeholder="请输入作业名称"
-      @search="getPageData('refresh')"
-      @tap="showFilter = true"
-    ></j-filter-bar>
-    <j-filter v-model="showFilter" @confirm="getPageData('refresh')">
-      <j-filter-search v-model="searchValue" @search="filterSearch" placeholder="请输入作业名称" ></j-filter-search>
+    <van-sticky>
+      <van-nav-bar title="热力机械工作票" left-text="返回" left-arrow @click-left="pageBack" />
+      <j-filter-bar
+        v-model="searchValue"
+        placeholder="请输入作业名称"
+        @search="getPageData('refresh')"
+        @tap="showFilter = true"
+      ></j-filter-bar>
+    </van-sticky>
+
+    <j-filter v-model="showFilter" @confirm="getPageData()">
+      <j-filter-search v-model="searchValue" @search="filterSearch" placeholder="请输入作业名称"></j-filter-search>
       <j-filter-item title="工作票状态" :actions="zypztList" @select="filterSelect_1"></j-filter-item>
       <j-filter-time title="完成时间"></j-filter-time>
     </j-filter>
     <div class="list-card-area">
       <div class="app">
         <van-skeleton title :row="5" :loading="isFirstLoading" class="skeleton">
-          <van-pull-refresh v-model="isRefreshLoading" @refresh="getPageData('refresh')">
-            <!-- <van-list
-              v-model="isListLoading"
-              :finished="isListMore"
-              :error.sync="isListLoadingError"
-              error-text="请求失败，点击重新加载"
-              finished-text="没有更多了"
-              @load="getPageData('list')"
-            >-->
-            <ReLiJiXieListCase ></ReLiJiXieListCase>
+          <van-pull-refresh v-model="isRefreshLoading" @refresh="getPageData()">
+            <div v-for="(item,index) in pageList" :key="index">
+              <ReLiJiXieListCase :info="item"></ReLiJiXieListCase>
+            </div>
           </van-pull-refresh>
         </van-skeleton>
       </div>
@@ -36,13 +33,14 @@
 import { mixin } from "@/mixin/mixin";
 import ReLiJiXieListCase from "./components/List.vue";
 export default {
-  name: 'relijixie_list',
+  name: "relijixie_list",
   mixins: [mixin],
-  components: {ReLiJiXieListCase},
+  components: { ReLiJiXieListCase },
   data() {
     return {
       searchValue: "",
       showFilter: false,
+      pageList: [],
       isFirstLoading: true, // 是否首次获取数据
       isRefreshLoading: false, // 全局刷新状态 - 是否完成
       zypztList: [
@@ -81,12 +79,37 @@ export default {
       ] // 作业票状态列表
     };
   },
-  mounted () {
+  mounted() {
     this.isFirstLoading = false; // 是否首次获取数据
     this.isRefreshLoading = true; // 全局刷新状态 - 是否完成
   },
+  created() {
+    this.getPageData();
+  },
   methods: {
-    getPageData(type) {},
+    getPageData() {
+      this.$toast.loading({
+        message: "加载中...",
+        duration: 0
+      });
+      this.$api.page_3
+        .getJobs({
+          __sid: localStorage.getItem("JiaHuaSessionId")
+        })
+        .then(res => {
+          let list = res.Result;
+          let newList = list.filter(item => {
+            return item.Type === "热力机械工作票";
+          });
+          this.$toast.clear();
+          this.isRefreshLoading = false;
+          this.pageList = newList;
+        })
+        .catch(() => {
+          this.isRefreshLoading = false;
+          this.$toast.clear();
+        });
+    },
     filterSearch(e) {},
     filterSelect_1(e) {
       this.selectZypzt = e.name;

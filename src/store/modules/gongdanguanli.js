@@ -1,10 +1,12 @@
 // initial state
 const state = {
-  keepAliveComponents: ['gongdanguanli_list']
+  keepAliveComponents: ['gongdanguanli_list','gongdanguanli']
 };
 
 // getters
-const getters = {};
+const getters = {
+
+};
 
 // actions
 const actions = {

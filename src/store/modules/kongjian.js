@@ -7,7 +7,10 @@ const state = {
   guardian: [], //监护人
   zyPrincipal: [], //作业部门负责人
   zyRen: [], //作业人
-  sxkjDanwei: [] //受限空间所属单位
+  sxkjDanwei: [], //受限空间所属单位
+  fxRen1: [], //分析人1
+  fxRen2: [], //分析人2
+  fxRen3: [], //分析人3
 };
 
 // getters

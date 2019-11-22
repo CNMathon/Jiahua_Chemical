@@ -377,6 +377,23 @@ export default {
     closeAction() {
       this.isShowAction = false;
     },
+    isEmpty(sendData) {
+      if (
+        sendData.zyContent == "" ||
+        sendData.devicename == "" ||
+        sendData.sxkjNeurogen == "" ||
+        sendData.zyOtherspecial == "" ||
+        sendData.zyStarttime == "" ||
+        sendData.zyEndtime == "" ||
+        sendData.zySskj == [] ||
+        sendData.guardian == [] ||
+        sendData.zyPrincipal == [] ||
+        sendData.zyRen == [] ||
+        sendData.aqcsjl == []
+      ) {
+        return false;
+      }
+    },
     // 发送数据
     postData() {
       this.$Toast.loading({
@@ -418,6 +435,10 @@ export default {
       });
       sendData.aqcsjl = sendData.aqcsjl.join(',');
       sendData.zyjhcs = sendData.zyjhcs.join(',');
+      if (this.isEmpty(sendData) == false) {
+        this.$notify("请将表单中的数据输入完整");
+        return;
+      }
       this.$api.page_3
         .htHseSxkjzypSave(sendData, this.$userInfo.sessionId)
         .then(res => {
@@ -468,20 +489,20 @@ export default {
                 if (info[key])this.sendData[key] = this.reductionSelectUser(info[key]);
                 break;
               case "zyRen":
-                if (info[key])this.sendData[key] = this.reductionSelectDept(info[key]);
+                if (info[key])this.sendData[key] = this.reductionSelectUser(info[key]);
                 break;
               case "zyPrincipal":
                 if (info[key])this.sendData[key] = this.reductionSelectUser(info[key]);
                 break;
               case "querenman":
-                if (info[key])this.signatureImg = info[key];
+                if (info[key])this.signatureImg = info[key];this.sendData[key] = info[key];
               break;
                 // 安装措施
               case "aqcsjl":
                 console.log("aqcsjl info[key]=================", info[key]);
                 if (info[key])info[key].split(',').forEach((item) => {
                   console.log("aqcsjl=================", item);
-                  this.selectChecked(item - 1);
+                  this.selectChecked(item - 1);this.sendData[key] = info[key];
                 });
                 // 作业监护措施
               case "zyjhcs":
