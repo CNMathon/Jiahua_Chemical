@@ -1,13 +1,13 @@
 <template>
-  <div class="dianqi-list" :class="{'complete': complete}" @click="goDetails">
+  <div class="dianqi-list" @click="goDetails(info.Id)">
     <div class="dianqi-list-content">
       <div>
-        <span>作业名称：隐患整改单</span>
+        <span>作业名称：{{info.Name}}</span>
       </div>
-      <div>负责人：王大锤</div>
-      <div>开始时间：2019-09-23 17:33:00</div>
+      <div>负责人：{{info.Principal}}</div>
+      <div>开始时间：{{info.PlanStartTime}}</div>
     </div>
-    <div class="dianqi-list-auditBtn">{{zypztList[1].name}}</div>
+    <div class="dianqi-list-auditBtn">{{zypztList[info.State].name}}</div>
   </div>
 </template>
 
@@ -15,10 +15,7 @@
 export default {
   name: "dianqi-list",
   props: {
-    complete: {
-      type: Boolean,
-      default: false
-    }
+    info: {}
   },
   data() {
     return {
@@ -59,8 +56,8 @@ export default {
     };
   },
   methods: {
-    goDetails() {
-      this.$router.push({ path: "../dianqi/details" });
+    goDetails(Id) {
+      this.$router.push({ path: "../dianqi/details", query: { id: Id } });
     }
   }
 };

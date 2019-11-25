@@ -17,25 +17,21 @@
       <!-- 申请人 -->
       <cell-value title="申请人" required :value="$userInfo.userName" disable></cell-value>
       <!-- 作业票编号 -->
-      <cell-value title="作业票编号" :value="$route.query.id" disable></cell-value>
+      <cell-value title="作业票编号" :value="oldInfo.dhzypCode" disable></cell-value>
       <!-- 作业票状态 -->
-      <cell-value title="作业票状态" value="编辑" disable></cell-value>
+      <cell-value title="作业票状态" :value="htStatus(oldInfo.htStatus)" disable></cell-value>
       <!-- 作业票编号 -->
-      <cell-value
-        title="作业票编号"
-        required
-        v-if="initData.dhzypCode"
-        :value="$userInfo.dhzypCode"
-        class="readonly"
-      ></cell-value>
+      <!-- <cell-value title="作业票编号"
+                  required
+                  v-if="initData.dhzypCode"
+                  :value="$userInfo.dhzypCode"
+      class="readonly"></cell-value>-->
       <!-- 作业票状态 -->
-      <cell-value
-        title="作业票状态"
-        required
-        v-if="initData.htStatus"
-        :value="$userInfo.userName"
-        class="readonly"
-      ></cell-value>
+      <!-- <cell-value title="作业票状态"
+                  required
+                  v-if="initData.htStatus"
+                  :value="$userInfo.userName"
+      class="readonly"></cell-value>-->
       <!-- 动火地点及内容 -->
       <cell-textarea title="动火地点及内容" required v-model="sendData.siteContent" placeholder="请输入作业内容"></cell-textarea>
       <!-- 动火级别 -->
@@ -72,21 +68,21 @@
       <!-- 动火结束时间 -->
       <cell-time v-model="sendData.dhEndtime" title="动火结束时间" required></cell-time>
       <!-- 动火作业负责人 -->
-      <cell-select-user
+      <select-organization 
         title="动火作业负责人"
         required
+        radio
         :storeModule="storeModule"
         storeKey="dhzyPrincipal"
         v-model="sendData.dhzyPrincipal"
-      ></cell-select-user>
-      <!-- 动火人 -->
-      <cell-select-user
+      ></select-organization >
+      <select-organization 
         title="动火人"
         required
         :storeModule="storeModule"
         storeKey="dhzyRen"
         v-model="sendData.dhzyRen"
-      ></cell-select-user>
+      ></select-organization>
       <!-- 动火安全 -->
       <div class="confirm">
         <div class="head">
@@ -287,26 +283,28 @@ export default {
       miehuotanNumber: 0,
       signatureShow: false,
       checked: [],
-      selectSignatureShow: Number,
+      selectSignatureShow: 0,
       isShowAction: false,
+      donghuoInit: false,
       oldInfo: {}
     };
   },
   watch: {
     dhWay(res) {
-      console.log(res)
+      console.log(res);
       this.sendData.dhWay = res;
     },
     otherSpecial(res) {
-      console.log(res)
+      console.log(res);
       this.sendData.otherSpecial = res;
     },
     hazardSb(res) {
-      console.log(res)
+      console.log(res);
       this.sendData.hazardSb = res;
-      console.log(this.sendData)
+      console.log(this.sendData);
     },
     dhzyPrincipal(res) {
+      console.log("res", res);
       this.sendData.dhzyPrincipal = res;
     },
     dhzyRen(res) {
@@ -321,17 +319,25 @@ export default {
     dhzyRen: state => state.donghuo.dhzyRen
   }),
   created() {
-    console.log(this.sendData)
     if (this.$route.query.id) {
       if (this.queryId !== this.$route.query.id) {
         this.queryId = this.$route.query.id;
+        this.donghuoInit = true;
         this.getPageData();
       }
     }
+    this.initChecked();
   },
   activated() {
+    console.log(this.$userInfo);
   },
   methods: {
+    initChecked() {
+      for (let i = 0; i < 9; i++) {
+        let obj = { checked: false, img: "" };
+        this.checked.push(obj);
+      }
+    },
     // 打开操作Popup
     openAction() {
       this.isShowAction = true;
@@ -396,7 +402,7 @@ export default {
 
     // 主表保存
     postData() {
-      console.log(this.sendData)
+      console.log(this.sendData);
       // 检测到输入不完整直接退出函数
       if (!this.isDataEdit()) {
         return;
@@ -407,16 +413,19 @@ export default {
       sendData.hazardSb = this.stringData("hazardSb", "list_3");
       sendData.dhzyPrincipal = this.userString(
         sendData.dhzyPrincipal,
-        "userName"
+        "userCode"
       );
-      sendData.dhzyRen = this.userString(sendData.dhzyRen, "userName");
-      sendData.applyDept = this.$userInfo.officeName;
-      sendData.applyRen = this.$userInfo.userName;
+      // sendData.cbsPeoson = sendData.dhzyPrincipal.substr(0, 4) === 'CBS_' ? '2' : '1'
+      sendData.dhzyRen = this.userString(sendData.dhzyRen, "userCode");
+      console.log(this.$userInfo);
+      sendData.applyDept = this.$userInfo.officeCode;
+      sendData.applyRen = this.$userInfo.userCode;
       sendData.__sid = this.$userInfo.sessionId;
       if (this.$route.query.id) {
         sendData.id = this.oldInfo.id;
         sendData.dhzypCode = this.oldInfo.dhzypCode;
       }
+      console.log('发送报文(空为创建，不为空为修改)'+this.queryId, sendData);
       this.$api.page_3
         .htHseDhzypSave(sendData)
         .then(res => {
@@ -434,71 +443,73 @@ export default {
           num: 1,
           safetyCs: `动火设备内部构件清理干净,蒸汽吹扫或水洗合格,达到用火条件。`,
           affirmRen: this.checked[0] ? this.checked[0].img : 0,
-          safetyStatus: this.checked[0] ? 1 : 0
+          safetyStatus: this.checked[0].checked ? 1 : 0
         },
         {
           zypId: messageId,
           num: 2,
           safetyCs: `断开与动火设备相连接的所有管线,加盲板${this.manbanNumber}块`,
           affirmRen: this.checked[1] ? this.checked[1].img : 0,
-          safetyStatus: this.checked[1] ? 1 : 0
+          safetyStatus: this.checked[1].checked ? 1 : 0
         },
         {
           zypId: messageId,
           num: 3,
           safetyCs: `动火点周围的下水井、地漏、地沟、电缆沟等已清除易燃物,并已采取覆盖、铺沙、水封等手段进行隔离`,
           affirmRen: this.checked[2] ? this.checked[2].img : 0,
-          safetyStatus: this.checked[2] ? 1 : 0
+          safetyStatus: this.checked[2].checked ? 1 : 0
         },
         {
           zypId: messageId,
           num: 4,
           safetyCs: `罐区内动火点同一围堰内和防火间距内的油罐不同时进行脱水作业`,
           affirmRen: this.checked[3] ? this.checked[3].img : 0,
-          safetyStatus: this.checked[3] ? 1 : 0
+          safetyStatus: this.checked[3].checked ? 1 : 0
         },
         {
           zypId: messageId,
           num: 5,
           safetyCs: `高处作业已采取防火花飞溅措施`,
           affirmRen: this.checked[4] ? this.checked[4].img : 0,
-          safetyStatus: this.checked[4] ? 1 : 0
+          safetyStatus: this.checked[4].checked ? 1 : 0
         },
         {
           zypId: messageId,
           num: 6,
           safetyCs: `动火点周围易燃物已清除`,
           affirmRen: this.checked[5] ? this.checked[5].img : 0,
-          safetyStatus: this.checked[5] ? 1 : 0
+          safetyStatus: this.checked[5].checked ? 1 : 0
         },
         {
           zypId: messageId,
           num: 7,
           safetyCs: `电焊回路线已接在焊件上,把线未穿过下水井或与其他设备搭接`,
           affirmRen: this.checked[6] ? this.checked[6].img : 0,
-          safetyStatus: this.checked[6] ? 1 : 0
+          safetyStatus: this.checked[6].checked ? 1 : 0
         },
         {
           zypId: messageId,
           num: 8,
           safetyCs: `乙炔气瓶(直立放置)、氧气瓶间距大于5米，与火源间的距离大于10米`,
           affirmRen: this.checked[7] ? this.checked[7].img : 0,
-          safetyStatus: this.checked[7] ? 1 : 0
+          safetyStatus: this.checked[7].checked ? 1 : 0
         },
         {
           zypId: messageId,
           num: 9,
           safetyCs: `现场配备消防水带${this.fangshuidaiNumber}根，灭火器${this.miehuoqiNumber}台，铁锹${this.tieqiuNumber}把，灭火毯${this.miehuotanNumber}块`,
           affirmRen: this.checked[8] ? this.checked[8].img : 0,
-          safetyStatus: this.checked[8] ? 1 : 0
+          safetyStatus: this.checked[8].checked ? 1 : 0
         }
       ];
+      console.log("z子表保存", sendSafeData);
       this.$api.page_3
         .htHseDhzypSaveHtHseDhzypSafety(
           JSON.stringify(sendSafeData),
           this.$userInfo.sessionId
         )
         .then(res => {
+          console.log("z子表保存成功");
           this.closeAction();
           this.$Toast.success({
             message: "提交成功",
@@ -510,10 +521,7 @@ export default {
     },
     saveCanvas(e) {
       this.signatureShow = false;
-      this.checked[this.selectSignatureShow] = {
-        checked: false,
-        img: ""
-      };
+      this.checked[this.selectSignatureShow].checked = true;
       this.checked[this.selectSignatureShow].img = e;
     },
     cancelCanvas() {
@@ -523,13 +531,21 @@ export default {
     },
     // 显示签名
     showSignature(index) {
+      //  如果未初始化 那么不需要展开
       this.selectSignatureShow = index;
-      this.signatureShow = true;
+      if (!this.donghuoInit) {
+        this.signatureShow = true;
+      }
     },
     // 取消签名
     signatureCancel(index) {
-      this.checked[index].checked = false;
-      this.checked[index].img = "";
+      console.log('取消选择', index);
+      // this.checked[index].checked = false;
+      // this.checked[index].img = "";
+      this.$set(this.checked, index, {
+        checked: false,
+        img: '',
+      });
     },
     // 动火主表查询
     getPageData() {
@@ -543,53 +559,87 @@ export default {
           __sid: localStorage.getItem("JiaHuaSessionId")
         })
         .then(res => {
+           console.log("const key in this.sendData 编辑", res);
           let info = res.list[0];
           this.oldInfo = info;
           for (const key in this.sendData) {
-            if (key === "dhzyPrincipal") {
-              this.sendData[key] = this.reductionSelectUser(info[key]);
+            if (key === "dhzyPrincipal" && info.dhfzr) {
+              this.sendData[key] = this.reductionSelectUserObj(
+                info.dhfzr
+              );
+            } else if (key === "dhzyRen" && info.dhr) {
+              this.sendData[key] = this.reductionSelectUserObj(info.dhr);
+            } else if (key === "dhzyPrincipal") {
+              this.sendData[key] = [];
             } else if (key === "dhzyRen") {
-              this.sendData[key] = this.reductionSelectUser(info[key]);
+              this.sendData[key] = [];
             } else if (key === "dhWay") {
-              if (info[key])
+              if (info[key]) {
                 this.sendData[key] = this.reductionSelectTag(
                   info[key],
                   this.list_1
                 );
+              }
             } else if (key === "otherSpecial") {
-              if (info[key])
+              if (info[key]) {
                 this.sendData[key] = this.reductionSelectTag(
                   info[key],
                   this.list_2
                 );
+              }
             } else if (key === "hazardSb") {
-              if (info[key])
+              if (info[key]) {
                 this.sendData[key] = this.reductionSelectTag(
                   info[key],
                   this.list_3
                 );
+              }
             } else {
               this.sendData[key] = info[key];
             }
           }
-          console.log(res)
+          console.log(res);
           // 动火子表查询
           this.mylistDataD();
         })
-        .catch(() => this.$Toast.clear());
+        .catch(() => {
+          this.$Toast.clear();
+          this.donghuoInit = false;
+          console.log("报错了 getPageData");
+        });
     },
     // 动火子表查询
     mylistDataD() {
       this.$api.page_3
         .mylistDataD({
-          id: this.oldInfo.id,
+          zypId: this.oldInfo.id,
           __sid: localStorage.getItem("JiaHuaSessionId")
         })
         .then(res => {
           this.$Toast.clear();
-          console.log("res: ", res);
+          console.log("res:mylistDataD ", res);
+          this.initListDataD(res);
         })
-        .catch(() => this.$Toast.clear());
+        .catch(() => {
+          console.log("报错了");
+          this.donghuoInit = false;
+          this.$Toast.clear();
+        });
+    },
+    initListDataD(data) {
+      //  this.checked
+      let checked = {};
+      data.forEach(item => {
+        this.checked[parseInt(item.num) - 1] = {
+          checked: item.safetyStatus === 1,
+          img: item.affirmRen === "0" ? "" : item.affirmRen
+        };
+      });
+      console.log("this.checked", this.checked);
+      this.$forceUpdate();
+      this.$nextTick(() => {
+        this.donghuoInit = false;
+      });
     },
     // 工作流提交
     Next() {
@@ -598,7 +648,7 @@ export default {
         return;
       } else if (this.oldInfo.actRuTask) {
       } else {
-        console.log(123456)
+        console.log(123456);
         this.$Toast.loading({
           message: "加载中...",
           forbidClick: true
@@ -609,50 +659,62 @@ export default {
             __sid: localStorage.getItem("JiaHuaSessionId")
           })
           .then(res => {
-            this.$Toast.clear()
-            if(res.list[0].actRuTask){
-              console.log(1)
+            this.$Toast.clear();
+            if (res.list[0].actRuTask) {
+              console.log(1);
               let data = {
-                'id':res.list[0].id,
-                'flowKey':'htHseDhzypService',
-                'comment':'',
-                'actRuTask.id':res.list[0].actRuTask.id,
-                'btnSubmit':'审批',
+                id: res.list[0].id,
+                flowKey: "htHseDhzypService",
+                comment: "",
+                "actRuTask.id": res.list[0].actRuTask.id,
+                btnSubmit: "审批",
                 __sid: localStorage.getItem("JiaHuaSessionId")
-              }
-              this.$api.page_3.approve(data).then((ress)=>{
-                console.log(ress)
-                if(ress.groups){
-                  this.$router.push({name:'daibanren',query:{
-                    groups:ress.groups.join(','),
-                    taskId:ress.taskId,
-                    id:res.list[0].id,
-                    type:'htHseDhzypService'
-                  }})
-                }else{
-                  this.$router.replace({name:'donghuo_list'})
-                }
-              }).catch(() => this.$Toast.clear());
-            }else{
-              console.log(2)
+              };
+              this.$api.page_3
+                .approve(data)
+                .then(ress => {
+                  console.log(ress);
+                  if (ress.groups) {
+                    this.$router.push({
+                      name: "daibanren",
+                      query: {
+                        groups: ress.groups.join(","),
+                        taskId: ress.taskId,
+                        id: res.list[0].id,
+                        type: "htHseDhzypService"
+                      }
+                    });
+                  } else {
+                    this.$router.replace({ name: "donghuo_list" });
+                  }
+                })
+                .catch(() => this.$Toast.clear());
+            } else {
+              console.log(2);
               let data = {
-                'id':res.list[0].id,
-                'flowKey':'htHseDhzypService',
+                id: res.list[0].id,
+                flowKey: "htHseDhzypService",
                 __sid: localStorage.getItem("JiaHuaSessionId")
-              }
-              this.$api.page_3.start('dhzyp/htHseDhzyp',data).then((ress)=>{
-                console.log(ress)
-                if(ress.groups){
-                  this.$router.push({name:'daibanren',query:{
-                    groups:ress.groups.join(','),
-                    taskId:ress.taskId,
-                    id:res.list[0].id,
-                    type:'htHseDhzypService'
-                  }})
-                }else{
-                  this.$router.replace({name:'donghuo_list'})
-                }
-              }).catch(() => this.$Toast.clear());
+              };
+              this.$api.page_3
+                .start("dhzyp/htHseDhzyp", data)
+                .then(ress => {
+                  console.log(ress);
+                  if (ress.groups) {
+                    this.$router.push({
+                      name: "daibanren",
+                      query: {
+                        groups: ress.groups.join(","),
+                        taskId: ress.taskId,
+                        id: res.list[0].id,
+                        type: "htHseDhzypService"
+                      }
+                    });
+                  } else {
+                    this.$router.replace({ name: "donghuo_list" });
+                  }
+                })
+                .catch(() => this.$Toast.clear());
             }
           })
           .catch(() => this.$Toast.clear());

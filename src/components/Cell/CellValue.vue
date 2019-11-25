@@ -1,5 +1,5 @@
 <template>
-  <div class="cell" :class="[border ? 'border' : '',disable? 'disable': '']">
+  <div class="cell" :class="[border ? 'border' : '',disable? 'disable': '']" @click="click()">
     <div class="cell_title">
       <span>{{ title }}</span>
       <span class="required" v-if="required">*</span>
@@ -8,7 +8,7 @@
     <div class="cell_value" v-else>
       <slot></slot>
     </div>
-    <van-icon name="arrow" v-if="arrow" />
+    <van-icon :name="iconName" v-if="arrow" color="#888888" />
   </div>
 </template>
 <script>
@@ -32,6 +32,15 @@ export default {
     arrow: {
       type: Boolean,
       default: false
+    },
+    iconName: {
+      type: String,
+      default: "arrow"
+    }
+  },
+  methods: {
+    click() {
+      this.$emit("click");
     }
   }
 };
@@ -58,7 +67,7 @@ export default {
     width: 50%;
     font-size: 28px;
     text-align: right;
-    color: rgba(45, 44, 51, 1);
+    color: #888888;
     line-height: 40px;
   }
 }

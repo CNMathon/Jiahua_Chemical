@@ -142,6 +142,7 @@ export default {
         value: this.result
       };
       this.$store.dispatch(`${this.storeModule}/changTag`, obj);
+	  localStorage.setItem("isfresh",false);
       this.$router.back();
     }
   }

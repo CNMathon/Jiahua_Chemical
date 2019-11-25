@@ -93,6 +93,8 @@ export const uploadFile = {
         fileUrl: res.fileUpload.fileUrl
       };
       this.fileList.push(obj);
+      console.log(5555)
+      console.log(this.fileList)
     },
     // 删除文件
     beforeDelete(e) {

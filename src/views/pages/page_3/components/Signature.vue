@@ -3,8 +3,9 @@
     <div class="confirm_item_content">
       <slot></slot>
     </div>
+    <!-- v-model="localChecked" -->
     <div class="confirm_item_check success">
-      <van-checkbox v-model="localChecked" checked-color="#07c160" @click="showSignature(0)" :disabled="disable"></van-checkbox>
+      <van-checkbox  v-model="localChecked" :click="showSignature(0)" checked-color="#07c160"  :disabled="disable"></van-checkbox>
     </div>
     <div class="confirm_item_signature" v-if="img">
       <van-image width="100%" height="100%" fit="scale-down" :src="img" />

@@ -233,7 +233,7 @@
         <!-- 操作Popup -->
         <van-popup v-model="isShowAction" position="bottom" class="action">
           <button @click="postData">保存</button>
-          <button>工作流提交</button>
+          <button @click="Next">工作流提交</button>
           <button @click="closeAction">取消</button>
         </van-popup>
       </div>
@@ -292,7 +292,9 @@ export default {
       safe: [],
       report: [],
       waterLight: [],
-      boomLight: []
+      boomLight: [],
+      actRuTask:'',
+      id:''
     };
   },
   components: {
@@ -337,6 +339,44 @@ export default {
     this.$store.dispatch("dongtu/cleanState");
   },
   methods: {
+    Next(){
+      console.log(33333333333)
+        if (this.actRuTask === '') {
+          console.log(2)
+          let data = {
+            'id': this.id,
+            'flowKey': 'htHseDtzypService',
+            __sid: localStorage.getItem("JiaHuaSessionId")
+          }
+          this.$api.page_3.start('dtzyp/htHseDtzyp', data).then((res) => {
+            if(res.result==='true'){
+              console.log(res)
+              if (res.groups) {
+                this.$router.push({
+                  name: 'daibanren', query: {
+                    groups: res.groups.join(','),
+                    taskId: res.taskId,
+                    id: this.id,
+                    type: 'htHseDtzypService'
+                  }              })
+              } else {
+                this.$router.replace({ name: 'dongtu_list' })
+              }
+            }else{
+              this.$notify(res.message);
+            }
+          }).catch(() => this.$Toast.clear());
+        } else {
+          console.log(22222222222222)
+          this.$router.push({
+            name: 'dongtu_shenpi',
+            query: {
+              id: this.id,
+              actRuTask: this.actRuTask,
+            }
+          })
+        }
+    },
     // 打开操作Popup
     openAction() {
       this.isShowAction = true;
@@ -390,6 +430,8 @@ export default {
         .then(res => {
           this.isLoading = false;
           let info = res.list[0];
+          this.actRuTask = info.actRuTask?info.actRuTask.id:''
+          this.id = info.id
           console.log("info: ", info);
           this.sendData.id = info.id;
           for (const key in this.sendData) {

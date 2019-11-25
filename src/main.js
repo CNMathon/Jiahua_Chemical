@@ -10,6 +10,7 @@ import CellImage from "./components/Cell/CellImage.vue";
 import CellValue from "./components/Cell/CellValue.vue";
 import CellTime from "./components/Cell/CellTime.vue";
 import CellPicker from "./components/Cell/CellPicker.vue";
+import CellPickers from "./components/Cell/CellPickers.vue";
 import CellSheet from "./components/Cell/CellSheet.vue";
 import CellTextarea from "./components/Cell/CellTextarea.vue";
 import CellOther from "./components/Cell/CellOther.vue";
@@ -17,6 +18,7 @@ import CellSelectUser from "./components/Cell/CellSelectUser.vue";
 import CellSelectDepartment from "./components/Cell/CellSelectDepartment.vue";
 import CellSelectUsers from "./components/Cell/CellSelectUsers.vue";
 import CellSelectTag from "./components/Cell/CellSelectTag.vue";
+import SelectOrganization from "./components/Organization/SelectOrganization.vue";
 import JFilter from "./components/Filter/Filter.vue";
 import JFilterItem from "./components/Filter/FilterItem.vue";
 import FilterCell from "./components/Filter/FilterCell.vue";
@@ -30,15 +32,15 @@ import api from "./api"; // 导入api接口
 import { Toast } from "vant";
 import { Dialog } from "vant";
 import { Notify } from "vant";
-import echarts from 'echarts'
-import Mixin from './mixin' // Mixin
+import echarts from "echarts";
+import Mixin from "./mixin"; // Mixin
 // 全局注册
 Vue.prototype.$api = api; // 将api挂载到vue的原型上
 Vue.prototype.$Toast = Toast;
 Vue.prototype.$Dialog = Dialog;
 Vue.prototype.$dayjs = dayjs; //全局挂载day.js
 Vue.prototype.$Notify = Notify;
-Vue.prototype.$echarts = echarts
+Vue.prototype.$echarts = echarts;
 Vue.prototype.$imageUrl = "http://47.96.148.87:8980/js"; // 将api挂载到vue的原型上
 Vue.use(Vant);
 Vue.use(VCharts);
@@ -49,6 +51,7 @@ Vue.component("cell-value", CellValue);
 Vue.component("cell-time", CellTime);
 Vue.component("cell-sheet", CellSheet);
 Vue.component("cell-picker", CellPicker);
+Vue.component("cell-pickers", CellPickers);
 Vue.component("cell-textarea", CellTextarea);
 Vue.component("cell-other", CellOther);
 Vue.component("cell-select-user", CellSelectUser);
@@ -61,6 +64,7 @@ Vue.component("j-filter-item", JFilterItem);
 Vue.component("j-filter-cell", FilterCell);
 Vue.component("j-filter-time", FilterTime);
 Vue.component("j-filter-search", FilterSearch);
+Vue.component("select-organization", SelectOrganization);
 Vue.mixin(Mixin); // Mixin
 // Vue.component('Action', Action);
 

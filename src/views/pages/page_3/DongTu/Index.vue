@@ -547,9 +547,9 @@ export default {
       console.log("file", htDeviceDefect_file);
       sendData.otherSpecial = this.stringData("otherSpecial", "list_1");
       sendData.hazardSb = this.stringData("hazardSb", "list_2");
-      sendData.guardian = this.userString(sendData.guardian, "userName");
-      sendData.dtMan = this.userString(sendData.dtMan, "userName");
-      sendData.dtDept = this.userString(sendData.dtDept, "name");
+      sendData.guardian = this.userString(sendData.guardian, "userCode");
+      sendData.dtMan = this.userString(sendData.dtMan, "userCode");
+      sendData.dtDept = this.userString(sendData.dtDept, "id");
       sendData.applyDept = this.$userInfo.officeName;
       sendData.applyer = this.$userInfo.userName;
       sendData.dtSite = this.sendData.dtSite; // 作业地点

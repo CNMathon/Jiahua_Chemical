@@ -55,6 +55,33 @@ export const business = {
       });
       return newArr;
     },
+//     avatarUrl: "http://47.96.148.87:8980/js/static/images/user1.jpg"
+// fullName: "新材料厂"
+// userCode: "XCLCDD001"
+// userName: "新材料调度甲班"
+
+    reductionSelectUserObj (data) {
+      let newArr = [];
+      let userOBj = (item) => {
+        let obj = {
+          avatarUrl: item.avatarUrl,
+          fullName: item.fullName,
+          userCode: item.userCode,
+          userName: item.userName,
+        };
+        return obj;
+      }
+      // 判断是传入的 obj还是 Array
+       if (Array.isArray(data)) {
+        let arr = data.split(",");
+        arr.forEach(element => {
+          newArr.push(userOBj(element));
+        });
+       } else {
+        newArr = [userOBj(data)];
+       }
+      return newArr;
+    },
     reductionSelectUser(data) {
       let newArr = [];
       let arr = data.split(",");

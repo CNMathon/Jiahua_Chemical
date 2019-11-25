@@ -10,46 +10,69 @@
       class="van-nav-bar--fixed"
     />
     <div class="cell_group">
-      <!-- 修改 -->
-      <cell-input title="项目名称" required :value="sendData.xmmc" placeholder="项目名称" />
-      <cell-input v-model="sendData.wzmc" title="违章名称" required placeholder="输入违章名称" />
-      <!-- 修改 -->
-      <cell-input v-model="sendData.wzmc" title="违章单位" required placeholder="单位名称" />
-      <cell-time v-model="sendData.startTime" title="发生时间" required></cell-time>
-      <cell-input v-model="sendData.fsdd" title="发生地点" required placeholder="输入发生地点"></cell-input>
+      <!-- 项目名称 -->
+      <cell-value
+        title="项目名称"
+        required
+        :value="sendData.projectname.projectName || '点击选择'"
+        iconName="search"
+        arrow
+        @click="selectProject()"
+      />
+      <!-- 违章名称 -->
+      <cell-input v-model="sendData.breakrulename" title="违章名称" required placeholder="输入违章名称" />
+      <!-- 违章单位 -->
+      <cell-value
+        title="违章单位"
+        required
+        :value="sendData.breakruledept.projectName || '点击选择'"
+        iconName="search"
+        arrow
+        @click="selectDepartment()"
+      />
+      <cell-time v-model="sendData.occurtime" title="发生时间" required></cell-time>
+      <cell-input v-model="sendData.occursite" title="发生地点" required placeholder="输入发生地点"></cell-input>
       <cell-select-user
         title="检察人员"
         required
         :storeModule="storeModule"
-        storeKey="jcry"
-        v-model="sendData.jcry"
+        storeKey="checkuser"
+        v-model="sendData.checkuser"
       />
-			<cell-select-user
+      <cell-select-user
         title="违章人员"
         required
         :storeModule="storeModule"
-        storeKey="wzry"
-        v-model="sendData.wzry"
+        storeKey="breakruleuser"
+        v-model="sendData.breakruleuser"
       />
-			<cell-select-tag
+      <!-- 违章考核标准 -->
+      <cell-value
         title="违章考核标准"
         required
-        :storeModule="storeModule"
-        storeKey="wzry"
-        v-model="sendData.wzry"
+        :value="sendData.wzstandard.projectName || '点击选择'"
+        iconName="search"
+        arrow
+        @click="selectAssessment()"
       />
-			<!-- 修改 -->
-      <cell-input v-model="sendData.fsdd" title="违章项目" required placeholder="项目名称"></cell-input>
-			<cell-select-tag
+      <!-- 违章项目 -->
+      <cell-value
+        title="违章项目"
+        required
+        :value="sendData.breakruleproject.projectName || '点击选择'"
+        iconName="search"
+        arrow
+        @click="selectProjects()"
+      />
+      <cell-picker
         title="违章类型"
         required
-        :storeModule="storeModule"
-        storeKey="wzlx"
-        v-model="sendData.wzlx"
-      />
-			<!-- 修改 -->
-			<cell-input v-model="sendData.wzmc" title="处罚标准" required placeholder="自动读取" />
-      <cell-textarea title="事件描述" required v-model="sendData.sjms" placeholder="输入内容"/>
+        v-model="sendData.breakruletype"
+        :columns="breakruletypeColumns"
+      ></cell-picker>
+      <!-- 修改 -->
+      <cell-value title="处罚标准" required placeholder="自动读取" />
+      <cell-textarea title="事件描述" required v-model="sendData.incidentdes" placeholder="输入内容" />
       <!-- 上传图片 -->
       <div class="cell">
         <div class="cell_title">
@@ -70,7 +93,6 @@
         </div>
       </div>
     </div>
-    <button @click="testme">testme</button>
     <!-- 时间选择 -->
     <van-popup v-model="timeShow" position="bottom">
       <van-datetime-picker
@@ -104,73 +126,62 @@ export default {
   },
   data() {
     return {
-			storeModule: "weizhang",
+      storeModule: "weizhang",
       isShowAction: false,
       sendData: {
-        xmmc: "", //项目名称
-        wzmc: "", //违章名称,
-        wzdw: "", // 违章单位
-        startTime: "", //发生时间
-        fsdd: "", //发生地点
-        jcry: "", // 检察人员
-        wzry: "", // 违章人员
-        wzkhbz: "", // 违章考核标准
-        wzxm: "", // 违章项目
-        wzlx: "", //违章类型
+        projectname: {}, //项目名称
+        breakrulename: "", //违章名称,
+        breakruledept: "", // 违章单位
+        occurtime: "", //发生时间
+        occursite: "", //发生地点
+        checkuser: [], // 检察人员
+        breakruleuser: [], // 违章人员
+        wzstandard: [], // 违章考核标准
+        breakruleproject: "", // 违章项目
+        breakruletype: "", //违章类型
         cfbz: "", // 处罚标准
-        sjms: "", //事件描述,
+        incidentdes: "", //事件描述,
         wztp: [] // 违章图片
-        // cfje: "", //处罚金额
-        // pxsj: "", //培训时间
-        // pxyj: "" //培训意见
       },
-      wzlxColumns: [1, 2, 3],
+      breakruletypeColumns: [
+        "违章指挥",
+        "违反劳动纪律",
+        "违章操作",
+        "违反十大禁令"
+      ],
       timeShow: false,
       currentDate: new Date(),
       fileList: [],
       signatureShow: false
     };
   },
-  watch:{
-    jcry(res){
-      this.sendData.jcry = res
+  watch: {
+    projectname(res) {
+      this.sendData.projectname = res[0];
     },
-    wzry(res){
-      this.sendData.wzry = res
+    checkuser(res) {
+      this.sendData.checkuser = res;
     },
-    wzlx(res){
-      this.sendData.wzlx = res
+    breakruleuser(res) {
+      this.sendData.breakruleuser = res;
     },
-    wzkhbz(res){
-      this.sendData.wzkhbz = res
+    wzkhbz(res) {
+      this.sendData.wzkhbz = res;
     }
   },
   computed: mapState({
-    jcry: state => state.weizhang.jcry,
-    wzry: state => state.weizhang.wzry,
-    wzlx: state => state.weizhang.wzlx,
-    wzkhbz: state => state.weizhang.wzkhbz,
+    projectname: state => state.weizhang.projectname,
+    checkuser: state => state.weizhang.checkuser,
+    breakruleuser: state => state.weizhang.breakruleuser,
+    wzkhbz: state => state.weizhang.wzkhbz
   }),
-  created() {
-    // console.log(this.sendData)
-    // this.sendData.jcry 
-    // this.$store.weizhang.jcry.map(item => {
-    //   this.sendData.jcry += item.username
-    // })
-    // console.log(this.sendData.jcry)
-  },
   methods: {
-    testme() {
-      console.log(this.jcry)
-    },
     Next() {
-			this.sendData.__sid = localStorage.JiaHuaSessionId
-			console.log(this.sendData);
-			this.$api.page_3
-				.htCbsBreakrulesmanageSave(this.sendData)
-				.then(res => {
-					console.log(res)
-				})
+      this.sendData.__sid = localStorage.JiaHuaSessionId;
+      console.log(this.sendData);
+      this.$api.page_3.htCbsBreakrulesmanageSave(this.sendData).then(res => {
+        console.log(res);
+      });
     },
     pageBack() {
       this.$router.back();
@@ -198,6 +209,30 @@ export default {
       this.$router.push({
         path: "/Component/CasSelect/Project"
       });
+    },
+    // 选择项目名称
+    selectProject() {
+      this.$router.push({
+        path: "./select_project"
+      });
+    },
+    // 选择违章单位
+    selectDepartment() {
+      this.$router.push({
+        path: "./select_department"
+      });
+    },
+    // 选择违章项目名称
+    selectProjects() {
+      this.$router.push({
+        path: "./select_projects"
+      });
+    },
+    // 选择考核标准
+    selectAssessment() {
+      this.$router.push({
+        path: "./select_assessment"
+      });
     }
   }
 };
@@ -210,7 +245,7 @@ export default {
   min-height: 100vh;
   background-color: #f5f5f5;
 
-  .cell_group{
+  .cell_group {
     margin-top: 92px;
   }
 

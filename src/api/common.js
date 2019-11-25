@@ -19,6 +19,12 @@ const common = {
     };
     params.mobileLogin = true;
     return axios.post(`${base.sq}file/upload`, params, config);
+  },
+  officeTreeData (params) {
+    return axios.get(`${base.sq}sys/office/treeData`, { params: params });
+  },
+  empUserList(params) {
+    return axios.get(`${base.sq}sys/empUser/listData`, { params: params });
   }
 };
 

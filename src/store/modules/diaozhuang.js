@@ -14,7 +14,8 @@ const getters = {};
 // actions
 const actions = {
   changTag({ commit }, tags) {
-    commit("setTag", { tags });
+	  console.log("commit",tags)
+      commit("setTag", { tags });
   },
   deleteTagItem({ commit, state }, tags) {
     let arr = state[tags.key];
@@ -32,6 +33,7 @@ const actions = {
 // mutations
 const mutations = {
   setTag(state, { tags }) {
+	  localStorage.setItem("isfresh",false);
     state[tags.key] = tags.value;
   },
   resetState(state) {

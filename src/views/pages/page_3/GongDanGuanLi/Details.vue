@@ -1,75 +1,80 @@
 <template>
   <div class="home">
-    <van-nav-bar
-      title="新建工单"
-      left-text="返回"
-      right-text="操作"
-      left-arrow
-      @click-left="pageBack"
-      @click-right="openAction"
-    />
+    <van-sticky>
+      <van-nav-bar
+        title="新建工单"
+        left-text="返回"
+        right-text="操作"
+        left-arrow
+        @click-left="pageBack"
+        @click-right="openAction"
+      />
+    </van-sticky>
     <div class="cell_group">
       <!-- 申请部门 -->
-      <cell-value title="申请部门" required value="部门名称" disable></cell-value>
-      <cell-value title="申请人" required value="人名" disable></cell-value>
-      <cell-input title="工单名称" required placeholder="请输入工单名称"></cell-input>
-      <cell-picker title="空间设备" required  :columns="shebeiList"></cell-picker>
-      <cell-input title="作业地点" required placeholder="请输入作业地点"></cell-input>
-      <cell-time title="维修开始时间" required></cell-time>
-      <cell-time title="维修结束时间" required></cell-time>
-      <cell-picker title="检修项目" required  :columns="jianxiuxiangmu"></cell-picker>
-      <cell-picker title="维护类别" required  :columns="weihuleibie"></cell-picker>
-      <cell-time title="维修时限" required></cell-time>
-      <cell-select-user
-        title="监护人"
-        required
-        :storeModule="storeModule"
-      ></cell-select-user>
-      <cell-picker title="检修班组" required  :columns="jianxiubanzu"></cell-picker>
-      <cell-select-user
-        title="作业人员"
-        required
-        :storeModule="storeModule"
-      ></cell-select-user>
-      <cell-select-user
-        title="现场负责人"
-        required
-        :storeModule="storeModule"
-      ></cell-select-user>
-      <cell-select-user
-        title="安全教育人"
-        required
-        :storeModule="storeModule"
-      ></cell-select-user>
-      <cell-textarea title="作业内容" required placeholder="请输入作业内容"></cell-textarea>
+      <cell-value title="申请部门" required value="部门名称" :value="sendData.sqbm || $userInfo.officeName"  disable></cell-value>
+      <cell-value title="申请人" required value="人名" :value="sendData.sqr || $userInfo.userName"  disable></cell-value>
+      <cell-input title="工单名称" required  :value="sendData.workOrderName" placeholder="请输入工单名称"></cell-input>
+      <cell-picker title="空间设备" required  :value="shebeiList[sendData.deviceSpaceIndex]" v-model="shebeiList[sendData.deviceSpaceIndex]"  :columns="shebeiList"></cell-picker>
+      <cell-input title="作业地点" required  :value="sendData.workAddress" placeholder="请输入作业地点"></cell-input>
+      <cell-time title="维修开始时间" :value="sendData.repairTimeStart" required></cell-time>
+      <cell-time title="维修结束时间" :value="sendData.repairTimeEnd" required></cell-time>
+      <cell-picker title="检修项目" required :value="jianxiuxiangmu[sendData.jianxiuxiangmuIndex]" v-model="jianxiuxiangmu[sendData.jianxiuxiangmuIndex]" :columns="jianxiuxiangmu"></cell-picker>
+      <cell-picker title="维护类别" required :value="weihuleibie[sendData.weihuleibieIndex]" v-model="weihuleibie[sendData.weihuleibieIndex]" :columns="weihuleibie"></cell-picker>
+      <cell-time title="维修时限" :value="sendData.repairTime" required></cell-time>
+      <cell-select-user title="监护人" storeKey="guardianshipName"  :value="sendData.guardianshipName" :v-model="sendData.guardianshipName"  required :storeModule="storeModule"></cell-select-user>
+			<cell-picker title="检修班组" required :value="jianxiubanzu[sendData.jianxiubanzuIndex]" v-model="jianxiubanzu[sendData.jianxiubanzuIndex]"  :columns="jianxiubanzu"></cell-picker>
+      <cell-select-user title="作业人员"  storeKey="executorName" :value="sendData.executorName"  :v-model="sendData.executorName" required :storeModule="storeModule"></cell-select-user>
+      <cell-select-user title="现场负责人" storeKey="scenePersonName"  :value="sendData.scenePersonName"  :v-model="sendData.scenePersonName" required :storeModule="storeModule"></cell-select-user>
+      <cell-select-user title="安全教育人"  storeKey="securityPersonName"  :value="sendData.securityPersonName"  :v-model="sendData.securityPersonName" required :storeModule="storeModule"></cell-select-user>
+      <cell-textarea title="作业内容" :value="sendData.workContent" required placeholder="请输入作业内容"></cell-textarea>
       <cell-select-tag
         required
         title="危害辨识"
-        storeKey="hazardSb"
-        :tagList="hazardSb"
+        storeKey="whsb"
+        :tagList="sendData.whsb"
         :showList="list_3"
         :storeModule="storeModule"
       ></cell-select-tag>
+      <cell-value title="特殊作业及相关作业票证号" :value="sendData.otherSpecial" :v-model="sendData.otherSpecial" required>
+        <img
+          src="../../../../assets/images/add.jpg"
+          class="cell_add_button"
+          @click="toSelectZuoYePiao"
+        />
+      </cell-value>
+      <cell-value title="安全措施确认" :value="sendData.measuresName" required></cell-value>
+      <div class="template">
+        <div class="picker">
+          <cell-pickers :columns="shebeiList"></cell-pickers>
+        </div>
+        <div class="btn">增加行</div>
+        <div class="btn">删除行</div>
+      </div>
     </div>
     <van-popup v-model="isShowAction" position="bottom" class="action">
-        <button>提交</button>
-        <button @click="closeAction">取消</button>
-      </van-popup>
+      <button @click="saveData()">提交</button>
+      <button @click="closeAction">取消</button>
+    </van-popup>
   </div>
 </template>
-
 <script>
-  import { mapState } from "vuex";
-  import { business } from "@/mixin/business";
+import { mapState } from "vuex";
+import { business } from "@/mixin/business";
 export default {
   name: "gongdanguanli_details",
   mixins: [business],
-  components: {
-  },
-  data () {
+  components: {},
+  data() {
     return {
       sendData: {
-        hazardSb: [], //危害辨识
+				deviceSpaceIndex:0,
+				jianxiuxiangmuIndex:0,
+				weihuleibieIndex:0,
+				jianxiubanzuIndex:0,
+        whsb: [] ,//危害辨识
+				otherSpecial:"",//特殊作业及相关作业票证号
+				measuresName:"111"
       },
       list_3: [
         "火灾、爆炸",
@@ -80,44 +85,95 @@ export default {
         "高处坠落"
       ],
       storeModule: "gongdanguanli",
-      jianxiubanzu:[4,5,6],
-      weihuleibie:[3,4,5],
-      jianxiuxiangmu:[2,3,4],
-      shebeiList:[1,2,3],
+      jianxiubanzu: [4, 5, 6],
+      weihuleibie: ["日常维续", "小修", "中修", "大修", "系统性大修"],
+      jianxiuxiangmu: ["检修项目1", "检修项目2", "检修项目3"],
+			shebeilistOld:[],
+      shebeiList: [],
       dhLevelColumns: [],
       isShowAction: false,
-      tagList1: ['触电','化学灼伤','中毒和窒息','高处坠落','机械伤害']
-    }
+      tagList1: ["触电", "化学灼伤", "中毒和窒息", "高处坠落", "机械伤害"],
+    };
   },
-  watch:{
-    hazardSb: {
-      handler(cval, oval) {
-        console.log('--------')
-        console.log(cval, oval)
-      },
-      deep: true
-    },
+  watch: {
+		guardianshipName(res){
+			this.sendData.guardianshipName = res;
+			this.sendData =JSON.parse( JSON.stringify(this.sendData))
+		},
+		executorName(res) {
+			this.sendData.executorName = res;
+			this.sendData =JSON.parse( JSON.stringify(this.sendData))
+		},
+		scenePersonName(res) {
+			this.sendData.scenePersonName = res;
+			this.sendData =JSON.parse( JSON.stringify(this.sendData))
+		},
+		securityPersonName(res) {
+			this.sendData.securityPersonName = res;
+			this.sendData =JSON.parse( JSON.stringify(this.sendData))
+		},
+		whsb(res){
+			console.log(res)
+			this.sendData.whsb = res;
+			this.sendData =JSON.parse( JSON.stringify(this.sendData))
+		}
   },
   computed: mapState({
-    hazardSb: state => state.gongdanguanli.hazardSb
+    hazardSb: state => state.gongdanguanli.hazardSb,
+		guardianshipName:state => state.gongdanguanli.guardianshipName ,
+		executorName:state => state.gongdanguanli.executorName  ,
+		scenePersonName:state => state.gongdanguanli.scenePersonName,
+		securityPersonName:state => state.gongdanguanli.securityPersonName,
+		whsb:state => state.gongdanguanli.whsb,
   }),
-  methods : {
+	created() {
+			this.deviceSpacelist();
+	},
+	activated() {
+	},
+  methods: {
     // 打开操作Popup
     openAction() {
       this.isShowAction = true;
     },
-
+		
+		saveData(){ //保存数据
+			
+			console.log(this.sendData)
+			// this.$api.page_3
+			//   .deviceWorkOrderSave({
+			// 	  ...this.sendData,
+			//     __sid: localStorage.getItem("JiaHuaSessionId")
+			//   })
+			//   .then(res => {
+			// 	  this.listData = res.list;
+			//   })
+		},
+		deviceSpacelist(){ //空间设备列表
+			this.$api.page_3.deviceSpacelistData({ __sid: localStorage.getItem("JiaHuaSessionId")})
+			.then(res=>{
+				var temp = [];
+				res.list.map(item=>{
+					temp.push(item.deviceName)
+				})
+				this.shebeiList = temp;
+				this.shebeilistOld = res.list;
+			})
+		},
     // 关闭操作Popup
     closeAction() {
       this.isShowAction = false;
     },
-    onClickRight () {}
+    onClickRight() {},
+    toSelectZuoYePiao() {
+      this.$router.push({ path: "./zuoyepiao" });
+    }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-.whiteCell{
+.whiteCell {
   background-color: #fff !important;
 }
 .action {
@@ -135,4 +191,26 @@ export default {
     font-size: 35px;
   }
 }
-</style>>
+.cell_add_button {
+  width: 40px;
+}
+.template {
+  padding: 30px 40px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  font-size: 28px;
+  color: #2d2c33;
+  line-height: 40px;
+  .picker {
+    width: 50%;
+    margin-right: auto;
+  }
+  .btn {
+    padding: 5px 10px;
+    box-sizing: border-box;
+    border: 1px solid #333;
+    margin-left: 10px;
+  }
+}
+</style>

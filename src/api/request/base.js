@@ -6,16 +6,20 @@
 const base = {
   sq: "http://47.96.148.87:8980/js/a/",
   sqsta: "http://47.96.148.87:8980/js/static/",
-  mes2: "http://mes2.jhec.com.cn:8080/MIS/",
-  mes3:
-    "http://mes3.jhec.com.cn:8080/JobManagement/api/services/JobManagement/mobileApi/"
+
+  sq2: "http://mes.jhec.com.cn:8084/",
+  mes2: "http://mes.jhec.com.cn:8082/MIS/",
+  mes3: "http://mes.jhec.com.cn:8083/JobManagement/api/services/JobManagement/mobileApi/"
 };
 
 //生产环境
 // const base = {
-//   sq: "http://mes1.jhec.com.cn:8080/js/a/",
-//   sqsta: "http://mes1.jhec.com.cn:8080/js/static/",
-//   mes2: "http://mes2.jhec.com.cn:8080/MIS/"
+//   sq: "http://mes.jhec.com.cn:8081/js/a/",
+//   sqsta: "http://mes.jhec.com.cn:8081/js/static/",
+
+//   sq2: "http://mes.jhec.com.cn:8084/",
+//   mes2: "http://mes.jhec.com.cn:8082/MIS/",
+//   mes3: "http://mes.jhec.com.cn:8083/JobManagement/api/services/JobManagement/mobileApi/"
 // };
 
 export default base;

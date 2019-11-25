@@ -1,34 +1,35 @@
 <template>
 	<div class="mangban">
 		<van-sticky>
-			<van-nav-bar title="临时用电" left-text="返回" right-text="操作" left-arrow @click-left="pageBack" @click-right="openAction" />
+			<van-nav-bar v-if="htStatus!=='5'" title="临时用电" left-text="返回" right-text="操作" left-arrow @click-left="pageBack" @click-right="openAction" />
+      <van-nav-bar v-else title="临时用电" left-text="返回" left-arrow @click-left="pageBack"/>
 		</van-sticky>
 		<div class="cell_group">
 			<!-- 申请部门 -->
-			<cell-value title="申请部门" required :value="$userInfo.officeName"></cell-value>
+			<cell-value disable title="申请部门" required :value="$userInfo.officeName"></cell-value>
 			<!-- 申请人 -->
-			<cell-value title="申请人" required :value="$userInfo.userName"></cell-value>
+			<cell-value disable title="申请人" required :value="$userInfo.userName"></cell-value>
 			<!-- 作业内容 -->
-			<cell-textarea v-model="sendData.workContent" title="作业内容" required placeholder="请输入作业内容"></cell-textarea>
+			<cell-textarea disable v-model="sendData.workContent" title="作业内容" required placeholder="请输入作业内容"></cell-textarea>
 			<!-- 作业地点 -->
-			<cell-input v-model="sendData.workLocation" title="作业地点" required placeholder="请输作业地点"></cell-input>
+			<cell-input disable v-model="sendData.workLocation" title="作业地点" required placeholder="请输作业地点"></cell-input>
 			<!-- 用电方式 -->
-			<cell-picker v-model="sendData.powerType" title="用电方式" required :columns="powerTypeColumns"></cell-picker>
+			<cell-picker disable v-model="sendData.powerType" title="用电方式" required :columns="powerTypeColumns"></cell-picker>
 			<!-- 工作电压 -->
-			<cell-picker v-model="sendData.jworkVoltage" title="工作电压" required :columns="jworkVoltageColumns"></cell-picker>
+			<cell-picker disable v-model="sendData.jworkVoltage" title="工作电压" required :columns="jworkVoltageColumns"></cell-picker>
 			<!-- 公共区域 -->
-			<cell-picker v-model="sendData.publicArea" title="公共区域" required :columns="publicAreaColumns"></cell-picker>
+			<cell-picker disable v-model="sendData.publicArea" title="公共区域" required :columns="publicAreaColumns"></cell-picker>
 			<!-- 用电设备及功率 -->
-			<cell-input v-model="sendData.devicePower" title="用电设备及功率" required placeholder="手工录入"></cell-input>
+			<cell-input disable v-model="sendData.devicePower" title="用电设备及功率" required placeholder="手工录入"></cell-input>
 			<!-- 危害辨识 -->
-			<cell-select-tag required title="危害辨识" storeKey="hazardIdentification" :tagList="hazardIdentification" :showList="list_1"
+			<cell-select-tag disable required title="危害辨识" storeKey="hazardIdentification" :tagList="hazardIdentification" :showList="list_1"
 			 :storeModule="storeModule"></cell-select-tag>
 			<!-- 用电开始时间 -->
-			<cell-time v-model="sendData.powertimeStart" title="用电开始时间" required></cell-time>
+			<cell-time disable v-model="sendData.powertimeStart" title="用电开始时间" required></cell-time>
 			<!-- 用电结束时间 -->
-			<cell-time v-model="sendData.powertimeEnd" title="用电结束时间" required></cell-time>
+			<cell-time disable v-model="sendData.powertimeEnd" title="用电结束时间" required></cell-time>
 			<!-- 接线人 -->
-			<cell-select-user title="接线人" required :storeModule="storeModule" storeKey="connectRen" v-model="sendData.connectRen"></cell-select-user>
+			<cell-select-user disable title="接线人" required :storeModule="storeModule" storeKey="connectRen" v-model="sendData.connectRen"></cell-select-user>
 			<!-- 施工作业部门 -->
 			<div class="cell">
 				<div class="cell_title">
@@ -42,11 +43,11 @@
 				</div>
 			</div>
 			<!-- 施工现场负责人 -->
-			<cell-select-user title="施工现场负责人" required :storeModule="storeModule" storeKey="workCharger" v-model="sendData.workCharger"></cell-select-user>
+			<cell-select-user disable title="施工现场负责人" required :storeModule="storeModule" storeKey="workCharger" v-model="sendData.workCharger"></cell-select-user>
 			<!-- 作业人 -->
-			<cell-select-user title="作业人" required :storeModule="storeModule" storeKey="workRen" v-model="sendData.workRen"></cell-select-user>
+			<cell-select-user disable title="作业人" required :storeModule="storeModule" storeKey="workRen" v-model="sendData.workRen"></cell-select-user>
 			<!-- 电工证号 -->
-			<cell-input v-model="sendData.licenseCode" title="电工证号" required placeholder="手工录入"></cell-input>
+			<cell-input disable v-model="sendData.licenseCode" title="电工证号" required placeholder="手工录入"></cell-input>
 		</div>
 		<!-- 签名 -->
 
@@ -58,7 +59,7 @@
 		<van-action-sheet v-model="showPicker" :actions="actions" @select="onSelect" />
 		<!-- 操作Popup -->
 		<van-popup v-model="isShowAction" position="bottom" class="action">
-			<button @click="postData">保存</button>
+			<button v-if="htStatus==='2'" @click="postData">保存</button>
 			<button @click="Next">工作流提交</button>
 			<button @click="closeAction">取消</button>
 		</van-popup>
@@ -70,39 +71,39 @@
 				<div class="head_3">确认人</div>
 			</div>
 			<div class="confirm_list">
-				<Signature :checked="checked[0] ? checked[0].checked : false" :img="checked[0] ? checked[0].img : ''" @checked="showSignature(0)"
+				<Signature :disable="htStatus!=='2'" :checked="checked[0] ? checked[0].checked : false" :img="checked[0] ? checked[0].img : ''" @checked="showSignature(0)"
 				 @cancel="signatureCancel(0)">
 					<span slot>安装临时线路人员持有电工作业操作证</span>
 				</Signature>
-				<Signature :checked="checked[1] ? checked[1].checked : false" :img="checked[1] ? checked[1].img : ''" @checked="showSignature(1)"
+				<Signature :disable="htStatus!=='2'" :checked="checked[1] ? checked[1].checked : false" :img="checked[1] ? checked[1].img : ''" @checked="showSignature(1)"
 				 @cancel="signatureCancel(1)">
 					<span slot>在防爆场所使用的临时电源、元器件和线路达到相应的防爆等级要求</span>
 				</Signature>
-				<Signature :checked="checked[2] ? checked[2].checked : false" :img="checked[2] ? checked[2].img : ''" @checked="showSignature(2)"
+				<Signature :disable="htStatus!=='2'" :checked="checked[2] ? checked[2].checked : false" :img="checked[2] ? checked[2].img : ''" @checked="showSignature(2)"
 				 @cancel="signatureCancel(2)">
 					<span slot>临时用电的单项和混用线路采用五线制</span>
 				</Signature>
-				<Signature :checked="checked[3] ? checked[3].checked : false" :img="checked[3] ? checked[3].img : ''" @checked="showSignature(3)"
+				<Signature :disable="htStatus!=='2'" :checked="checked[3] ? checked[3].checked : false" :img="checked[3] ? checked[3].img : ''" @checked="showSignature(3)"
 				 @cancel="signatureCancel(3)">
 					<span slot>临时用电线路在装置内不低于2.5m,道路不低于5m</span>
 				</Signature>
-				<Signature :checked="checked[4] ? checked[4].checked : false" :img="checked[4] ? checked[4].img : ''" @checked="showSignature(4)"
+				<Signature :disable="htStatus!=='2'" :checked="checked[4] ? checked[4].checked : false" :img="checked[4] ? checked[4].img : ''" @checked="showSignature(4)"
 				 @cancel="signatureCancel(4)">
 					<span slot>临时用电线路架空进线未采用裸线,未在树或脚手架上架设</span>
 				</Signature>
-				<Signature :checked="checked[5] ? checked[5].checked : false" :img="checked[5] ? checked[5].img : ''" @checked="showSignature(5)"
+				<Signature :disable="htStatus!=='2'" :checked="checked[5] ? checked[5].checked : false" :img="checked[5] ? checked[5].img : ''" @checked="showSignature(5)"
 				 @cancel="signatureCancel(5)">
 					<span slot>暗管埋设及地下电缆线路设有“走向标志”和“安全标志”,电缆埋深大于0.7m</span>
 				</Signature>
-				<Signature :checked="checked[6] ? checked[6].checked : false" :img="checked[6] ? checked[5].img : ''" @checked="showSignature(6)"
+				<Signature :disable="htStatus!=='2'" :checked="checked[6] ? checked[6].checked : false" :img="checked[6] ? checked[5].img : ''" @checked="showSignature(6)"
 				 @cancel="signatureCancel(6)">
 					<span slot>现场临时用配电盘、箱有防雨措施</span>
 				</Signature>
-				<Signature :checked="checked[7] ? checked[7].checked : false" :img="checked[7] ? checked[7].img : ''" @checked="showSignature(7)"
+				<Signature :disable="htStatus!=='2'" :checked="checked[7] ? checked[7].checked : false" :img="checked[7] ? checked[7].img : ''" @checked="showSignature(7)"
 				 @cancel="signatureCancel(7)">
 					<span slot>临时用电设施装有漏电保护器,移动工具、手持工具“一机一闸一保护”</span>
 				</Signature>
-				<Signature :checked="checked[8] ? checked[8].checked : false" :img="checked[8] ? checked[8].img : ''" @checked="showSignature(8)"
+				<Signature :disable="htStatus!=='2'" :checked="checked[8] ? checked[8].checked : false" :img="checked[8] ? checked[8].img : ''" @checked="showSignature(8)"
 				 @cancel="signatureCancel(8)">
 					<span slot>用电设备、线路容量、负荷符合要求</span>
 				</Signature>
@@ -116,24 +117,39 @@
 					</div>
 				</Signature> -->
 				
-				<!-- 其他安全措施 -->
-				<cell-textarea title="其他安全措施" required placeholder="请输入其他安全措施"></cell-textarea>
-				
-				<!-- 签字 -->
-				<cell-input title="签字" required placeholder="请签字"></cell-input>
-
+				<van-popup class="popup"
+                  v-model="signatureShow2"
+                  :close-on-click-overlay="false"
+                  position="bottom">
+          <Canvas ref="signature"
+                  @save="saveCanvas2"
+                  @cancel="cancelCanvas2"></Canvas>
+        </van-popup>
+        <cell-textarea :disable="htStatus!=='2'" v-model="sendData.otherSafety" title="其他安全措施" required placeholder="请输入其他安全措施"></cell-textarea>
+        <div class="signature" v-if="htStatus==='2'" @click="signatureShow2 = true">
+          <span>签字</span>
+          <van-image v-if="sendData.othercsComplier" style="width:40px;margin-left:30px" :src="sendData.othercsComplier"></van-image>
+          <van-icon style="float:right" name="edit" />
+          <span style="float:right;font-size:14px;margin-right:30px">{{sendData.othercsTime}}</span>
+        </div>
+        <div v-else class="signature">
+          <span>签字</span>
+          <van-image v-if="sendData.othercsComplier" style="width:40px;margin-left:30px" :src="sendData.othercsComplier"></van-image>
+          <van-icon style="float:right" name="edit" />
+          <span style="float:right;font-size:14px;margin-right:30px">{{sendData.othercsTime}}</span>
+        </div>
 
 			</div>
 
 			<div class="cell_group">
 				<!-- 临时用电作业初审人 -->
-				<cell-value title="临时用电作业初审人" :value="$userInfo.userName"></cell-value>
+				<cell-value :disable="htStatus!=='2'" title="临时用电作业初审人" :value="$userInfo.userName"></cell-value>
 				<!-- 电源接入点 -->
-				<cell-input title="电源接入点" required :value="$userInfo.userName"></cell-input>
+				<cell-input :disable="htStatus!=='2'" title="电源接入点" required :value="$userInfo.userName"></cell-input>
 				<!-- 临时用电接入人 -->
-				<cell-select-user title="临时用电接入人" required :storeModule="storeModule" storeKey="connectRen" v-model="sendData.connectRen"></cell-select-user>
+				<cell-select-user :disable="htStatus!=='2'" title="临时用电接入人" required :storeModule="storeModule" storeKey="connectRen" v-model="sendData.connectRen"></cell-select-user>
 				<!-- 仅用执行人电工账号 -->
-				<cell-input title="临时用电作业初审人" required :value="$userInfo.userName"></cell-input>
+				<cell-input :disable="htStatus!=='2'" title="临时用电作业初审人" required :value="$userInfo.userName"></cell-input>
 			</div>
 			<van-popup class="popup" v-model="signatureShow" :close-on-click-overlay="false" position="bottom">
 				<Canvas ref="signature" @save="saveCanvas" @cancel="cancelCanvas"></Canvas>
@@ -169,10 +185,14 @@
 					checked: false,
 					image: ""
 				}],
-				signatureShow: false,
+        signatureShow: false,
+        signatureShow2: false,
 				selectSignatureShow: Number,
 				otherSafe: '',
 				sendData: {
+          otherSafety:'',
+          othercsComplier:'',
+          othercsTime:'',
 					workContent: "", //作业内容
 					workLocation: "", //作业地点
 					powerType: "", //用电方式
@@ -228,7 +248,10 @@
 					}
 				],
 				isShowAction: false,
-				zypCode: 0
+        zypCode: 0,
+        actRuTask:'',
+        id:'',
+        htStatus:''
 			};
 		},
 		computed: mapState({
@@ -258,6 +281,18 @@
 		// 	this.$destroy("LinShi");
 		// },
 		methods: {
+      saveCanvas2(e) {
+        console.log(123)
+        console.log("e: ", e);
+        this.signatureShow2 = false;
+        this.sendData.othercsComplier = e;
+        this.sendData.othercsTime = this.$dayjs(new Date()).format("YYYY-MM-DD HH:mm")
+      },
+      // 取消签名
+      cancelCanvas2() {
+        console.log("取消签名");
+        this.signatureShow2 = false;
+      },
 			...mapMutations('linshi', {
 				setTag: 'setTag'
 			}),
@@ -265,78 +300,40 @@
 			 * 获取工作票内容
 			 */
       Next() {
-        if (!this.$route.query.zypCode) {
-          this.$notify("请先提交保存");
-          return;
-        } else {
-          console.log(123456)
-          this.$Toast.loading({
-            message: "加载中...",
-            forbidClick: true
-          });
-          this.$api.page_3
-            .htHseLsydzypListData({
-              zypCode : this.zypCode,
-              __sid: localStorage.getItem("JiaHuaSessionId")
-            })
-            .then(res => {
-              this.$Toast.clear()
-              if(res.list[0].actRuTask){
-                console.log(1)
-                let data = {
-                  'id':res.list[0].id,
-                  'flowKey':'htHseLsydzypService',
-                  'comment':'',
-                  'actRuTask.id':res.list[0].actRuTask.id,
-                  'btnSubmit':'审批',
-                  __sid: localStorage.getItem("JiaHuaSessionId")
-                }
-                this.$api.page_3.approve(data).then((ress)=>{
-                  console.log(ress)
-                  if(ress.groups){
-                    this.$router.push({name:'daibanren',query:{
-                      groups:ress.groups.join(','),
-                      taskId:ress.taskId,
-                      id:res.list[0].id,
-                      type:'htHseLsydzypService'
-                    }})
-                  }else{
-                    this.$router.replace({name:'linshi_list'})
-                  }
-                }).catch(() => this.$Toast.clear());
-              }else{
-                console.log(2)
-                let data = {
-                  'id':res.list[0].id,
-                  'flowKey':'htHseLsydzypService',
-                  __sid: localStorage.getItem("JiaHuaSessionId")
-                }
-                this.$api.page_3.start('lsydzyp/htHseLsydzyp',data).then((ress)=>{
-                  console.log(ress)
-                  if(ress.groups){
-                    this.$router.push({name:'daibanren',query:{
-                      groups:ress.groups.join(','),
-                      taskId:ress.taskId,
-                      id:res.list[0].id,
-                      type:'htHseLsydzypService'
-                    }})
-                  }else{
-                    this.$router.replace({name:'linshi_list'})
-                  }
-                }).catch(() => this.$Toast.clear());
+        console.log(this.actRuTask)
+        if (this.actRuTask === '') {
+          console.log(2)
+          let data = {
+            'id': this.id,
+            'flowKey': 'htHseLsydzypService',
+            __sid: localStorage.getItem("JiaHuaSessionId")
+          }
+          this.$api.page_3.start('lsydzyp/htHseLsydzyp', data).then((res) => {
+            if(res.result==='true'){
+              console.log(res)
+              if (res.groups) {
+                this.$router.push({
+                  name: 'daibanren', query: {
+                    groups: res.groups.join(','),
+                    taskId: res.taskId,
+                    id: this.id,
+                    type: 'htHseLsydzypService'
+                  }              })
+              } else {
+                this.$router.replace({ name: 'linshi_list' })
               }
-            })
-            .catch(() => this.$Toast.clear());
-          // this.$api.page_3
-          //   .start("dhzyp", {
-          //     id: this.oldInfo.id,
-          //     __sid: localStorage.getItem("JiaHuaSessionId")
-          //   })
-          //   .then(res => {
-          //     console.log("res: ", res);
-          //     this.$Toast.clear();
-          //   })
-          //   .catch(() => this.$Toast.clear());
+            }else{
+              this.$notify(res.message);
+            }
+          }).catch(() => this.$Toast.clear());
+        } else {
+          this.$router.push({
+            name: 'linshi_shenpi',
+            query: {
+              id: this.id,
+              actRuTask: this.actRuTask,
+            }
+          })
         }
       },
 			getData() {
@@ -347,7 +344,10 @@
 				this.$api.page_3
 					.htHseLsydzypListData(sendData)
 					.then(res => {
-						console.log(res)
+            console.log(res)
+            this.actRuTask = res.list[0].actRuTask?res.list[0].actRuTask.id:''
+            this.id = res.list[0].id
+            this.htStatus = res.list[0].htStatus
 						this.sendData.workContent = res.list[0].workContent;
 						this.sendData.workLocation = res.list[0].workLocation;
 						this.sendData.powerType = Number(res.list[0].powerType ? res.list[0].powerType : 0);
@@ -669,4 +669,12 @@
 			width: 300px;
 		}
 	}
+  .signature {
+    background-color: white;
+    padding: 1.25rem;
+    font-size:15px;
+    box-sizing: border-box;
+    align-items: center;
+    justify-content: space-between;
+  }
 </style>

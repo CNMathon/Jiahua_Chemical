@@ -234,6 +234,27 @@ const article = {
       qs.stringify(params)
     );
   },
+  //承包商项目
+  contractorProject(params) {
+    return axios.post(
+      `${base.sq}proinfo/htCbsXxglProjectInfo/listData2?htStatus=3`,
+      qs.stringify(params)
+    );
+  },
+  //违章考核标准
+  violationAssessmentCriteria(params) {
+    return axios.post(
+      `${base.sq}breakrulesstandard/breakRulesasseaStandard/listDataLayerData2?normStatus=3`,
+      qs.stringify(params)
+    );
+  },
+  //违章项目
+  violationProject(params) {
+    return axios.post(
+      `${base.sq}breakrulesstandard/breakRulesasseaStandard/getItemByStandId`,
+      qs.stringify(params)
+    );
+  },
   //获取部门数据
   getPosts(params) {
     return axios.get(`${base.sq}act/core/client/getPosts`, { params: params });
@@ -275,7 +296,19 @@ const article = {
   getTaskById(params) {
     console.log("params: ", params);
     return axios.get(`${base.mes3}GetTaskById?${qs.stringify(params)}`);
-  }
+  },
+  //工单列表
+  	deviceWorkOrderListData(params){
+		 return axios.get(`${base.sq}workorder/deviceWorkOrder/listData.json?${qs.stringify(params)}`);
+	},
+	//工单保存 
+	deviceWorkOrderSave(params){
+		 return axios.post(`${base.sq}workorder/deviceWorkOrder/save?${qs.stringify(params)}`);
+	}, 
+	//空间设备列表 
+	 deviceSpacelistData(params){
+	 	 return axios.get(`${base.sq}deviceinfo/deviceSpace/listData.json?${qs.stringify(params)}`);
+	 },
 };
 
 export default article;

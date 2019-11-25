@@ -12,7 +12,9 @@
   </div>
 </template>
 <script>
+import base  from "@/api/request/base.js";
 import { mixin } from "@/mixin/mixin";
+console.log('base', base);
 export default {
   name: "yuan_liao",
   mixins: [mixin],
@@ -22,32 +24,32 @@ export default {
         {
           name: "硫磺（硫酸厂）",
           url:
-            "http://mes1.jhec.com.cn:8080/webroot/decision/view/report?viewlet=mobile_apps%252FLH.cpt&ref_t=design&op=write&ref_c=eb939190-331f-45fe-aaba-90cd2968d07d"
+            `${base.sq2}webroot/decision/view/report?viewlet=mobile_apps%252FLH.cpt&ref_t=design&op=write&ref_c=eb939190-331f-45fe-aaba-90cd2968d07d`
         },
         {
           name: "棕榈仁油（脂肪醇厂）",
           url:
-            "http://mes1.jhec.com.cn:8080/webroot/decision/view/report?viewlet=mobile_apps%252FZLRY.cpt&ref_t=design&op=write&ref_c=eb939190-331f-45fe-aaba-90cd2968d07d"
+            `${base.sq2}webroot/decision/view/report?viewlet=mobile_apps%252FZLRY.cpt&ref_t=design&op=write&ref_c=eb939190-331f-45fe-aaba-90cd2968d07d`
         },
         {
           name: "工业盐（烧碱厂）",
           url:
-            "http://mes1.jhec.com.cn:8080/webroot/decision/view/report?viewlet=mobile_apps%252FGYY.cpt&ref_t=design&op=write&ref_c=eb939190-331f-45fe-aaba-90cd2968d07d"
+            `${base.sq2}webroot/decision/view/report?viewlet=mobile_apps%252FGYY.cpt&ref_t=design&op=write&ref_c=eb939190-331f-45fe-aaba-90cd2968d07d`
         },
         {
           name: "硝酸（新材料厂）",
           url:
-            "http://mes1.jhec.com.cn:8080/webroot/decision/view/report?viewlet=mobile_apps%252FXS.cpt&ref_t=design&op=write&ref_c=eb939190-331f-45fe-aaba-90cd2968d07d"
+            `${base.sq2}webroot/decision/view/report?viewlet=mobile_apps%252FXS.cpt&ref_t=design&op=write&ref_c=eb939190-331f-45fe-aaba-90cd2968d07d`
         },
         {
           name: "甲苯（新材料厂）",
           url:
-            "http://mes1.jhec.com.cn:8080/webroot/decision/view/report?viewlet=mobile_apps%252FXS.cpt&ref_t=design&op=write&ref_c=eb939190-331f-45fe-aaba-90cd2968d07d"
+            `${base.sq2}webroot/decision/view/report?viewlet=mobile_apps%252FXS.cpt&ref_t=design&op=write&ref_c=eb939190-331f-45fe-aaba-90cd2968d07d`
         },
         {
           name: "工业二氯甲烷（新材料厂）",
           url:
-            "http://mes1.jhec.com.cn:8080/webroot/decision/view/report?viewlet=mobile_apps%252FELJW.cpt&ref_t=design&op=write&ref_c=eb939190-331f-45fe-aaba-90cd2968d07d"
+            `${base.sq2}webroot/decision/view/report?viewlet=mobile_apps%252FELJW.cpt&ref_t=design&op=write&ref_c=eb939190-331f-45fe-aaba-90cd2968d07d`
         }
       ]
     };

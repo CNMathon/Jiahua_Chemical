@@ -24,13 +24,15 @@
 			<cell-select-tag required title="涉及其他特殊作业" storeKey="specialWork" :tagList="sendData.specialWork" :showList="list_1"
 			 :storeModule="storeModule"></cell-select-tag>
 			<!-- 危害辨识 -->
-			<cell-select-tag required title="危害辨识" storeKey="harmAnalise" :tagList="sendData.harmAnalise" :showList="list_2" :storeModule="storeModule"></cell-select-tag>
+			<cell-select-tag required title="危害辨识" storeKey="harmAnalise" :tagList="sendData.harmAnalise" :showList="list_2"
+			 :storeModule="storeModule"></cell-select-tag>
 			<!-- 作业开始时间 -->
 			<cell-time v-model="sendData.startTime" title="作业开始时间" required></cell-time>
 			<!-- 作业结束时间 -->
 			<cell-time v-model="sendData.endTime" title="作业结束时间" required></cell-time>
 			<!-- 作业部门负责人 -->
-			<cell-select-user title="作业部门负责人" required :storeModule="storeModule" :value="sendData.workDeptLeader" storeKey="workDeptLeader" v-model="sendData.workDeptLeader"></cell-select-user>
+			<cell-select-user title="作业部门负责人" required :storeModule="storeModule" :value="sendData.workDeptLeader" storeKey="workDeptLeader"
+			 v-model="sendData.workDeptLeader"></cell-select-user>
 			<!-- 监护人 -->
 			<cell-select-user title="监护人" required :storeModule="storeModule" storeKey="guarder" v-model="sendData.guarder"></cell-select-user>
 			<!-- 作业人 -->
@@ -199,8 +201,8 @@
 						name: "取消",
 						index: 2
 					}
-        ],
-        num:0
+				],
+				num: 0
 			};
 		},
 		components: {
@@ -208,19 +210,19 @@
 			Canvas,
 			StepperPlus,
 			Signature
-    },
+		},
 		computed: mapState({
 			specialWork: state => state.gaochu.specialWork,
 			harmAnalise: state => state.gaochu.harmAnalise,
 			guarder: state => state.gaochu.guarder,
 			workDeptLeader: state => state.gaochu.workDeptLeader,
 			worker: state => state.gaochu.worker
-    }),
+		}),
 		mounted() {
-			
+			console.log("monuuisda")
 		},
 		// beforeDestroy() {
-    //   console.log('destroy')
+		//   console.log('destroy')
 		// 	this.$store.dispatch("gaochu/cleanState");
 		// },
 		methods: {
@@ -313,142 +315,162 @@
 				this.$api.page_3
 					.htHseUpworkticketListData(sendData)
 					.then(res => {
-            console.log(res)
+						console.log(res)
 						const info = res.list[0];
-						
-						this.sendData.id=info.id;
-						
+
+						this.sendData.id = info.id;
+
 						this.sendData.workContent = info.workContent;
 						this.sendData.workAddress = info.workAddress;
 						this.sendData.workHeight = Number(info.workHeight);
 						this.sendData.heightType = Number(info.heightType);
 						this.sendData.startTime = info.startTime;
-            this.sendData.endTime = info.endTime;
-            info.specialWork.split(',').forEach((item)=>{
-              console.log(item)
-              this.sendData.specialWork.push(item-1)
-            })
-						info.harmAnalise.split(',').forEach((item)=>{
-              console.log(item)
-              this.sendData.harmAnalise.push(item-1)
-            })
-						
-						let workDeptLeader=[];
-						info.workDeptLeader.split(",").map(items=>{
+						this.sendData.endTime = info.endTime;
+						info.specialWork.split(',').forEach((item) => {
+							console.log(item)
+							this.sendData.specialWork.push(item - 1)
+						})
+						info.harmAnalise.split(',').forEach((item) => {
+							console.log(item)
+							this.sendData.harmAnalise.push(item - 1)
+						})
+
+						let workDeptLeader = [];
+						info.workDeptLeaderName.split(",").map(items => {
 							workDeptLeader.push({
-								userName:items
+								userName: items
 							});
 						})
-						
-						let worker=[];
-						info.worker.split(",").map(items=>{
+
+						let worker = [];
+						info.workerName.split(",").map(items => {
 							worker.push({
-								userName:items
+								userName: items
 							});
 						})
-						
-						let guarder=[];
-						info.guarder.split(",").map(items=>{
+
+						let guarder = [];
+						info.guarderName.split(",").map(items => {
 							guarder.push({
-								userName:items
+								userName: items
 							});
 						})
-						
+
 						this.sendData.workDeptLeader = workDeptLeader;
 						this.sendData.worker = worker;
-						this.sendData.guarder =guarder;
-						
-						let specialWork=[];
-						this.sendData.specialWork.map(items=>{
+						this.sendData.guarder = guarder;
+
+						let specialWork = [];
+						this.sendData.specialWork.map(items => {
 							specialWork.push(this.list_1[items]);
 						})
-						let harmAnalise=[];
-						this.sendData.harmAnalise.map(items=>{
+						let harmAnalise = [];
+						this.sendData.harmAnalise.map(items => {
 							harmAnalise.push(this.list_2[items]);
 						})
-						this.setTag({tags:{key:"harmAnalise",value:harmAnalise}});
-						this.setTag({tags:{key:"specialWork",value:specialWork}});
+						this.setTag({
+							tags: {
+								key: "harmAnalise",
+								value: harmAnalise
+							}
+						});
+						this.setTag({
+							tags: {
+								key: "specialWork",
+								value: specialWork
+							}
+						});
 
 						console.log(this.sendData);
 
 					})
 					.catch(() => {});
-      },
-      Next() {
-        if (!this.$route.query.gczyCode) {
-          this.$notify("请先提交保存");
-          return;
-        } else {
-          console.log(123456)
-          this.$Toast.loading({
-            message: "加载中...",
-            forbidClick: true
-          });
-          this.$api.page_3
-            .htHseUpworkticketListData({
-              gczyCode : this.gczyCode,
-              __sid: localStorage.getItem("JiaHuaSessionId")
-            })
-            .then(res => {
-              this.$Toast.clear()
-              if(res.list[0].actRuTask){
-                console.log(1)
-                let data = {
-                  'id':res.list[0].id,
-                  'flowKey':'htHseUpworkticketService',
-                  'comment':'',
-                  'actRuTask.id':res.list[0].actRuTask.id,
-                  'btnSubmit':'审批',
-                  __sid: localStorage.getItem("JiaHuaSessionId")
-                }
-                this.$api.page_3.approve(data).then((ress)=>{
-                  console.log(ress)
-                  if(ress.groups){
-                    this.$router.push({name:'daibanren',query:{
-                      groups:ress.groups.join(','),
-                      taskId:ress.taskId,
-                      id:res.list[0].id,
-                      type:'htHseUpworkticketService'
-                    }})
-                  }else{
-                    this.$router.replace({name:'gaochu_list'})
-                  }
-                }).catch(() => this.$Toast.clear());
-              }else{
-                console.log(2)
-                let data = {
-                  'id':res.list[0].id,
-                  'flowKey':'htHseUpworkticketService',
-                  __sid: localStorage.getItem("JiaHuaSessionId")
-                }
-                this.$api.page_3.start('heightworkticket/htHseUpworkticket',data).then((ress)=>{
-                  console.log(ress)
-                  if(ress.groups){
-                    this.$router.push({name:'daibanren',query:{
-                      groups:ress.groups.join(','),
-                      taskId:ress.taskId,
-                      id:res.list[0].id,
-                      type:'htHseUpworkticketService'
-                    }})
-                  }else{
-                    this.$router.replace({name:'gaochu_list'})
-                  }
-                }).catch(() => this.$Toast.clear());
-              }
-            })
-            .catch(() => this.$Toast.clear());
-          // this.$api.page_3
-          //   .start("dhzyp", {
-          //     id: this.oldInfo.id,
-          //     __sid: localStorage.getItem("JiaHuaSessionId")
-          //   })
-          //   .then(res => {
-          //     console.log("res: ", res);
-          //     this.$Toast.clear();
-          //   })
-          //   .catch(() => this.$Toast.clear());
-        }
-      },
+			},
+			Next() {
+				if (!this.$route.query.gczyCode) {
+					this.$notify("请先提交保存");
+					return;
+				} else {
+					console.log(123456)
+					this.$Toast.loading({
+						message: "加载中...",
+						forbidClick: true
+					});
+					this.$api.page_3
+						.htHseUpworkticketListData({
+							gczyCode: this.gczyCode,
+							__sid: localStorage.getItem("JiaHuaSessionId")
+						})
+						.then(res => {
+							this.$Toast.clear()
+							if (res.list[0].actRuTask) {
+								console.log(1)
+								let data = {
+									'id': res.list[0].id,
+									'flowKey': 'htHseUpworkticketService',
+									'comment': '',
+									'actRuTask.id': res.list[0].actRuTask.id,
+									'btnSubmit': '审批',
+									__sid: localStorage.getItem("JiaHuaSessionId")
+								}
+								this.$api.page_3.approve(data).then((ress) => {
+									console.log(ress)
+									if (ress.groups) {
+										this.$router.push({
+											name: 'daibanren',
+											query: {
+												groups: ress.groups.join(','),
+												taskId: ress.taskId,
+												id: res.list[0].id,
+												type: 'htHseUpworkticketService'
+											}
+										})
+									} else {
+										this.$router.replace({
+											name: 'gaochu_list'
+										})
+									}
+								}).catch(() => this.$Toast.clear());
+							} else {
+								console.log(2)
+								let data = {
+									'id': res.list[0].id,
+									'flowKey': 'htHseUpworkticketService',
+									__sid: localStorage.getItem("JiaHuaSessionId")
+								}
+								this.$api.page_3.start('heightworkticket/htHseUpworkticket', data).then((ress) => {
+									console.log(ress)
+									if (ress.groups) {
+										this.$router.push({
+											name: 'daibanren',
+											query: {
+												groups: ress.groups.join(','),
+												taskId: ress.taskId,
+												id: res.list[0].id,
+												type: 'htHseUpworkticketService'
+											}
+										})
+									} else {
+										this.$router.replace({
+											name: 'gaochu_list'
+										})
+									}
+								}).catch(() => this.$Toast.clear());
+							}
+						})
+						.catch(() => this.$Toast.clear());
+					// this.$api.page_3
+					//   .start("dhzyp", {
+					//     id: this.oldInfo.id,
+					//     __sid: localStorage.getItem("JiaHuaSessionId")
+					//   })
+					//   .then(res => {
+					//     console.log("res: ", res);
+					//     this.$Toast.clear();
+					//   })
+					//   .catch(() => this.$Toast.clear());
+				}
+			},
 			// pageBack() {
 			// 	this.$router.back();
 			// },
@@ -462,12 +484,12 @@
 				let sendData = JSON.parse(JSON.stringify(this.sendData));
 				sendData.specialWork = this.stringData("specialWork", "list_1");
 				sendData.harmAnalise = this.stringData("harmAnalise", "list_2");
-				sendData.guarder = this.userString(sendData.guarder, "userName");
+				sendData.guarder = this.userString(sendData.guarder, "userCode");
 				sendData.workDeptLeader = this.userString(
 					sendData.workDeptLeader,
-					"userName"
+					"userCode"
 				);
-				sendData.worker = this.userString(sendData.worker, "userName");
+				sendData.worker = this.userString(sendData.worker, "userCode");
 				sendData.applyDept = this.$userInfo.officeName;
 				sendData.applicant = this.$userInfo.userName;
 				sendData.__sid = this.$userInfo.sessionId;
@@ -664,7 +686,7 @@
 								this.$Toast.success({
 									message: "提交成功",
 									onClose() {
-									  that.pageBack();
+										that.pageBack();
 									}
 								});
 							})
@@ -742,26 +764,31 @@
 			worker(res) {
 				this.sendData.worker = res;
 			}
-    },
+		},
 		activated() {
-      console.log(window.history)
-      console.log(99999999999999999)
-      // 获取显示List序列
+			console.log(window.history)
+			console.log(99999999999999999)
+			// 获取显示List序列
 			this.gczyCode = this.$route.query.gczyCode || "";
 			// 设置显示List
 			this.status = this.$route.query.status || 0;
-			if (this.gczyCode&&sessionStorage.getItem('flag')==='1') {
-        console.log(999)
-        this.getData();
-        sessionStorage.removeItem('flag')
-			}
+			if (this.gczyCode && sessionStorage.getItem('flag') === '1') {
+        this.sendData.specialWork = [] //涉及其他作业
+				this.sendData.harmAnalise = []
+				console.log(999)
+				this.getData();
+				sessionStorage.removeItem('flag')
+      }
+      if(this.gczyCode==='' && sessionStorage.getItem('flag') === '1'){
+        this.clearData()
+      }
 			this.sendData.id = "";
 			let zypId = this.$route.query.id;
-      let zypStatus = this.$route.query.status;
-      let isInitData = false
-      if(this.$route.query.moreInfo){
-        let isInitData = this.$route.query.moreInfo.isInitData;
-      }
+			let zypStatus = this.$route.query.status;
+			let isInitData = false
+			if (this.$route.query.moreInfo) {
+				let isInitData = this.$route.query.moreInfo.isInitData;
+			}
 			if (zypStatus == 1 && isInitData == true) {
 				this.sendData.id = zypId;
 				this.$api.page_3

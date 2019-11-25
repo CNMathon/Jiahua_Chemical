@@ -280,7 +280,7 @@
 
 						let hazardIdentification = [];
 						res.list[0].hazardIdentification.split(",").map(items => {
-							hazardIdentification.push(this.list_1[items]);
+							hazardIdentification.push(this.list_1[items-1]);
 						})
 						this.setTag({
 							tags: {

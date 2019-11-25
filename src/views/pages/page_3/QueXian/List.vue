@@ -110,7 +110,7 @@ export default {
   // justify-content: space-between;
   width: 100%;
   background-color: #6096f8;
-  padding: 22px 31px 15px 34px;
+  padding: 22px 31px 22px 34px;
   color: #ffffff;
   border-radius: 10px;
 }
@@ -154,9 +154,11 @@ export default {
   ul {
     display: flex;
     justify-content: space-around;
+    padding: 0 31px 0 34px;
     li {
       width: 25%;
       text-align: center;
+      font-size: 25px;
     }
   }
 }
@@ -171,9 +173,12 @@ export default {
 .top-item {
   width: 25%;
   text-align: center;
+  line-height: 40px;
+  font-size: 27px;
 }
 
 .bottom-item {
+  font-size: 25px;
   overflow:hidden;
   text-overflow:ellipsis;
   white-space:nowrap

@@ -2,12 +2,12 @@
   <div class="relijixie-list" :class="{'complete': complete}" @click="goDetails">
     <div class="relijixie-list-content">
       <div>
-        <span>设备位号：03040898</span>
+        <span>设备位号：{{item.deviceSpaceId}}</span>
       </div>
-      <div><span>设备名称：安全阀</span><span style="margin-left:20px">维修类别：日常维修</span></div>
-      <div>工单名称：安全阀日常拆检维修</div>
+      <div><span>设备名称：安全阀</span><span style="margin-left:20px">维修类别：{{item.repairType | repairTypeFilter}}</span></div>
+      <div>工单名称：{{item.workOrderName}}</div>
     </div>
-    <div class="relijixie-list-auditBtn">{{zypztList[1].name}}</div>
+    <div class="relijixie-list-auditBtn">{{zypztList[item.htStatus].name}}</div>
   </div>
 </template>
 
@@ -18,7 +18,18 @@ export default {
     complete: {
       type: Boolean,
       default: false
-    }
+    },
+	item:{
+		type:Object,
+		default:()=>{
+			return {};
+		}
+	}
+  },
+  filters:{
+	  repairTypeFilter(val){
+		  return val+"aa";
+	  }
   },
   data() {
     return {

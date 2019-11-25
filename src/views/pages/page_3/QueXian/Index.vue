@@ -20,7 +20,12 @@
         v-model="sendData.findPeopleName"
       />
       <!-- 缺陷描述 -->
-      <cell-textarea required v-model="sendData.description" title="缺陷描述" placeholder="请输入缺陷描述" />
+      <cell-textarea
+        required
+        v-model="sendData.description"
+        title="缺陷描述"
+        placeholder="请输入缺陷描述"
+      />
       <!-- 缺陷类型 -->
       <cell-picker
         v-model="sendData.defectType"
@@ -72,22 +77,22 @@
       <button @click="postData">保存</button>
       <button @click="closeAction">取消</button>
     </van-popup>
-    <!-- 缺陷类型 -->
-    <van-action-sheet
+    <!-- 缺陷类型 - old -->
+    <!-- <van-action-sheet
       v-model="defectTypeShow"
       :actions="defectTypeColumns"
       cancel-text="取消"
       @select="onSelect"
       @cancel="defectTypeShow = false"
-    />
+    /> -->
     <!-- 缺陷类别 -->
-    <van-action-sheet
-      v-model="categoryShow"
+    <!-- <van-action-sheet
+      v-model="scategoryShow"
       :actions="categoryColumns"
       cancel-text="取消"
       @select="onSelects"
       @cancel="categoryShow = false"
-    />
+    /> -->
   </div>
 </template>
 <script>
@@ -101,11 +106,12 @@ export default {
       isShowAction: false,
       storeModule: "quexian",
       sendData: {
-        description: "", //缺陷内容
-        findDate: "", //发现时间
-        defectType: {}, //缺陷类型
-        category: {}, //缺陷类别
-        findPeopleName: [] //发现人
+        deviceName: "", // 空间设备
+        description: "", // 缺陷描述
+        findDate: "", // 发现时间
+        defectType: {}, // 缺陷类型
+        category: {}, // 缺陷类别
+        findPeopleName: [] // 发现人
       },
       defectTypeShow: false,
       categoryShow: false,
@@ -125,20 +131,23 @@ export default {
       fileList: []
     };
   },
-  computed: mapState({
-    findPeopleName: state => state.quexian.findPeopleName
-  }),
+  // computed: mapState({
+  //   findPeopleName: state => state.quexian.findPeopleName
+  // }),
   computed: {
     defectTypeColumnsName() {
       return this.defectTypeColumns.map(res => res.name);
     },
     categoryColumnsName() {
       return this.categoryColumns.map(res => res.name);
-    }
+    },
+    ...mapState({
+      findPeopleName: state => state.quexian.findPeopleName
+    }),
   },
   methods: {
     afterRead(file) {
-      console.log(file)
+      console.log(file);
     },
     openAction() {
       this.isShowAction = true;
@@ -152,30 +161,31 @@ export default {
       let sendData = JSON.parse(JSON.stringify(this.sendData));
       sendData.findPeopleName = this.userString(
         sendData.findPeopleName,
-        "userName"
+        "userCode"
       );
-      sendData.defectType = sendData.defectType.index;
-      sendData.category = sendData.category.index;
+      // sendData.defectType = sendData.defectType.index;
+      // sendData.category = sendData.category.index;
       sendData.__sid = this.$userInfo.sessionId;
-      this.$api.page_3
-        .htDeviceDefectSave(sendData)
-        .then(res => {
-          console.log("res: ", res);
-          this.$Toast.success({
-            message: "提交成功",
-            onClose() {
-              that.sendData = {
-                description: "", //缺陷内容
-                findDate: "", //发现时间
-                defectType: {}, //缺陷类型
-                category: {}, //缺陷类别
-                findPeopleName: [] //发现人
-              };
-              that.pageBack();
-            }
-          });
-        })
-        .catch(() => {});
+      console.log(sendData);
+      // this.$api.page_3
+      //   .htDeviceDefectSave(sendData)
+      //   .then(res => {
+      //     console.log("res: ", res);
+      //     this.$Toast.success({
+      //       message: "提交成功",
+      //       onClose() {
+      //         that.sendData = {
+      //           description: "", //缺陷内容
+      //           findDate: "", //发现时间
+      //           defectType: {}, //缺陷类型
+      //           category: {}, //缺陷类别
+      //           findPeopleName: [] //发现人
+      //         };
+      //         that.pageBack();
+      //       }
+      //     });
+      //   })
+      //   .catch(() => {});
     },
     onSelect(item) {
       this.sendData.defectType = item;
