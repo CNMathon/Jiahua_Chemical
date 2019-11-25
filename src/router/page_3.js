@@ -785,6 +785,14 @@ const routes = {
           }
         },
         {
+          path: "/page_3/quexian/select_device",
+          name: "SelectDevice",
+          component: () => import("@/components/Cell/CellSelectDevices.vue"),
+          meta: {
+            keepAlive: false //此组件需要被缓存
+          }
+        },
+        {
           path: "/page_3/quexian/list",
           name: "quexiano_list",
           component: () => import("../views/pages/page_3/QueXian/List.vue"),
@@ -933,7 +941,7 @@ const routes = {
           }
         }
       ]
-    }
+    },
   ]
 };
 

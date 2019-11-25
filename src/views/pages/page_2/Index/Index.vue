@@ -238,31 +238,31 @@ export default {
         {
           text: "动力中心",
           color: "rgba(23, 193, 149, 0.1)",
-          router: "../page_1/dongli",
+          router: "/dongli",
           query: {}
         },
         {
           text: "烧碱",
           color: "rgba(238, 116, 95, 0.1)",
-          router: "../page_1/shaojian",
+          router: "/shaojian",
           query: {}
         },
         {
           text: "脂肪醇",
           color: "rgba(237, 246, 252, 1)",
-          router: "../page_1/zhifangchun",
+          router: "/zhifangchun",
           query: {}
         },
         {
           text: "新材料",
           color: "rgba(78,169,232,0.1)",
-          router: "../page_1/xincailiao_1",
+          router: "/xincailiao_1",
           query: {}
         },
         {
           text: "硫酸",
           color: "rgba(96,150,248,0.1);",
-          router: "../page_1/liusuan_1",
+          router: "/liusuan_1",
           query: {
             mode: 1
           }

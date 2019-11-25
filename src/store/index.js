@@ -38,7 +38,7 @@ export default new Vuex.Store({
     relijixie,
     dianqi,
     dianqi2,
-	  weizhang
+	weizhang
   },
   strict: debug
 });

@@ -34,7 +34,11 @@
     <div class="list">
       <van-list>
         <!-- 多选 -->
-        <van-checkbox-group v-model="result" v-if="!$route.query.radio && selectUser" :max="$route.query.max">
+        <van-checkbox-group
+          v-model="result"
+          v-if="!$route.query.radio && selectUser"
+          :max="$route.query.max"
+        >
           <van-cell-group>
             <van-cell v-for="(item, index) in list" clickable :key="item.id" @click="toggle(index)">
               <template slot="title">
@@ -78,7 +82,10 @@
         </van-radio-group>
       </van-list>
     </div>
-    <div class="action" v-if="!$route.query.radio" @click="pageBack">确定<span v-if="!$route.query.radio && selectUser">({{ result.length }}/{{ $route.query.max }})</span></div>
+    <div class="action" v-if="!$route.query.radio" @click="pageBack">
+      确定
+      <span v-if="!$route.query.radio && selectUser">({{ result.length }}/{{ $route.query.max }})</span>
+    </div>
     <div class="action" v-else @click="pageBack">确定</div>
   </div>
 </template>
@@ -106,7 +113,7 @@ export default {
     this.storeKey = this.$route.query.storeKey;
     this.results = this.$store.state[this.storeModule][this.storeKey];
     this.officeTreeData();
-    // console.log(this.storeKey)
+    //
   },
   methods: {
     toggleData(data, index) {
@@ -159,10 +166,8 @@ export default {
           __sid: this.$userInfo.sessionId
         })
         .then(res => {
-          console.log("获得组织列表树", res);
           // 数据全部加载完成
           this.cacheAllList = this.list = this.organizationList(res, "0");
-          console.log("list", this.list);
         });
     },
     // 获取用户列表
@@ -170,36 +175,27 @@ export default {
       let sendData = {
         userName: "",
         refName: this.refName,
-        employee: {
-          company: {
-            companyName: this.employeeCompanyCompanyName
-          },
-          office: {
-            officeName: this.employeeOfficeOfficeName
-          }
-        },
+        "employee.company.companyName": this.employeeCompanyCompanyName,
+        "employee.office.officeName": this.employeeOfficeOfficeName,
         __sid: this.$userInfo.sessionId
       };
       this.$api.common
         .empUserList(sendData)
         .then(res => {
-          console.log("获得组织---列表", res);
           this.list = res.list.map(item => {
             let newItem = {};
             item.avatarUrl =
-            this.$imageUrl + item.avatarUrl.replace("/ctxPath", "");
+              this.$imageUrl + item.avatarUrl.replace("/ctxPath", "");
             newItem.avatarUrl = item.avatarUrl;
             newItem.userName = item.userName;
             newItem.userCode = item.userCode;
             newItem.fullName = item.refObj.office.officeName;
             return newItem;
-          });;
+          });
           //  开始选择人物
           this.selectUser = true;
         })
-        .catch(() => {
-          console.log("???报错");
-        });
+        .catch(() => {});
     },
     //  创建一个树形结构
     organizationList(res, id) {
@@ -221,10 +217,9 @@ export default {
         obj.value = [];
         obj.value.push(this.list[this.radio]);
       }
-      console.log(this.storeModule);
-      console.log(obj);
+
       this.$store.dispatch(`${this.storeModule}/changTag`, obj);
-      console.log(this.$store.state);
+
       this.$router.back();
     }
   }

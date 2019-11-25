@@ -298,17 +298,29 @@ const article = {
     return axios.get(`${base.mes3}GetTaskById?${qs.stringify(params)}`);
   },
   //工单列表
-  	deviceWorkOrderListData(params){
-		 return axios.get(`${base.sq}workorder/deviceWorkOrder/listData.json?${qs.stringify(params)}`);
-	},
-	//工单保存 
-	deviceWorkOrderSave(params){
-		 return axios.post(`${base.sq}workorder/deviceWorkOrder/save?${qs.stringify(params)}`);
-	}, 
-	//空间设备列表 
-	 deviceSpacelistData(params){
-	 	 return axios.get(`${base.sq}deviceinfo/deviceSpace/listData.json?${qs.stringify(params)}`);
-	 },
+  deviceWorkOrderListData(params) {
+    return axios.get(`${base.sq}workorder/deviceWorkOrder/listData.json?${qs.stringify(params)}`);
+  },
+  //工单保存 
+  deviceWorkOrderSave(params) {
+    return axios.post(`${base.sq}workorder/deviceWorkOrder/save?${qs.stringify(params)}`);
+  },
+  //空间设备列表 
+  deviceSpacelistData(params) {
+    return axios.get(`${base.sq}deviceinfo/deviceSpace/listData?${qs.stringify(params)}`);
+  },
+  // 文件上传
+  fileUpload(params) {
+    return axios.post(`${base.sq}file/upload`,
+      qs.stringify(params),
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          "__sid": localStorage.JiaHuaSessionId
+        }
+      }
+    );
+  },
 };
 
 export default article;

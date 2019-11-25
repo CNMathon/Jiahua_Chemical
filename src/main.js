@@ -18,6 +18,7 @@ import CellSelectUser from "./components/Cell/CellSelectUser.vue";
 import CellSelectDepartment from "./components/Cell/CellSelectDepartment.vue";
 import CellSelectUsers from "./components/Cell/CellSelectUsers.vue";
 import CellSelectTag from "./components/Cell/CellSelectTag.vue";
+import CellSelectDevice from "./components/Cell/CellSelectDevice.vue";
 import SelectOrganization from "./components/Organization/SelectOrganization.vue";
 import JFilter from "./components/Filter/Filter.vue";
 import JFilterItem from "./components/Filter/FilterItem.vue";
@@ -27,6 +28,7 @@ import FilterSearch from "./components/Filter/FilterSearch.vue";
 import FilterBar from "./components/Filter/FilterBar.vue";
 import Action from "./components/action/Index.vue";
 import dayjs from "dayjs";
+import md5 from "js-md5";
 import "video.js/dist/video-js.css";
 import api from "./api"; // 导入api接口
 import { Toast } from "vant";
@@ -39,6 +41,7 @@ Vue.prototype.$api = api; // 将api挂载到vue的原型上
 Vue.prototype.$Toast = Toast;
 Vue.prototype.$Dialog = Dialog;
 Vue.prototype.$dayjs = dayjs; //全局挂载day.js
+Vue.prototype.$md5 = md5; //全局挂载js-md5
 Vue.prototype.$Notify = Notify;
 Vue.prototype.$echarts = echarts;
 Vue.prototype.$imageUrl = "http://47.96.148.87:8980/js"; // 将api挂载到vue的原型上
@@ -58,6 +61,7 @@ Vue.component("cell-select-user", CellSelectUser);
 Vue.component("cell-select-department", CellSelectDepartment);
 Vue.component("cell-select-users", CellSelectUsers);
 Vue.component("cell-select-tag", CellSelectTag);
+Vue.component("cell-select-device", CellSelectDevice);
 Vue.component("j-filter", JFilter);
 Vue.component("j-filter-bar", FilterBar);
 Vue.component("j-filter-item", JFilterItem);

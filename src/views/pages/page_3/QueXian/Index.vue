@@ -10,7 +10,13 @@
     />
     <div class="cell_group">
       <!-- 空间设备 -->
-      <cell-input v-model="sendData.dtSite" title="空间设备" required placeholder="输入设备名" />
+      <cell-select-device
+        title="空间设备"
+        required
+        :storeModule="storeModule"
+        storeKey="deviceName"
+        v-model="sendData.deviceName"
+      />
       <!-- 发现人 -->
       <cell-select-user
         title="发现人"
@@ -20,12 +26,7 @@
         v-model="sendData.findPeopleName"
       />
       <!-- 缺陷描述 -->
-      <cell-textarea
-        required
-        v-model="sendData.description"
-        title="缺陷描述"
-        placeholder="请输入缺陷描述"
-      />
+      <cell-textarea required v-model="sendData.description" title="缺陷描述" placeholder="请输入缺陷描述" />
       <!-- 缺陷类型 -->
       <cell-picker
         v-model="sendData.defectType"
@@ -77,6 +78,7 @@
       <button @click="postData">保存</button>
       <button @click="closeAction">取消</button>
     </van-popup>
+    <button @click="testme">testme</button>
     <!-- 缺陷类型 - old -->
     <!-- <van-action-sheet
       v-model="defectTypeShow"
@@ -84,7 +86,7 @@
       cancel-text="取消"
       @select="onSelect"
       @cancel="defectTypeShow = false"
-    /> -->
+    />-->
     <!-- 缺陷类别 -->
     <!-- <van-action-sheet
       v-model="scategoryShow"
@@ -92,7 +94,7 @@
       cancel-text="取消"
       @select="onSelects"
       @cancel="categoryShow = false"
-    /> -->
+    />-->
   </div>
 </template>
 <script>
@@ -106,7 +108,7 @@ export default {
       isShowAction: false,
       storeModule: "quexian",
       sendData: {
-        deviceName: "", // 空间设备
+        deviceName: [], // 空间设备
         description: "", // 缺陷描述
         findDate: "", // 发现时间
         defectType: {}, // 缺陷类型
@@ -131,9 +133,6 @@ export default {
       fileList: []
     };
   },
-  // computed: mapState({
-  //   findPeopleName: state => state.quexian.findPeopleName
-  // }),
   computed: {
     defectTypeColumnsName() {
       return this.defectTypeColumns.map(res => res.name);
@@ -142,12 +141,38 @@ export default {
       return this.categoryColumns.map(res => res.name);
     },
     ...mapState({
-      findPeopleName: state => state.quexian.findPeopleName
-    }),
+      findPeopleName: state => state.quexian.findPeopleName,
+      deviceName: state => state.quexian.deviceName
+    })
+  },
+  watch: {
+    deviceName(res) {
+      this.sendData.deviceName[0] = res.deviceName;
+      console.log('change')
+    }
   },
   methods: {
+    testme() {
+      console.log(`computed:`, this.deviceName)
+      console.log(`sendData:`, this.sendData.deviceName)
+    },
     afterRead(file) {
-      console.log(file);
+      this.fileList.push(file);
+      console.log(`fileList:`, this.fileList);
+      console.log({
+        fileMd5: this.$md5(file.content),
+        fileName: file.file.name,
+        file: file.content
+      });
+      this.$api.page_3
+        .fileUpload({
+          fileMd5: this.$md5(file.content),
+          fileName: file.file.name,
+          file: file.content
+        })
+        .then(res => {
+          console.log(res);
+        });
     },
     openAction() {
       this.isShowAction = true;
@@ -163,6 +188,12 @@ export default {
         sendData.findPeopleName,
         "userCode"
       );
+      sendData.deviceSpace.deviceCode = sendData.deviceName[0].deviceCode
+      sendData.deviceSpaceId = sendData.deviceName[0].id
+
+      // sendData.device.deviceCode = ''
+      // sendData.deviceId = ''
+      
       // sendData.defectType = sendData.defectType.index;
       // sendData.category = sendData.category.index;
       sendData.__sid = this.$userInfo.sessionId;
@@ -201,6 +232,10 @@ export default {
   watch: {
     findPeopleName(res) {
       this.sendData.findPeopleName = res;
+    },
+    deviceName(res) {
+      this.sendData.deviceName = res;
+      console.log(`change => deviceName`)
     }
   }
 };

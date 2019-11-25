@@ -1,6 +1,7 @@
 // initial state
 const state = {
-  findPeopleName: []
+  findPeopleName: [], // 发现人
+  deviceName: [], // 空间设备
 };
 
 // getters
@@ -35,7 +36,7 @@ const mutations = {
         state[key] = [];
       }
     }
-  }
+  },
 };
 
 export default {
