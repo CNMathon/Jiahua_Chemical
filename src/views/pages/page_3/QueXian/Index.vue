@@ -113,7 +113,8 @@ export default {
         findDate: "", // 发现时间
         defectType: {}, // 缺陷类型
         category: {}, // 缺陷类别
-        findPeopleName: [] // 发现人
+        findPeopleName: [], // 发现人
+        deviceSpace: {},
       },
       defectTypeShow: false,
       categoryShow: false,
@@ -188,35 +189,26 @@ export default {
         sendData.findPeopleName,
         "userCode"
       );
+      sendData.htStatus = 1
       sendData.deviceSpace.deviceCode = sendData.deviceName[0].deviceCode
       sendData.deviceSpaceId = sendData.deviceName[0].id
-
+      delete sendData.deviceName
       // sendData.device.deviceCode = ''
       // sendData.deviceId = ''
-      
+
       // sendData.defectType = sendData.defectType.index;
       // sendData.category = sendData.category.index;
       sendData.__sid = this.$userInfo.sessionId;
       console.log(sendData);
-      // this.$api.page_3
-      //   .htDeviceDefectSave(sendData)
-      //   .then(res => {
-      //     console.log("res: ", res);
-      //     this.$Toast.success({
-      //       message: "提交成功",
-      //       onClose() {
-      //         that.sendData = {
-      //           description: "", //缺陷内容
-      //           findDate: "", //发现时间
-      //           defectType: {}, //缺陷类型
-      //           category: {}, //缺陷类别
-      //           findPeopleName: [] //发现人
-      //         };
-      //         that.pageBack();
-      //       }
-      //     });
-      //   })
-      //   .catch(() => {});
+      this.$api.page_3
+        .htDeviceDefectSave(sendData)
+        .then(res => {
+          console.log("res: ", res);
+          this.$Toast.success({
+            message: "提交成功",
+          });
+        })
+        .catch(() => {});
     },
     onSelect(item) {
       this.sendData.defectType = item;

@@ -153,6 +153,7 @@ export default {
           this.list = data.children;
         } else {
           this.employeeOfficeOfficeName = data.name;
+          this.employeeOfficeOfficeCode = data.id;
           this.getUserData();
         }
       } else {
@@ -175,8 +176,8 @@ export default {
       let sendData = {
         userName: "",
         refName: this.refName,
-        "employee.company.companyName": this.employeeCompanyCompanyName,
-        "employee.office.officeName": this.employeeOfficeOfficeName,
+        "employee.office.officeCode": this.employeeOfficeOfficeCode,
+        "isAll":true,
         __sid: this.$userInfo.sessionId
       };
       this.$api.common

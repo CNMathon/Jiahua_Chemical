@@ -234,6 +234,15 @@ const article = {
       qs.stringify(params)
     );
   },
+  // 违章查询
+  Violation(params) {
+    return axios.get(
+      `${base.sq}breakrulemanage/jhCbsBrkRulesManage/form.json`,
+      {
+        params: params
+      }
+    );
+  },
   //承包商项目
   contractorProject(params) {
     return axios.post(
@@ -299,28 +308,33 @@ const article = {
   },
   //工单列表
   deviceWorkOrderListData(params) {
-    return axios.get(`${base.sq}workorder/deviceWorkOrder/listData.json?${qs.stringify(params)}`);
+    return axios.get(
+      `${base.sq}workorder/deviceWorkOrder/listData.json?${qs.stringify(
+        params
+      )}`
+    );
   },
-  //工单保存 
+  //工单保存
   deviceWorkOrderSave(params) {
-    return axios.post(`${base.sq}workorder/deviceWorkOrder/save?${qs.stringify(params)}`);
+    return axios.post(
+      `${base.sq}workorder/deviceWorkOrder/save?${qs.stringify(params)}`
+    );
   },
-  //空间设备列表 
+  //空间设备列表
   deviceSpacelistData(params) {
-    return axios.get(`${base.sq}deviceinfo/deviceSpace/listData?${qs.stringify(params)}`);
+    return axios.get(
+      `${base.sq}deviceinfo/deviceSpace/listData?${qs.stringify(params)}`
+    );
   },
   // 文件上传
   fileUpload(params) {
-    return axios.post(`${base.sq}file/upload`,
-      qs.stringify(params),
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          "__sid": localStorage.JiaHuaSessionId
-        }
+    return axios.post(`${base.sq}file/upload`, qs.stringify(params), {
+      headers: {
+        "Content-Type": "multipart/form-data",
+        __sid: localStorage.JiaHuaSessionId
       }
-    );
-  },
+    });
+  }
 };
 
 export default article;

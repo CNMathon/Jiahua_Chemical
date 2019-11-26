@@ -14,28 +14,23 @@
     </van-sticky>
     <div class="list">
       <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="getUserData">
-        <van-checkbox-group v-model="result" :max="1">
+        <van-radio-group v-model="radio">
           <van-cell-group>
-            <van-cell v-for="(item, index) in list" clickable :key="item.id" @click="toggle(index)">
+            <van-cell v-for="(item, index) in list" clickable :key="item.id" @click="radio = index">
               <template slot="title">
                 <div class="cell-title">
                   <div class="info">
-                    <div class="name">{{ item.projectName }}</div>
-                    <div class="department">{{ item.projectAddress }}</div>
+                    <div class="name">{{ item.normName }}</div>
                   </div>
                 </div>
               </template>
-              <van-checkbox :name="item" ref="checkboxes" slot="icon" />
+              <van-radio slot="icon" :name="index" />
             </van-cell>
           </van-cell-group>
-        </van-checkbox-group>
+        </van-radio-group>
       </van-list>
     </div>
-    <div
-      class="action"
-      v-if="!$route.query.radio"
-      @click="pageBack"
-    >确定（{{ result.length }}/{{ pageSetting.count }}）</div>
+    <div class="action" v-if="!$route.query.radio" @click="pageBack">确定</div>
     <div class="action" v-else @click="pageBack">确定</div>
   </div>
 </template>
@@ -53,7 +48,7 @@ export default {
       list: [],
       loading: false,
       finished: false,
-      result: []
+      radio: ""
     };
   },
   methods: {
@@ -83,17 +78,6 @@ export default {
       }, 500);
       this.getUserData();
     },
-    toggle(index) {
-      this.$refs.checkboxes[index].toggle();
-    },
-    tapRadio(index) {
-      this.radio = index;
-    },
-    clickChech() {
-      this.$nextTick(index => {
-        this.$refs.checkboxes[index].checked = true;
-      });
-    },
     // 获取数据列表
     getUserData() {
       let sendData = {
@@ -114,9 +98,8 @@ export default {
           }
           let list = res.list.map(item => {
             let newItem = {};
-            newItem.projectName = item.projectName;
-            newItem.projectAddress = item.projectAddress;
-            newItem.id = item.id;
+            newItem.normName = item.normName;
+            newItem.normNub = item.normNub;
             return newItem;
           });
           this.pageSetting.count = res.count;
@@ -127,13 +110,11 @@ export default {
     },
     pageBack() {
       let obj = {
-        key: "projectname",
+        key: "wzstandard",
         value: this.result
       };
-      if (this.$route.query.radio) {
-        obj.value = [];
-        obj.value.push(this.list[this.radio]);
-      }
+      obj.value = [];
+      obj.value.push(this.list[this.radio]);
       this.$store.dispatch(`weizhang/changTag`, obj);
       this.$router.back();
     }

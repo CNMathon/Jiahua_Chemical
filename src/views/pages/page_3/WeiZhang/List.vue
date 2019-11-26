@@ -14,12 +14,7 @@
 
     <div class="list-card-area">
       <div class="app">
-        <van-skeleton
-          title
-          :row="3"
-          :loading="isLoading"
-          class="skeleton"
-        >
+        <van-skeleton title :row="3" :loading="isLoading" class="skeleton">
           <label v-for="(item, index) in listData" :key="index">
             <!-- 此处在做完AJAX后需要判断是否为最后行 - class存在判断 -->
             <div class="donghuo-list-card donghuo-list-card-nolast">
@@ -29,7 +24,7 @@
                 <div class="left-line left-line-notlast">发生时间：{{item.occurtime}}</div>
               </div>
               <div class="right">
-                <button>查看详情</button>
+                <button @click="toDetails(item)">查看详情</button>
               </div>
             </div>
           </label>
@@ -67,14 +62,23 @@ export default {
         })
         .then(res => {
           this.listData = res.list;
-          this.isLoading = false
-          console.log(this.listData)
+          this.isLoading = false;
         });
+    },
+    toDetails(info) {
+      this.$router.push({
+        path: "./index",
+        query: { id: info.id }
+      });
     }
   },
   created() {
-    this.listSelect()
-  },
+    this.listSelect();
+    this.$store.dispatch("weizhang/cleanState");
+    this.$nextTick(() => {
+      this.$store.commit("weizhang/add_KeepAlive", "weizhangindex");
+    });
+  }
 };
 </script>
 
@@ -82,8 +86,8 @@ export default {
 .donghuo {
   background-color: #f5f5f5;
 }
-.filter{
-    margin-top: 92px;
+.filter {
+  margin-top: 92px;
 }
 
 .list-card-area {
@@ -143,7 +147,7 @@ export default {
 }
 
 .skeleton {
-  margin-bottom: 10px
+  margin-bottom: 10px;
 }
 
 .left-line-hor {
@@ -180,8 +184,8 @@ export default {
 }
 
 .bottom-item {
-  overflow:hidden;
-  text-overflow:ellipsis;
-  white-space:nowrap
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 </style>

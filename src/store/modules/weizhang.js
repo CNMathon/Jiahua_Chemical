@@ -1,8 +1,11 @@
 // initial state
 const state = {
+  keepAliveComponents: ["weizhangindex"],
   projectname: [],
+  breakruledept: [],
   checkuser: [], // 检察人员
   breakruleuser: [], // 违章人员
+  breakruleproject: [], //违章项目
   wzstandard: [] // 违章考核标准
 };
 
@@ -12,8 +15,6 @@ const getters = {};
 // actions
 const actions = {
   changTag({ commit }, tags) {
-    console.log(3333333333333333);
-    console.log(commit);
     commit("setTag", { tags });
   },
   deleteTagItem({ commit, state }, tags) {
@@ -40,6 +41,14 @@ const mutations = {
         state[key] = [];
       }
     }
+  },
+  add_KeepAlive(state, name) {
+    if (state.keepAliveComponents.includes(name)) return;
+    state.keepAliveComponents.push(name);
+  },
+  delete_KeepAlive(state, name) {
+    const index = state.keepAliveComponents.indexOf(name);
+    index > -1 && state.keepAliveComponents.splice(index, 1);
   }
 };
 

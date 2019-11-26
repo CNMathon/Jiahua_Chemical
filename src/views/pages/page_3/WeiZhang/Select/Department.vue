@@ -115,7 +115,7 @@ export default {
     },
     pageBack() {
       let obj = {
-        key: "projectname",
+        key: "breakruledept",
         value: this.result
       };
       if (this.$route.query.radio) {

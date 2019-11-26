@@ -84,7 +84,7 @@ const routes = {
             import("../views/pages/page_3/GongDanGuanLi/Details.vue"),
           meta: {
             name: "新增工单",
-						keepAlive:true
+            keepAlive: true
           }
         },
         {
@@ -102,14 +102,14 @@ const routes = {
           component: () =>
             import("../views/pages/page_3/components/TagSelect.vue")
         },
-				 {
-				  path: "/page_3/gongdanguanli/select_user",
-				  name: "GongDanGuanLi_SelectUser",
-				  component: () => import("../views/pages/page_3/SelectUser/Index.vue"),
-				  meta: {
-				    keepAlive: false //此组件不需要被缓存
-				  }
-				},
+        {
+          path: "/page_3/gongdanguanli/select_user",
+          name: "GongDanGuanLi_SelectUser",
+          component: () => import("../views/pages/page_3/SelectUser/Index.vue"),
+          meta: {
+            keepAlive: false //此组件不需要被缓存
+          }
+        }
       ]
     },
     // 电气第一种工作票
@@ -496,10 +496,10 @@ const routes = {
           path: "/page_3/diaozhuang/index",
           name: "diaozhuang_index",
           component: () => import("../views/pages/page_3/DiaoZhuang/Index.vue"),
-			 meta: {
-			   keepAlive: true //此组件需要被缓存
-			 }
-			},
+          meta: {
+            keepAlive: true //此组件需要被缓存
+          }
+        },
         {
           path: "/page_3/diaozhuang/index2",
           name: "diaozhuang_index2",
@@ -823,16 +823,13 @@ const routes = {
     {
       path: "/page_3/weizhang",
       name: "weizhang",
-      component: () => import("../views/pages/page_3/QueXian/Home.vue"),
+      component: () => import("../views/pages/page_3/WeiZhang/Home.vue"),
       redirect: "/page_3/weizhang/index",
       children: [
         {
           path: "/page_3/weizhang/index",
           name: "weizhang_index",
-          component: () => import("../views/pages/page_3/WeiZhang/Index.vue"),
-          meta: {
-            keepAlive: true //此组件需要被缓存
-          }
+          component: () => import("../views/pages/page_3/WeiZhang/Index.vue")
         },
         {
           path: "/page_3/weizhang/select_user",
@@ -848,47 +845,37 @@ const routes = {
         {
           path: "/page_3/weizhang/list",
           name: "weizhang_list",
-          component: () => import("../views/pages/page_3/WeiZhang/List.vue"),
-          meta: {
-            keepAlive: false //此组件需要被缓存
-          }
+          component: () => import("../views/pages/page_3/WeiZhang/List.vue")
         },
         {
           path: "/page_3/weizhang/acceptance",
           name: "weizhang_acceptance",
           component: () =>
-            import("../views/pages/page_3/WeiZhang/Acceptance.vue"),
-          meta: {
-            keepAlive: false //此组件需要被缓存
-          }
+            import("../views/pages/page_3/WeiZhang/Acceptance.vue")
         },
         {
           path: "/page_3/weizhang/select_project",
           name: "weizhang_select_project",
           component: () =>
-            import("../views/pages/page_3/WeiZhang/Select/Project.vue"),
-          meta: {}
+            import("../views/pages/page_3/WeiZhang/Select/Project.vue")
         },
         {
           path: "/page_3/weizhang/select_department",
           name: "weizhang_select_department",
           component: () =>
-            import("../views/pages/page_3/WeiZhang/Select/Department.vue"),
-          meta: {}
+            import("../views/pages/page_3/WeiZhang/Select/Department.vue")
         },
         {
           path: "/page_3/weizhang/select_projects",
           name: "weizhang_select_projects",
           component: () =>
-            import("../views/pages/page_3/WeiZhang/Select/Projects.vue"),
-          meta: {}
+            import("../views/pages/page_3/WeiZhang/Select/Projects.vue")
         },
         {
           path: "/page_3/weizhang/select_assessment",
           name: "weizhang_select_assessment",
           component: () =>
-            import("../views/pages/page_3/WeiZhang/Select/Assessment.vue"),
-          meta: {}
+            import("../views/pages/page_3/WeiZhang/Select/Assessment.vue")
         }
       ]
     },
@@ -941,7 +928,7 @@ const routes = {
           }
         }
       ]
-    },
+    }
   ]
 };
 

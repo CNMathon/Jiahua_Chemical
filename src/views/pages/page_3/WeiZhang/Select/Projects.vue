@@ -14,17 +14,17 @@
     </van-sticky>
     <div class="list">
       <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="getUserData">
-        <van-checkbox-group v-model="result" :max="1">
+        <van-checkbox-group v-model="result">
           <van-cell-group>
             <van-cell v-for="(item, index) in list" clickable :key="item.id" @click="toggle(index)">
               <template slot="title">
                 <div class="cell-title">
                   <div class="info">
-                    <div class="name">{{ item.projectName }}</div>
-                    <div class="department">{{ item.projectAddress }}</div>
+                    <div class="name">{{ item.khcontent }}</div>
                   </div>
                 </div>
               </template>
+              <div class="department">{{ item.khnorm }}</div>
               <van-checkbox :name="item" ref="checkboxes" slot="icon" />
             </van-cell>
           </van-cell-group>
@@ -86,14 +86,6 @@ export default {
     toggle(index) {
       this.$refs.checkboxes[index].toggle();
     },
-    tapRadio(index) {
-      this.radio = index;
-    },
-    clickChech() {
-      this.$nextTick(index => {
-        this.$refs.checkboxes[index].checked = true;
-      });
-    },
     // 获取数据列表
     getUserData() {
       let sendData = {
@@ -101,7 +93,7 @@ export default {
         pageNo: this.pageSetting.pageNo,
         pageSize: this.pageSetting.pageSize,
         __sid: this.$userInfo.sessionId,
-        standId: this.$router.query.id
+        standId: this.$route.query.id
       };
       this.$api.page_3
         .violationProject(sendData)
@@ -113,13 +105,7 @@ export default {
             this.finished = true;
             return;
           }
-          let list = res.list.map(item => {
-            let newItem = {};
-            newItem.projectName = item.projectName;
-            newItem.projectAddress = item.projectAddress;
-            newItem.id = item.id;
-            return newItem;
-          });
+          let list = res.list;
           this.pageSetting.count = res.count;
           this.pageSetting.pageNo = res.pageNo + 1;
           this.list = [...this.list, ...list];
@@ -128,13 +114,9 @@ export default {
     },
     pageBack() {
       let obj = {
-        key: "projectname",
+        key: "breakruleproject",
         value: this.result
       };
-      if (this.$route.query.radio) {
-        obj.value = [];
-        obj.value.push(this.list[this.radio]);
-      }
       this.$store.dispatch(`weizhang/changTag`, obj);
       this.$router.back();
     }
