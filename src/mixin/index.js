@@ -4,7 +4,7 @@ const mixin = {
   },
   methods: {
     pageBack() {
-      this.$router.back();
+      this.$router.back(-1);
     },
     notify() {
       this.$notify("请正确填写工作票内容");

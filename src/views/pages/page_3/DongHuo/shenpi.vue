@@ -15,7 +15,13 @@
                      required
                      v-model="comment"
                      placeholder="请输入审批意见"></cell-textarea>
+      <div v-if="status=='2'" class="huiqian">
+        <span>会签节点</span>
+        <p @click="check1" :class="zzb===1?'checked':'box'">制造部</p>
+        <p @click="check2" :class="aqhbb===1?'checked':'box'">安全环保部</p>
+      </div>
     </div>
+    
     <div class="signature" @click="signatureShow = true">
           <span>签字</span>
           <van-image v-if="apprSignCode" style="width:40px;margin-left:30px" :src="apprSignCode"></van-image>
@@ -47,7 +53,10 @@
         id: '',
         actRuTask: '',
         apprSignCode:"",
-        signatureShow:false
+        signatureShow:false,
+        status:'',
+        zzb:0,
+        aqhbb:0
       };
     },
     mixins: [mixin],
@@ -55,8 +64,23 @@
       console.log(this.$route.query)
       this.id = this.$route.query.id
       this.actRuTask = this.$route.query.actRuTask
+      this.status = this.$route.query.status
     },
     methods: {
+      check1(){
+        if(this.zzb==0){
+          this.zzb = 1
+        }else{
+          this.zzb = 0
+        }
+      },
+      check2(){
+        if(this.aqhbb==0){
+          this.aqhbb = 1
+        }else{
+          this.aqhbb = 0
+        }
+      },
       saveCanvas(e) {
         console.log(123)
         console.log("e: ", e);
@@ -72,23 +96,40 @@
         this.$router.go(-1)
       },
       submit () {
-        console.log(888)
         if (this.comment === '') {
           this.$notify("请填写审批意见");
         }else if(this.apprSignCode==''){
           this.$notify("请签字");
         }  else {
-          let data = {
-            'id': this.id,
-            'flowKey': 'htHseDhzypService',
-            'comment': this.comment,
-            'actRuTask.id': this.actRuTask,
-            'btnSubmit': '通过',
-            extendVar:{
-              apprSignCode:this.apprSignCode
-            },
-            __sid: localStorage.getItem("JiaHuaSessionId")
+          let data
+          if(this.status=='2'){
+            data = {
+              'id': this.id,
+              'flowKey': 'htHseDhzypService',
+              'comment': this.comment,
+              'actRuTask.id': this.actRuTask,
+              'btnSubmit': '通过',
+              extendVar:{
+                'zzb':this.zzb,
+                'aqhbb':this.aqhbb,
+                apprSignCode:this.apprSignCode
+              },
+              __sid: localStorage.getItem("JiaHuaSessionId")
+            }
+          }else{
+            data = {
+              'id': this.id,
+              'flowKey': 'htHseDhzypService',
+              'comment': this.comment,
+              'actRuTask.id': this.actRuTask,
+              'btnSubmit': '通过',
+              extendVar:{
+                apprSignCode:this.apprSignCode
+              },
+              __sid: localStorage.getItem("JiaHuaSessionId")
+            }
           }
+          console.log(data)
           this.$api.page_3.approve(data).then((ress) => {
             console.log(ress)
             if (ress.result === 'true') {
@@ -123,5 +164,25 @@
   box-sizing: border-box;
   align-items: center;
   justify-content: space-between;
+  font-size:0.875rem;
+}
+.huiqian{
+  padding:30px;
+  font-size:0.875rem;
+  .box{
+    float: right;
+    margin: 0 10px;
+    padding: 2px 10px;
+    border: 1px solid #cbcbcb;
+    color: #cbcbcb;
+  }
+  .checked{
+    float: right;
+    margin: 0 10px;
+    padding: 2px 10px;
+    background: #108CD4;
+    color:#ffffff;
+    border:none
+  }
 }
 </style>

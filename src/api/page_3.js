@@ -334,7 +334,13 @@ const article = {
         __sid: localStorage.JiaHuaSessionId
       }
     });
-  }
+  },
+  // 检修项目查询
+  deviceProjectListData(params) {
+    return axios.get(
+      `${base.sq}project/deviceProject/listData.json?${qs.stringify(params)}`
+    );
+  },
 };
 
 export default article;

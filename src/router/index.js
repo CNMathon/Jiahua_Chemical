@@ -35,7 +35,6 @@ const router = new VueRouter({
   }
 });
 router.beforeEach((to, _from, next) => {
-	
   if (to.name === "login") {
     next();
     return;
@@ -51,7 +50,8 @@ router.beforeEach((to, _from, next) => {
         userCode: localStorage.getItem("JiaHuaUserCode"),
         refCode: localStorage.getItem("JiaHuaRefCode"),
         officeCode: localStorage.getItem("JiaHuaOfficeCode"),
-        officeName: localStorage.getItem("JiaHuaOfficeName")
+        officeName: localStorage.getItem("JiaHuaOfficeName"),
+        companyName: localStorage.getItem("JiaHuaUserCompanyName")
       };
       next();
     }

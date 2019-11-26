@@ -32,34 +32,33 @@
   </div>
 </template>
 <script>
-  // import { DesUtils} from "./DES.js";
-  import { encode } from "./des2.js";
-  
+// import { DesUtils} from "./DES.js";
+import { encode } from "./des2.js";
+
 export default {
   name: "login",
   data() {
     return {
-
       loading: false,
       screenHeight: 0,
-      username: '',
-      password: ''
+      username: "",
+      password: ""
     };
   },
   methods: {
     tapLogin() {
       const that = this;
       this.loading = true;
-    var secretKey =`thinkgem,jeesite,com`;
-    // var secretKey =`yingzhifu,taihui,nanjing`;
+      var secretKey = `thinkgem,jeesite,com`;
+      // var secretKey =`yingzhifu,taihui,nanjing`;
 
-    // console.log(encode)
-    // var tname = encode(this.username, secretKey); //加密
-    // var pwd = encode(this.password, secretKey); //加密
-    // console.log('&username=' + tname + '&password=' + pwd); 
+      // console.log(encode)
+      // var tname = encode(this.username, secretKey); //加密
+      // var pwd = encode(this.password, secretKey); //加密
+      // console.log('&username=' + tname + '&password=' + pwd);
 
-     var tname =this.username ;
-	   var pwd = this.password ;
+      var tname = this.username;
+      var pwd = this.password;
       let sendData = {
         username: tname,
         password: pwd,
@@ -72,6 +71,10 @@ export default {
         localStorage.setItem("JiaHuaUserName", res.user.userName);
         localStorage.setItem("JiaHuaRefCode", res.user.refCode);
         localStorage.setItem("JiaHuaUserCode", res.user.userCode);
+        localStorage.setItem(
+          "JiaHuaUserCompanyName",
+          res.user.refObj.company.companyName
+        );
         // system账号不做此项
         if (this.username != "system") {
           localStorage.setItem(

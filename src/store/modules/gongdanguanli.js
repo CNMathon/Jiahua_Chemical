@@ -6,6 +6,9 @@ const state = {
 	scenePersonName:[], //现场负责人
 	securityPersonName:[], //安全教育人
 	whsb:[] ,// 危害辨识
+
+  device: [], // 空间设备
+  projectInfo: [], // 检修项目
 };
 
 // getters

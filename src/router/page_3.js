@@ -88,6 +88,26 @@ const routes = {
           }
         },
         {
+          path: "/page_3/gongdanguanli/details1",
+          name: "GongDanGuanLi_Details1",
+          component: () =>
+            import("../views/pages/page_3/GongDanGuanLi/Details1.vue"),
+          meta: {
+            name: "新增工单",
+            keepAlive: true
+          }
+        },
+        {
+          path: "/page_3/gongdanguanli/select_device",
+          name: "GongDanGuanLi_Select_Device",
+          component: () =>
+            import("@/components/Cell/CellSelectDevices.vue"),
+          meta: {
+            name: "新增工单",
+            keepAlive: true
+          }
+        },
+        {
           path: "/page_3/gongdanguanli/zuoyepiao",
           name: "GongDanGuanLi_zuoyepiao",
           component: () =>
@@ -106,6 +126,14 @@ const routes = {
           path: "/page_3/gongdanguanli/select_user",
           name: "GongDanGuanLi_SelectUser",
           component: () => import("../views/pages/page_3/SelectUser/Index.vue"),
+          meta: {
+            keepAlive: false //此组件不需要被缓存
+          }
+        },
+        {
+          path: "/page_3/gongdanguanli/select_project",
+          name: "GongDanGuanLi_SelectUser",
+          component: () => import("@/components/Cell/CellSelectProjects.vue"),
           meta: {
             keepAlive: false //此组件不需要被缓存
           }

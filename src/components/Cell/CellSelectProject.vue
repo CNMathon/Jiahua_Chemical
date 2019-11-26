@@ -5,7 +5,7 @@
       <span class="required" v-if="required">*</span>
     </div>
     <div class="cell_value">
-      <span>{{ showNames() || "请输入设备名" }}</span>
+      <span>{{ showNames() || "请选择项目" }}</span>
       <span class="cell_value_arrow">
         <van-icon name="search" />
       </span>
@@ -51,7 +51,7 @@ export default {
     toSelectUser() {
       if (this.disable) return;
       this.$router.push({
-        path: "./select_device",
+        path: "./select_project",
         query: {
           storeModule: this.storeModule,
           storeKey: this.storeKey,
@@ -60,7 +60,7 @@ export default {
     },
     showNames() {
       if (!this.isDataEmpty(this.value)) {
-        return this.value[0].deviceName
+        return this.value[0].projectName
         // let arr = JSON.parse(JSON.stringify(this.value));
 				// console.log(this.value)
 				// console.log("value")

@@ -28,7 +28,6 @@
       <cell-picker
         title="检修项目"
         required
-        :value="jianxiuxiangmu[sendData.jianxiuxiangmuIndex]"
         v-model="jianxiuxiangmu[sendData.jianxiuxiangmuIndex]"
         :columns="jianxiuxiangmu"
       ></cell-picker>
@@ -79,7 +78,7 @@
         required
         :storeModule="storeModule"
       ></cell-select-user>
-      <cell-textarea title="作业内容" :value="sendData.workContent" required placeholder="请输入作业内容"></cell-textarea>
+      <cell-textarea title="作业内容" v-model="sendData.workContent" required placeholder="请输入作业内容"></cell-textarea>
       <cell-select-tag
         required
         title="危害辨识"
@@ -100,7 +99,7 @@
           @click="toSelectZuoYePiao"
         />
       </cell-value>
-      <cell-value title="安全措施确认" :value="sendData.measuresName" required></cell-value>
+      <cell-value title="安全措施确认" required></cell-value>
       <div class="template">
         <div class="picker">
           <cell-pickers :columns="shebeiList"></cell-pickers>
@@ -138,7 +137,8 @@ export default {
         deviceSpace: {
           deviceCode: '', // 空间设备编号
         },
-        deviceSpaceId: "" // 空间设备id
+        deviceSpaceId: "", // 空间设备id
+        workContent: "", // 作业内容
       },
       list_3: [
         "火灾、爆炸",
@@ -209,11 +209,28 @@ export default {
       this.isShowAction = true;
     },
 
+    // 提交数据
     saveData() {
+      let inputEmptyStatus = this.isDataEmpty(
+        this.sendData.workOrderName, // 工单名称
+        this.sendData.shebeiListIndex, // 空间设备 => index，空则未选择
+        this.sendData.workAddress, // 工作地点
+        this.sendData.workContent, // 作业内容
+        this.sendData.whsb, // 危害辨识
+        this.sendData.workOrderName, // 工单名称
+      )
+      // 判断用户输入数据是否异常
+      if (inputEmptyStatus) {
+        this.$notify('请输入完整的表单数据')
+        return
+      }
       //保存数据
       let sendData = this.deepCopy(this.sendData);
+      console.log(`shebeiList: `, this.shebeiList)
+      console.log(`sendData.shebeiListIndex: `, sendData.shebeiListIndex)
       sendData.deviceSpace.deviceCode = this.shebeiList[sendData.shebeiListIndex].deviceCode
       sendData.deviceSpaceId = this.shebeiList[sendData.shebeiListIndex].id
+      sendData.whsb = String(sendData.whsb)
       let finData = this.deepCopy(sendData)
       delete finData.jianxiubanzuIndex
       delete finData.shebeiListIndex

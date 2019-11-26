@@ -79,6 +79,7 @@
       <select-organization 
         title="动火人"
         required
+        max="9"
         :storeModule="storeModule"
         storeKey="dhzyRen"
         v-model="sendData.dhzyRen"
@@ -567,8 +568,20 @@ export default {
               this.sendData[key] = this.reductionSelectUserObj(
                 info.dhfzr
               );
-            } else if (key === "dhzyRen" && info.dhr) {
-              this.sendData[key] = this.reductionSelectUserObj(info.dhr);
+            } else if (key === "dhzyRen" && info.dhzyRenCode) {
+              //  info.dhzyRenCode.split(',')  info.dhzyRen.split(',');
+              let user =  info.dhzyRenCode.split(',');
+              let userCode =  info.dhzyRen.split(',');
+              let userList = [];
+              user.forEach((item, index) => {
+                userList.push({
+                    userName: item,
+                    userCode: userCode[index],
+                  }
+                )
+              })
+              console.log('userList', userList);
+              this.sendData[key] = this.reductionSelectUserObj(userList);
             } else if (key === "dhzyPrincipal") {
               this.sendData[key] = [];
             } else if (key === "dhzyRen") {

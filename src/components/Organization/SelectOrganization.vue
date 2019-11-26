@@ -46,7 +46,6 @@ export default {
       default: false
     },
     max: 0
-
   },
   methods: {
     toSelectUser() {

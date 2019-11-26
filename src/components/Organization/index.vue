@@ -32,12 +32,12 @@
       </div>
     </div>
     <div class="list">
-      <van-list>
+      <van-list :finished="true" :loading="false">
         <!-- 多选 -->
         <van-checkbox-group
           v-model="result"
           v-if="!$route.query.radio && selectUser"
-          :max="$route.query.max"
+          :max="max"
         >
           <van-cell-group>
             <van-cell v-for="(item, index) in list" clickable :key="item.id" @click="toggle(index)">
@@ -47,7 +47,7 @@
                     <img :src="item.avatarUrl" alt srcset />
                   </div>
                   <div class="info">
-                    <div class="name">{{ item.userName }}</div>
+                    <div class="name">{{  item.name || item.userName }}</div>
                     <div class="department">{{ item.fullName }}</div>
                   </div>
                 </div>
@@ -63,7 +63,7 @@
               v-for="(item, index) in list"
               clickable
               :key="item.id"
-              @click="tapOrganization(item)"
+              @click="tapOrganization(item, index)"
             >
               <template slot="title">
                 <div class="cell-title">
@@ -71,7 +71,7 @@
                     <img :src="item.avatarUrl" alt srcset />
                   </div>
                   <div class="info">
-                    <div class="name">{{ item.name }}</div>
+                    <div class="name">{{ item.name || item.userName }}</div>
                   </div>
                 </div>
               </template>
@@ -104,6 +104,7 @@ export default {
       refName: "", // 用户名
       storeModule: "",
       selectUser: false, // 选择用户
+      max: 1,
       storeKey: "",
       radio: ""
     };
@@ -112,6 +113,7 @@ export default {
     this.storeModule = this.$route.query.storeModule;
     this.storeKey = this.$route.query.storeKey;
     this.results = this.$store.state[this.storeModule][this.storeKey];
+    this.max = parseInt(this.$route.query.max);
     this.officeTreeData();
     //
   },
@@ -136,17 +138,23 @@ export default {
     },
     // 搜索
     onSearch() {
+      //  直接选择个人
+      this.selectUser = true;
+      //  个人列表
       this.list = [];
+      this.treePostionList= [];
       this.getUserData();
     },
     // 取消搜索
     onCancel() {
       this.refName = "";
-      this.list = [];
-      this.getUserData();
+      //  取消直接选择个人
+      this.selectUser = false;
+      this.list = this.cacheAllList;
+      this.treePostionList= [];
     },
-    //  选择组织 获得当前所有的 子类
-    tapOrganization(data) {
+    //  多选
+    toggle(index) {
       if (!this.selectUser) {
         this.treePostionList.push(data);
         if (data.children.length > 0) {
@@ -158,7 +166,24 @@ export default {
         }
       } else {
         //  选择具体的人物 分多选或者的单选
-        this.tapRadio(data);
+        this.$refs.checkboxes[index].toggle();
+      } 
+    },
+    //  选择组织 获得当前所有的 子类
+    tapOrganization(data, index) {
+      console.log('单选', data);
+      if (!this.selectUser) {
+        this.treePostionList.push(data);
+        if (data.children.length > 0) {
+          this.list = data.children;
+        } else {
+          this.employeeOfficeOfficeName = data.name;
+          this.employeeOfficeOfficeCode = data.id;
+          this.getUserData();
+        }
+      } else {
+        //  选择具体的人物 分多选或者的单选
+        this.tapRadio(index);
       }
     },
     officeTreeData() {
@@ -183,6 +208,7 @@ export default {
       this.$api.common
         .empUserList(sendData)
         .then(res => {
+          console.log('获取人员列表', res);
           this.list = res.list.map(item => {
             let newItem = {};
             item.avatarUrl =

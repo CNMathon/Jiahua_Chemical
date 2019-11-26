@@ -22,7 +22,14 @@
       <!-- 违章名称 -->
       <cell-input v-model="sendData.breakrulename" title="违章名称" required placeholder="输入违章名称" />
       <!-- 违章单位 -->
-      <cell-value title="违章单位" required :value="sendData.breakruledept" iconName="search" arrow />
+      <cell-value
+        title="违章单位"
+        required
+        :value="sendData.breakruledept"
+        iconName="search"
+        arrow
+        disable
+      />
       <cell-time v-model="sendData.occurtime" title="发生时间" required></cell-time>
       <cell-input v-model="sendData.occursite" title="发生地点" required placeholder="输入发生地点"></cell-input>
       <cell-select-user
@@ -58,14 +65,9 @@
         arrow
         @click="selectProjects()"
       />
-      <div class="breakruleproject" v-if="sendData.breakruleproject.length > 0">
-        <div
-          class="breakruleproject__item"
-          v-for="(item,index) in sendData.breakruleproject"
-          :key="index"
-        >
-          <div class="breakruleproject__title">{{item.khcontent}}</div>
-          <div class="breakruleproject__value">{{item.khnorm}}</div>
+      <div class="breakruleproject" v-if="sendData.breakruleproject !== {}">
+        <div class="breakruleproject__item">
+          <div class="breakruleproject__title">{{sendData.breakruleproject.khcontent}}</div>
         </div>
       </div>
       <cell-picker
@@ -75,7 +77,7 @@
         :columns="breakruletypeColumns"
       ></cell-picker>
       <!-- 修改 -->
-      <cell-value title="处罚标准" required placeholder="自动读取" />
+      <cell-value title="处罚标准" required disable :value="sendData.punishnorm" />
       <cell-textarea title="事件描述" required v-model="sendData.incidentdes" placeholder="输入内容" />
       <!-- 上传图片 -->
       <div class="cell">
@@ -141,7 +143,7 @@ export default {
         checkuser: [], // 检察人员
         breakruleuser: [], // 违章人员
         wzstandard: [], // 违章考核标准
-        breakruleproject: [], // 违章项目
+        breakruleproject: {}, // 违章项目
         breakruletype: "", //违章类型
         cfbz: "", // 处罚标准
         incidentdes: "", //事件描述,
@@ -178,7 +180,8 @@ export default {
       this.sendData.wzstandard = res[0];
     },
     breakruleproject(res) {
-      this.sendData.breakruleproject = res;
+      this.sendData.breakruleproject = res[0];
+      this.sendData.punishnorm = this.sendData.breakruleproject.khnorm;
     }
   },
   computed: mapState({
@@ -196,52 +199,87 @@ export default {
   },
   methods: {
     getPageData() {
+      this.$Toast.loading({
+        message: "加载中...",
+        forbidClick: true
+      });
       let sendData = {
         id: this.$route.query.id,
         __sid: localStorage.JiaHuaSessionId
       };
-      this.$api.page_3.Violation(sendData).then(res => {
-        let info = res.htCbsBreakrulesmanage;
-        console.log("info: ", info);
-        this.sendData.breakrulename = info.breakrulename;
-        this.sendData.occurtime = info.occurtime;
-        this.sendData.occursite = info.occursite;
-        this.sendData.incidentdes = info.incidentdes;
-        this.sendData.punishnorm = info.punishnorm;
-        this.sendData.breakruledept = info.cbs.cbsName;
-        this.sendData.breakruletype = Number(info.breakruletype);
-        let obj = {
-          userCode: info.checkuser,
-          userName: info.jcry.userName
-        };
-        this.sendData.checkuser.push(obj);
-        this.sendData.wzstandard = {
-          normName: info.wzstandard,
-          normNub: info.wzstandardid
-        };
-        // this.sendData.checkuser = this.reductionSelectUserObj(info.checkuser);
-      });
+      this.$api.page_3
+        .Violation(sendData)
+        .then(res => {
+          this.$Toast.clear();
+          let info = res.htCbsBreakrulesmanage;
+          console.log("info: ", info);
+          this.sendData.projectname = {
+            projectName: "",
+            projectAddress: "",
+            id: info.projectname
+          };
+          this.sendData.breakrulename = info.breakrulename;
+          this.sendData.occurtime = info.occurtime;
+          this.sendData.occursite = info.occursite;
+          this.sendData.incidentdes = info.incidentdes;
+          this.sendData.breakruletype = Number(info.breakruletype);
+          this.sendData.punishnorm = info.punishnorm || "";
+          let obj = {
+            userCode: info.checkuser,
+            userName: info.jcry.userName
+          };
+          let arr = [];
+          arr.push(obj);
+          this.sendData.checkuser = arr;
+          this.sendData.wzstandard = {
+            normName: info.wzstandard,
+            normNub: info.wzstandardid
+          };
+          this.sendData.breakruledept = info.cbs.cbsName || "";
+        })
+        .catch(() => {
+          this.$Toast.clear();
+        });
     },
     Next() {
+      this.isShowAction = false;
+      this.$Toast.loading({
+        message: "正在提交...",
+        forbidClick: true
+      });
       let sendData = JSON.parse(JSON.stringify(this.sendData));
       if (this.$route.query.id) {
         sendData.id = this.$route.query.id;
       }
       sendData.__sid = localStorage.JiaHuaSessionId;
-      sendData.checkuser = sendData.checkuser.userCode;
-      sendData.projectname = sendData.projectname.id;
-      sendData.breakruledept = sendData.projectname.id;
+      sendData.checkuser = sendData.checkuser[0].userCode;
+      sendData.breakruledept = sendData.projectname.id || "";
+      sendData.projectname = sendData.projectname.id || "";
       sendData.breakruleuser = this.userString(
         sendData.breakruleuser,
         "userCode"
       );
+      sendData.commpany = localStorage.JiaHuaUserCompanyName;
       sendData.wzstandardid = sendData.wzstandard.normNub;
       sendData.wzstandard = sendData.wzstandard.normName;
-      sendData.breakruleproject = this.userString(
-        sendData.breakruleproject,
-        "id"
-      );
-      this.$api.page_3.htCbsBreakrulesmanageSave(sendData).then(res => {});
+      sendData.punishnorm = sendData.punishnorm;
+      sendData.breakruleproject = sendData.breakruleproject.id;
+      const that = this;
+      this.$api.page_3
+        .htCbsBreakrulesmanageSave(sendData)
+        .then(res => {
+          this.$Toast.clear();
+          this.$Toast.success({
+            message: "提交成功",
+            onClose() {
+              that.pageBack();
+            }
+          });
+        })
+        .catch(err => {
+          this.$Toast.clear();
+          this.$toast(err.data.message);
+        });
     },
     pageBack() {
       this.$router.back();

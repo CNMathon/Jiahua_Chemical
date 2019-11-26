@@ -14,9 +14,9 @@
     </van-sticky>
     <div class="list">
       <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="getUserData">
-        <van-checkbox-group v-model="result">
+        <van-radio-group v-model="radio">
           <van-cell-group>
-            <van-cell v-for="(item, index) in list" clickable :key="item.id" @click="toggle(index)">
+            <van-cell v-for="(item, index) in list" clickable :key="item.id" @click="radio = index">
               <template slot="title">
                 <div class="cell-title">
                   <div class="info">
@@ -25,17 +25,13 @@
                 </div>
               </template>
               <div class="department">{{ item.khnorm }}</div>
-              <van-checkbox :name="item" ref="checkboxes" slot="icon" />
+              <van-radio :name="index" slot="icon" />
             </van-cell>
           </van-cell-group>
-        </van-checkbox-group>
+        </van-radio-group>
       </van-list>
     </div>
-    <div
-      class="action"
-      v-if="!$route.query.radio"
-      @click="pageBack"
-    >确定（{{ result.length }}/{{ pageSetting.count }}）</div>
+    <div class="action" v-if="!$route.query.radio" @click="pageBack">确定</div>
     <div class="action" v-else @click="pageBack">确定</div>
   </div>
 </template>
@@ -53,7 +49,7 @@ export default {
       list: [],
       loading: false,
       finished: false,
-      result: []
+      radio: ""
     };
   },
   methods: {
@@ -82,9 +78,6 @@ export default {
         }
       }, 500);
       this.getUserData();
-    },
-    toggle(index) {
-      this.$refs.checkboxes[index].toggle();
     },
     // 获取数据列表
     getUserData() {
@@ -115,8 +108,9 @@ export default {
     pageBack() {
       let obj = {
         key: "breakruleproject",
-        value: this.result
+        value: []
       };
+      obj.value.push(this.list[this.radio]);
       this.$store.dispatch(`weizhang/changTag`, obj);
       this.$router.back();
     }

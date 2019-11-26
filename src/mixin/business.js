@@ -64,8 +64,8 @@ export const business = {
       let newArr = [];
       let userOBj = (item) => {
         let obj = {
-          avatarUrl: item.avatarUrl,
-          fullName: item.fullName,
+          avatarUrl: item.avatarUrl || '',
+          fullName: item.fullName || '',
           userCode: item.userCode,
           userName: item.userName,
         };
@@ -73,7 +73,7 @@ export const business = {
       }
       // 判断是传入的 obj还是 Array
        if (Array.isArray(data)) {
-        let arr = data.split(",");
+        let arr = data;
         arr.forEach(element => {
           newArr.push(userOBj(element));
         });

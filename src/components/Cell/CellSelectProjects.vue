@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <van-nav-bar
-      title="设备档案"
+      title="项目列表"
       left-text="返回"
       right-text="确定"
       left-arrow
@@ -22,9 +22,10 @@
       <j-filter-cell title="申请人"></j-filter-cell>
     </j-filter>
     <ul class="list-title">
-      <li>设备名称</li>
-      <li>设备位号</li>
-      <li>专业类别</li>
+      <li>项目名称</li>
+      <li>责任部门</li>
+      <li>项目级别</li>
+      <li>计划时间</li>
     </ul>
     <div class="list-card-area">
       <div class="app">
@@ -41,17 +42,17 @@
             <label v-for="(item, index) in listData" :key="index">
               <!-- 此处在做完AJAX后需要判断是否为最后行 - class存在判断 -->
               <div class="donghuo-list-card donghuo-list-card-nolast">
-                <div class="check-list">
+                <div class="check-list item">
                   <van-radio shape="square" v-model="radio" :name="index" />
                 </div>
-                <div>{{item.deviceName}}</div>
-                <div>{{item.devicePosition}}</div>
-                <div v-if="item.specialtyType == 1">电气</div>
-                <div v-if="item.specialtyType == 2">仪表</div>
-                <div v-if="item.specialtyType == 3">机械</div>
-                <div v-if="item.specialtyType == 4">特种</div>
-                <div v-if="item.specialtyType == 5">化验</div>
-                <div v-if="item.specialtyType == 6">安全附件</div>
+                <div class="item">{{item.projectName}}</div>
+                <div class="item" v-if="`correlation` in item">{{item.correlation.officeName}}</div>
+                <div class="item" v-else>空</div>
+                <div class="item">{{item.projectGrade}}</div>
+                <div class="item">
+                  <div>{{item.planStartDate}}</div>
+                  <div>{{item.planEndDate}}</div>
+                </div>
               </div>
             </label>
             <!-- </van-list> -->
@@ -148,10 +149,8 @@ export default {
       //   obj.value = [];
       //   obj.value.push(this.list[this.radio]);
       // }
-      console.log(`changeData:`, obj)
+      console.log(`changeVuexData:`, obj)
       this.$store.dispatch(`${this.storeModule}/changTag`, obj);
-      console.log(this.$store.state[this.storeModule])
-      
       this.$router.back();
     },
     onClickMenu() {
@@ -165,8 +164,9 @@ export default {
         this.isRefreshLoading = true;
       }
 
+      console.log(this.$api.page_3)
       this.$api.page_3
-        .deviceSpacelistData({
+        .deviceProjectListData({
           // siteContent: this.searchValue,
           // dhLevel: this.selectDhlevel,
           __sid: localStorage.getItem("JiaHuaSessionId")
@@ -240,18 +240,25 @@ export default {
   color: #ffffff;
   border-radius: 10px;
   line-height: 40px;
-  // div:nth-child(1) {
-  //   width: 20%;
-  // }
-  div:nth-child(2) {
-    width: 60%;
+  font-size: 25px;
+  .item:nth-child(1) {
+    width: 10%;
   }
-  div:nth-child(3) {
-    width: 40%;
+  .item:nth-child(2) {
+    width: 35%;
+  }
+  .item:nth-child(3) {
+    width: 25%;
     text-align: center;
   }
-  div:nth-child(4) {
-    width: 40%;
+  .item:nth-child(4) {
+    width: 5%;
+    text-align: center;
+  }
+  .item:nth-child(5) {
+    display: flex;
+    flex-direction: column;
+    width: 25%;
     text-align: right;
   }
 }

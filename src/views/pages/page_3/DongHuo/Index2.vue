@@ -383,7 +383,8 @@
         signatureA: "",
         signatureATime: "",
         actRuTask: '',
-        id: ''
+        id: '',
+        status:''
       };
     },
     watch: {
@@ -503,6 +504,7 @@
             console.log("const key in this.sendData", res);
             this.actRuTask = res.list[0].actRuTask ? res.list[0].actRuTask.id : ''
             this.id = res.list[0].id
+            this.status = res.list[0].htStatus
             for (const key in this.sendData) {
               if (key === "dhzyPrincipal" && info.dhfzr) {
                 this.sendData[key] = this.reductionSelectUserObj(info.dhfzr);
@@ -575,6 +577,7 @@
             query: {
               id: this.id,
               actRuTask: this.actRuTask,
+              status:this.status
             }
           })
         }

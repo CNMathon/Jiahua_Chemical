@@ -6,7 +6,7 @@
         left-text="返回"
         right-text="新增工单"
         left-arrow
-        @click-left="pageBack"
+        @click-left="jumpTo('/page_3')"
         @click-right="toDetail"
       />
       <j-filter-bar
@@ -113,7 +113,7 @@ export default {
 		  })
 	},
     toDetail() {
-      this.$router.push({ path: "/page_3/gongdanguanli/details" });
+      this.$router.push({ path: "./details1" });
     },
     getPageData(type) {
 		console.log(111)

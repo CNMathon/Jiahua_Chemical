@@ -1,20 +1,16 @@
 <template>
-  <div class="home">
-    <keep-alive :include="cachedViews">
-      <router-view>
+  <div class="gongdanguanli_home">
+    <keep-alive>
+      <router-view v-if="$route.meta.keepAlive">
         <!-- 这里是会被缓存的视图组件 -->
       </router-view>
     </keep-alive>
+
+    <router-view v-if="!$route.meta.keepAlive">
+      <!-- 这里是不被缓存的视图组件 -->
+    </router-view>
   </div>
 </template>
 <script>
-export default {
-  name: "gongdanguanli",
-  computed: {
-    cachedViews() {
-      console.log(this.$store.state)
-      return this.$store.state.gongdanguanli.keepAliveComponents;
-    }
-  }
-};
+export default {};
 </script>

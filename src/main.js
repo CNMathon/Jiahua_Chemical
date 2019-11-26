@@ -15,8 +15,10 @@ import CellSheet from "./components/Cell/CellSheet.vue";
 import CellTextarea from "./components/Cell/CellTextarea.vue";
 import CellOther from "./components/Cell/CellOther.vue";
 import CellSelectUser from "./components/Cell/CellSelectUser.vue";
+import CellSelectProject from "./components/Cell/CellSelectProject.vue";
 import CellSelectDepartment from "./components/Cell/CellSelectDepartment.vue";
 import CellSelectUsers from "./components/Cell/CellSelectUsers.vue";
+import CellSelectProjects from "./components/Cell/CellSelectProjects.vue";
 import CellSelectTag from "./components/Cell/CellSelectTag.vue";
 import CellSelectDevice from "./components/Cell/CellSelectDevice.vue";
 import SelectOrganization from "./components/Organization/SelectOrganization.vue";
@@ -26,7 +28,7 @@ import FilterCell from "./components/Filter/FilterCell.vue";
 import FilterTime from "./components/Filter/FilterTime.vue";
 import FilterSearch from "./components/Filter/FilterSearch.vue";
 import FilterBar from "./components/Filter/FilterBar.vue";
-import Action from "./components/action/Index.vue";
+import PopupAction from "./components/Popup/PopupAction.vue";
 import dayjs from "dayjs";
 import md5 from "js-md5";
 import "video.js/dist/video-js.css";
@@ -60,6 +62,7 @@ Vue.component("cell-other", CellOther);
 Vue.component("cell-select-user", CellSelectUser);
 Vue.component("cell-select-department", CellSelectDepartment);
 Vue.component("cell-select-users", CellSelectUsers);
+Vue.component("cell-select-project", CellSelectProject);
 Vue.component("cell-select-tag", CellSelectTag);
 Vue.component("cell-select-device", CellSelectDevice);
 Vue.component("j-filter", JFilter);
@@ -69,8 +72,8 @@ Vue.component("j-filter-cell", FilterCell);
 Vue.component("j-filter-time", FilterTime);
 Vue.component("j-filter-search", FilterSearch);
 Vue.component("select-organization", SelectOrganization);
+Vue.component('popup-action', PopupAction);
 Vue.mixin(Mixin); // Mixin
-// Vue.component('Action', Action);
 
 new Vue({
   router,
