@@ -33,12 +33,12 @@
                  :key="index">
             <!-- 此处在做完AJAX后需要判断是否为最后行 - class存在判断 -->
             <div class="donghuo-list-card donghuo-list-card-nolast"
-                 @click="jumpToMorePage(item.htStatus, item.dtzypCode)">
+                 @click="jumpToMorePage(item.htStatus, item.id)">
               <div class="left">
                 <div class="left-line left-line-notlast">动土作业票编号：{{item.dtzypCode}}</div>
                 <div class="left-line left-line-notlast">作业地点：{{item.dtSite}}</div>
-                <div class="left-line left-line-notlast left-line-hor">申请部门：{{item.applyDept}}</div>
-                <div class="left-line left-line-notlast left-line-hor">申请人：{{item.applyer}}</div>
+                <div class="left-line left-line-notlast left-line-hor">申请部门：{{item.office?item.office.fullName:''}}</div>
+                <div class="left-line left-line-notlast left-line-hor">申请人：{{item.user?item.user.userName:''}}</div>
                 <div class="left-line left-line-notlast">动土开始时间：{{item.dtStarttime}}</div>
                 <div class="left-line">动土结束时间：{{item.dtEndtime}}</div>
               </div>

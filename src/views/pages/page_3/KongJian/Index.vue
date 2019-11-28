@@ -27,7 +27,7 @@
                     disable></cell-value>
         <!-- 作业票状态 -->
         <cell-value title="作业票状态"
-                    value="编辑"
+                    :value="htStatus(oldInfo.htStatus)"
                     disable></cell-value>
         <!-- 受限空间所属单位 -->
         <cell-select-department title="受限空间所属单位"
@@ -73,26 +73,26 @@
                    v-model="sendData.zyEndtime"
                    required></cell-time>
         <!-- 作业部门负责人 -->
-        <cell-select-user title="作业部门负责人"
+        <select-organization  title="作业部门负责人"
                           required
                           :max="2"
                           :storeModule="storeModule"
                           storeKey="zyPrincipal"
-                          v-model="sendData.zyPrincipal"></cell-select-user>
+                          v-model="sendData.zyPrincipal"></select-organization>
         <!-- 作业人 -->
-        <cell-select-user title="作业人"
+        <select-organization  title="作业人"
                           required
                           :max="9"
                           :storeModule="storeModule"
                           storeKey="zyRen"
-                          v-model="sendData.zyRen"></cell-select-user>
+                          v-model="sendData.zyRen"></select-organization>
         <!-- 监护人 -->
-        <cell-select-user title="监护人"
+        <select-organization title="监护人"
                           required
                           :max="2"
                           :storeModule="storeModule"
                           storeKey="guardian"
-                          v-model="sendData.guardian"></cell-select-user>
+                          v-model="sendData.guardian"></select-organization>
 
         <!-- 安全措施 -->
         <div class="confirm">
@@ -299,6 +299,7 @@
         this.sendData.zyPrincipal = res;
       },
       sxkjDanwei (res) {
+        console.log('选择受限空单位', res);
         this.sendData.sxkjDanwei = res;
       }
     },
@@ -400,9 +401,9 @@
         let sendData = JSON.parse(JSON.stringify(this.sendData));
         sendData.zyOtherspecial = this.stringData("zyOtherspecial", "list_1");
         sendData.zywhBs = this.stringData("zywhBs", "list_2");
-        sendData.guardian = this.userString(sendData.guardian, "userName");
-        sendData.zyPrincipal = this.userString(sendData.zyPrincipal, "userName");
-        sendData.zyRen = this.userString(sendData.zyRen, "userName");
+        sendData.guardian = this.userString(sendData.guardian, "userCode"); // 监护人
+        sendData.zyPrincipal = this.userString(sendData.zyPrincipal, "userCode"); // 作业负责人
+        sendData.zyRen = this.userString(sendData.zyRen, "userCode"); // 作业人
         sendData.sxkjDanwei = this.userString(sendData.sxkjDanwei, "name");
         //sendData.applyDept = this.$userInfo.officeName;
         //sendData.applyRen = this.$userInfo.userName;
@@ -474,21 +475,20 @@
           .then(res => {
             let info = res.list[0];
             this.oldInfo = info;
-            console.log('获得服务器数据', info);
-            // 安装措施 aqcsjl zyjhcs 作业监护措施 querenman 签名
+            console.log('获得服务器数据=====================================================', info);
             for (const key in this.sendData) {
               switch (key) {
                 case "sxkjDanwei":
                   if (info[key]) this.sendData[key] = this.reductionSelectDept(info[key]);
                   break;
                 case "guardian":
-                  if (info[key]) this.sendData[key] = this.reductionSelectUser(info[key]);
+                  if (info[key]) this.sendData[key] = this.reductionSelectUserObj(this.assemblyStrToUserObj(info.guardian, info.guardianCode));
                   break;
                 case "zyRen":
-                  if (info[key]) this.sendData[key] = this.reductionSelectUser(info[key]);
+                  if (info[key]) this.sendData[key] = this.reductionSelectUserObj(this.assemblyStrToUserObj(info.zyRen, info.zyRencode));
                   break;
                 case "zyPrincipal":
-                  if (info[key]) this.sendData[key] = this.reductionSelectUser(info[key]);
+                  if (info[key]) this.sendData[key] = this.reductionSelectUserObj(this.assemblyStrToUserObj(info.zyPrincipal, info.zyPrincipalCode));
                   break;
                 case "querenman":
                   if (info[key]) this.signatureImg = info[key]; this.sendData[key] = info[key];

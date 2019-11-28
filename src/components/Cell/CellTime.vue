@@ -11,7 +11,7 @@
       <van-datetime-picker
         ref="van-datetime-picker"
         v-model="selectTime"
-        type="datetime"
+        :type="type"
         :min-date="minDate"
         @cancel="timeShow = false"
         @confirm="onTimeConfirm"
@@ -42,25 +42,28 @@ export default {
     disable: {
       type: Boolean,
       default: false
+    },
+    type: {
+      type: String,
+      default: "datetime"
     }
   },
   data() {
     return {
       values: "",
       timeShow: false,
-      minDate:new Date(),
+      minDate: new Date(),
       selectTime: new Date(),
       pickerTime: ""
     };
   },
   methods: {
     showTime() {
-      console.log(this.disable)
-      if (!this.disable){
-        console.log(this.timeShow)
+      console.log(this.disable);
+      if (!this.disable) {
+        console.log(this.timeShow);
         this.timeShow = true;
       }
-      
     },
     // 补零
     addZero: function(str) {
@@ -72,18 +75,27 @@ export default {
     },
     // 确认时间选择
     onTimeConfirm(val) {
-      console.log(val)
-      this.value = val
+      console.log(val);
+      this.value = val;
       this.values = val;
       this.timeShow = false;
     },
     showText() {
-        console.log(this.value
+      console.log(
+        this.value
           ? this.$dayjs(this.value).format("YYYY-MM-DD HH:mm")
-          : "点击选择")
+          : "点击选择"
+      );
+      if (this.type == 'datetime') {
         return this.value
           ? this.$dayjs(this.value).format("YYYY-MM-DD HH:mm")
           : "点击选择";
+      }
+      if (this.type == 'date') {
+        return this.value
+          ? this.$dayjs(this.value).format("YYYY-MM-DD")
+          : "点击选择";
+      }
     }
   },
   watch: {

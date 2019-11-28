@@ -71,19 +71,19 @@ export default {
         localStorage.setItem("JiaHuaUserName", res.user.userName);
         localStorage.setItem("JiaHuaRefCode", res.user.refCode);
         localStorage.setItem("JiaHuaUserCode", res.user.userCode);
-        localStorage.setItem(
-          "JiaHuaUserCompanyName",
-          res.user.refObj.company.companyName
-        );
         // system账号不做此项
         if (this.username != "system") {
           localStorage.setItem(
+            "JiaHuaUserCompanyName",
+            res.user.refObj?res.user.refObj.company.companyName:''
+          );
+          localStorage.setItem(
             "JiaHuaOfficeCode",
-            res.user.refObj.office.officeCode
+            res.user.refObj?res.user.refObj.office.officeCode:''
           );
           localStorage.setItem(
             "JiaHuaOfficeName",
-            res.user.refObj.office.officeName
+            res.user.refObj?res.user.refObj.office.officeName:''
           );
         }
         this.loading = false;

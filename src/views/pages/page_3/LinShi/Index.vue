@@ -32,8 +32,8 @@
 			<!-- 用电结束时间 -->
 			<cell-time v-model="sendData.powertimeEnd" title="用电结束时间" required></cell-time>
 			<!-- 接线人 -->
-			<cell-select-user title="接线人" :value="sendData.connectRen" required :storeModule="storeModule" storeKey="connectRen"
-			 v-model="sendData.connectRen"></cell-select-user>
+			<select-organization title="接线人" :value="sendData.connectRen" required :storeModule="storeModule" storeKey="connectRen"
+			 v-model="sendData.connectRen"></select-organization>
 			<!-- 施工作业部门 -->
 			<cell-select-department
               title="施工作业部门"
@@ -43,9 +43,9 @@
               v-model="sendData.workDept"
             ></cell-select-department>
 			<!-- 施工现场负责人 -->
-			<cell-select-user title="施工现场负责人" required :storeModule="storeModule" storeKey="workCharger" v-model="sendData.workCharger"></cell-select-user>
+			<select-organization title="施工现场负责人" required :storeModule="storeModule" storeKey="workCharger" v-model="sendData.workCharger"></select-organization>
 			<!-- 作业人 -->
-			<cell-select-user title="作业人" required :storeModule="storeModule" storeKey="workRen" v-model="sendData.workRen"></cell-select-user>
+			<select-organization max="9" title="作业人" required :storeModule="storeModule" storeKey="workRen" v-model="sendData.workRen"></select-organization>
 			<!-- 电工证号 -->
 			<cell-input v-model="sendData.licenseCode" title="电工证号" required placeholder="手工录入"></cell-input>
 		</div>
@@ -139,7 +139,7 @@
     },
     activated(){
       console.log(sessionStorage.getItem('flag'))
-      console.log(this.zypCode);
+      console.log(this.$userInfo);
 			// 获取显示List序列
 			this.zypCode = this.$route.query.zypCode || "";
 			// 设置显示List
@@ -193,7 +193,7 @@
           });
           this.$api.page_3
             .htHseLsydzypListData({
-              zypCode : this.zypCode,
+              id : this.zypCode,
               __sid: localStorage.getItem("JiaHuaSessionId")
             })
             .then(res => {
@@ -259,27 +259,25 @@
 			getData() {
 				console.log("获取工作票内容");
 				let sendData = {};
-				sendData.zypCode = this.zypCode;
+				sendData.id = this.zypCode;
 				sendData.__sid = this.$userInfo.sessionId;
 				this.$api.page_3
-					.htHseLsydzypListData(sendData)
+					.htHseLsydzypListDataById(sendData)
 					.then(res => {
 						console.log("res", res);
-
-						this.sendData.workContent = res.list[0].workContent;
-						this.sendData.workLocation = res.list[0].workLocation;
-						this.sendData.powerType = Number(res.list[0].powerType ? res.list[0].powerType : 0);
-						this.sendData.jworkVoltage = Number(res.list[0].workVoltage ? res.list[0].workVoltage : 0);
-						this.sendData.publicArea = Number(res.list[0].publicArea ? res.list[0].publicArea : 0);
-						this.sendData.devicePower = res.list[0].devicePower;
-						this.sendData.licenseCode = res.list[0].licenseCode;
-						this.sendData.powertimeStart = res.list[0].powertimeStart;
-						this.sendData.powertimeEnd = res.list[0].powertimeEnd;
-						this.sendData.id=res.list[0].id;
-
-
+						let info = res;
+						this.sendData.workContent = info.workContent;
+						this.sendData.workLocation = info.workLocation;
+						this.sendData.powerType = Number(info.powerType ? info.powerType : 0);
+						this.sendData.jworkVoltage = Number(info.workVoltage ? info.workVoltage : 0);
+						this.sendData.publicArea = Number(info.publicArea ? info.publicArea : 0);
+						this.sendData.devicePower = info.devicePower;
+						this.sendData.licenseCode = info.licenseCode;
+						this.sendData.powertimeStart = info.powertimeStart;
+						this.sendData.powertimeEnd = info.powertimeEnd;
+						this.sendData.id=info.id;
 						let hazardIdentification = [];
-						res.list[0].hazardIdentification.split(",").map(items => {
+						info.hazardIdentification.split(",").map(items => {
 							hazardIdentification.push(this.list_1[items-1]);
 						})
 						this.setTag({
@@ -290,38 +288,29 @@
 						});
 
 
-						let connectRen = [];
-						res.list[0].connectRen.split(",").map(items => {
-							connectRen.push({
-								userName: items
-							});
-						})
-
-
-						let workCharger = [];
-						res.list[0].workCharger.split(",").map(items => {
-							workCharger.push({
-								userName: items
-							});
-						})
-            let workDept = []
-            res.list[0].workDept.split(",").map(items => {
-							workDept.push({
-								name: items
-							});
-						})
+						// let connectRen = [];
+						// info.connectRen.split(",").map(items => {
+						// 	connectRen.push({
+						// 		userName: items
+						// 	});
+						// })
 
 						let workRen = [];
-						res.list[0].workRen.split(",").map(items => {
+						info.workRen.split(",").map(items => {
 							workRen.push({
 								userName: items
 							});
 						})
 						
 						console.log(this.sendData);
-						this.sendData.workDept = workDept;
-						this.sendData.connectRen = connectRen;
-						this.sendData.workCharger = workCharger;
+						this.sendData.workDept = [{
+              id:info.zybm.id,
+              pId:info.zybm.pId,
+              name:info.zybm.officeName,
+              title:info.zybm.title
+            }]
+						this.sendData.connectRen = this.reductionSelectUserObj(info.jxr);
+						this.sendData.workCharger = this.reductionSelectUserObj(info.zybmfzr);
 						this.sendData.workRen = workRen; 
 
 
@@ -337,12 +326,12 @@
 					"hazardIdentification",
 					"list_1"
 				);
-				sendData.connectRen = this.userString(sendData.connectRen, "userName");
-				sendData.workCharger = this.userString(sendData.workCharger, "userName");
-        sendData.workRen = this.userString(sendData.workRen, "userName");
-        sendData.workDept = this.userString(sendData.workDept, "name");
-				sendData.apprDept = this.$userInfo.officeName;
-				sendData.apprRen = this.$userInfo.userName;
+				sendData.connectRen = this.userString(sendData.connectRen, "userCode");
+				sendData.workCharger = this.userString(sendData.workCharger, "userCode");
+        sendData.workRen = this.userString(sendData.workRen, "userCode");
+        sendData.workDept = this.userString(sendData.workDept, "id");
+				sendData.apprDept = this.$userInfo.officeCode;
+				sendData.apprRen = this.$userInfo.userCode;
 				sendData.__sid = this.$userInfo.sessionId;
 				this.$api.page_3
 					.htHseLsydzypSave(sendData)

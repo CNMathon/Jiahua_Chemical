@@ -171,6 +171,7 @@
                   @save="saveCanvas2"
                   @cancel="cancelCanvas2"></Canvas>
         </van-popup>
+        <!-- otherSafety othercsComplier othercsTime -->
         <cell-textarea v-model="sendData.otherSafety" title="其他安全措施" required placeholder="请输入其他安全措施"></cell-textarea>
         <div class="signature" @click="signatureShow2 = true">
           <span>签字</span>
@@ -275,7 +276,8 @@
         signatureShow: false,
         oldInfo: {},
         actRuTask:'',
-        id:''
+        id:'',
+        status:''
       };
     },
     computed: mapState({
@@ -323,23 +325,31 @@
       },
       getInfo () {
         this.$api.page_3
-          .htHseMbzypListData({
+          .htHseMbzypListDataById({
             __sid: localStorage.getItem("JiaHuaSessionId"),
-            mbzypCode: this.infoId
+            id: this.infoId
           })
           .then(res => {
-            let info = res.list[0];
+            let info = res;
             this.oldInfo = info;
-            console.log(info)
+            console.log('初审=====================', info);
             this.actRuTask = info.actRuTask?info.actRuTask.id:''
             this.id = info.id
-            this.sendData.scMan = this.reductionSelectUser(info.sc.userName)
-            this.sendData.zyMan = this.reductionSelectUser(info.zy.userName)
+            this.status = info.htStatus
+            this.sendData.scMan = this.reductionSelectUserObj(info.sc);
+            this.sendData.zyMan = this.reductionSelectUserObj(info.zy);
             this.sendData.otherSpecial = this.reductionSelectTag(info.otherSpecial, this.list_1);
-            
-            if (info.onePipe.length > 14) {
-              let arr = info.onePipe.split("|");
-              console.log(arr)
+            this.sendData.othercsComplier = info.othercsComplier;
+            this.sendData.othercsTime = info.othercsTime;
+            this.sendData.otherSafety = info.otherSafety;
+            //  格式化管道
+            let pipiObj = (arr) => {
+              let PullName = arr[10].split(",");
+              let BlockName = arr[9].split(",");
+              let BlockCode = new Array(BlockName.length).fill('').join(',');
+              let PullCode = new Array(PullName.length).fill('').join(',');
+              let pipePullOperator = this.assemblyStrToUserObj(PullCode,arr[10]);
+              let pipeBlockOperator = this.assemblyStrToUserObj(BlockCode,arr[9]);
               let obj = {
                 'pipeName': arr[0],
                 'pipeMedium': arr[1],
@@ -350,77 +360,51 @@
                 'pipeNumber': arr[6],
                 'pipePullTime': arr[7],
                 'pipeBlockTime': arr[8],
-                'pipeBlockOperator': this.reductionSelectUser(arr[9]),
-                'pipePullOperator': this.reductionSelectUser(arr[10]),
-                'pipeBlockGuardian': this.reductionSelectUser(arr[11]),
-                'pipePullGuardian': this.reductionSelectUser(arr[12]),
+                'pipeBlockOperator': this.reductionSelectUserObj(pipeBlockOperator),
+                'pipePullOperator': this.reductionSelectUserObj(pipePullOperator),
+                'pipeBlockGuardian': this.reductionSelectUserObj(this.reductionSelectUser(arr[11])),
+                'pipePullGuardian': this.reductionSelectUserObj(this.reductionSelectUser(arr[12])),
               }
-              this.sendData.pipe.push(obj)
+              return obj;
+            }
+            if (info.onePipe.length > 14) {
+              let arr = info.onePipe.split("|");
+              this.sendData.pipe.push(pipiObj(arr));
             }
             if (info.twoPipe.length > 14) {
               let arr = info.twoPipe.split("|");
-              console.log(arr)
-              let obj = {
-                'pipeName': arr[0],
-                'pipeMedium': arr[1],
-                'pipeTemp': arr[2],
-                'pipePressure': arr[3],
-                'pipeMaterial': arr[4],
-                'pipeSpec': arr[5],
-                'pipeNumber': arr[6],
-                'pipePullTime': arr[7],
-                'pipeBlockTime': arr[8],
-                'pipeBlockOperator': this.reductionSelectUser(arr[9]),
-                'pipePullOperator': this.reductionSelectUser(arr[10]),
-                'pipeBlockGuardian': this.reductionSelectUser(arr[11]),
-                'pipePullGuardian': this.reductionSelectUser(arr[12]),
-              }
-              this.sendData.pipe.push(obj)
+              this.sendData.pipe.push(pipiObj(arr));
             }
             if (info.threePipe.length > 14) {
               let arr = info.threePipe.split("|");
-              console.log(arr)
-              let obj = {
-                'pipeName': arr[0],
-                'pipeMedium': arr[1],
-                'pipeTemp': arr[2],
-                'pipePressure': arr[3],
-                'pipeMaterial': arr[4],
-                'pipeSpec': arr[5],
-                'pipeNumber': arr[6],
-                'pipePullTime': arr[7],
-                'pipeBlockTime': arr[8],
-                'pipeBlockOperator': this.reductionSelectUser(arr[9]),
-                'pipePullOperator': this.reductionSelectUser(arr[10]),
-                'pipeBlockGuardian': this.reductionSelectUser(arr[11]),
-                'pipePullGuardian': this.reductionSelectUser(arr[12]),
-              }
-              this.sendData.pipe.push(obj)
+              this.sendData.pipe.push(pipiObj(arr));
             }
             if (info.fourPipe.length > 14) {
               let arr = info.fourPipe.split("|");
-              console.log(arr)
-              let obj = {
-                'pipeName': arr[0],
-                'pipeMedium': arr[1],
-                'pipeTemp': arr[2],
-                'pipePressure': arr[3],
-                'pipeMaterial': arr[4],
-                'pipeSpec': arr[5],
-                'pipeNumber': arr[6],
-                'pipePullTime': arr[7],
-                'pipeBlockTime': arr[8],
-                'pipeBlockOperator': this.reductionSelectUser(arr[9]),
-                'pipePullOperator': this.reductionSelectUser(arr[10]),
-                'pipeBlockGuardian': this.reductionSelectUser(arr[11]),
-                'pipePullGuardian': this.reductionSelectUser(arr[12]),
-              }
-              this.sendData.pipe.push(obj)
+              this.sendData.pipe.push(pipiObj(arr));
             }
             console.log(this.sendData)
+            this.initListDataD(info.htHseMbzypSafetyList);
           })
           .catch(() => { });
       },
+      //  初始化子票
+      initListDataD(data) {
+      //  this.checked
+      let checked = {};
+      data.forEach(item => {
+        this.checked[parseInt(item.num) ] = {
+          checked: item.safetyStatus === 1,
+          safetyCs: item.safetyCs,
+          img: item.affirmRen === "0" ? "" : item.affirmRen
+        };
+      });
+      console.log("this.checked", this.checked);
+      this.$forceUpdate();
+      // this.$nextTick(() => {
+      //   this.donghuoInit = false;
+      // });
+    },
       Next () {
         console.log(this.actRuTask)
         if (this.actRuTask === '') {
@@ -454,6 +438,7 @@
             query: {
               id: this.id,
               actRuTask: this.actRuTask,
+              status:this.status
             }
           })
         }
@@ -480,7 +465,9 @@
       // 显示签名
       showSignature (index) {
         this.selectSignatureShow = index;
-        this.signatureShow = true;
+        if (!this.checked[index].checked) {
+          this.signatureShow = true;
+        } 
       },
       // 取消签名
       signatureCancel (index) {
@@ -535,13 +522,15 @@
             dataStrArr[i] = `|||||||||||&|&`;
             continue;
           }
+          let pipePullOperator = pipe[i].pipePullOperator.map(item => item.userName);
+          let pipeBlockOperator = pipe[i].pipeBlockOperator.map(item => item.userName);
           dataStrArr[i] = `${pipe[i].pipeName}|${pipe[i].pipeMedium}|${pipe[i].pipeTemp}|${
             pipe[i].pipePressure
             }|${pipe[i].pipeMaterial}|${pipe[i].pipeSpec}|${
             pipe[i].pipeNumber
             }|${pipe[i].pipeBlockTime}|${pipe[i].pipePullTime}|${
-            pipe[i].pipeBlockOperator[0].userName
-            }|${pipe[i].pipePullOperator[0].userName}|${
+            pipeBlockOperator.join(',')
+            }|${pipePullOperator.join(',')}|${
             pipe[i].pipeBlockGuardian[0].userName
             }|${pipe[i].pipePullGuardian[0].userName}`;
         }
@@ -552,6 +541,7 @@
           fourPipe: dataStrArr[3],
           __sid: sendData.__sid
         };
+        
         let htHseMbzyp_file = this.fileList.map(item => {
           return item.id;
         });
@@ -565,8 +555,8 @@
         finSendData.otherSafety = sendData.otherSafety
         finSendData.othercsComplier = sendData.othercsComplier
         finSendData.htHseMbzyp_file = htHseMbzyp_file.join(",");
-        finSendData.scMan = this.userString(sendData.scMan, "userName");
-        finSendData.zyMan = this.userString(sendData.zyMan, "userName");
+        finSendData.scMan = this.userString(sendData.scMan, "userCode");
+        finSendData.zyMan = this.userString(sendData.zyMan, "userCode");
         finSendData.otherSpecial = this.stringData("otherSpecial", "list_1");
         finSendData.htHseMbzypSafetyList = this.checked.map((item, index) => {
           let obj = {
@@ -580,6 +570,10 @@
         });
         console.log("finSendData: ", finSendData);
         console.log(this.fileList)
+        if (this.$route.query.id) {
+          finSendData.id = this.oldInfo.id;
+          finSendData.mbzypCode = this.oldInfo.mbzypCode;
+        }
         this.$api.page_3.htHseMbzypSave(finSendData, this.$userInfo.sessionId).then(res => {
           console.log(res)
           if (res.result === 'true') {

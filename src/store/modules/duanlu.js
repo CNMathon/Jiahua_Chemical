@@ -2,7 +2,9 @@
 const state = {
   reason: [],
   endangerSign: [],
-  workCharger: [] //作业部门负责人
+  workCharger: [], //作业部门负责人
+  workDept:[],
+  involveDept:[]
 };
 
 // getters

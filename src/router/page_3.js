@@ -372,6 +372,11 @@ const routes = {
           meta: {
             name: "受限空间-确认签字"
           }
+        },
+        {
+          path: "/page_3/kongjian/select_organization",
+          name: "kongjian_select_organization",
+          component: () => import("../components/Organization/index.vue")
         }
       ]
     },
@@ -435,6 +440,11 @@ const routes = {
           path: "/page_3/mangban/confirm",
           name: "mangban_confirm",
           component: () => import("../views/pages/page_3/MangBan/Confirm.vue")
+        },
+        {
+          path: "/page_3/mangban/select_organization",
+          name: "mangban_select_organization",
+          component: () => import("../components/Organization/index.vue")
         }
       ]
     },
@@ -510,6 +520,11 @@ const routes = {
             name: "高出安全-确认签字",
             keepAlive: false //此组件不需要被缓存
           }
+        },
+        {
+          path: "/page_3/gaochu/select_organization",
+          name: "gaochu_select_organization",
+          component: () => import("../components/Organization/index.vue")
         }
       ]
     },
@@ -520,6 +535,14 @@ const routes = {
       component: () => import("../views/pages/page_3/DiaoZhuang/Home.vue"),
       redirect: "/page_3/diaozhuang/index",
       children: [
+        {
+          path: "/page_3/diaozhuang/shenpi",
+          name: "diaozhuang_shenpi",
+          component: () => import("../views/pages/page_3/DiaoZhuang/shenpi.vue"),
+          meta: {
+            name: "审批"
+          }
+        },
         {
           path: "/page_3/diaozhuang/index",
           name: "diaozhuang_index",
@@ -537,7 +560,15 @@ const routes = {
             keepAlive: true //此组件需要被缓存
           }
         },
-
+        {
+          path: "/page_3/diaozhuang/index3",
+          name: "diaozhuang_index3",
+          component: () =>
+            import("../views/pages/page_3/DiaoZhuang/Index3.vue"),
+          meta: {
+            keepAlive: true //此组件需要被缓存
+          }
+        },
         {
           path: "/page_3/diaozhuang/list",
           name: "diaozhuang_list",
@@ -590,6 +621,11 @@ const routes = {
             name: "吊装安全-确认签字",
             keepAlive: false //此组件不需要被缓存
           }
+        },
+        {
+          path: "/page_3/diaozhuang/select_organization",
+          name: "diaozhuang_select_organization",
+          component: () => import("../components/Organization/index.vue")
         }
       ]
     },
@@ -657,6 +693,11 @@ const routes = {
             name: "临时用电-确认签字",
             keepAlive: false //此组件不需要被缓存
           }
+        },
+        {
+          path: "/page_3/linshi/select_organization",
+          name: "linshi_select_organization",
+          component: () => import("../components/Organization/index.vue")
         }
       ]
     },
@@ -735,6 +776,11 @@ const routes = {
             name: "动土安全-确认签字",
             keepAlive: false //此组件不需要被缓存
           }
+        },
+        {
+          path: "/page_3/dongtu/select_organization",
+          name: "dongtu_select_organization",
+          component: () => import("../components/Organization/index.vue")
         }
       ]
     },
@@ -745,6 +791,14 @@ const routes = {
       component: () => import("../views/pages/page_3/DuanLu/Home.vue"),
       redirect: "/page_3/duanlu/index",
       children: [
+        {
+          path: "/page_3/duanlu/shenpi",
+          name: "duanlu_shenpi",
+          component: () => import("../views/pages/page_3/DuanLu/shenpi.vue"),
+          meta: {
+            name: "审批"
+          }
+        },
         {
           path: "/page_3/duanlu/index",
           name: "duanlu_index",

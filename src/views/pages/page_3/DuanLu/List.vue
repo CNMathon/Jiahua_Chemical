@@ -33,7 +33,7 @@
                  :key="index">
             <!-- 此处在做完AJAX后需要判断是否为最后行 - class存在判断 -->
             <div class="donghuo-list-card donghuo-list-card-nolast"
-                 @click="jumpToMorePage(item.htStatus, item.permitCode)">
+                 @click="jumpToMorePage(item.htStatus, item.id)">
               <div class="left">
                 <div class="left-line left-line-notlast">许可证编号：{{item.permitCode}}</div>
                 <div class="left-line left-line-notlast"
@@ -116,6 +116,7 @@
       // 跳转至详情页
       jumpToMorePage (status, code) {
         const that = this;
+        sessionStorage.setItem('flag','1')
         function todo (statusList, path, moreInfo = null) {
           if (status == statusList) {
             that.$router.push({

@@ -70,7 +70,11 @@
       <!-- 发现时间 -->
       <cell-time v-model="sendData.findDate" title="发现时间" />
       <!-- 上传图片 -->
-      <cell-image :value="fileList" :afterRead="afterRead" />
+      <cell-image
+        v-model="fileList"
+        :beforeRead="beforeRead"
+        :before-delete="beforeDelete"
+      />
     </div>
 
     <!-- <div class="next" @click="Next">提交</div> -->
@@ -78,7 +82,6 @@
       <button @click="postData">保存</button>
       <button @click="closeAction">取消</button>
     </van-popup>
-    <button @click="testme">testme</button>
     <!-- 缺陷类型 - old -->
     <!-- <van-action-sheet
       v-model="defectTypeShow"
@@ -100,9 +103,10 @@
 <script>
 import { mapState } from "vuex";
 import { business } from "@/mixin/business";
+import { uploadFile } from "@/mixin/uploadFile";
 export default {
   name: "quexian",
-  mixins: [business],
+  mixins: [business, uploadFile],
   data() {
     return {
       isShowAction: false,
@@ -131,7 +135,6 @@ export default {
         { name: "二类缺陷", index: 1 },
         { name: "三类缺陷", index: 2 }
       ],
-      fileList: []
     };
   },
   computed: {
@@ -140,6 +143,11 @@ export default {
     },
     categoryColumnsName() {
       return this.categoryColumns.map(res => res.name);
+    },
+    fileUrlList() {
+      let arr = [];
+      this.fileList.map(item => arr.push(item.fileUrl))
+      return arr
     },
     ...mapState({
       findPeopleName: state => state.quexian.findPeopleName,
@@ -153,28 +161,6 @@ export default {
     }
   },
   methods: {
-    testme() {
-      console.log(`computed:`, this.deviceName)
-      console.log(`sendData:`, this.sendData.deviceName)
-    },
-    afterRead(file) {
-      this.fileList.push(file);
-      console.log(`fileList:`, this.fileList);
-      console.log({
-        fileMd5: this.$md5(file.content),
-        fileName: file.file.name,
-        file: file.content
-      });
-      this.$api.page_3
-        .fileUpload({
-          fileMd5: this.$md5(file.content),
-          fileName: file.file.name,
-          file: file.content
-        })
-        .then(res => {
-          console.log(res);
-        });
-    },
     openAction() {
       this.isShowAction = true;
     },
@@ -183,6 +169,20 @@ export default {
     },
     // 发送数据
     postData() {
+      let empStat = this.isDataEmpty(
+        this.sendData.deviceName, // 空间设备
+        this.sendData.findPeopleName, // 发现人
+        this.sendData.description, // 缺陷描述
+        this.sendData.defectType, // 缺陷类型
+        this.sendData.category, // 缺陷类别
+        this.sendData.findDate, // 发现时间
+        this.fileList, // 上传图片
+      )
+      if (empStat) {
+        console.error('用户表单输入不完整')
+        this.$notify('请输入完整的表单数据')
+        return
+      }
       const that = this;
       let sendData = JSON.parse(JSON.stringify(this.sendData));
       sendData.findPeopleName = this.userString(
@@ -192,7 +192,8 @@ export default {
       sendData.htStatus = 1
       sendData.deviceSpace.deviceCode = sendData.deviceName[0].deviceCode
       sendData.deviceSpaceId = sendData.deviceName[0].id
-      delete sendData.deviceName
+      sendData.htDeviceDefect_file = String(this.fileUrlList)
+      // delete sendData.deviceName
       // sendData.device.deviceCode = ''
       // sendData.deviceId = ''
 

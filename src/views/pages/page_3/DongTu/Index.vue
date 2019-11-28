@@ -54,21 +54,21 @@
             <!-- 动土结束时间 -->
             <cell-time v-model="sendData.dtEndtime" title="动土结束时间" required></cell-time>
             <!-- 监护人 -->
-            <cell-select-user
+            <select-organization
               title="监护人"
               required
               :storeModule="storeModule"
               storeKey="guardian"
               v-model="sendData.guardian"
-            ></cell-select-user>
+            ></select-organization>
             <!-- 作业负责人 -->
-            <cell-select-user
+            <select-organization
               title="作业负责人"
               required
               :storeModule="storeModule"
               storeKey="dtMan"
               v-model="sendData.dtMan"
-            ></cell-select-user>
+            ></select-organization>
             <!-- 作业范围、内容、方式 -->
             <div class="cell border_none image-update">
               <div class="cell_title">
@@ -550,8 +550,8 @@ export default {
       sendData.guardian = this.userString(sendData.guardian, "userCode");
       sendData.dtMan = this.userString(sendData.dtMan, "userCode");
       sendData.dtDept = this.userString(sendData.dtDept, "id");
-      sendData.applyDept = this.$userInfo.officeName;
-      sendData.applyer = this.$userInfo.userName;
+      sendData.applyDept = this.$userInfo.officeCode;
+      sendData.applyer = this.$userInfo.userCode;
       sendData.dtSite = this.sendData.dtSite; // 作业地点
       sendData.htDeviceDefect_file = htDeviceDefect_file.join(",");
       sendData.__sid = this.$userInfo.sessionId;
@@ -599,23 +599,26 @@ export default {
     getPageData() {
       this.isLoading = true;
       this.$api.page_3
-        .htHseDtzypListData({
-          dtzypCode: this.$route.query.code,
+        .htHseDtzypListDataById({
+          id: this.$route.query.code,
           __sid: localStorage.getItem("JiaHuaSessionId")
         })
         .then(res => {
           this.isLoading = false;
-          let info = res.list[0];
+          let info = res;
           console.log("pageData: ", info);
           console.log("id: ", info.id);
           this.sendData.id = info.id;
           for (const key in this.sendData) {
             if (key === "guardian") {
-              this.sendData[key] = this.reductionSelectUser(info[key]);
+              this.sendData[key] = this.reductionSelectUserObj(info[key]);
             } else if (key === "dtMan") {
-              this.sendData[key] = this.reductionSelectUser(info[key]);
+              this.sendData[key] = this.reductionSelectUserObj(info.zyfzr);
             } else if (key === "dtDept") {
-              this.sendData[key] = this.reductionSelectDept(info[key]);
+              this.sendData[key] = [{
+                id:info.zybm.id,
+                name:info.zybm.officeName
+              }];
             } else if (key === "otherSpecial") {
               if (info[key])
                 this.sendData[key] = this.reductionSelectTag(

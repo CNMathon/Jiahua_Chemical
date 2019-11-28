@@ -31,7 +31,7 @@
         required
         title="危害辨识"
         storeKey="endangerSign"
-        :tagList="endangerSign"
+        :tagList="sendData.endangerSign"
         :showList="list_2"
         :storeModule="storeModule"
       ></cell-select-tag>
@@ -40,17 +40,13 @@
       <!-- 断路结束时间 -->
       <cell-time v-model="sendData.offtimeEnd" title="断路结束时间" required></cell-time>
       <!-- 作业部门 -->
-      <div class="cell">
-        <div class="cell_title">
-          <span>作业部门</span>
-        </div>
-        <div class="cell_value">
-          <span>部门名1、部门名2</span>
-          <span class="cell_value_arrow">
-            <van-icon name="search" />
-          </span>
-        </div>
-      </div>
+      <cell-select-department
+              title="作业部门"
+              required
+              :storeModule="storeModule"
+              storeKey="workDept"
+              v-model="sendData.workDept"
+            ></cell-select-department>
       <!-- 作业部门负责人 -->
       <cell-select-user
         title="作业部门负责人"
@@ -61,17 +57,13 @@
       ></cell-select-user>
       <!-- {{sendData.workCharger}} -->
       <!-- 涉及部门 -->
-      <div class="cell">
-        <div class="cell_title">
-          <span>涉及部门</span>
-        </div>
-        <div class="cell_value">
-          <span>人名1、人名2</span>
-          <span class="cell_value_arrow">
-            <van-icon name="search" />
-          </span>
-        </div>
-      </div>
+      <cell-select-department
+              title="涉及部门"
+              required
+              :storeModule="storeModule"
+              storeKey="involveDept"
+              v-model="sendData.involveDept"
+            ></cell-select-department>
       <!-- 断路地段示意图及相关说明-->
       <!-- <cell-textarea v-model="sendData.offExplain" title="断路地段示意图及相关说明" placeholder="请输入工作内容"></cell-textarea> -->
       <div class="cell border_none">
@@ -169,8 +161,10 @@ export default {
         endangerSign: [], //危害辨识
         offtimeStart: "", //断路时间（起）
         offtimeEnd: "", //断路时间（止）
-        workCharger: [] //作业部门负责人
+        workCharger: [], //作业部门负责人
         //offExplain: "" //相关说明
+        workDept:[],
+        involveDept:[]
       },
       fileList: [], // 图片列表
       list_1: [
@@ -205,7 +199,9 @@ export default {
   computed: mapState({
     reason: state => state.duanlu.reason,
     endangerSign: state => state.duanlu.endangerSign,
-    workCharger: state => state.duanlu.workCharger
+    workCharger: state => state.duanlu.workCharger,
+    involveDept:state=>state.duanlu.involveDept,
+    workDept:state=>state.duanlu.workDept
   }),
   // beforeDestroy() {
   //   if (this.canClean) {
@@ -227,11 +223,29 @@ export default {
     //   };
     // }
     console.log("code:", this.$route.query.code);
-    if (this.$route.query.code) {
-      if (this.queryId !== this.$route.query.code) {
-        this.queryId = this.$route.query.code;
-        this.getPageData();
+    if (this.$route.query.code&&sessionStorage.getItem('flag')=='1') {
+      this.sendData={
+        reason: [], //断路原因
+        endangerSign: [], //危害辨识
+        offtimeStart: "", //断路时间（起）
+        offtimeEnd: "", //断路时间（止）
+        workCharger: [], //作业部门负责人
+        involveDept:[],
+        workDept:[]
       }
+      this.getPageData();
+      sessionStorage.removeItem('flag')
+    }else if(!this.$route.query.code&&sessionStorage.getItem('flag')=='1'){
+      this.sendData={
+        reason: [], //断路原因
+        endangerSign: [], //危害辨识
+        offtimeStart: "", //断路时间（起）
+        offtimeEnd: "", //断路时间（止）
+        workCharger: [], //作业部门负责人
+        involveDept:[],
+        workDept:[]
+      }
+      sessionStorage.removeItem('flag')
     }
   },
   methods: {
@@ -253,7 +267,7 @@ export default {
         });
         this.$api.page_3
           .htHseDlzypListData({
-            id: this.id,
+            permitCode: this.$route.query.code,
             __sid: localStorage.getItem("JiaHuaSessionId")
           })
           .then(res => {
@@ -318,18 +332,42 @@ export default {
     },
     getPageData() {
       this.$api.page_3
-        .htHseDlzypListData({
+        .htHseDlzypListDataById({
           __sid: localStorage.getItem("JiaHuaSessionId"),
-          permitCode: this.$route.query.code
+          id: this.$route.query.code
         })
         .then(res => {
-          this.listData = res.list;
+          this.listData = res;
           this.isLoading = false;
+          this.id = res.id
           console.log(this.listData);
+          this.sendData.offtimeEnd = this.listData.offtimeEnd
+          this.sendData.offtimeStart = this.listData.offtimeStart
+          this.sendData.reason = this.reductionSelectTag(
+                  this.listData.reason,
+                  this.list_1
+                );
+          this.sendData.endangerSign = this.reductionSelectTag(
+                  this.listData.endangerSign,
+                  this.list_2
+                );
+          this.sendData.workDept = this.reductionSelectDept(this.listData.zybm.fullName);
+          this.sendData.workCharger = this.reductionSelectUser(this.listData.zybmfzr.userName);
+          this.sendData.involveDept = this.reductionSelectDept(this.listData.involveDept);
+          console.log(this.sendData)
         })
         .catch(() => {});
     },
-
+    reductionSelectDept(data) {
+      let newArr = [];
+      let arr = data.split(",");
+      arr.forEach(element => {
+        let obj = {};
+        obj.name = element;
+        newArr.push(obj);
+      });
+      return newArr;
+    },
     // 打开操作Popup
     openAction() {
       this.isShowAction = true;
@@ -342,15 +380,21 @@ export default {
     postData(again = false, zypId) {
       const that = this;
       let sendData = JSON.parse(JSON.stringify(this.sendData));
-      let offExplain = this.fileList.map(item => {
+      console.log(this.fileList)
+      let htHseDtzyp_file = this.fileList.map(item => {
         return item.id;
       });
+      if(this.id!=0){
+        sendData.id = this.id
+      }
       sendData.reason = this.stringData("reason", "list_1");
       sendData.endangerSign = this.stringData("endangerSign", "list_2");
       sendData.applyDept = this.$userInfo.officeCode;
       sendData.applyer = this.$userInfo.userCode;
-      //sendData.offExplain = offExplain.join(",");
+      sendData.htHseDtzyp_file = htHseDtzyp_file.join(",");
       sendData.workCharger = sendData.workCharger[0].userCode
+      sendData.workDept = sendData.workDept[0].id
+      sendData.involveDept = sendData.involveDept[0].id
       sendData.__sid = this.$userInfo.sessionId;
       let List = [
         {
@@ -440,6 +484,12 @@ export default {
     },
     workCharger(res) {
       this.sendData.workCharger = res;
+    },
+    workDept(res){
+      this.sendData.workDept = res
+    },
+    involveDept(res){
+      this.sendData.involveDept = res
     }
   }
 };

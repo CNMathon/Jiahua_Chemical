@@ -171,7 +171,6 @@ export default {
     },
     //  选择组织 获得当前所有的 子类
     tapOrganization(data, index) {
-      console.log('单选', data);
       if (!this.selectUser) {
         this.treePostionList.push(data);
         if (data.children.length > 0) {
@@ -208,7 +207,6 @@ export default {
       this.$api.common
         .empUserList(sendData)
         .then(res => {
-          console.log('获取人员列表', res);
           this.list = res.list.map(item => {
             let newItem = {};
             item.avatarUrl =

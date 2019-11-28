@@ -49,13 +49,16 @@
                      @click.stop="edit(item)"
                      v-if="item.htStatus == 1">编辑</div>
                 <div class="right"
-                     @click.stop="()=>{$router.push({path:'/page_3/diaozhuang/index2',query:{zypcode:item.zypcode}})}"
+                     @click.stop="toIndex2(item)"
                      v-if="item.htStatus == 2">初审</div>
                 <div class="right"
+                      @click.stop="toIndex3(item)"
                      v-if="item.htStatus == 3">有效</div>
                 <div class="right"
+                      @click.stop="toIndex3(item)"
                      v-if="item.htStatus == 4">已验票</div>
                 <div class="right"
+                      @click.stop="toIndex3(item)"
                      v-if="item.htStatus == 5">已终结</div>
               </div>
             </div>
@@ -116,7 +119,15 @@
 		edit(item){
 			this.$router.push({path:'/page_3/diaozhuang/index',query:{zypcode:item.zypcode}});
 			localStorage.setItem('isfresh',"diaozhuanglist");
-		},
+    },
+    toIndex2(item){
+      this.$router.push({path:'/page_3/diaozhuang/index2',query:{zypcode:item.zypcode}});
+			localStorage.setItem('isfresh',"diaozhuanglist");
+    },
+    toIndex3(item){
+      this.$router.push({path:'/page_3/diaozhuang/index3',query:{zypcode:item.zypcode}});
+			localStorage.setItem('isfresh',"diaozhuanglist");
+    },
       pageBack () {
         this.$router.push({
           path: "/page_3/index"

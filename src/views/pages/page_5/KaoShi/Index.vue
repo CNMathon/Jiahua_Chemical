@@ -88,7 +88,6 @@ export default {
     // 获取考试数据
     getPageData(refresh = false) {
       let _this = this.pageList[this.tabActive].info;
-
       if (refresh) {
         _this.pageNow = 1;
         _this.loading = false;

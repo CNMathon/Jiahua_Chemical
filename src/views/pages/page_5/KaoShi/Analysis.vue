@@ -39,6 +39,7 @@
           </div>
           <!-- 多选题 -->
           <div class="checkbox" v-if="item.questionType == 2">
+            <div class="header-title">多选题</div>
             <div class="title" v-html="item.questionStem"></div>
             <van-checkbox-group v-model="item.myAnswer" disabled>
               <div v-for="(items,indexs) in item.children" :key="indexs">
@@ -88,6 +89,41 @@
               </div>
             </div>
           </div>
+          <!-- 填空题 -->
+          <div class="checkbox" v-if="item.questionType == 4">
+            <div class="header-title">填空题</div>
+            <div class="judge">
+              <!-- <div class="title" v-html="item.questionStem"></div> -->
+              <div v-for="(items,indexs) in item.questionStem" :key="indexs">
+                <div v-if="items.type === 0">
+                  <span v-html="items.value"></span>
+                </div>
+                <div v-if="items.type === 1"></div>
+              </div>
+            </div>
+            <div class="analysis">
+              <div class="analysis__item">
+                <div class="analysis__item_title">解题分析：</div>
+                <div class="analysis__item_text" v-html="item.questionAnalize"></div>
+              </div>
+              <div class="analysis__item">
+                <div class="analysis__item_title">正确答案：</div>
+                <div class="analysis__item_text">
+                  <span v-for="(items,index) in item.questionAnswer" :key="index">
+                    {{items.val}}
+                    <span v-if="item.questionAnswer.length !== index + 1">,</span>
+                  </span>
+                </div>
+              </div>
+              <div class="analysis__item">
+                <div class="analysis__item_title">考生答案：</div>
+                <span v-for="(items,index) in item.myAnswer" :key="index">
+                  {{items.val}}
+                  <span v-if="item.myAnswer.length !== index + 1">,</span>
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </van-skeleton>
@@ -123,6 +159,54 @@ export default {
         .then(res => {
           // 加载状态结束
           this.isLoading = false;
+          res.map(item => {
+            if (Number(item.questionType) === 2) {
+              console.log("item.myAnswer: ", item.myAnswer);
+              if (item.myAnswer === "") {
+                item.myAnswer = [];
+              }
+            }
+            if (Number(item.questionType) === 4) {
+              let reg = /([BlankArea])\w+/g;
+              let regArr = item.questionStem.match(reg);
+              let newQuestionStem = item.questionStem;
+              newQuestionStem = newQuestionStem.replace(/\[/g, "");
+              newQuestionStem = newQuestionStem.replace(/]/g, "");
+              newQuestionStem = newQuestionStem.split(/(BlankArea\w+)/g);
+              let arr = [];
+              let num = 0;
+              newQuestionStem.forEach(element => {
+                if (element.indexOf("BlankArea") === -1) {
+                  let obj = {
+                    type: 0,
+                    value: element
+                  };
+                  arr.push(obj);
+                } else {
+                  let obj = {
+                    type: 1,
+                    value: element,
+                    key: num
+                  };
+                  arr.push(obj);
+                  num = num + 1;
+                }
+              });
+              item.questionStem = arr;
+              if (item.myAnswer !== "") {
+                return;
+              }
+              item.myAnswer = [];
+              regArr.forEach((element, index) => {
+                let obj = {
+                  no: index + 1,
+                  val: ""
+                };
+                item.myAnswer.push(obj);
+              });
+            }
+            return item;
+          });
           this.answerData = res;
         })
         .catch(() => {

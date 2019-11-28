@@ -329,12 +329,12 @@
       },
       getInfo () {
         this.$api.page_3
-          .htHseMbzypListData({
+          .htHseMbzypListDataById({
             __sid: localStorage.getItem("JiaHuaSessionId"),
-            mbzypCode: this.infoId
+            id: this.infoId
           })
           .then(res => {
-            let info = res.list[0];
+            let info = res;
             this.oldInfo = info;
             console.log(info)
             this.actRuTask = info.actRuTask?info.actRuTask.id:''
@@ -425,9 +425,24 @@
               this.sendData.pipe.push(obj)
             }
             console.log(this.sendData)
+            this.initListDataD(info.htHseMbzypSafetyList);
           })
           .catch(() => { });
       },
+      //  初始化子票
+      initListDataD(data) {
+      //  this.checked
+      let checked = {};
+      data.forEach(item => {
+        this.checked[parseInt(item.num) ] = {
+          checked: item.safetyStatus === 1,
+          safetyCs: item.safetyCs,
+          img: item.affirmRen === "0" ? "" : item.affirmRen
+        };
+      });
+      console.log("this.checked", this.checked);
+      this.$forceUpdate();
+    },
       Next () {
         console.log(this.actRuTask)
         if (this.actRuTask === '') {
@@ -487,7 +502,9 @@
       // 显示签名
       showSignature (index) {
         this.selectSignatureShow = index;
-        this.signatureShow = true;
+        if ( !this.checked[index].checked) {
+          this.signatureShow = true;
+        } 
       },
       // 取消签名
       signatureCancel (index) {

@@ -31,7 +31,7 @@
           <label v-for="(item, index) in listData"
                  :key="index">
             <!-- 此处在做完AJAX后需要判断是否为最后行 - class存在判断 -->
-            <div class="donghuo-list-card donghuo-list-card-nolast">
+            <div class="donghuo-list-card donghuo-list-card-nolast" @click.stop="jumpToMorePage(item.htStatus, item.id)">
               <div class="left">
                 <div class="left-line left-line-notlast">设备管道名称：{{item.pipe}}</div>
                 <div class="left-line left-line-notlast">盲板抽堵编号：{{item.mbzypCode}}</div>
@@ -40,24 +40,7 @@
                 <div class="left-line left-line-notlast">生活部门产品负责人：{{item.sc?item.sc.userName:''}}</div>
                 <div class="left-line">作业部门负责人：{{item.zy?item.zy.userName:''}}</div>
               </div>
-              <div class="right"
-                   @click.stop="()=>{$router.push({path:'/page_3/mangban/index',query:{id:item.mbzypCode}})}"
-                   v-if="item.htStatus == 1">编辑</div>
-              <div class="right"
-                   @click.stop="()=>{$router.push({path:'/page_3/mangban/index2',query:{id:item.mbzypCode}})}"
-                   v-if="item.htStatus == 2">提交资料</div>
-              <div class="right"
-                   @click.stop="()=>{$router.push({path:'/page_3/mangban/index3',query:{id:item.mbzypCode}})}"
-                   v-if="item.htStatus == 3">初审</div>
-              <div class="right"
-                   @click.stop="()=>{$router.push({path:'/page_3/mangban/index4',query:{id:item.mbzypCode}})}"
-                   v-if="item.htStatus == 4">审核</div>
-              <div class="right"
-                   @click.stop="()=>{$router.push({path:'/page_3/mangban/index4',query:{id:item.mbzypCode}})}"
-                   v-if="item.htStatus == 5">有效</div>
-              <div class="right"
-                   @click.stop="()=>{$router.push({path:'/page_3/mangban/index4',query:{id:item.mbzypCode}})}"
-                   v-if="item.htStatus == 6">结束</div>
+              <div class="right">{{zypztList[item.htStatus].name}}</div>
             </div>
           </label>
         </van-skeleton>
@@ -100,6 +83,30 @@
       });
     },
     methods: {
+      // 跳转至详情页
+      jumpToMorePage (status, code) {
+        let path = '';
+        switch (Number(status)) {
+          case 1:
+            path += '../mangban';
+            break;
+          case 2:
+            path += '../mangban/index2';
+            break;
+          case 3:
+            path += '../mangban/index3';
+            break;
+          case 4:
+          case 5:
+          case 6:
+            path += '../mangban/index4';
+            break;
+        }
+        this.$router.push({
+            path: path,
+            query: { id: code }
+          });
+      },
       pageBack () {
         this.$router.push({
           path: "/page_3/index"

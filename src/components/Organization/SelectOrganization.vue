@@ -47,6 +47,8 @@ export default {
     },
     max: 0
   },
+  mounted(){
+  },
   methods: {
     toSelectUser() {
       if (this.disable) return;
@@ -63,10 +65,7 @@ export default {
     showNames() {
       if (this.value) {
         let arr = JSON.parse(JSON.stringify(this.value));
-				console.log(this.value)
-				console.log("value")
         let newArr = arr.map(item => {
-					console.log(item)
           return item.userName;
         });
         return newArr.join(",");

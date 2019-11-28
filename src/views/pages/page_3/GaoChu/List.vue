@@ -25,18 +25,11 @@
     </j-filter>
     <van-pull-refresh v-model="isLoading"
                       @refresh="getListData(true)">
-      <van-list v-model="loading"
-                :finished="finished"
-                :error.sync="error"
-                error-text="请求失败，点击重新加载"
-                finished-text="没有更多了"
-                @load="getListData()">
         <div class="list">
           <div class="list-card-area">
             <div v-for="(item, index) in pageList"
-                 :key="index">
-              <div class="donghuo-list-card donghuo-list-card-nolast"
-                   @click="jumpToMorePage(item.htStatus, item.id)">
+                 :key="index"  @click.stop="toDetail(item.htStatus,item.gczyCode)">
+              <div class="donghuo-list-card donghuo-list-card-nolast">
                 <div class="left">
                   <div class="left-line left-line-notlast">作业内容：{{ item.workContent }}</div>
                   <div class="left-line left-line-notlast">作业地点：{{ item.workAddress }}</div>
@@ -46,26 +39,11 @@
                   <div class="left-line left-line-notlast">作业开始时间：{{ item.startTime }}</div>
                   <div class="left-line">作业结束时间：{{ item.endTime }}</div>
                 </div>
-                <div class="right"
-                     @click.stop="toDetail(0,item.gczyCode)"
-                     v-if="item.htStatus == 1">编辑</div>
-                <div class="right"
-                     @click.stop="toDetail(1,item.gczyCode)"
-                     v-if="item.htStatus == 2">初审</div>
-                <div class="right"
-                    @click.stop="toDetail(2,item.gczyCode)"
-                     v-if="item.htStatus == 3">有效</div>
-                <div class="right"
-                    @click.stop="toDetail(2,item.gczyCode)"
-                     v-if="item.htStatus == 4">已验票</div>
-                <div class="right"
-                    @click.stop="toDetail(2,item.gczyCode)"
-                     v-if="item.htStatus == 5">已终结</div>
+                <div class="right">{{zypztList[item.htStatus].name}}</div>
               </div>
             </div>
           </div>
         </div>
-      </van-list>
     </van-pull-refresh>
   </van-list>
 </template>
@@ -93,22 +71,26 @@
           { index: -1, name: "请选择" },
           { index: 1, name: "编辑" },
           { index: 2, name: "初审" },
-          { index: 3, name: "审核" },
-          { index: 4, name: "有效" },
+          { index: 3, name: "有效" },
+          { index: 4, name: "已验票" },
           { index: 5, name: "已终结" }
         ],
         status: "",
       };
     },
     mixins: [mixin],
+    created () {
+      this.getListData(true);
+    },
     methods: {
       pageBack () {
         this.$router.push({
           path: "/page_3/index"
         });
       },
-      // 获取吊装工作票
+      // 获取工作票
       getListData (refresh = false) {
+        console.log('this.isLoading', this.isLoading);
         if (refresh) {
           this.pageNow = 1;
           this.isLoading = true;
@@ -169,37 +151,14 @@
       },
       toDetail (id, status) {
         sessionStorage.setItem('flag', '1');
-        if (id === 0) {
+        if (parseInt(id) === 1) {
           this.$router.push({ path: '/page_3/gaochu/index', query: { gczyCode: status } })
-        } else if (id === 1) {
+        } else if (parseInt(id)  === 2) {
           this.$router.push({ path: '/page_3/gaochu/index2', query: { gczyCode: status } })
         }else{
           this.$router.push({ path: '/page_3/gaochu/index3', query: { gczyCode: status } })
         }
       },
-      // jumpToMorePage(status, id) {
-      //   const that = this;
-      //   function todo(statusList, path, moreInfo = null) {
-      //     if (status == statusList) {
-      //       console.log(808)
-      //       that.$router.push({
-      //         path: path,
-      //         query: {
-      //           status: status,
-      //           id: id,
-      //           moreInfo: moreInfo
-      //         }
-      //       })
-      //     }
-      //   }
-
-      //   // todo 参数
-      //   // 参数1 => 需要指定的 status
-      //   // 参数2 => 跳转页面
-      //   // 参数3 => 其他需要通过 router 传输的数据
-      //   todo(1, './index', {isInitData: true})
-      //   todo(2, './IndexChuShen', {isInitData: true})
-      // },
     }
   };
 </script>

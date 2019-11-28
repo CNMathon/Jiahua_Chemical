@@ -9,6 +9,15 @@
       @click-right="openAction"
     />
     <div class="cell_group">
+      <cell-value title="部门" :value="'动力中心'"></cell-value>
+      <cell-value title="班组" :value="'甲班'"></cell-value>
+      <cell-value title="工作负责人" :value="'王大锤'"></cell-value>
+      <cell-value title="参加工作人数" :value="'2'"></cell-value>
+      <cell-textarea title="工作内容" required placeholder="热力机械作业票工作内容"></cell-textarea>
+      <cell-time title="开始时间" required></cell-time>
+      <cell-time title="结束时间" required></cell-time>
+      <cell-textarea title="必须采取的安全措施" required placeholder="热力机械作业票必须采取的安全措施"></cell-textarea>
+      <cell-textarea title="措施执行情况" required placeholder="热力机械作业票的措施执行情况"></cell-textarea>
       <van-cell title="已填写作业票预览" is-link />
       <van-cell title="流程图" is-link />
       <van-cell title="10、上诉安全措施以全部实行,许可开始工作于" value="2019-01-03" is-link />

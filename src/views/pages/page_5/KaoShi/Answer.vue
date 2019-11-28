@@ -10,7 +10,7 @@
         <div class="header">
           <div>总题数：{{answerData.length}}</div>
           <div>考试时间：2小时</div>
-          <div>剩余时间：1小时</div>
+          <div>剩余时间：{{time}}</div>
         </div>
         <div v-for="(item,index) in answerData" :key="index">
           <!-- 单选题 -->
@@ -28,6 +28,7 @@
           </div>
           <!-- 多选题 -->
           <div class="checkbox" v-if="item.questionType == 2">
+            <div class="header-title">多选题</div>
             <div class="title" v-html="item.questionStem"></div>
             <van-checkbox-group v-model="item.myAnswer">
               <div v-for="(items,indexs) in item.children" :key="indexs">
@@ -57,6 +58,21 @@
               </div>
             </div>
           </div>
+          <!-- 填空题 -->
+          <div class="checkbox" v-if="item.questionType == 4">
+            <div class="header-title">填空题</div>
+            <div class="judge">
+              <!-- <div class="title" v-html="item.questionStem"></div> -->
+              <div v-for="(items,indexs) in item.questionStem" :key="indexs">
+                <div v-if="items.type === 0">
+                  <span v-html="items.value"></span>
+                </div>
+                <div v-if="items.type === 1">
+                  <input v-model="item.myAnswer[items.key].val" />
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </van-skeleton>
@@ -73,7 +89,8 @@ export default {
       result: [],
       isLoading: true,
       answerData: [],
-      save: 0
+      save: 0,
+      time: "2小时"
     };
   },
   mounted() {
@@ -81,7 +98,6 @@ export default {
     this.getPageData();
   },
   beforeDestroy() {
-    console.log("beforeDestroy");
     clearInterval(this.save);
   },
   methods: {
@@ -97,6 +113,56 @@ export default {
         .then(res => {
           // 加载状态结束
           this.isLoading = false;
+          res.map(item => {
+            if (Number(item.questionType) === 2) {
+              if (item.myAnswer === "") {
+                item.myAnswer = [];
+              } else {
+                item.myAnswer = item.myAnswer.split(",");
+              }
+            }
+            if (Number(item.questionType) === 4) {
+              let reg = /([BlankArea])\w+/g;
+              let regArr = item.questionStem.match(reg);
+              let newQuestionStem = item.questionStem;
+              newQuestionStem = newQuestionStem.replace(/\[/g, "");
+              newQuestionStem = newQuestionStem.replace(/]/g, "");
+              newQuestionStem = newQuestionStem.split(/(BlankArea\w+)/g);
+              let arr = [];
+              let num = 0;
+              newQuestionStem.forEach(element => {
+                if (element.indexOf("BlankArea") === -1) {
+                  let obj = {
+                    type: 0,
+                    value: element
+                  };
+                  arr.push(obj);
+                } else {
+                  let obj = {
+                    type: 1,
+                    value: element,
+                    key: num
+                  };
+                  arr.push(obj);
+                  num = num + 1;
+                }
+              });
+              item.questionStem = arr;
+              if (item.myAnswer !== "") {
+                return;
+              }
+              item.myAnswer = [];
+              regArr.forEach((element, index) => {
+                let obj = {
+                  no: index + 1,
+                  val: ""
+                };
+                item.myAnswer.push(obj);
+              });
+            }
+            return item;
+          });
+
           this.answerData = res;
           this.save = setInterval(() => {
             this.stopExam();
@@ -127,6 +193,15 @@ export default {
           this.stopExam(1);
         });
     },
+    resultFormat(result) {
+      var h = Math.floor((result / 3600) % 24);
+      var m = Math.floor((result / 60) % 60);
+      if (h < 1) {
+        return (result = m + "分钟");
+      } else {
+        return (result = h + "小时" + m + "分钟");
+      }
+    },
     stopExam(isFinalSubmit = 0) {
       let sendData = {
         id: this.$route.query.id,
@@ -135,7 +210,21 @@ export default {
         isFinalSubmit: isFinalSubmit,
         children: []
       };
-      this.answerData.map(item => {
+      const answerData = JSON.parse(JSON.stringify(this.answerData));
+      answerData.map(item => {
+        if (Number(item.questionType) === 2) {
+          item.myAnswer = item.myAnswer.join(",");
+        }
+        if (Number(item.questionType) === 4) {
+          let myAnswer = [];
+          for (const key in item.myAnswer) {
+            if (item.myAnswer.hasOwnProperty(key)) {
+              const element = item.myAnswer[key];
+              myAnswer.push(element);
+            }
+          }
+          item.myAnswer = myAnswer;
+        }
         let obj = {
           sectionID: item.sectionID,
           questionID: item.questionID,
@@ -152,7 +241,10 @@ export default {
       this.$api.page_5
         .submitMyPaper(data, this.$userInfo.sessionId)
         .then(res => {
-          console.log("res: ", res);
+          this.time = this.resultFormat(res.remainMinutes);
+          if (res.remainMinutes === 0) {
+            this.stopExam(1);
+          }
           if (isFinalSubmit === 1) {
             this.$Toast.success({
               message: "提交成功",

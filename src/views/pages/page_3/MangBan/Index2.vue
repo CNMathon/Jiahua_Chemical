@@ -19,11 +19,11 @@
                   disable></cell-value>
       <!-- 作业票编号 -->
       <cell-value title="作业票编号"
-                  value
+                  :value="$userInfo.dhzypCode"
                   disable></cell-value>
       <!-- 作业票状态 -->
       <cell-value title="作业票状态"
-                  value="编辑"
+                  :value="htStatus(oldInfo.htStatus)"
                   disable></cell-value>
     </div>
     <div class="cell_group"
@@ -301,25 +301,28 @@
     methods: {
       getInfo () {
         this.$api.page_3
-          .htHseMbzypListData({
+          .htHseMbzypListDataById({
             __sid: localStorage.getItem("JiaHuaSessionId"),
-            mbzypCode: this.infoId
+            id: this.infoId
           })
           .then(res => {
-            let info = res.list[0];
+            let info = res;
             this.oldInfo = info;
             console.log(info)
             this.id = info.id
             this.actRuTask = info.actRuTask?info.actRuTask.id:''
             console.log(this.id)
-            this.sendData.scMan = this.reductionSelectUser(info.sc.userName)
-            this.sendData.zyMan = this.reductionSelectUser(info.zy.userName)
+            this.sendData.scMan = this.reductionSelectUserObj(info.sc);
+            this.sendData.zyMan = this.reductionSelectUserObj(info.zy);
             this.sendData.otherSpecial = this.reductionSelectTag(info.otherSpecial, this.list_1);
-            
-            
-            if (info.onePipe.length > 14) {
-              let arr = info.onePipe.split("|");
-              console.log(arr)
+            //  格式化管道
+            let pipiObj = (arr) => {
+              let PullName = arr[10].split(",");
+              let BlockName = arr[9].split(",");
+              let BlockCode = new Array(BlockName.length).fill('').join(',');
+              let PullCode = new Array(PullName.length).fill('').join(',');
+              let pipePullOperator = this.assemblyStrToUserObj(PullCode,arr[10]);
+              let pipeBlockOperator = this.assemblyStrToUserObj(BlockCode,arr[9]);
               let obj = {
                 'pipeName': arr[0],
                 'pipeMedium': arr[1],
@@ -330,77 +333,51 @@
                 'pipeNumber': arr[6],
                 'pipePullTime': arr[7],
                 'pipeBlockTime': arr[8],
-                'pipeBlockOperator': this.reductionSelectUser(arr[9]),
-                'pipePullOperator': this.reductionSelectUser(arr[10]),
-                'pipeBlockGuardian': this.reductionSelectUser(arr[11]),
-                'pipePullGuardian': this.reductionSelectUser(arr[12]),
+                'pipeBlockOperator': this.reductionSelectUserObj(pipeBlockOperator),
+                'pipePullOperator': this.reductionSelectUserObj(pipePullOperator),
+                'pipeBlockGuardian': this.reductionSelectUserObj(this.reductionSelectUser(arr[11])),
+                'pipePullGuardian': this.reductionSelectUserObj(this.reductionSelectUser(arr[12])),
               }
-              this.sendData.pipe.push(obj)
+              return obj;
+            }
+            if (info.onePipe.length > 14) {
+              let arr = info.onePipe.split("|");
+              this.sendData.pipe.push(pipiObj(arr));
             }
             if (info.twoPipe.length > 14) {
               let arr = info.twoPipe.split("|");
-              console.log(arr)
-              let obj = {
-                'pipeName': arr[0],
-                'pipeMedium': arr[1],
-                'pipeTemp': arr[2],
-                'pipePressure': arr[3],
-                'pipeMaterial': arr[4],
-                'pipeSpec': arr[5],
-                'pipeNumber': arr[6],
-                'pipePullTime': arr[7],
-                'pipeBlockTime': arr[8],
-                'pipeBlockOperator': this.reductionSelectUser(arr[9]),
-                'pipePullOperator': this.reductionSelectUser(arr[10]),
-                'pipeBlockGuardian': this.reductionSelectUser(arr[11]),
-                'pipePullGuardian': this.reductionSelectUser(arr[12]),
-              }
-              this.sendData.pipe.push(obj)
+              this.sendData.pipe.push(pipiObj(arr));
             }
             if (info.threePipe.length > 14) {
               let arr = info.threePipe.split("|");
-              console.log(arr)
-              let obj = {
-                'pipeName': arr[0],
-                'pipeMedium': arr[1],
-                'pipeTemp': arr[2],
-                'pipePressure': arr[3],
-                'pipeMaterial': arr[4],
-                'pipeSpec': arr[5],
-                'pipeNumber': arr[6],
-                'pipePullTime': arr[7],
-                'pipeBlockTime': arr[8],
-                'pipeBlockOperator': this.reductionSelectUser(arr[9]),
-                'pipePullOperator': this.reductionSelectUser(arr[10]),
-                'pipeBlockGuardian': this.reductionSelectUser(arr[11]),
-                'pipePullGuardian': this.reductionSelectUser(arr[12]),
-              }
-              this.sendData.pipe.push(obj)
+              this.sendData.pipe.push(pipiObj(arr));
             }
             if (info.fourPipe.length > 14) {
               let arr = info.fourPipe.split("|");
-              console.log(arr)
-              let obj = {
-                'pipeName': arr[0],
-                'pipeMedium': arr[1],
-                'pipeTemp': arr[2],
-                'pipePressure': arr[3],
-                'pipeMaterial': arr[4],
-                'pipeSpec': arr[5],
-                'pipeNumber': arr[6],
-                'pipePullTime': arr[7],
-                'pipeBlockTime': arr[8],
-                'pipeBlockOperator': this.reductionSelectUser(arr[9]),
-                'pipePullOperator': this.reductionSelectUser(arr[10]),
-                'pipeBlockGuardian': this.reductionSelectUser(arr[11]),
-                'pipePullGuardian': this.reductionSelectUser(arr[12]),
-              }
-              this.sendData.pipe.push(obj)
+              this.sendData.pipe.push(pipiObj(arr));
             }
             console.log(this.sendData)
+            this.initListDataD(info.htHseMbzypSafetyList);
           })
           .catch(() => { });
       },
+      //  初始化子票
+      initListDataD(data) {
+      //  this.checked
+      let checked = {};
+      data.forEach(item => {
+        this.checked[parseInt(item.num)] = {
+          checked: item.safetyStatus === 1,
+          safetyCs: item.safetyCs,
+          img: item.affirmRen === "0" ? "" : item.affirmRen
+        };
+      });
+      console.log("this.checked", this.checked);
+      this.$forceUpdate();
+      // this.$nextTick(() => {
+      //   this.donghuoInit = false;
+      // });
+    },
       Next () {
         console.log(this.actRuTask)
         if (this.actRuTask === '') {
@@ -460,7 +437,9 @@
       // 显示签名
       showSignature (index) {
         this.selectSignatureShow = index;
-        this.signatureShow = true;
+        if ( !this.checked[index].checked) {
+          this.signatureShow = true;
+        } 
       },
       // 取消签名
       signatureCancel (index) {
@@ -515,13 +494,15 @@
             dataStrArr[i] = `|||||||||||&|&`;
             continue;
           }
+          let pipePullOperator = pipe[i].pipePullOperator.map(item => item.userName);
+          let pipeBlockOperator = pipe[i].pipeBlockOperator.map(item => item.userName);
           dataStrArr[i] = `${pipe[i].pipeName}|${pipe[i].pipeMedium}|${pipe[i].pipeTemp}|${
             pipe[i].pipePressure
             }|${pipe[i].pipeMaterial}|${pipe[i].pipeSpec}|${
             pipe[i].pipeNumber
             }|${pipe[i].pipeBlockTime}|${pipe[i].pipePullTime}|${
-            pipe[i].pipeBlockOperator[0].userName
-            }|${pipe[i].pipePullOperator[0].userName}|${
+            pipeBlockOperator.join(',')
+            }|${pipePullOperator.join(',')}|${
             pipe[i].pipeBlockGuardian[0].userName
             }|${pipe[i].pipePullGuardian[0].userName}`;
         }
@@ -532,6 +513,10 @@
           fourPipe: dataStrArr[3],
           __sid: sendData.__sid
         };
+        if (this.$route.query.id) {
+          finSendData.id = this.oldInfo.id;
+          finSendData.mbzypCode = this.oldInfo.mbzypCode;
+        }
         let htHseMbzyp_file = this.fileList.map(item => {
           return item.id;
         });
@@ -542,8 +527,8 @@
         finSendData.applyer = this.$userInfo.userCode;//正式用
         finSendData.mbzypCode = this.infoId
         finSendData.htHseMbzyp_file = htHseMbzyp_file.join(",");
-        finSendData.scMan = this.userString(sendData.scMan, "userName");
-        finSendData.zyMan = this.userString(sendData.zyMan, "userName");
+        finSendData.scMan = this.userString(sendData.scMan, "userCode");
+        finSendData.zyMan = this.userString(sendData.zyMan, "userCode");
         finSendData.otherSpecial = this.stringData("otherSpecial", "list_1");
         finSendData.htHseMbzypSafetyList = this.checked.map((item, index) => {
           let obj = {
@@ -567,7 +552,6 @@
           }
         });
       },
-
       // 材质选择取消
       onMaterialCancel () {
         this.materialShowShow = false;

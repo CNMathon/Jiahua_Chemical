@@ -1,14 +1,15 @@
 // initial state
 const state = {
   keepAliveComponents: ['gongdanguanli_list','gongdanguanli'],
-	guardianshipName:[], //监护人
-	executorName:[], //作业人员
-	scenePersonName:[], //现场负责人
-	securityPersonName:[], //安全教育人
 	whsb:[] ,// 危害辨识
 
   device: [], // 空间设备
-  projectInfo: [], // 检修项目
+  projectInfo: [], // 检修项目,
+  guardianshipInfo: [], // 监护人
+  executorInfo: [], // 作业人员
+  securityInfo: [], // 安全教育人
+  sceneInfo: [], // 现场负责人
+  harmType: [], // 危害辨识
 };
 
 // getters

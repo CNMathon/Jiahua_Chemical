@@ -17,8 +17,12 @@
                      placeholder="请输入审批意见"></cell-textarea>
       <div v-if="status=='2'" class="huiqian">
         <span>会签节点</span>
-        <p @click="check1" :class="zzb===1?'checked':'box'">制造部</p>
-        <p @click="check2" :class="aqhbb===1?'checked':'box'">安全环保部</p>
+        <div style="margin-top:10px">
+          <p @click="check1" :class="zzb===1?'checked':'box'">制造部</p>
+          <p @click="check2" :class="aqhbb===1?'checked':'box'">安全环保部</p>
+          <p @click="check3" :class="tjzg===1?'checked':'box'">土建专工</p>
+          <p @click="check4" :class="sdbm===1?'checked':'box'">属地部门</p>
+        </div>
       </div>
     </div>
     
@@ -56,7 +60,9 @@
         signatureShow:false,
         status:'',
         zzb:0,
-        aqhbb:0
+        aqhbb:0,
+        tjzg:0,
+        sdbm:0
       };
     },
     mixins: [mixin],
@@ -80,6 +86,20 @@
           this.aqhbb = 1
         }else{
           this.aqhbb = 0
+        }
+      },
+      check3(){
+        if(this.tjzg==0){
+          this.tjzg = 1
+        }else{
+          this.tjzg = 0
+        }
+      },
+      check4(){
+        if(this.sdbm==0){
+          this.sdbm = 1
+        }else{
+          this.sdbm = 0
         }
       },
       saveCanvas(e) {
@@ -106,13 +126,15 @@
           if(this.status=='2'){
             data = {
               'id': this.id,
-              'flowKey': 'htHseDhzypService',
+              'flowKey': 'htHseDlzypService',
               'comment': this.comment,
               'actRuTask.id': this.actRuTask,
               'btnSubmit': '通过',
               extendVar:{
-                'zzb':this.zzb,
-                'aqhbb':this.aqhbb,
+                zzb:this.zzb,
+                aqhbb:this.aqhbb,
+                tjzg:this.tjzg,
+                sdbm:this.sdbm,
                 apprSignCode:this.apprSignCode
               },
               __sid: localStorage.getItem("JiaHuaSessionId")
@@ -120,7 +142,7 @@
           }else{
             data = {
               'id': this.id,
-              'flowKey': 'htHseDhzypService',
+              'flowKey': 'htHseDlzypService',
               'comment': this.comment,
               'actRuTask.id': this.actRuTask,
               'btnSubmit': '通过',
@@ -141,11 +163,11 @@
                     groups: ress.groups.join(','),
                     taskId: ress.taskId,
                     id: this.id,
-                    type: 'htHseDhzypService'
+                    type: 'htHseDlzypService'
                   }                })
               } else {
                 console.log(44444444444444444)
-                this.$router.push({ path: '../donghuo/list' })
+                this.$router.push({ path: '../duanlu/list' })
               }
             } else {
               this.$notify(ress.message);

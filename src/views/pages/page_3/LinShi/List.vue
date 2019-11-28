@@ -111,11 +111,11 @@
       edit (item) {
         sessionStorage.setItem('flag', '1')
         //this.$router.push({ name: "linshi_index", query: { zypCode: item.zypCode } });
-        this.$router.push({ path: "../linshi/index", query: { zypCode: item.zypCode } });
+        this.$router.push({ path: "../linshi/index", query: { zypCode: item.id } });
       },
       toIndex2 (item) {
         sessionStorage.setItem('flag', '1')
-        this.$router.push({ path: "../linshi/index2", query: { zypCode: item.zypCode } });
+        this.$router.push({ path: "../linshi/index2", query: { zypCode: item.id } });
       },
       /**
        * 获取吊装工作票

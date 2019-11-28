@@ -14,6 +14,7 @@ import CellPickers from "./components/Cell/CellPickers.vue";
 import CellSheet from "./components/Cell/CellSheet.vue";
 import CellTextarea from "./components/Cell/CellTextarea.vue";
 import CellOther from "./components/Cell/CellOther.vue";
+import CellAddList from "./components/Cell/CellAddList.vue";
 import CellSelectUser from "./components/Cell/CellSelectUser.vue";
 import CellSelectProject from "./components/Cell/CellSelectProject.vue";
 import CellSelectDepartment from "./components/Cell/CellSelectDepartment.vue";
@@ -38,6 +39,7 @@ import { Dialog } from "vant";
 import { Notify } from "vant";
 import echarts from "echarts";
 import Mixin from "./mixin"; // Mixin
+// import MixinUploadFile from "@/mixin/uploadFile.js"; // Mixin-UploadFile
 // 全局注册
 Vue.prototype.$api = api; // 将api挂载到vue的原型上
 Vue.prototype.$Toast = Toast;
@@ -59,6 +61,7 @@ Vue.component("cell-picker", CellPicker);
 Vue.component("cell-pickers", CellPickers);
 Vue.component("cell-textarea", CellTextarea);
 Vue.component("cell-other", CellOther);
+Vue.component("cell-add-list", CellAddList);
 Vue.component("cell-select-user", CellSelectUser);
 Vue.component("cell-select-department", CellSelectDepartment);
 Vue.component("cell-select-users", CellSelectUsers);
@@ -74,6 +77,7 @@ Vue.component("j-filter-search", FilterSearch);
 Vue.component("select-organization", SelectOrganization);
 Vue.component('popup-action', PopupAction);
 Vue.mixin(Mixin); // Mixin
+// Vue.mixin(MixinUploadFile); // Mixin-UploadFile
 
 new Vue({
   router,

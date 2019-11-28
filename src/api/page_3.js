@@ -13,6 +13,12 @@ const article = {
       params: params
     });
   },
+  //获取任务id
+  getTaskInfo(params) {
+    return axios.get(`${base.sq}act/core/mobile/getTaskInfo`, {
+      params: params
+    });
+  },
   // 动火作业票主表保存
   htHseDhzypSave(params) {
     return axios.post(`${base.sq}dhzyp/htHseDhzyp/save`, qs.stringify(params));
@@ -89,6 +95,21 @@ const article = {
   htHseDtzypSave(params) {
     return axios.post(`${base.sq}dtzyp/htHseDtzyp/save`, qs.stringify(params));
   },
+   // 高处作业作业票查询
+   htHseUpworkticketListData(params) {
+    return axios.post(
+      `${base.sq}heightworkticket/htHseUpworkticket/listData.json`,
+      qs.stringify(params)
+    );
+  },
+
+  // 高处作业 子表查询
+  htHseUpworkticketGetChildrenListData(params) {
+    return axios.post(
+      `${base.sq}heightworkticket/htHseUpworkticket/listHtHseUpworkticketSon.json`,
+      qs.stringify(params)
+    );
+  },
   // 高处作业票保存
   htHseUpworkticketSave(params) {
     return axios.post(
@@ -100,7 +121,7 @@ const article = {
   htHseUpworkticketSaveLit(params, __sid) {
     return axios.post(
       `${base.sq}heightworkticket/htHseUpworkticket/saveHtHseUpworkticketSon.json`,
-      params,
+      qs.stringify(params),
       {
         headers: {
           "Content-Type": "application/json",
@@ -123,6 +144,13 @@ const article = {
       qs.stringify(params)
     );
   },
+  // 受限空间作业票查询 详情
+  htHseSxkjzypListDataById(params) {
+    return axios.post(
+      `${base.sq}sxkjzyp/htHseSxkjzyp/getById`,
+      qs.stringify(params)
+    );
+  },
   // 部门相关查询
   bmSelect(params) {
     return axios.post(
@@ -137,6 +165,13 @@ const article = {
       qs.stringify(params)
     );
   },
+  // 临时用电作业票列表
+  htHseLsydzypListDataById(params) {
+    return axios.post(
+      `${base.sq}lsydzyp/htHseLsydzyp/getById`,
+      qs.stringify(params)
+    );
+  },
   // 临时用电作业票保存、修改
   htHseLsydzypSave(params) {
     return axios.post(
@@ -148,6 +183,13 @@ const article = {
   htHseDlzypListData(params) {
     return axios.post(
       `${base.sq}dlzyp/htHseDlzyp/listData`,
+      qs.stringify(params)
+    );
+  },
+  // 断路作业票查询 详情
+  htHseDlzypListDataById(params) {
+    return axios.post(
+      `${base.sq}dlzyp/htHseDlzyp/getById`,
       qs.stringify(params)
     );
   },
@@ -176,24 +218,32 @@ const article = {
       }
     });
   },
-  // 盲板作业票新增和修改
+  // 盲板作业票查询
   htHseMbzypListData(params) {
     return axios.post(
       `${base.sq}mbzyp/htHseMbzyp/listData`,
       qs.stringify(params)
     );
   },
-  // 高处作业作业票查询
-  htHseUpworkticketListData(params) {
+  // 盲板作业票查询 详情
+  htHseMbzypListDataById(params) {
     return axios.post(
-      `${base.sq}heightworkticket/htHseUpworkticket/listData.json`,
+      `${base.sq}mbzyp/htHseMbzyp/getById`,
       qs.stringify(params)
     );
   },
+ 
   // 动土作业票查询
   htHseDtzypListData(params) {
     return axios.post(
       `${base.sq}dtzyp/htHseDtzyp/listData`,
+      qs.stringify(params)
+    );
+  },
+  // 动土作业票查询 详情
+  htHseDtzypListDataById(params) {
+    return axios.post(
+      `${base.sq}dtzyp/htHseDtzyp/getById`,
       qs.stringify(params)
     );
   },
@@ -328,17 +378,32 @@ const article = {
   },
   // 文件上传
   fileUpload(params) {
-    return axios.post(`${base.sq}file/upload`, qs.stringify(params), {
-      headers: {
-        "Content-Type": "multipart/form-data",
-        __sid: localStorage.JiaHuaSessionId
+    return axios.post(
+      `${base.sq}file/upload?${qs.stringify(params)}`, 
+      {
+        headers: {
+          "Content-Type": "multipart/form-data; boundary----WebKitFormBoundaryt8uxnK9w7CBA2Rzj",
+          "__sid": localStorage.JiaHuaSessionId
+        }
       }
-    });
+    );
   },
   // 检修项目查询
   deviceProjectListData(params) {
     return axios.get(
       `${base.sq}project/deviceProject/listData.json?${qs.stringify(params)}`
+    );
+  },
+  // 工单详情与验收接口
+  workorderDeviceWorkOrder2Form(params) {
+    return axios.get(
+      `${base.sq}workorder/deviceWorkOrder2/form.json?${qs.stringify(params)}`
+    );
+  },
+  // 工单安全模板查询接口
+  workorderDeviceWorkOrderSecurityListData(params) {
+    return axios.get(
+      `${base.sq}workorder/deviceWorkOrderSecurity/listData?${qs.stringify(params)}`
     );
   },
 };

@@ -157,10 +157,23 @@
             query: { id: dhzypCode }
           });
         } else if (Number(info.htStatus) === 2) {
-          this.$router.push({
-            path: "../donghuo/index2",
-            query: { id: dhzypCode }
-          });
+          this.$api.page_3.getTaskInfo({
+            taskId:info.actRuTask.id,
+            __sid: localStorage.getItem("JiaHuaSessionId")}).then((res)=>{
+            console.log(res)
+            if(res.taskKey==='zyp-dh-01'){
+              this.$router.push({
+                path: "../donghuo/index2",
+                query: { id: dhzypCode }
+              });
+            }else if(res.taskKey==='zyp-dh1-01'){
+              this.$router.push({
+                path: "../donghuo/index3",
+                query: { id: dhzypCode }
+              });
+            }
+          })
+          
         } else {
           this.$router.push({
             path: "../donghuo/index3",

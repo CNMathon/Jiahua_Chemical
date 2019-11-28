@@ -19,11 +19,11 @@
                   disable></cell-value>
       <!-- 作业票编号 -->
       <cell-value title="作业票编号"
-                  value
+                  :value="$userInfo.dhzypCode || oldInfo.dhzypCode"
                   disable></cell-value>
       <!-- 作业票状态 -->
       <cell-value title="作业票状态"
-                  value="编辑"
+                  :value="htStatus(oldInfo.htStatus)"
                   disable></cell-value>
     </div>
     <div class="cell_group"
@@ -67,22 +67,22 @@
       <cell-time v-model="item.pipeBlockTime"
                  title="抽时间" />
       <!-- 堵作业人 -->
-      <cell-select-user title="堵作业人"
+      <select-organization max="9" title="堵作业人"
                         :storeModule="storeModule"
                         :storeKey="'pipeBlockOperator'+ index"
                         v-model="item.pipeBlockOperator" />
       <!-- 抽作业人 -->
-      <cell-select-user title="抽作业人"
+      <select-organization max="9" title="抽作业人"
                         :storeModule="storeModule"
                         :storeKey="'pipePullOperator'+ index"
                         v-model="item.pipePullOperator" />
       <!-- 堵监护人 -->
-      <cell-select-user title="堵监护人"
+      <select-organization max="1" title="堵监护人"
                         :storeModule="storeModule"
                         :storeKey="'pipeBlockGuardian'+ index"
                         v-model="item.pipeBlockGuardian" />
       <!-- 抽监护人 -->
-      <cell-select-user title="抽监护人"
+      <select-organization max="1" title="抽监护人"
                         :storeModule="storeModule"
                         :storeKey="'pipePullGuardian'+ index"
                         v-model="item.pipePullGuardian" />
@@ -100,17 +100,19 @@
     <!-- 第二部分 -->
     <div class="cell_group">
       <!-- 生产部门作业负责人 -->
-      <cell-select-user title="生产部门作业负责人"
+      <select-organization max="1" title="生产部门作业负责人"
                         required
                         :storeModule="storeModule"
                         storeKey="scMan"
-                        v-model="sendData.scMan"></cell-select-user>
+                        radio
+                        v-model="sendData.scMan"></select-organization>
       <!-- 作业部门负责人 -->
-      <cell-select-user title="作业部门负责人"
+      <select-organization max="1" title="作业部门负责人"
                         required
+                        radio
                         :storeModule="storeModule"
                         storeKey="zyMan"
-                        v-model="sendData.zyMan"></cell-select-user>
+                        v-model="sendData.zyMan"></select-organization>
       <!-- 涉及其他特殊作业 -->
       <cell-select-tag required
                        title="涉及其他特殊作业"
@@ -212,10 +214,10 @@
               pipeNumber: '',
               pipePullTime: '',
               pipeBlockTime: '',
-              pipeBlockOperator:'',
-              pipePullOperator: '',
-              pipeBlockGuardian: '',
-              pipePullGuardian: '',
+              pipeBlockOperator:[],
+              pipePullOperator: [],
+              pipeBlockGuardian: [],
+              pipePullGuardian: [],
             }
           ],
           __sid: localStorage.getItem("JiaHuaSessionId")
@@ -299,21 +301,25 @@
     methods: {
       getInfo () {
         this.$api.page_3
-          .htHseMbzypListData({
+          .htHseMbzypListDataById({
             __sid: localStorage.getItem("JiaHuaSessionId"),
-            mbzypCode: this.infoId
+            id: this.infoId
           })
           .then(res => {
-            let info = res.list[0];
+            console.log('盲板数据================================', res);
+            let info = res;
             this.oldInfo = info;
-            console.log(info)
-            this.sendData.scMan = this.reductionSelectUser(info.sc.userName)
-            this.sendData.zyMan = this.reductionSelectUser(info.zy.userName)
+            this.sendData.scMan = this.reductionSelectUserObj(info.sc);
+            this.sendData.zyMan = this.reductionSelectUserObj(info.zy);
             this.sendData.otherSpecial = this.reductionSelectTag(info.otherSpecial, this.list_1);
             this.sendData.pipe=[]
-            if (info.onePipe.length > 14) {
-              let arr = info.onePipe.split("|");
-              console.log(arr)
+            let pipiObj = (arr) => {
+              let PullName = arr[10].split(",");
+              let BlockName = arr[9].split(",");
+              let BlockCode = new Array(BlockName.length).fill('').join(',');
+              let PullCode = new Array(PullName.length).fill('').join(',');
+              let pipePullOperator = this.assemblyStrToUserObj(PullCode,arr[10]);
+              let pipeBlockOperator = this.assemblyStrToUserObj(BlockCode,arr[9]);
               let obj = {
                 'pipeName': arr[0],
                 'pipeMedium': arr[1],
@@ -324,77 +330,55 @@
                 'pipeNumber': arr[6],
                 'pipePullTime': arr[7],
                 'pipeBlockTime': arr[8],
-                'pipeBlockOperator': this.reductionSelectUser(arr[9]),
-                'pipePullOperator': this.reductionSelectUser(arr[10]),
-                'pipeBlockGuardian': this.reductionSelectUser(arr[11]),
-                'pipePullGuardian': this.reductionSelectUser(arr[12]),
+                'pipeBlockOperator': this.reductionSelectUserObj(pipeBlockOperator),
+                'pipePullOperator': this.reductionSelectUserObj(pipePullOperator),
+                'pipeBlockGuardian': this.reductionSelectUserObj(this.reductionSelectUser(arr[11])),
+                'pipePullGuardian': this.reductionSelectUserObj(this.reductionSelectUser(arr[12])),
               }
-              this.sendData.pipe.push(obj)
+              return obj;
+            }
+            if (info.onePipe.length > 14) {
+              let arr = info.onePipe.split("|");
+              this.sendData.pipe.push(pipiObj(arr));
             }
             if (info.twoPipe.length > 14) {
               let arr = info.twoPipe.split("|");
-              console.log(arr)
-              let obj = {
-                'pipeName': arr[0],
-                'pipeMedium': arr[1],
-                'pipeTemp': arr[2],
-                'pipePressure': arr[3],
-                'pipeMaterial': arr[4],
-                'pipeSpec': arr[5],
-                'pipeNumber': arr[6],
-                'pipePullTime': arr[7],
-                'pipeBlockTime': arr[8],
-                'pipeBlockOperator': this.reductionSelectUser(arr[9]),
-                'pipePullOperator': this.reductionSelectUser(arr[10]),
-                'pipeBlockGuardian': this.reductionSelectUser(arr[11]),
-                'pipePullGuardian': this.reductionSelectUser(arr[12]),
-              }
-              this.sendData.pipe.push(obj)
+              this.sendData.pipe.push(pipiObj(arr));
             }
             if (info.threePipe.length > 14) {
               let arr = info.threePipe.split("|");
-              console.log(arr)
-              let obj = {
-                'pipeName': arr[0],
-                'pipeMedium': arr[1],
-                'pipeTemp': arr[2],
-                'pipePressure': arr[3],
-                'pipeMaterial': arr[4],
-                'pipeSpec': arr[5],
-                'pipeNumber': arr[6],
-                'pipePullTime': arr[7],
-                'pipeBlockTime': arr[8],
-                'pipeBlockOperator': this.reductionSelectUser(arr[9]),
-                'pipePullOperator': this.reductionSelectUser(arr[10]),
-                'pipeBlockGuardian': this.reductionSelectUser(arr[11]),
-                'pipePullGuardian': this.reductionSelectUser(arr[12]),
-              }
-              this.sendData.pipe.push(obj)
+              this.sendData.pipe.push(pipiObj(arr));
             }
             if (info.fourPipe.length > 14) {
               let arr = info.fourPipe.split("|");
-              console.log(arr)
-              let obj = {
-                'pipeName': arr[0],
-                'pipeMedium': arr[1],
-                'pipeTemp': arr[2],
-                'pipePressure': arr[3],
-                'pipeMaterial': arr[4],
-                'pipeSpec': arr[5],
-                'pipeNumber': arr[6],
-                'pipePullTime': arr[7],
-                'pipeBlockTime': arr[8],
-                'pipeBlockOperator': this.reductionSelectUser(arr[9]),
-                'pipePullOperator': this.reductionSelectUser(arr[10]),
-                'pipeBlockGuardian': this.reductionSelectUser(arr[11]),
-                'pipePullGuardian': this.reductionSelectUser(arr[12]),
-              }
-              this.sendData.pipe.push(obj)
+              this.sendData.pipe.push(pipiObj(arr));
             }
             console.log(this.sendData)
+            //  安全措施初始化
+            this.initListDataD(info.htHseMbzypSafetyList);
+
           })
-          .catch(() => { });
+          .catch((err) => {
+            console.log('============报错', err);
+           });
       },
+      //  初始化子票
+      initListDataD(data) {
+      //  this.checked
+      let checked = {};
+      data.forEach(item => {
+        this.checked[parseInt(item.num)] = {
+          checked: item.safetyStatus === 1,
+          safetyCs: item.safetyCs,
+          img: item.affirmRen === "0" ? "" : item.affirmRen
+        };
+      });
+      console.log("this.checked", this.checked);
+      this.$forceUpdate();
+      // this.$nextTick(() => {
+      //   this.donghuoInit = false;
+      // });
+    },
       Next () {
         if (!this.$route.query.id) {
           this.$notify("请先提交保存");
@@ -426,7 +410,7 @@
                 this.$api.page_3.approve(data).then((ress) => {
                   console.log(ress)
                   if (ress.groups) {
-                    this.$router.push({                      name: 'daibanren', query: {
+                    this.$router.push({ name: 'daibanren', query: {
                         groups: ress.groups.join(','),
                         taskId: ress.taskId,
                         id: res.list[0].id,
@@ -483,7 +467,9 @@
       // 显示签名
       showSignature (index) {
         this.selectSignatureShow = index;
-        this.signatureShow = true;
+        if ( !this.checked[index].checked) {
+          this.signatureShow = true;
+        } 
       },
       // 取消签名
       signatureCancel (index) {
@@ -538,13 +524,15 @@
             dataStrArr[i] = `|||||||||||&|&`;
             continue;
           }
+          let pipePullOperator = pipe[i].pipePullOperator.map(item => item.userName);
+          let pipeBlockOperator = pipe[i].pipeBlockOperator.map(item => item.userName);
           dataStrArr[i] = `${pipe[i].pipeName}|${pipe[i].pipeMedium}|${pipe[i].pipeTemp}|${
             pipe[i].pipePressure
             }|${pipe[i].pipeMaterial}|${pipe[i].pipeSpec}|${
             pipe[i].pipeNumber
             }|${pipe[i].pipeBlockTime}|${pipe[i].pipePullTime}|${
-            pipe[i].pipeBlockOperator[0].userName
-            }|${pipe[i].pipePullOperator[0].userName}|${
+            pipeBlockOperator.join(',')
+            }|${pipePullOperator.join(',')}|${
             pipe[i].pipeBlockGuardian[0].userName
             }|${pipe[i].pipePullGuardian[0].userName}`;
         }
@@ -563,6 +551,7 @@
         finSendData.scMan = this.userString(sendData.scMan, "userCode");
         finSendData.zyMan = this.userString(sendData.zyMan, "userCode");
         finSendData.otherSpecial = this.stringData("otherSpecial", "list_1");
+         //  储存安全措施
         finSendData.htHseMbzypSafetyList = this.checked.map((item, index) => {
           let obj = {
             zypId: "",
@@ -573,7 +562,12 @@
           };
           return obj;
         });
+        console.log("htHseMbzypSafetyList: ===========================", finSendData.htHseMbzypSafetyList);
         console.log("finSendData: ", finSendData);
+        if (this.$route.query.id) {
+          finSendData.id = this.oldInfo.id;
+          finSendData.mbzypCode = this.oldInfo.mbzypCode;
+        }
         this.$api.page_3.htHseMbzypSave(finSendData, this.$userInfo.sessionId).then(res => {
           console.log(res)
           if (res.result === 'true') {
@@ -707,7 +701,7 @@
   }
 
   .guandao-id {
-    background-color: rgb(0, 142, 225) !important;
+    background-color: #6096f8!important;
   }
 
   .action {

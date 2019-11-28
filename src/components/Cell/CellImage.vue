@@ -6,8 +6,8 @@
     </div>
     <div class="cell_input">
       <van-uploader
-        v-model="data_value"
-        :after-read="afterRead"
+        v-model="vm_value"
+        :before-read="beforeRead"
         preview-size="5rem"
       />
       <slot name="right"></slot>
@@ -17,6 +17,15 @@
 <script>
 export default {
   name: "cell_input",
+  data() {
+    return {
+      vm_value: this.value
+    }
+  },
+  model: {
+    prop: "value",
+    event: "change"
+  },
   props: {
     title: String,
     inputType: {
@@ -37,13 +46,8 @@ export default {
       type: Boolean,
       default: false
     },
-    afterRead: Function
+    beforeRead: Function
   },
-  data() {
-    return {
-      data_value: this.value
-    }
-  }
 };
 </script>
 <style lang="scss" scoped>

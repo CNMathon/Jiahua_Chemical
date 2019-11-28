@@ -412,7 +412,7 @@ export default {
           unit: "kg/h"
         },
         {
-          text: "硫酸分机转速",
+          text: "硫酸风机转速",
           enText: "LSC_SITS_1701",
           value: "",
           unit: "rpm"

@@ -75,7 +75,7 @@
         :storeModule="storeModule"
         storeKey="dhzyPrincipal"
         v-model="sendData.dhzyPrincipal"
-      ></select-organization >
+      ></select-organization>
       <select-organization 
         title="动火人"
         required
@@ -292,20 +292,15 @@ export default {
   },
   watch: {
     dhWay(res) {
-      console.log(res);
       this.sendData.dhWay = res;
     },
     otherSpecial(res) {
-      console.log(res);
       this.sendData.otherSpecial = res;
     },
     hazardSb(res) {
-      console.log(res);
       this.sendData.hazardSb = res;
-      console.log(this.sendData);
     },
     dhzyPrincipal(res) {
-      console.log("res", res);
       this.sendData.dhzyPrincipal = res;
     },
     dhzyRen(res) {
@@ -570,18 +565,7 @@ export default {
               );
             } else if (key === "dhzyRen" && info.dhzyRenCode) {
               //  info.dhzyRenCode.split(',')  info.dhzyRen.split(',');
-              let user =  info.dhzyRenCode.split(',');
-              let userCode =  info.dhzyRen.split(',');
-              let userList = [];
-              user.forEach((item, index) => {
-                userList.push({
-                    userName: item,
-                    userCode: userCode[index],
-                  }
-                )
-              })
-              console.log('userList', userList);
-              this.sendData[key] = this.reductionSelectUserObj(userList);
+              this.sendData[key] = this.reductionSelectUserObj(this.assemblyStrToUserObj(info.dhzyRen, info.dhzyRenCode));
             } else if (key === "dhzyPrincipal") {
               this.sendData[key] = [];
             } else if (key === "dhzyRen") {

@@ -15,6 +15,11 @@
                      required
                      v-model="comment"
                      placeholder="请输入审批意见"></cell-textarea>
+      <div v-if="status=='3'" class="huiqian">
+        <span>会签节点</span>
+        <p @click="check1" :class="aqy===0?'checked':'box'">安全员</p>
+        <p @click="check2" :class="sbgly===0?'checked':'box'">设备管理员</p>
+      </div>
     </div>
     <div class="signature" @click="signatureShow = true">
           <span>签字</span>
@@ -47,7 +52,10 @@
         id: '',
         actRuTask: '',
         apprSignCode:"",
-        signatureShow:false
+        signatureShow:false,
+        status:0,
+        sbgly:1,
+        aqy:1
       };
     },
     mixins: [mixin],
@@ -55,14 +63,30 @@
       console.log(this.$route.query)
       this.id = this.$route.query.id
       this.actRuTask = this.$route.query.actRuTask
+      this.status = this.$route.query.status
     },
     methods: {
       saveCanvas(e) {
-      console.log(123)
-      console.log("e: ", e);
-      this.signatureShow = false;
-      this.apprSignCode = e;
-    },
+        console.log(123)
+        console.log("e: ", e);
+        this.signatureShow = false;
+        this.apprSignCode = e;
+      },
+      //选中传0
+      check1(){
+        if(this.aqy==0){
+          this.aqy = 1
+        }else{
+          this.aqy = 0
+        }
+      },
+      check2(){
+        if(this.sbgly==0){
+          this.sbgly = 1
+        }else{
+          this.sbgly = 0
+        }
+      },
     // 取消签名
     cancelCanvas() {
       console.log("取消签名");
@@ -78,16 +102,33 @@
         }else if(this.apprSignCode==''){
           this.$notify("请签字");
         } else {
-          let data = {
-            'id': this.id,
-            'flowKey': 'htHseMbzypService',
-            'comment': this.comment,
-            'actRuTask.id': this.actRuTask,
-            'btnSubmit': '通过',
-            extendVar:{
-              apprSignCode:this.apprSignCode
-            },
-            __sid: localStorage.getItem("JiaHuaSessionId")
+          let data
+          if(this.status=='3'){
+            data = {
+              'id': this.id,
+              'flowKey': 'htHseMbzypService',
+              'comment': this.comment,
+              'actRuTask.id': this.actRuTask,
+              'btnSubmit': '通过',
+              extendVar:{
+                sbgly:this.sbgly,
+                aqy:this.aqy,
+                apprSignCode:this.apprSignCode
+              },
+              __sid: localStorage.getItem("JiaHuaSessionId")
+            }
+          }else{
+            data = {
+              'id': this.id,
+              'flowKey': 'htHseMbzypService',
+              'comment': this.comment,
+              'actRuTask.id': this.actRuTask,
+              'btnSubmit': '通过',
+              extendVar:{
+                apprSignCode:this.apprSignCode
+              },
+              __sid: localStorage.getItem("JiaHuaSessionId")
+            }
           }
           this.$api.page_3.approve(data).then((ress) => {
             console.log(ress)
@@ -123,5 +164,24 @@
   box-sizing: border-box;
   align-items: center;
   justify-content: space-between;
+}
+.huiqian{
+  padding:30px;
+  font-size:0.875rem;
+  .box{
+    float: right;
+    margin: 0 10px;
+    padding: 2px 10px;
+    border: 1px solid #cbcbcb;
+    color: #cbcbcb;
+  }
+  .checked{
+    float: right;
+    margin: 0 10px;
+    padding: 2px 10px;
+    background: #108CD4;
+    color:#ffffff;
+    border:none
+  }
 }
 </style>

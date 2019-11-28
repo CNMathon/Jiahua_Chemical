@@ -55,11 +55,19 @@ export const business = {
       });
       return newArr;
     },
-//     avatarUrl: "http://47.96.148.87:8980/js/static/images/user1.jpg"
-// fullName: "新材料厂"
-// userCode: "XCLCDD001"
-// userName: "新材料调度甲班"
-
+    assemblyStrToUserObj (code, name) {
+      let user =  name.split(',');
+      let userCode =  code.split(',');
+      let userList = [];
+      user.forEach((item, index) => {
+        userList.push({
+            userName: item,
+            userCode: userCode[index],
+          }
+        )
+      });
+      return userList;
+    },
     reductionSelectUserObj (data) {
       let newArr = [];
       let userOBj = (item) => {

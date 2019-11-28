@@ -430,13 +430,13 @@ export default {
     getPageData() {
       this.isLoading = true;
       this.$api.page_3
-        .htHseDtzypListData({
-          dtzypCode: this.queryId,
+        .htHseDtzypListDataById({
+          id: this.$route.query.code,
           __sid: localStorage.getItem("JiaHuaSessionId")
         })
         .then(res => {
           this.isLoading = false;
-          let info = res.list[0];
+          let info = res;
           this.htStatus = info.htStatus
           this.actRuTask = info.actRuTask?info.actRuTask.id:''
           this.id = info.id
