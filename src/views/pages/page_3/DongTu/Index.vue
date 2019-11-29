@@ -399,7 +399,7 @@ export default {
         });
         this.$api.page_3
           .htHseDtzypListData({
-            dtzypCode: this.$route.query.code,
+            id: this.$route.query.code,
             __sid: localStorage.getItem("JiaHuaSessionId")
           })
           .then(res => {
@@ -611,7 +611,10 @@ export default {
           this.sendData.id = info.id;
           for (const key in this.sendData) {
             if (key === "guardian") {
-              this.sendData[key] = this.reductionSelectUserObj(info[key]);
+              this.sendData[key] = [{
+                'userName':info.jhr,
+                'userCode':info.guardian
+              }];
             } else if (key === "dtMan") {
               this.sendData[key] = this.reductionSelectUserObj(info.zyfzr);
             } else if (key === "dtDept") {

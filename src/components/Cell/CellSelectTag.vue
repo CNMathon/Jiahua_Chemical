@@ -63,7 +63,8 @@ export default {
       };
       this.$store.dispatch(`${this.storeModule}/deleteTagItem`, obj);
     }
-  }
+  },
+  
 };
 </script>
 <style lang="scss" scoped>

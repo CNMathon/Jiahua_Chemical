@@ -29,6 +29,7 @@
         </div>
       </div>
     </div>
+    <!-- <button @click="testme">testme</button> -->
   </div>
 </template>
 
@@ -43,12 +44,16 @@ export default {
     value: {
       modList: {
         config: [],
-        value: []
+        value: [],
+        
       }, // 模板List
       content: [] // 内容
     } // 安全措施板块
   },
   methods: {
+    // testme() {
+    //   console.log(this.value)
+    // },
     addLine() {
       console.log(this.value)
       this.value.content.push(this.contentData);
@@ -79,7 +84,8 @@ export default {
         stat: {
           config: ["是", "否", "不涉及"],
           value: [],
-        }
+        },
+        id: this.value.modList.id[this.value.modList.value - 1]
       }
     }
   }

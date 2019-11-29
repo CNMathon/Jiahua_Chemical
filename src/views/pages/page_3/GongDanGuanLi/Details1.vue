@@ -85,18 +85,13 @@
           :showList="sendData.harmTypeList"
           :storeModule="storeModule"
         />
-        <cell-value
+        <cell-select-ticket 
           title="特殊作业及相关作业票证号"
-          :value="sendData.otherSpecial"
-          :v-model="sendData.otherSpecial"
-          required
-        >
-          <img
-            src="../../../../assets/images/add.jpg"
-            class="cell_add_button"
-            @click="jumpTo('./zuoyepiao')"
-          />
-        </cell-value>
+          :storeModule="storeModule"
+          storeKey="ticketList"
+          v-model="sendData.ticketList"
+        />
+        <!-- {{sendData.ticketList}} -->
         <cell-add-list
           v-model="sendData.srcCheck"
           title="安全措施确认"
@@ -148,6 +143,8 @@ export default {
           "车辆伤害",
           "超重伤害"
         ], // 危害辨识List - del
+        ticketList: {}, // 特殊作业及相关作业票证号
+        srcMod_Full: [],
         srcCheck: {
           modList: {
             config: [],
@@ -182,7 +179,9 @@ export default {
         sendData.securityInfo, // 安全教育人
         sendData.sceneInfo, // 安全教育人
         sendData.workContent, // 作业内容
-        sendData.harmType // 危害辨识
+        sendData.harmType, // 危害辨识
+        sendData.ticketList, // 特殊作业及相关作业票证号
+        sendData.srcCheck, // 安全措施确认
       );
       if (inputEmpStat) {
         this.$notify("请将表单数据填写完整");
@@ -206,7 +205,21 @@ export default {
       sendData.securityPersonCode = sendData.securityInfo[0].userCode; // 安全教育人Code
       sendData.scenePersonName = sendData.sceneInfo[0].userName; // 现场负责人姓名
       sendData.scenePersonCode = sendData.sceneInfo[0].userCode; // 现场负责人Code
+      sendData.securityList = []; // 安全措施确认
+      this.sendData.srcCheck.content.map(item => {
+        sendData.securityList.push({
+          id: item.id,
+          measuresName: item.safe,
+          selectType: item.stat.value
+        })
+      })
+      sendData.__sid = localStorage.JiaHuaSessionId; // sessionId
       console.log(`sendData: `, sendData);
+      this.$api.page_3
+        .deviceWorkOrderSave(sendData)
+        .then(res => {
+          console.log(res)
+        })
 
       // finData => Delete something needn't
       // let finData = this.deepCopy(this.sendData)
@@ -263,6 +276,7 @@ export default {
           .then(res => {
             loadStatMan();
             console.log(`srcMod-Full: `, res.list);
+            this.srcMod_Full = res.list
 
             // srcCheckModInfo
             // this.sendData.srcCheckModInfo = res.list;
@@ -271,6 +285,13 @@ export default {
             let srcCheckModCol = [];
             res.list.map(item => srcCheckModCol.push(item.measuresName));
             this.sendData.srcCheck.modList.config = srcCheckModCol;
+            console.log(`srcCheckModCol: `, srcCheckModCol)
+
+            // srcCheckModId
+            let srcCheckModId = [];
+            res.list.map(item => srcCheckModId.push(item.id));
+            this.sendData.srcCheck.modList.id = srcCheckModId;
+            console.log(`srcCheckModId: `, srcCheckModId)
           });
       })();
     }
@@ -286,7 +307,8 @@ export default {
       executorInfo: state => state.gongdanguanli.executorInfo,
       securityInfo: state => state.gongdanguanli.securityInfo,
       sceneInfo: state => state.gongdanguanli.sceneInfo,
-      harmType: state => state.gongdanguanli.harmType
+      harmType: state => state.gongdanguanli.harmType,
+      ticketList: state => state.gongdanguanli.ticketList,
     })
   },
   watch: {
@@ -317,7 +339,11 @@ export default {
     harmType(res) {
       console.log("change - harmType => ", res);
       this.sendData.harmType = res;
-    }
+    },
+    ticketList(res) {
+      console.log("change - ticketList => ", res);
+      this.sendData.ticketList = res;
+    },
   }
 };
 </script>

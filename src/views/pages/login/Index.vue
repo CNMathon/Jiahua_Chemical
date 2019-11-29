@@ -65,38 +65,43 @@ export default {
         __ajax: "json"
       };
 
-      this.$api.common.userLogin(sendData).then(res => {
-        console.log(res);
-        localStorage.setItem("JiaHuaSessionId", res.sessionid);
-        localStorage.setItem("JiaHuaUserName", res.user.userName);
-        localStorage.setItem("JiaHuaRefCode", res.user.refCode);
-        localStorage.setItem("JiaHuaUserCode", res.user.userCode);
-        // system账号不做此项
-        if (this.username != "system") {
-          localStorage.setItem(
-            "JiaHuaUserCompanyName",
-            res.user.refObj?res.user.refObj.company.companyName:''
-          );
-          localStorage.setItem(
-            "JiaHuaOfficeCode",
-            res.user.refObj?res.user.refObj.office.officeCode:''
-          );
-          localStorage.setItem(
-            "JiaHuaOfficeName",
-            res.user.refObj?res.user.refObj.office.officeName:''
-          );
-        }
-        this.loading = false;
-        this.$toast.success({
-          duration: 1000,
-          message: "登录成功",
-          onClose() {
-            that.$router.replace({
-              path: "/"
-            });
+      this.$api.common.userLogin(sendData)
+        .then(res => {
+          console.log(this.loading)
+          console.log(res);
+          localStorage.setItem("JiaHuaSessionId", res.sessionid);
+          localStorage.setItem("JiaHuaUserName", res.user.userName);
+          localStorage.setItem("JiaHuaRefCode", res.user.refCode);
+          localStorage.setItem("JiaHuaUserCode", res.user.userCode);
+          // system账号不做此项
+          if (this.username != "system") {
+            localStorage.setItem(
+              "JiaHuaUserCompanyName",
+              res.user.refObj ? res.user.refObj.company.companyName : ""
+            );
+            localStorage.setItem(
+              "JiaHuaOfficeCode",
+              res.user.refObj ? res.user.refObj.office.officeCode : ""
+            );
+            localStorage.setItem(
+              "JiaHuaOfficeName",
+              res.user.refObj ? res.user.refObj.office.officeName : ""
+            );
           }
-        });
-      });
+          this.loading = false;
+          this.$toast.success({
+            duration: 1000,
+            message: "登录成功",
+            onClose() {
+              that.$router.replace({
+                path: "/"
+              });
+            }
+          });
+        })
+        .catch(err => {
+          setTimeout(() => this.loading = false, 3000)
+        })
     }
   },
   created() {

@@ -40,17 +40,13 @@
             disable
           ></cell-select-user>
           <!-- 作业部门 -->
-          <div class="cell">
-            <div class="cell_title">
-              <span>作业部门</span>
-            </div>
-            <div class="cell_value">
-              <span>{{sendData.dtDept}}</span>
-              <span class="cell_value_arrow">
-                <van-icon name="search" />
-              </span>
-            </div>
-          </div>
+          <cell-select-department
+              title="作业部门"
+              required
+              :storeModule="storeModule"
+              storeKey="dtDept"
+              v-model="sendData.dtDept"
+            ></cell-select-department>
           <!-- 作业负责人 -->
           <cell-select-user
             title="作业负责人"
@@ -396,10 +392,11 @@ export default {
       });
       sendData.otherSpecial = this.stringData("otherSpecial", "list_1");
       sendData.hazardSb = this.stringData("hazardSb", "list_2");
-      sendData.guardian = this.userString(sendData.guardian, "userName");
-      sendData.dtMan = this.userString(sendData.dtMan, "userName");
-      sendData.applyDept = this.$userInfo.officeName;
-      sendData.applyer = this.$userInfo.userName;
+      sendData.guardian = this.userString(sendData.guardian, "userCode");
+      sendData.dtMan = this.userString(sendData.dtMan, "userCode");
+      sendData.dtDept = this.userString(sendData.dtDept, "id");
+      sendData.applyDept = this.$userInfo.officeCode;
+      sendData.applyer = this.$userInfo.userCode;
       sendData.htDeviceDefect_file = htDeviceDefect_file.join(",");
       // sendData.id =
       sendData.__sid = this.$userInfo.sessionId;
@@ -436,11 +433,17 @@ export default {
           this.sendData.id = info.id;
           for (const key in this.sendData) {
             if (key === "guardian") {
-              this.sendData[key] = this.reductionSelectUser(info[key]);
+              this.sendData[key] = [{
+                'userName':info.jhr,
+                'userCode':info.guardian
+              }];
             } else if (key === "dtMan") {
-              this.sendData[key] = this.reductionSelectUser(info[key]);
+              this.sendData[key] = this.reductionSelectUserObj(info.zyfzr);
             } else if (key === "dtDept") {
-              this.sendData[key] = info[key];
+              this.sendData[key] = [{
+                id:info.zybm.id,
+                name:info.zybm.officeName
+              }];
             } else if (key === "otherSpecial") {
               if (info[key])
                 this.sendData[key] = this.reductionSelectTag(

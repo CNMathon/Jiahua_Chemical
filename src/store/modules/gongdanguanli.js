@@ -10,6 +10,7 @@ const state = {
   securityInfo: [], // 安全教育人
   sceneInfo: [], // 现场负责人
   harmType: [], // 危害辨识
+  ticketList: [], // 特殊作业及相关作业票证号
 };
 
 // getters

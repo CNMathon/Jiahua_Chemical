@@ -404,7 +404,7 @@
         sendData.guardian = this.userString(sendData.guardian, "userCode"); // 监护人
         sendData.zyPrincipal = this.userString(sendData.zyPrincipal, "userCode"); // 作业负责人
         sendData.zyRen = this.userString(sendData.zyRen, "userCode"); // 作业人
-        sendData.sxkjDanwei = this.userString(sendData.sxkjDanwei, "name");
+        sendData.sxkjDanwei = this.userString(sendData.sxkjDanwei, "id");
         //sendData.applyDept = this.$userInfo.officeName;
         //sendData.applyRen = this.$userInfo.userName;
         sendData.applyDept = this.$userInfo.officeCode;
@@ -479,7 +479,7 @@
             for (const key in this.sendData) {
               switch (key) {
                 case "sxkjDanwei":
-                  if (info[key]) this.sendData[key] = this.reductionSelectDept(info[key]);
+                  if (info[key]) this.sendData[key] = [{id:info.offices.id,name:info.offices.officeName,pId:'',title:info.offices.officeName}];
                   break;
                 case "guardian":
                   if (info[key]) this.sendData[key] = this.reductionSelectUserObj(this.assemblyStrToUserObj(info.guardian, info.guardianCode));

@@ -778,7 +778,7 @@ export default {
         this.spWork[3].value = res.gczyCount;
         this.spWork[4].value = res.dtzyCount;
         this.spWork[5].value = res.dlzyCount;
-        this.spWork[6].value = res.lsydCount;
+        this.spWork[6].value = res.lsydcount;
         this.spWork[7].value = res.dzzyCount;
       });
 

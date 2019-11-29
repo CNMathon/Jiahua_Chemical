@@ -45,9 +45,17 @@
     </van-popup>
   </div>
 </template>
+
 <script>
+import { mapMutations } from "vuex";
 export default {
-  name: "zuoyepiaoxuanze",
+  model: {
+    prop: "value",
+    event: "change"
+  },
+  props: {
+    value: Object
+  },
   data() {
     return {
       showPop: false,
@@ -63,15 +71,32 @@ export default {
       result: ["a", "b"],
       isLoading: false,
       pageList: [],
-      dataType: 0, // 筛选Value值
+      dataType: 0 // 筛选Value值
     };
   },
   methods: {
-    confirm() {},
+    confirm() {
+      let arr = [];
+      this.pageList
+        .filter(item => item.checked)
+        .map(item =>
+          arr.push({
+            ticketCode: item.zyCode,
+            ticketType: item.zyType,
+            ticketId: item.id
+          })
+        );
+      this.$store.dispatch(`${this.storeModule}/changTag`, {
+        key: this.storeKey,
+        value: arr
+      });
+      this.$router.back()
+      console.log(`newArr: `, this.value);
+    },
     onConfirm(value, index) {
       this.showPop = false;
-      this.dataType = index
-      this.getPageData()
+      this.dataType = index;
+      this.getPageData();
     },
     // 获取页面数据
     getPageData() {
@@ -93,7 +118,19 @@ export default {
   },
   created() {
     this.getPageData();
+    // console.log(this.$route)
   },
+  computed: {
+    storeModule() {
+      return this.$route.query.storeModule;
+    },
+    storeKey() {
+      return this.$route.query.storeKey;
+    },
+    result() {
+      return this.$store.state[this.storeModule][this.storeKey];
+    }
+  }
 };
 </script>
 <style lang="scss" scoped>

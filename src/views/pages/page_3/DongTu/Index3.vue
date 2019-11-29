@@ -444,11 +444,17 @@ export default {
           this.sendData.id = info.id;
           for (const key in this.sendData) {
             if (key === "guardian") {
-              this.sendData[key] = this.reductionSelectUser(info[key]);
+              this.sendData[key] = [{
+                'userName':info.jhr,
+                'userCode':info.guardian
+              }];
             } else if (key === "dtMan") {
-              this.sendData[key] = this.reductionSelectUser(info[key]);
+              this.sendData[key] = this.reductionSelectUserObj(info.zyfzr);
             } else if (key === "dtDept") {
-              this.sendData[key] = info[key];
+              this.sendData[key] = [{
+                id:info.zybm.id,
+                name:info.zybm.officeName
+              }];
             } else if (key === "otherSpecial") {
               if (info[key])
                 this.sendData[key] = this.reductionSelectTag(

@@ -24,13 +24,12 @@
       <!-- 作业票状态 -->
       <cell-value title="作业票状态" required value="初审" disable></cell-value>
       <!-- 受限空间所属空间 -->
-      <cell-value
-        title="受限空间所属单位"
-        required
-        v-model="sendData.sxkjDanwei"
-        placeholder="请输入设备名称"
-        disable
-      ></cell-value>
+      <cell-select-department title="受限空间所属单位"
+                                required
+                                disable
+                                :storeModule="storeModule"
+                                storeKey="sxkjDanwei"
+                                v-model="sendData.sxkjDanwei"></cell-select-department>
       <!-- 作业内容 -->
       <cell-textarea
         title="作业内容"
@@ -759,7 +758,7 @@ export default {
       sendData.guardian = this.userString(sendData.guardian, "userCode");
       sendData.zyPrincipal = this.userString(sendData.zyPrincipal, "userCode");
       sendData.zyRen = this.userString(sendData.zyRen, "userCode");
-      sendData.sxkjDanwei = sendData.sxkjDanwei;
+      sendData.sxkjDanwei = this.userString(sendData.sxkjDanwei, "id");
       sendData.applyDept = this.$userInfo.officeCode;
       sendData.applyRen = this.$userInfo.userCode;
       sendData.__sid = this.$userInfo.sessionId;
@@ -862,6 +861,9 @@ export default {
           this.htStatus = res.list[0].htStatus;
           for (const key in this.sendData) {
             switch (key) {
+              case "sxkjDanwei":
+                  if (info[key]) this.sendData[key] = [{id:info.offices.id,name:info.offices.officeName,pId:'',title:info.offices.officeName}];
+                  break;
               case "guardian":
                 if (info[key])
                   this.sendData[key] = this.reductionSelectUser(info[key]);

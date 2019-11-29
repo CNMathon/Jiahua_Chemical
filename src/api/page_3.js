@@ -119,16 +119,15 @@ const article = {
   },
   // 高处作业子票保存
   htHseUpworkticketSaveLit(params, __sid) {
-    return axios.post(
-      `${base.sq}heightworkticket/htHseUpworkticket/saveHtHseUpworkticketSon.json`,
-      qs.stringify(params),
-      {
-        headers: {
-          "Content-Type": "application/json",
-          __sid: __sid
-        }
+    return axios({
+      method: 'POST',
+      url: `${base.sq}heightworkticket/htHseUpworkticket/saveHtHseUpworkticketSon.json`,
+      data: qs.stringify(params),
+      headers: {
+        "content-type": "application/json; charset=utf-8",
+        __sid: __sid
       }
-    );
+    })
   },
   // 受限空间作业票保存
   htHseSxkjzypSave(params, __sid) {
@@ -405,6 +404,14 @@ const article = {
     return axios.get(
       `${base.sq}workorder/deviceWorkOrderSecurity/listData?${qs.stringify(params)}`
     );
+  },
+  // 工单作业票查询
+  cptListData(params) {
+    return axios.post(`${base.sq}cpt/listData`, qs.stringify(params));
+  },
+  // 获取我发起的任务
+  clientStartListData(params) {
+    return axios.post(`${base.sq}act/core/client/startListData`, qs.stringify(params));
   },
 };
 

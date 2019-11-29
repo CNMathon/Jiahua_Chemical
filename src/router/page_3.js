@@ -108,10 +108,10 @@ const routes = {
           }
         },
         {
-          path: "/page_3/gongdanguanli/zuoyepiao",
+          path: "/page_3/gongdanguanli/ticket",
           name: "GongDanGuanLi_zuoyepiao",
           component: () =>
-            import("../views/pages/page_3/GongDanGuanLi/ZuoYePiao.vue"),
+            import("@/components/Cell/CellSelectTickets.vue"),
           meta: {
             name: "新增工单-作业票选择"
           }

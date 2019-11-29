@@ -661,12 +661,12 @@ export default {
       );
       sendData.dhzyRen = this.userString(sendData.dhzyRen, "userCode");
       // 添加动火分析 dhfxTimeC fxdNameC krqbzLimitationC fxRenC- fxDataC
-      sendData.fxRenA = this.userString(sendData.fxRenA, "userCode"); //分析人A
-      sendData.fxRenB = this.userString(sendData.fxRenB, "userCode"); //分析人A
-      sendData.fxRenC = this.userString(sendData.fxRenC, "userCode"); //分析人A
+      sendData.fxRenA = this.userString(sendData.fxRenA || [], "userCode"); //分析人A
+      sendData.fxRenB = this.userString(sendData.fxRenB || [], "userCode"); //分析人A
+      sendData.fxRenC = this.userString(sendData.fxRenC || [], "userCode"); //分析人A
       // 结束
-      sendData.applyDept = this.$userInfo.officeName;
-      sendData.applyRen = this.$userInfo.userName;
+      sendData.applyDept = this.$userInfo.officeCode;
+      sendData.applyRen = this.$userInfo.userCode;
       sendData.__sid = this.$userInfo.sessionId;
       sendData.id = this.oldInfo.id;
       sendData.dhzypCode = this.oldInfo.dhzypCode;
