@@ -30,7 +30,7 @@ export default {
     return {
       myComplete: 4,
       wait: 1,
-      active: 1，
+      active: 1,
       pendLoding
     };
   }
