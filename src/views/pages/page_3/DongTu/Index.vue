@@ -14,11 +14,11 @@
         <div class="app">
           <div class="cell_group">
             <!-- 申请部门 -->
-            <cell-value title="申请部门" :value="$userInfo.officeName" disable></cell-value>
+            <cell-value title="申请部门" :value="apply.dept" disable></cell-value>
             <!-- 申请人 -->
-            <cell-value title="申请人" :value="$userInfo.userName" disable></cell-value>
+            <cell-value title="申请人" :value="apply.name" disable></cell-value>
             <!-- 作业票编号 -->
-            <cell-value title="作业票编号" :value="$route.query.code" disable></cell-value>
+            <cell-value title="作业票编号" :value="apply.code" disable></cell-value>
             <!-- 作业票状态 -->
             <cell-value title="作业票状态" value="编辑" disable></cell-value>
             <!-- 作业部门 -->
@@ -57,6 +57,7 @@
             <select-organization
               title="监护人"
               required
+              radio
               :storeModule="storeModule"
               storeKey="guardian"
               v-model="sendData.guardian"
@@ -65,6 +66,7 @@
             <select-organization
               title="作业负责人"
               required
+              max="2"
               :storeModule="storeModule"
               storeKey="dtMan"
               v-model="sendData.dtMan"
@@ -103,7 +105,7 @@
               <div class="confirm_list">
                 <Signature
                   :checked="checked[0] ? checked[0].checked : false"
-                  :img="checked[0] ? checked[0].img : ''"
+                  :img="checked[0].checked ? checked[0].img : ''"
                   @checked="showSignature(0)"
                   @cancel="signatureCancel(0)"
                 >
@@ -111,7 +113,7 @@
                 </Signature>
                 <Signature
                   :checked="checked[1] ? checked[1].checked : false"
-                  :img="checked[1] ? checked[1].img : ''"
+                  :img="checked[1].checked  ? checked[1].img : ''"
                   @checked="showSignature(1)"
                   @cancel="signatureCancel(1)"
                 >
@@ -119,65 +121,65 @@
                 </Signature>
                 <Signature
                   :checked="checked[2] ? checked[2].checked : false"
-                  :img="checked[2] ? checked[2].img : ''"
+                  :img="checked[2].checked  ? checked[2].img : ''"
                   @checked="showSignature(2)"
                   @cancel="signatureCancel(2)"
                 >
                   <div slot>地下电力点啦已确认保护措施已落实</div>
                 </Signature>
                 <Signature
-                  :checked="checked[2] ? checked[2].checked : false"
-                  :img="checked[2] ? checked[2].img : ''"
-                  @checked="showSignature(2)"
-                  @cancel="signatureCancel(2)"
+                  :checked="checked[3] ? checked[3].checked : false"
+                  :img="checked[3].checked  ? checked[3].img : ''"
+                  @checked="showSignature(3)"
+                  @cancel="signatureCancel(3)"
                 >
                   <div slot>地下通讯电（光）缆、局域网络电（光）缆已确认保护措施已落实</div>
                 </Signature>
                 <Signature
-                  :checked="checked[2] ? checked[2].checked : false"
-                  :img="checked[2] ? checked[2].img : ''"
-                  @checked="showSignature(2)"
-                  @cancel="signatureCancel(2)"
+                  :checked="checked[4] ? checked[4].checked : false"
+                  :img="checked[4].checked  ? checked[4].img : ''"
+                  @checked="showSignature(4)"
+                  @cancel="signatureCancel(4)"
                 >
                   <div slot>地下供排水、消防管道、工艺管道已确认保护措施已落实。</div>
                 </Signature>
                 <Signature
-                  :checked="checked[2] ? checked[2].checked : false"
-                  :img="checked[2] ? checked[2].img : ''"
-                  @checked="showSignature(2)"
-                  @cancel="signatureCancel(2)"
+                  :checked="checked[5] ? checked[5].checked : false"
+                  :img="checked[5].checked ? checked[5].img : ''"
+                  @checked="showSignature(5)"
+                  @cancel="signatureCancel(5)"
                 >
                   <div slot>已按作业方案图划线和立绘</div>
                 </Signature>
                 <Signature
-                  :checked="checked[2] ? checked[2].checked : false"
-                  :img="checked[2] ? checked[2].img : ''"
-                  @checked="showSignature(2)"
-                  @cancel="signatureCancel(2)"
+                  :checked="checked[6] ? checked[6].checked : false"
+                  :img="checked[6].checked ? checked[6].img : ''"
+                  @checked="showSignature(6)"
+                  @cancel="signatureCancel(6)"
                 >
                   <div slot>动土地点有电线、管道等地下设施，已向作业单位交代并派人监护；作业时情挖做使用铁棒、铁镐或抓斗等机械工具。</div>
                 </Signature>
                 <Signature
-                  :checked="checked[2] ? checked[2].checked : false"
-                  :img="checked[2] ? checked[2].img : ''"
-                  @checked="showSignature(2)"
-                  @cancel="signatureCancel(2)"
+                  :checked="checked[7] ? checked[7].checked : false"
+                  :img="checked[7].checked ? checked[7].img : ''"
+                  @checked="showSignature(7)"
+                  @cancel="signatureCancel(7)"
                 >
                   <div slot>作业现场围栏、警戒线、告示牌、夜间照明、警示灯已按要求设置</div>
                 </Signature>
                 <Signature
-                  :checked="checked[2] ? checked[2].checked : false"
-                  :img="checked[2] ? checked[2].img : ''"
-                  @checked="showSignature(2)"
-                  @cancel="signatureCancel(2)"
+                  :checked="checked[8] ? checked[8].checked : false"
+                  :img="checked[8].checked ? checked[8].img : ''"
+                  @checked="showSignature(8)"
+                  @cancel="signatureCancel(8)"
                 >
                   <div slot>已进行放坡处理和固壁支撑</div>
                 </Signature>
                 <Signature
-                  :checked="checked[2] ? checked[2].checked : false"
-                  :img="checked[2] ? checked[2].img : ''"
-                  @checked="showSignature(2)"
-                  @cancel="signatureCancel(2)"
+                  :checked="checked[9] ? checked[9].checked : false"
+                  :img="checked[9].checked ? checked[9].img : ''"
+                  @checked="showSignature(9)"
+                  @cancel="signatureCancel(9)"
                 >
                   <div slot>人员出入口和撤离安全措施已落实：</div>
                   <span
@@ -190,10 +192,10 @@
                   >修坡道</span>
                 </Signature>
                 <Signature
-                  :checked="checked[2] ? checked[2].checked : false"
-                  :img="checked[2] ? checked[2].img : ''"
-                  @checked="showSignature(2)"
-                  @cancel="signatureCancel(2)"
+                  :checked="checked[10] ? checked[10].checked : false"
+                  :img="checked[10].checked ? checked[10].img : ''"
+                  @checked="showSignature(10)"
+                  @cancel="signatureCancel(10)"
                 >
                   <div slot>施工作业已报</div>
                   <span
@@ -214,10 +216,10 @@
                   >公司调度</span>
                 </Signature>
                 <Signature
-                  :checked="checked[2] ? checked[2].checked : false"
-                  :img="checked[2] ? checked[2].img : ''"
-                  @checked="showSignature(2)"
-                  @cancel="signatureCancel(2)"
+                  :checked="checked[11] ? checked[11].checked : false"
+                  :img="checked[11].checked ? checked[11].img : ''"
+                  @checked="showSignature(11)"
+                  @cancel="signatureCancel(11)"
                 >
                   <div slot>夜间作业采用足够、充足照明，</div>
                   <div slot>A防水型灯</div>
@@ -249,10 +251,10 @@
                   <div slot>作业人员已佩戴防护器械</div>
                 </Signature>
                 <Signature
-                  :checked="checked[2] ? checked[2].checked : false"
-                  :img="checked[2] ? checked[2].img : ''"
-                  @checked="showSignature(2)"
-                  @cancel="signatureCancel(2)"
+                  :checked="checked[12] ? checked[12].checked : false"
+                  :img="checked[12].checked ? checked[12].img : ''"
+                  @checked="showSignature(12)"
+                  @cancel="signatureCancel(12)"
                 >
                   <div slot>动土范围内无障碍物，并在总图上做标记</div>
                 </Signature>
@@ -286,7 +288,7 @@ import { uploadFile } from "@/mixin/uploadFile";
 import Signature from "../components/Signature.vue";
 import Canvas from "@/components/Canvas.vue";
 export default {
-  name: "dongtu",
+  name: "dongtuindex",
   mixins: [business, uploadFile],
   components: {
     Signature,
@@ -295,6 +297,11 @@ export default {
   data() {
     return {
       storeModule: "dongtu",
+      apply: {
+        name: '',
+        dept: '',
+        code: '',
+      },
       sendData: {
         dtSite: "", //作业地点
         dtStarttime: "", //动土开始时间
@@ -302,7 +309,7 @@ export default {
         otherSpecial: [], //涉及其他作业
         hazardSb: [], //危害辨识
         guardian: [], //监护人
-        dtDept:[],
+        dtDept: [],
         dtMan: [] //作业部门负责人
       },
       list_1: [
@@ -333,7 +340,7 @@ export default {
       isLoading: false,
       signatureShow: false,
       isSave: false,
-      canClean: false,
+      canClean: false
     };
   },
   computed: mapState({
@@ -341,58 +348,51 @@ export default {
     hazardSb: state => state.dongtu.hazardSb,
     guardian: state => state.dongtu.guardian,
     dtMan: state => state.dongtu.dtMan,
-    dtDept: state=> state.dongtu.dtDept
+    dtDept: state => state.dongtu.dtDept
   }),
-  beforeRouteLeave(to, from, next) {
-    if (to.name === "dongtu_list") {
-      this.queryId = "";
-      for (const key in this.sendData) {
-        if (this.sendData.hasOwnProperty(key)) {
-          console.log("typeof this.sendData[key]: ", typeof this.sendData[key]);
-          if (typeof this.sendData[key] === "object") {
-            this.sendData[key] = [];
-          } else {
-            this.sendData[key] = "";
-          }
-        }
-      }
-      next();
-    } else {
-      next();
-    }
+  created() {
+    this.pageInit();
   },
-  activated() {
-    // console.log(this.$store.state)
-    // if(this.$store.state.dongtu.dtDept&&this.$store.state.dongtu.dtDept.length>0){
-    //   this.sendData.dtDept = this.$store.state.dongtu.dtDept
-    // }
-    console.log("code:", this.$route.query.code);
-    if (this.$route.query.code) {
-      if (this.queryId !== this.$route.query.code) {
-        this.queryId = this.$route.query.code;
-        this.getPageData();
-      }
-    }
+  activated() {},
+  beforeDestroy() {
+    this.queryId = "";
+    this.$store.dispatch("dongtu/cleanState");
   },
-  // beforeDestroy() {
-  //   if (this.canClean) {
-  //     this.queryId = "";
-  //     this.$store.dispatch("dongtu/cleanState");
-  //   }
-  // },
   methods: {
+    pageInit() {
+      if (this.$route.query.code) {
+        if (this.queryId !== this.$route.query.code) {
+          this.queryId = this.$route.query.code;
+          this.getPageData();
+        }
+      } else {
+        this.apply ={
+            name: this.$userInfo.userName,
+            dept: this.$userInfo.officeName,
+            code: '',
+          };
+      }
+      this.initChecked();
+    },
+    initChecked() {
+      this.checked = [];
+      for (let i = 0; i < 13; i++) {
+        let obj = { checked: false };
+        this.checked.push(obj);
+      }
+    },
     // 工作流提交
     workflowSubmit() {
       if (this.$route.query.status == undefined) {
-        this.$notify('请先保存表单')
+        this.$notify("请先保存表单");
       }
     },
     Next() {
       if (!this.$route.query.code) {
         this.$notify("请先提交保存");
         return;
-      }else {
-        console.log(123456)
+      } else {
+        console.log(123456);
         this.$Toast.loading({
           message: "加载中...",
           forbidClick: true
@@ -403,50 +403,62 @@ export default {
             __sid: localStorage.getItem("JiaHuaSessionId")
           })
           .then(res => {
-            this.$Toast.clear()
-            if(res.list[0].actRuTask){
-              console.log(1)
+            this.$Toast.clear();
+            if (res.list[0].actRuTask) {
+              console.log(1);
               let data = {
-                'id':res.list[0].id,
-                'flowKey':'htHseDtzypService',
-                'comment':'',
-                'actRuTask.id':res.list[0].actRuTask.id,
-                'btnSubmit':'审批',
+                id: res.list[0].id,
+                flowKey: "htHseDtzypService",
+                comment: "",
+                "actRuTask.id": res.list[0].actRuTask.id,
+                btnSubmit: "审批",
                 __sid: localStorage.getItem("JiaHuaSessionId")
-              }
-              this.$api.page_3.approve(data).then((ress)=>{
-                console.log(ress)
-                if(ress.groups){
-                  this.$router.push({name:'daibanren',query:{
-                    groups:ress.groups.join(','),
-                    taskId:ress.taskId,
-                    id:res.list[0].id,
-                    type:'htHseDtzypService'
-                  }})
-                }else{
-                  this.$router.replace({name:'dongtu_list'})
-                }
-              }).catch(() => this.$Toast.clear());
-            }else{
-              console.log(2)
+              };
+              this.$api.page_3
+                .approve(data)
+                .then(ress => {
+                  console.log(ress);
+                  if (ress.groups) {
+                    this.$router.push({
+                      name: "daibanren",
+                      query: {
+                        groups: ress.groups.join(","),
+                        taskId: ress.taskId,
+                        id: res.list[0].id,
+                        type: "htHseDtzypService"
+                      }
+                    });
+                  } else {
+                    this.$router.replace({ name: "dongtu_list" });
+                  }
+                })
+                .catch(() => this.$Toast.clear());
+            } else {
+              console.log(2);
               let data = {
-                'id':res.list[0].id,
-                'flowKey':'htHseDtzypService',
+                id: res.list[0].id,
+                flowKey: "htHseDtzypService",
                 __sid: localStorage.getItem("JiaHuaSessionId")
-              }
-              this.$api.page_3.start('dtzyp/htHseDtzyp',data).then((ress)=>{
-                console.log(ress)
-                if(ress.groups){
-                  this.$router.push({name:'daibanren',query:{
-                    groups:ress.groups.join(','),
-                    taskId:ress.taskId,
-                    id:res.list[0].id,
-                    type:'htHseDtzypService'
-                  }})
-                }else{
-                  this.$router.replace({name:'dongtu_list'})
-                }
-              }).catch(() => this.$Toast.clear());
+              };
+              this.$api.page_3
+                .start("dtzyp/htHseDtzyp", data)
+                .then(ress => {
+                  console.log(ress);
+                  if (ress.groups) {
+                    this.$router.push({
+                      name: "daibanren",
+                      query: {
+                        groups: ress.groups.join(","),
+                        taskId: ress.taskId,
+                        id: res.list[0].id,
+                        type: "htHseDtzypService"
+                      }
+                    });
+                  } else {
+                    this.$router.replace({ name: "dongtu_list" });
+                  }
+                })
+                .catch(() => this.$Toast.clear());
             }
           })
           .catch(() => this.$Toast.clear());
@@ -474,8 +486,7 @@ export default {
         } else {
           this[groupArr].splice(index);
         }
-      }
-      else {
+      } else {
         this[groupArr].splice(0);
         this[groupArr].push(value);
       }
@@ -485,7 +496,9 @@ export default {
       console.log("index: ", index);
       console.log("显示签名");
       this.selectSignatureShow = index;
-      this.signatureShow = true;
+      if (!this.checked[index].checked) {
+        this.signatureShow = true;
+      }
     },
     signatureCancel(index) {
       console.log("index: ", index);
@@ -525,7 +538,7 @@ export default {
     saveCanvas(e) {
       this.signatureShow = false;
       this.checked[this.selectSignatureShow] = {
-        checked: false,
+        checked: true,
         img: ""
       };
       this.checked[this.selectSignatureShow].img = e;
@@ -536,7 +549,6 @@ export default {
       this.checked[this.selectSignatureShow].img = "";
       this.signatureShow = false;
     },
-
     // 发送数据
     postData() {
       const that = this;
@@ -550,22 +562,19 @@ export default {
       sendData.guardian = this.userString(sendData.guardian, "userCode");
       sendData.dtMan = this.userString(sendData.dtMan, "userCode");
       sendData.dtDept = this.userString(sendData.dtDept, "id");
-      sendData.applyDept = this.$userInfo.officeCode;
-      sendData.applyer = this.$userInfo.userCode;
       sendData.dtSite = this.sendData.dtSite; // 作业地点
       sendData.htDeviceDefect_file = htDeviceDefect_file.join(",");
       sendData.__sid = this.$userInfo.sessionId;
       sendData.dtStarttime = this.sendData.dtStarttime;
       sendData.dtEndtime = this.sendData.dtEndtime;
-      let htHseDtzypListData = [
-        {
-          id: this.$route.query.id,
-          
-        },
-      ]
-      sendData.htHseDtzypListData = htHseDtzypListData;
-      if (this.$route.query.id) {
-        sendData.id = this.$route.query.id
+      // let htHseDtzypListData = [
+      //   {
+      //     id: this.$route.query.code
+      //   }
+      // ];
+      // sendData.htHseDtzypListData = htHseDtzypListData;
+      if (this.$route.query.code) {
+        sendData.id = this.$route.query.code;
       }
       if (
         this.isDataEmpty(
@@ -578,11 +587,22 @@ export default {
           sendData.dtMan
         )
       ) {
-        console.log(123);
         this.notify();
         return;
       }
+      if (this.queryId) {
+        sendData.applyDept = this.oldInfo.office.officeCode;
+        sendData.applyer = this.oldInfo.user.userCode;
+        //  获取子列表
+        sendData.htHseDtzypSafetyList = this.setChilderData(this.queryId);
+      } else {
+        sendData.applyDept = this.$userInfo.officeCode;
+        sendData.applyer = this.$userInfo.userCode;
+            //  获取子列表
+        sendData.htHseDtzypSafetyList = this.setChilderData('');
+      }
       console.log("sendData", sendData);
+      console.log("sendData", sendData.htHseDtzypSafetyList);
       this.$api.page_3
         .htHseDtzypSave(sendData)
         .then(() => {
@@ -595,33 +615,133 @@ export default {
         })
         .catch(() => {});
     },
+    setChilderData (messageId) {
+       let lsidydzypSafetyList = [
+        {
+          id: messageId,
+          num: 1,
+          safetyCs: `作业人员已进行了安全教育`,
+          affirmRen: this.checked[0].checked ? this.checked[0].img : 0,
+          safetyStatus: this.checked[0].checked ? 1 : 0
+        },
+        {
+          id: messageId,
+          num: 2,
+          safetyCs: `作业地点处于易燃易爆场所，需要动火时已办理动火证`,
+          affirmRen: this.checked[1].checked ? this.checked[1].img : 0,
+          safetyStatus: this.checked[1].checked ? 1 : 0
+        },
+        {
+          id: messageId,
+          num: 3,
+          safetyCs: `地下电力点啦已确认保护措施已落实`,
+          affirmRen: this.checked[2].checked ? this.checked[2].img : 0,
+          safetyStatus: this.checked[2].checked ? 1 : 0
+        },
+        {
+          id: messageId,
+          num: 4,
+          safetyCs: `地下通讯电（光）缆、局域网络电（光）缆已确认保护措施已落实`,
+          affirmRen: this.checked[3].checked ? this.checked[3].img : 0,
+          safetyStatus: this.checked[3].checked ? 1 : 0
+        },
+        {
+          id: messageId,
+          num: 5,
+          safetyCs: `地下供排水、消防管道、工艺管道已确认保护措施已落实。`,
+          affirmRen: this.checked[4].checked ? this.checked[4].img : 0,
+          safetyStatus: this.checked[4].checked ? 1 : 0
+        },
+        {
+          id: messageId,
+          num: 6,
+          safetyCs: `已按作业方案图划线和立绘`,
+          affirmRen: this.checked[5].checked ? this.checked[5].img : 0,
+          safetyStatus: this.checked[5].checked ? 1 : 0
+        },
+        {
+          id: messageId,
+          num: 7,
+          safetyCs: `动土地点有电线、管道等地下设施，已向作业单位交代并派人监护；作业时情挖做使用铁棒、铁镐或抓斗等机械工具。`,
+          affirmRen: this.checked[6].checked ? this.checked[6].img : 0,
+          safetyStatus: this.checked[6].checked ? 1 : 0
+        },
+        {
+          id: messageId,
+          num: 8,
+          safetyCs: `作业现场围栏、警戒线、告示牌、夜间照明、警示灯已按要求设置`,
+          affirmRen: this.checked[7].checked ? this.checked[7].img : 0,
+          safetyStatus: this.checked[7].checked ? 1 : 0
+        },
+        {
+          id: messageId,
+          num: 9,
+          safetyCs: `已进行放坡处理和固壁支撑`,
+          affirmRen: this.checked[8].checked ? this.checked[8].img : 0,
+          safetyStatus: this.checked[8].checked ? 1 : 0
+        },
+        {
+          id: messageId,
+          num: 10,
+          safetyCs: `人员出入口和撤离安全措施已落实:${this.safe.join(',')}`,
+          affirmRen: this.checked[9].checked ? this.checked[9].img : 0,
+          safetyStatus: this.checked[9].checked ? 1 : 0
+        },
+        {
+          id: messageId,
+          num: 11,
+          safetyCs: `施工作业已报:${this.report.join(',')}`,
+          affirmRen: this.checked[10].checked ? this.checked[10].img : 0,
+          safetyStatus: this.checked[10].checked ? 1 : 0
+        },
+                //  safe report waterLight
+        {
+          id: messageId,
+          num: 12,
+          safetyCs: `夜间作业采用足够、充足照明，A防水型灯:${this.waterLight[0]}防爆型灯${this.boomLight[0]}作业人员已佩戴防护器械`,
+          affirmRen: this.checked[11].checked ? this.checked[11].img : 0,
+          safetyStatus: this.checked[11].checked ? 1 : 0
+        },
+        {
+          id: messageId,
+          num: 13,
+          safetyCs: `动土范围内无障碍物，并在总图上做标记`,
+          affirmRen: this.checked[12].checked ? this.checked[12].img : 0,
+          safetyStatus: this.checked[12].checked ? 1 : 0
+        }
+      ];
+      return lsidydzypSafetyList;
+    },
     // 编辑-获取页面数据
     getPageData() {
       this.isLoading = true;
       this.$api.page_3
         .htHseDtzypListDataById({
-          id: this.$route.query.code,
+          id: this.queryId,
           __sid: localStorage.getItem("JiaHuaSessionId")
         })
         .then(res => {
           this.isLoading = false;
           let info = res;
+          this.oldInfo = res;
           console.log("pageData: ", info);
           console.log("id: ", info.id);
           this.sendData.id = info.id;
           for (const key in this.sendData) {
             if (key === "guardian") {
-              this.sendData[key] = [{
-                'userName':info.jhr,
-                'userCode':info.guardian
-              }];
+              this.sendData[key] = this.reductionSelectUserObj({
+                userName: info.jhr,
+                userCode: info.guardian
+              });
             } else if (key === "dtMan") {
               this.sendData[key] = this.reductionSelectUserObj(info.zyfzr);
             } else if (key === "dtDept") {
-              this.sendData[key] = [{
-                id:info.zybm.id,
-                name:info.zybm.officeName
-              }];
+              this.sendData[key] = [
+                {
+                  id: info.zybm.id,
+                  name: info.zybm.officeName
+                }
+              ];
             } else if (key === "otherSpecial") {
               if (info[key])
                 this.sendData[key] = this.reductionSelectTag(
@@ -638,8 +758,37 @@ export default {
               this.sendData[key] = info[key];
             }
           }
+          this.apply ={
+            name: info.office.officeName,
+            dept: info.user.userName,
+            code: info.dtzypCode,
+          };
+          // this.sendData.applyDept = this.oldInfo.office.officeName;
+          // this.sendData.applyer = this.oldInfo.user.userName;
+          if (info.htHseDtzypSafetyList.length > 0) {
+            this.initChilderData(info.htHseDtzypSafetyList)
+          }
+          // 子表初始化
           console.log("this.sendData: ", this.sendData);
         });
+    },
+    initChilderData (res) {
+      let checked = {};
+        console.log("动土", res);
+        res.forEach((item, inx) => {
+          if (item.safetyStatus && item.safetyStatus === 1) {
+            checked[item.num] = {
+              checked: true,
+              img: item.affirmRen,
+            };
+          } else {
+            checked[item.num] = {
+              checked: false,
+              img: "",
+            };
+          }
+        });
+        this.checked = Object.values(checked);
     },
     reductionSelectDept(data) {
       let newArr = [];
@@ -650,7 +799,7 @@ export default {
         newArr.push(obj);
       });
       return newArr;
-    },
+    }
   },
   watch: {
     otherSpecial(res) {
@@ -663,13 +812,10 @@ export default {
       this.sendData.guardian = res;
     },
     dtMan(res) {
-      console.log(222222222222222)
       this.sendData.dtMan = res;
     },
-    dtDept(res){
-      console.log(222222222222222)
-      console.log(res)
-      this.sendData.dtDept = res
+    dtDept(res) {
+      this.sendData.dtDept = res;
     }
   }
 };

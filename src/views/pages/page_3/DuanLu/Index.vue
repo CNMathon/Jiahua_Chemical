@@ -48,13 +48,13 @@
               v-model="sendData.workDept"
             ></cell-select-department>
       <!-- 作业部门负责人 -->
-      <cell-select-user
+      <select-organization
         title="作业部门负责人"
         required
         :storeModule="storeModule"
         storeKey="workCharger"
         v-model="sendData.workCharger"
-      ></cell-select-user>
+      ></select-organization>
       <!-- {{sendData.workCharger}} -->
       <!-- 涉及部门 -->
       <cell-select-department
@@ -267,7 +267,7 @@ export default {
         });
         this.$api.page_3
           .htHseDlzypListData({
-            permitCode: this.$route.query.code,
+            id: this.$route.query.code,
             __sid: localStorage.getItem("JiaHuaSessionId")
           })
           .then(res => {
@@ -351,9 +351,15 @@ export default {
                   this.listData.endangerSign,
                   this.list_2
                 );
-          this.sendData.workDept = this.reductionSelectDept(this.listData.zybm.fullName);
-          this.sendData.workCharger = this.reductionSelectUser(this.listData.zybmfzr.userName);
-          this.sendData.involveDept = this.reductionSelectDept(this.listData.involveDept);
+          this.sendData.workDept = [{
+            name:this.listData.zybm.officeName,
+            id:this.listData.zybm.id
+          }];
+          this.sendData.workCharger = this.reductionSelectUserObj(this.listData.zybmfzr);
+          this.sendData.involveDept = [{
+            name:this.listData.sjbm,
+            id:this.listData.involveDept
+          }];
           console.log(this.sendData)
         })
         .catch(() => {});

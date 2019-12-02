@@ -363,7 +363,6 @@ export default {
             }
           }).catch(() => this.$Toast.clear());
         } else {
-          console.log(22222222222222)
           this.$router.push({
             name: 'dongtu_shenpi',
             query: {
@@ -460,8 +459,29 @@ export default {
               this.sendData[key] = info[key];
             }
           }
+          if (info.htHseDtzypSafetyList.length > 0) {
+            this.initChilderData(info.htHseDtzypSafetyList)
+          }
           console.log("this.sendData: ", this.sendData);
         });
+    },
+    initChilderData (res) {
+      let checked = {};
+        console.log("动土", res);
+        res.forEach((item, inx) => {
+          if (item.safetyStatus && item.safetyStatus === 1) {
+            checked[item.num] = {
+              checked: true,
+              img: item.affirmRen,
+            };
+          } else {
+            checked[item.num] = {
+              checked: false,
+              img: "",
+            };
+          }
+        });
+        this.checked = Object.values(checked);
     },
     reductionSelectDept(data) {
       console.log(data)

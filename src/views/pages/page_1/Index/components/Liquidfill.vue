@@ -1,14 +1,16 @@
 <template>
-  <div class="liquidfill">
-    <ve-liquidfill
-      class="liquidfill-item"
-      width="5rem"
-      height="5rem"
-      :data="chartData"
-      :settings="chartSettings"
-      :tooltip-visible="false"
-    ></ve-liquidfill>
-    <div class="title">{{ title[type - 1] }}</div>
+  <div class="app" v-if="isShow">
+    <div class="liquidfill">
+      <ve-liquidfill
+        class="liquidfill-item"
+        width="5rem"
+        height="5rem"
+        :data="chartData"
+        :settings="chartSettings"
+        :tooltip-visible="false"
+      ></ve-liquidfill>
+      <div class="title">{{ title[type] }}</div>
+    </div>
   </div>
 </template>
 
@@ -19,17 +21,16 @@ export default {
     type: {
       type: Number,
       default: 0
-    }
+    },
+    value: Number
   },
   created() {
-    this.chartSettings.seriesMap[0].color[0] = this.color[this.type - 1];
-    this.chartSettings.seriesMap[0].outline.itemStyle.borderColor = this.color[
-      this.type - 1
-    ];
-    this.chartData.rows[0].title = this.title[this.type - 1];
+    console.log(`ballValue: `, this.value);
+    this.init()
   },
   data() {
     return {
+      isShow: true,
       color: ["#D85A38", "#1890FF", "#5DB739", "#8d4bbb"],
       title: ["培训合格率", "持证上岗率", "隐患整改率", "达标排放合格率"],
       chartSettings: {
@@ -53,20 +54,34 @@ export default {
             animationDuration: 0,
             backgroundStyle: {
               color: "#ffffff"
-            }
+            },
+            silent: true
           }
         ]
       },
       chartData: {
         columns: ["title", "percent"],
-        rows: [
-          {
-            title: "培训合格率",
-            percent: 0.6
-          }
-        ]
+        rows: [{percent: this.value}]
       }
     };
+  },
+  watch: {
+    value() {
+      this.init()
+      console.log("change");
+      this.dataMount();
+    }
+  },
+  methods: {
+    init() {
+      this.chartSettings.seriesMap[0].color[0] = this.color[this.type];
+      this.chartSettings.seriesMap[0].outline.itemStyle.borderColor = this.color[
+        this.type
+      ];
+    },
+    dataMount() {
+      this.chartData.rows[0].percent = this.value;
+    }
   }
 };
 </script>

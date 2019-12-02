@@ -52,16 +52,49 @@ export default {
   },
   methods: {
     toSelectUser() {
+      console.log(this.storeModule)
       if (this.disable) return;
-      this.$router.push({
-        path: "/page_3/kongjian/kongjian_select_department",
-        query: {
-          storeModule: this.storeModule,
-          storeKey: this.storeKey,
-          radio: this.radio,
-          max: this.max
-        }
-      });
+      if(this.storeModule==='diaozhuang'){
+        this.$router.push({
+          path: "/page_3/diaozhuang/diaozhuang_select_department",
+          query: {
+            storeModule: this.storeModule,
+            storeKey: this.storeKey,
+            radio: this.radio,
+            max: this.max
+          }
+        });
+      }else if (this.storeModule==='linshi') {
+        this.$router.push({
+          path: "/page_3/linshi/linshi_select_department",
+          query: {
+            storeModule: this.storeModule,
+            storeKey: this.storeKey,
+            radio: this.radio,
+            max: this.max
+          }
+        });
+      } else if (this.storeModule==='dongtu') {
+        this.$router.push({
+          path: "/page_3/dongtu/dongtu_select_department",
+          query: {
+            storeModule: this.storeModule,
+            storeKey: this.storeKey,
+            radio: this.radio,
+            max: this.max
+          }
+        });
+      } else{
+        this.$router.push({
+          path: "/page_3/kongjian/kongjian_select_department",
+          query: {
+            storeModule: this.storeModule,
+            storeKey: this.storeKey,
+            radio: this.radio,
+            max: this.max
+          }
+        });
+      }
     },
     showNames() {
       console.log(789)

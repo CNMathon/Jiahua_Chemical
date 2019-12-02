@@ -32,7 +32,7 @@
         <div class="list">
           <div class="list-card-area">
             <div v-for="(item, index) in pageList"
-                 :key="index">
+                 :key="index"  @click="toIndex(item.htStatus, item)">
               <div class="donghuo-list-card donghuo-list-card-nolast">
                 <div class="left">
                   <div class="left-line left-line-notlast">作业内容：{{ item.workContent }}</div>
@@ -44,22 +44,7 @@
                   <div class="left-line">作业结束时间：{{ item.powertimeEnd }}</div>
                 </div>
                 <div>
-                  <div class="right"
-                       @click="toIndex2(item)"
-                       v-if="item.htStatus == 2">初审</div>
-                  <div class="right"
-                       @click="toIndex2(item)"
-                       v-else-if="item.htStatus == 3">有效</div>
-                  <div class="right"
-                       @click="toIndex2(item)"
-                       v-else-if="item.htStatus == 4">已验票</div>
-                  <div class="right"
-                       @click="toIndex2(item)"
-                       v-else-if="item.htStatus == 5">已终结</div>
-                  <div class="right"
-                       v-else
-                       @click="edit(item)">编辑</div>
-                  <!-- <div class="right" @click="edit(item)">编辑</div> -->
+                  <div class="right">{{zypztList[item.htStatus] ? zypztList[item.htStatus].name : '编辑'}}</div>
                 </div>
               </div>
             </div>
@@ -108,14 +93,27 @@
         });
       },
       // 编辑
-      edit (item) {
-        sessionStorage.setItem('flag', '1')
-        //this.$router.push({ name: "linshi_index", query: { zypCode: item.zypCode } });
-        this.$router.push({ path: "../linshi/index", query: { zypCode: item.id } });
-      },
-      toIndex2 (item) {
-        sessionStorage.setItem('flag', '1')
-        this.$router.push({ path: "../linshi/index2", query: { zypCode: item.id } });
+      toIndex (index, item) {
+        let path = '';
+        console.log('index', index);
+        switch (Number(index)) {
+          case 1:
+            path += '../linshi/index';
+            break;
+          case 2:
+          case 3:
+          case 4:
+          case 5:
+            path += '../linshi/index2';
+            break;
+          default:
+            path += '../linshi/index';
+            break;
+        }
+        this.$router.push({
+            path: path,
+            query: { zypCode: item.id }
+          });
       },
       /**
        * 获取吊装工作票
@@ -185,7 +183,14 @@
       }
     },
     created () {
-      this.getListData(true)
+      this.getListData(true);
+      this.$store.dispatch("linshi/cleanState");
+      this.$store.commit("linshi/delete_KeepAlive", "linshiindex");
+      this.$store.commit("linshi/delete_KeepAlive", "linshiindex2");
+      this.$nextTick(() => {
+        this.$store.commit("linshi/add_KeepAlive", "linshiindex");
+        this.$store.commit("linshi/add_KeepAlive", "linshiindex2");
+      });
     }
   };
 </script>

@@ -26,7 +26,8 @@
           <div>
             <van-row>
               <van-col span="6">
-                <div style="width:100%;height:100px" id="dongli"></div>
+                <!-- <div style="width:100%;height:100px" id="dongli"></div> -->
+                <div style="width:100%;height:100px" id="dongli-fix"></div>
               </van-col>
               <van-col span="6">
                 <div style="width:100%;height:100px" id="shaojian"></div>
@@ -82,15 +83,15 @@
           <div class="tszyBox">
             <div class="title">重大危险源监控</div>
             <van-row class="tip">
-              <van-col span="8">
+              <van-col span="8" @click="jumpTo('/page_1/danger/sj')">
                 <img src="img/nav_1.ffd7a07c.svg" />
                 <p>烧碱</p>
               </van-col>
-              <van-col span="8">
+              <van-col span="8" @click="jumpTo('/page_1/danger/xcl')">
                 <img src="img/nav_2.3c77d78b.svg" />
                 <p>新材料</p>
               </van-col>
-              <van-col span="8">
+              <van-col span="8" @click="jumpTo('/page_1/danger/ls')">
                 <img src="img/nav_3.6e07cf35.svg" />
                 <p>硫酸</p>
               </van-col>
@@ -150,30 +151,10 @@
               <van-col span="8">原材料合格率(%)</van-col>
               <van-col span="8">产品合格率(%)</van-col>
             </van-row>
-            <van-row class="item">
-              <van-col span="8">动力中心</van-col>
-              <van-col span="8">80</van-col>
-              <van-col span="8">79</van-col>
-            </van-row>
-            <van-row class="item">
-              <van-col span="8">烧碱厂</van-col>
-              <van-col span="8">79</van-col>
-              <van-col span="8">59</van-col>
-            </van-row>
-            <van-row class="item">
-              <van-col span="8">脂肪醇厂</van-col>
-              <van-col span="8">97</van-col>
-              <van-col span="8">92</van-col>
-            </van-row>
-            <van-row class="item">
-              <van-col span="8">硫酸厂</van-col>
-              <van-col span="8">91</van-col>
-              <van-col span="8">85</van-col>
-            </van-row>
-            <van-row class="item">
-              <van-col span="8">新材料厂</van-col>
-              <van-col span="8">83</van-col>
-              <van-col span="8">91</van-col>
+            <van-row class="item" v-for="(item, index) in sql2Data" :key="index">
+              <van-col span="8">{{item.name}}</van-col>
+              <van-col span="8">{{item.allRate1 * 100}}</van-col>
+              <van-col span="8">{{item.allRate2 * 100}}</van-col>
             </van-row>
           </div>
         </van-tab>
@@ -250,8 +231,8 @@
           <!-- <div slot="nav-rights" class="nav-right" @click="toPage('./shebei')">
             <van-icon name="bars" size="20px" />
           </div>-->
-          <div class="tabs-box-item" v-for="index in 4" :key="index">
-            <Liquidfill :type="index"></Liquidfill>
+          <div class="tabs-box-item" v-for="(item, index) in ballData" :key="index">
+            <Liquidfill :type="index" :value="item"></Liquidfill>
           </div>
         </div>
       </div>
@@ -526,6 +507,88 @@ export default {
           level: "120"
         }
       ],
+      sql2Data: [
+        {
+          name: "动力中心",
+          allNum: "239",
+          num1: "0",
+          num2: "16",
+          num3: "17",
+          num4: "175",
+          num5: "0",
+          rate1: "0",
+          rate2: "0.067",
+          rate3: "0.071",
+          rate4: "0.732",
+          rate5: "0",
+          allRate1: "0.87",
+          allRate2: "0"
+        },
+        {
+          name: "硫酸厂",
+          allNum: "102",
+          num1: "0",
+          num2: "58",
+          num3: "9",
+          num4: "31",
+          num5: "0",
+          rate1: "0",
+          rate2: "0.569",
+          rate3: "0.088",
+          rate4: "0.304",
+          rate5: "0",
+          allRate1: "0.961",
+          allRate2: "0"
+        },
+        {
+          name: "烧碱厂",
+          allNum: "213",
+          num1: "0",
+          num2: "119",
+          num3: "0",
+          num4: "59",
+          num5: "0",
+          rate1: "0",
+          rate2: "0.559",
+          rate3: "0",
+          rate4: "0.277",
+          rate5: "0",
+          allRate1: "0.836",
+          allRate2: "0"
+        },
+        {
+          name: "新材料厂",
+          allNum: "294",
+          num1: "94",
+          num2: "2",
+          num3: "0",
+          num4: "99",
+          num5: "0",
+          rate1: "0.32",
+          rate2: "0.007",
+          rate3: "0",
+          rate4: "0.337",
+          rate5: "0",
+          allRate1: "0.663",
+          allRate2: "0"
+        },
+        {
+          name: "脂肪醇厂",
+          allNum: "150",
+          num1: "0",
+          num2: "36",
+          num3: "0",
+          num4: "91",
+          num5: "0",
+          rate1: "0",
+          rate2: "0.24",
+          rate3: "0",
+          rate4: "0.607",
+          rate5: "0",
+          allRate1: "0.847",
+          allRate2: "0"
+        }
+      ],
       spWork: [
         {
           text: "动火作业",
@@ -565,11 +628,22 @@ export default {
         cbsrycount: 0
       },
       date_1: new Date(),
-      date_2: new Date()
+      date_2: new Date(),
+      ballData: [0, 0, 0,0]
+      // ballData: {
+      //   pxhg: 0,
+      //   czsg: 0,
+      //   yhzg: 0,
+      //   dbpfhg: 0
+      // }
     };
   },
   mounted() {},
   methods: {
+    testme() {
+      this.ballData = [1,0.5,0.84,0.32]
+      console.log(this.ballData)
+    },
     // chartPanel 初始化
     // => 参数1 => chartPanel数据结构 => Array
     echartDrawRing(arr) {
@@ -593,7 +667,7 @@ export default {
     drawRing(obj, title, value, level) {
       let graphic = [];
       if (level) {
-        let str=value.replace(/%/g,'')
+        let str = value.replace(/%/g, "");
         graphic = [
           {
             type: "text",
@@ -739,13 +813,52 @@ export default {
       console.log(tagNames);
       console.log(String(tagNames));
 
+      // 动力中心 - fix
+      this.$api.page_1.sipV1Sql1().then(res => {
+        console.log(`动力中心fix: `, res);
+        let arr = [
+          {
+            id: "dongli-fix",
+            value: res.value
+          }
+        ];
+        finishCount++;
+        // let res_dataPanel = res.filter((item, index) => index <= 9);
+        // let res_chartPanel = res.filter(
+        //   (item, index) => index > 9 && index <= 16
+        // );
+        // let res_envChartPanel = res.filter((item, index) => index > 16);
+        // console.log("res_dataPanel", res_dataPanel);
+        // console.log("res_chartPanel", res_chartPanel);
+        // console.log("res_envChartPanel", res_envChartPanel);
+
+        res_dataPanel.map(
+          (item, index) =>
+            (this.dataPanel[index].value = item.Value.toFixed(2))
+        );
+        res_chartPanel.map(
+          (item, index) =>
+            (this.chartPanel[index].value = item.Value.toFixed(2))
+        );
+        res_envChartPanel.map(
+          (item, index) =>
+            (this.envChartPanel[index].value = item.Value.toFixed(2))
+        );
+        this.echartDrawRing(arr);
+      });
+
+      this.$api.page_1.sipV1Sql2().then(res => {
+        console.log(`sql2: `, res);
+        this.sql2Data = res;
+      });
+
       this.$api.page_1
         .getRtMonTagInfosByNames({
           tagNames: String(tagNames)
         })
         .then(res => {
           console.log(res);
-          finishCount++
+          finishCount++;
           let res_dataPanel = res.filter((item, index) => index <= 9);
           let res_chartPanel = res.filter(
             (item, index) => index > 9 && index <= 16
@@ -770,7 +883,7 @@ export default {
           this.echartDrawRing(this.chartPanel);
         });
       this.$api.page_1.hsezyCount().then(res => {
-        finishCount++
+        finishCount++;
         console.log("res_zyCount", res);
         this.spWork[0].value = res.dhzyCount;
         this.spWork[1].value = res.mbzyCount;
@@ -783,12 +896,26 @@ export default {
       });
 
       this.$api.page_1.hseCBSCount().then(res => {
-        finishCount++
+        finishCount++;
         console.log("res_CBSCount", res);
         this.cbsCount.cbscount = res.cbscount;
         this.cbsCount.cbsrycount = res.cbsrycount;
       });
 
+      // this.$api.page_1.dpJhyhzgl().then(res => {
+      //   console.log(`ballData-yhzg`, res.split(":"));
+      //   ballData[0] = res.split(":");
+      // });
+
+      // this.$api.page_1.dpJhpxhgl().then(res => {
+      //   console.log(`ballData-pxhg`, res.split(":"));
+      //   ballData[1] = res.split(":");
+      // });
+
+      // this.$api.page_1.dpCzsgl().then(res => {
+      //   console.log(`ballData-czsg`, res.split(":"));
+      //   ballData[2] = res.split(":");
+      // });
     }
   },
   created() {

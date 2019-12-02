@@ -9,7 +9,6 @@
         @tap="showFilter = true"
       ></j-filter-bar>
     </van-sticky>
-
     <j-filter v-model="showFilter" @confirm="getPageData()">
       <j-filter-search v-model="searchValue" @search="filterSearch" placeholder="请输入作业名称"></j-filter-search>
       <j-filter-item title="工作票状态" :actions="zypztList" @select="filterSelect_1"></j-filter-item>

@@ -21,6 +21,10 @@
   color: #000000 !important;
 }
 
+.van-nav-bar {
+  z-index: 99 !important;
+}
+
 .refresh {
   .van-pull-refresh__track {
     .content {
@@ -65,5 +69,9 @@
 }
 .z-index-highest {
   z-index: 999 !important;
+}
+
+.fixed-first-tab {
+  margin-top: 90px !important;
 }
 </style>

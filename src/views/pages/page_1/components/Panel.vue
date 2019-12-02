@@ -1,9 +1,9 @@
 <template>
   <div class="panel" :class="{ big: size === 'big' }">
     <div class="panel-icon-row">
-      <div class="panel-icon">
+      <!-- <div class="panel-icon">
         <van-icon class-prefix="iconfont" color="#DA615F" name="thermometer" size="18px" />
-      </div>
+      </div> -->
     </div>
     <div class="panel-value" v-if="size === 'big'">
       {{ value }}
@@ -77,7 +77,7 @@ export default {
 }
 .big {
   width: 210px;
-  height: 260px;
+  height: 190px;
   padding: 20px;
   .panel-value {
     font-size: 40px;

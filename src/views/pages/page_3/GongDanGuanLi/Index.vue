@@ -16,25 +16,15 @@
         @tap="showFilter = true"
       ></j-filter-bar>
     </van-sticky>
-    <j-filter v-model="showFilter" @confirm="getPageData('refresh')" >
+    <j-filter v-model="showFilter" @confirm="getPageData('refresh')">
       <j-filter-search v-model="searchValue" @search="filterSearch" placeholder="请输入作业名称"></j-filter-search>
       <j-filter-item title="工作票状态" :actions="zypztList" @select="filterSelect_1"></j-filter-item>
       <j-filter-time title="完成时间"></j-filter-time>
     </j-filter>
     <div class="list-card-area">
       <div class="app">
-        <van-skeleton title :row="5" :loading="isFirstLoading" class="skeleton">
-          <van-pull-refresh v-model="isRefreshLoading" @refresh="getPageData('refresh')">
-            <!-- <van-list
-              v-model="isListLoading"
-              :finished="isListMore"
-              :error.sync="isListLoadingError"
-              error-text="请求失败，点击重新加载"
-              finished-text="没有更多了"
-              @load="getPageData('list')"
-            >-->
-            <gongdanguanliList v-for="(item,inx) in listData" :key="item.id" :item="item"></gongdanguanliList>
-          </van-pull-refresh>
+        <van-skeleton title avatar :row="3" :loading="isLoading">
+          <gongdanguanliList v-for="(item, index) in listData" :key="index" :item="item"></gongdanguanliList>
         </van-skeleton>
       </div>
     </div>
@@ -87,42 +77,45 @@ export default {
           name: "已终止",
           index: 8
         }
-      ] ,// 作业票状态列表
-	  listData:[],
-	  searhParams:{ //查询参数
-		  
-	  }
+      ], // 作业票状态列表
+      listData: [],
+      searhParams: {
+        //查询参数
+      },
+      isLoading: false
     };
   },
-  mounted() {
-    this.isFirstLoading = false; // 是否首次获取数据
-    this.isRefreshLoading = true; // 全局刷新状态 - 是否完成
-  },
-  activated() {
-  	this.init({});
+  // mounted() {
+  //   this.isFirstLoading = false; // 是否首次获取数据
+  //   this.isRefreshLoading = true; // 全局刷新状态 - 是否完成
+  // },
+  created() {
+    this.init();
   },
   methods: {
-	init(params){
-		this.$api.page_3
-		  .deviceWorkOrderListData({
-			  ...params,
-		    __sid: localStorage.getItem("JiaHuaSessionId")
-		  })
-		  .then(res => {
-			  this.listData = res.list;
-		  })
-	},
+    init() {
+      this.isLoading = true;
+      this.$api.page_3
+        .deviceWorkOrderListData({
+          __sid: localStorage.getItem("JiaHuaSessionId")
+        })
+        .then(res => {
+          this.isLoading = false;
+          console.log(res);
+          this.listData = res.list;
+        });
+    },
     toDetail() {
       this.$router.push({ path: "./details1" });
     },
     getPageData(type) {
-		console.log(111)
-	},
+      console.log(111);
+    },
     filterSearch(e) {
-		console.log(222)
-	},
+      console.log(222);
+    },
     filterSelect_1(e) {
-		console.log(333)
+      console.log(333);
       this.selectZypzt = e.name;
     }
   }

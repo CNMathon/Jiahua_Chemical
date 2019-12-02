@@ -171,6 +171,11 @@
                 path: "../donghuo/index3",
                 query: { id: dhzypCode }
               });
+            }else{
+              this.$router.push({
+                path: "../donghuo/index5",
+                query: { id: dhzypCode }
+              });
             }
           })
           

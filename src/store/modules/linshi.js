@@ -1,10 +1,13 @@
 // initial state
 const state = {
+  keepAliveComponents: ["linshiindex", "linshiindex2"],
   hazardIdentification: [],
   connectRen: [], //接线人
   workCharger: [], //施工现场负责人
   workRen: [], //作业人
-  workDept:[]
+  workDept:[],
+  accessRen: [], // 临时用电接入人
+  priAppr: [], // 临时用电作业初审人
 };
 
 // getters
@@ -27,7 +30,6 @@ const actions = {
     commit("resetState");
   }
 };
-
 // mutations
 const mutations = {
   setTag(state, { tags }) {
@@ -39,6 +41,14 @@ const mutations = {
         state[key] = [];
       }
     }
+  },
+  add_KeepAlive(state, name) {
+    if (state.keepAliveComponents.includes(name)) return;
+    state.keepAliveComponents.push(name);
+  },
+  delete_KeepAlive(state, name) {
+    const index = state.keepAliveComponents.indexOf(name);
+    index > -1 && state.keepAliveComponents.splice(index, 1);
   }
 };
 

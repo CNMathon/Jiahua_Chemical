@@ -1,18 +1,19 @@
 <template>
-  <div class="mangban_home">
-    <keep-alive>
-      <router-view v-if="$route.meta.keepAlive">
+  <div class="gaochu_home">
+     <keep-alive :include="cachedViews">
+      <router-view>
         <!-- 这里是会被缓存的视图组件 -->
       </router-view>
     </keep-alive>
-
-    <router-view v-if="!$route.meta.keepAlive">
-      <!-- 这里是不被缓存的视图组件 -->
-    </router-view>
   </div>
 </template>
 <script>
 export default {
-  name: "mangban_home"
+  name: "gaochu_home",
+  computed: {
+    cachedViews() {
+      return this.$store.state.gaochu.keepAliveComponents;
+    }
+  }
 };
 </script>

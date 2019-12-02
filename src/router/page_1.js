@@ -19,6 +19,29 @@ const routes = {
       }
     },
     {
+      path: "/page_1/danger",
+      component: () => import("../views/pages/page_1/danger/Home.vue"),
+      // redirect: "/page_1/index",
+      name: "danger",
+      children: [
+        {
+          path: "/page_1/danger/sj",
+          name: "dangerSj",
+          component: () => import("@/views/pages/page_1/danger/sj/Index.vue"),
+        },
+        {
+          path: "/page_1/danger/xcl",
+          name: "dangerXcl",
+          component: () => import("@/views/pages/page_1/danger/xcl/Index.vue"),
+        },
+        {
+          path: "/page_1/danger/ls",
+          name: "dangerLs",
+          component: () => import("@/views/pages/page_1/danger/ls/Index.vue"),
+        },
+      ]
+    },
+    {
       path: "/page_1/dongli",
       name: "dongli",
       component: () => import("../views/pages/page_1/DongLi/Index.vue"),

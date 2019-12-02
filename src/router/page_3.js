@@ -270,6 +270,13 @@ const routes = {
           meta: {
             name: "动火安全-不可编辑"
           }
+        },{
+          path: "/page_3/donghuo/index5",
+          name: "donghuo_index5",
+          component: () => import("../views/pages/page_3/DongHuo/Index5.vue"),
+          meta: {
+            name: "动火安全-不可编辑"
+          }
         },
         {
           path: "/page_3/donghuo/list",
@@ -467,25 +474,16 @@ const routes = {
           path: "/page_3/gaochu/index",
           name: "gaochu_index",
           component: () => import("../views/pages/page_3/GaoChu/Index.vue"),
-          meta: {
-            keepAlive: true //此组件需要被缓存
-          }
         },
         {
           path: "/page_3/gaochu/index2",
           name: "gaochu_index2",
           component: () => import("../views/pages/page_3/GaoChu/Index2.vue"),
-          meta: {
-            keepAlive: true //此组件需要被缓存2
-          }
         },
         {
           path: "/page_3/gaochu/index3",
           name: "gaochu_index3",
           component: () => import("../views/pages/page_3/GaoChu/Index3.vue"),
-          meta: {
-            keepAlive: true //此组件需要被缓存2
-          }
         },
         {
           path: "/page_3/gaochu/list",
@@ -547,35 +545,30 @@ const routes = {
           path: "/page_3/diaozhuang/index",
           name: "diaozhuang_index",
           component: () => import("../views/pages/page_3/DiaoZhuang/Index.vue"),
-          meta: {
-            keepAlive: true //此组件需要被缓存
-          }
         },
         {
           path: "/page_3/diaozhuang/index2",
           name: "diaozhuang_index2",
           component: () =>
             import("../views/pages/page_3/DiaoZhuang/Index2.vue"),
-          meta: {
-            keepAlive: true //此组件需要被缓存
-          }
         },
         {
           path: "/page_3/diaozhuang/index3",
           name: "diaozhuang_index3",
           component: () =>
             import("../views/pages/page_3/DiaoZhuang/Index3.vue"),
-          meta: {
-            keepAlive: true //此组件需要被缓存
-          }
         },
         {
           path: "/page_3/diaozhuang/list",
           name: "diaozhuang_list",
           component: () => import("../views/pages/page_3/DiaoZhuang/List.vue"),
-          meta: {
-            keepAlive: false //此组件不需要被缓存
-          }
+        },
+        {
+          path: "/page_3/diaozhuang/diaozhuang_select_department",
+          name: "diaozhuang_select_department",
+          component: () =>
+            import("../views/pages/page_3/SelectDepartment/Index.vue"),
+          meta: {}
         },
         {
           path: "/page_3/diaozhuang/select",
@@ -648,17 +641,11 @@ const routes = {
           path: "/page_3/linshi/index",
           name: "linshi_index",
           component: () => import("../views/pages/page_3/LinShi/Index.vue"),
-          meta: {
-            keepAlive: true //此组件需要被缓存
-          }
         },
         {
           path: "/page_3/linshi/index2",
           name: "linshi_index2",
           component: () => import("../views/pages/page_3/LinShi/Index2.vue"),
-          meta: {
-            keepAlive: true //此组件需要被缓存
-          }
         },
         {
           path: "/page_3/linshi/list",
@@ -667,6 +654,13 @@ const routes = {
           meta: {
             keepAlive: false //此组件不需要被缓存
           }
+        },
+        {
+          path: "/page_3/linshi/linshi_select_department",
+          name: "linshi_select_department",
+          component: () =>
+            import("../views/pages/page_3/SelectDepartment/Index.vue"),
+            meta: {}
         },
         {
           path: "/page_3/linshi/select",
@@ -720,27 +714,25 @@ const routes = {
           path: "/page_3/dongtu/index",
           name: "dongtu_index",
           component: () => import("../views/pages/page_3/DongTu/Index.vue"),
-          meta: {
-            keepAlive: true //此组件需要被缓存
-          },
           props: true
         },
         {
           path: "/page_3/dongtu/index2",
           name: "dongtu_index",
           component: () => import("../views/pages/page_3/DongTu/Index2.vue"),
-          meta: {
-            keepAlive: true //此组件需要被缓存
-          },
           props: true
+        },
+        {
+          path: "/page_3/dongtu/dongtu_select_department",
+          name: "dongtu_select_department",
+          component: () =>
+            import("../views/pages/page_3/SelectDepartment/Index.vue"),
+            meta: {}
         },
         {
           path: "/page_3/dongtu/index_2",
           name: "dongtu_index_2",
           component: () => import("../views/pages/page_3/DongTu/Index2.vue"),
-          meta: {
-            keepAlive: true //此组件需要被缓存
-          },
           props: true
         },
         {
@@ -848,6 +840,11 @@ const routes = {
             name: "断路安全-确认签字",
             keepAlive: false //此组件不需要被缓存
           }
+        },
+        {
+          path: "/page_3/duanlu/select_organization",
+          name: "duanlu_select_organization",
+          component: () => import("../components/Organization/index.vue")
         }
       ]
     },

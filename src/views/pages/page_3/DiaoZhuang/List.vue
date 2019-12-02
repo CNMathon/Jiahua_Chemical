@@ -1,6 +1,11 @@
 <!-- 吊装列表页 -->
 <template>
-  <van-list class="home">
+  <van-list class="home"  v-model="loading"
+                :finished="finished" 
+                :error.sync="error"
+                error-text="请求失败，点击重新加载"
+                finished-text="没有更多了"
+                @load="getListData" >
     <van-sticky>
       <van-nav-bar title="吊装安全"
                    left-text="返回"
@@ -25,16 +30,10 @@
     </j-filter>
     <van-pull-refresh v-model="isLoading"
                       @refresh="getListData(true)">
-      <van-list v-model="loading"
-                :finished="finished"
-                :error.sync="error"
-                error-text="请求失败，点击重新加载"
-                finished-text="没有更多了"
-                @load="getListData()">
         <div class="list">
           <div class="list-card-area">
             <div v-for="(item, index) in pageList"
-                 :key="index">
+                 :key="index" @click="jumpToMorePage(item.htStatus,item.zypcode)">
               <div class="donghuo-list-card donghuo-list-card-nolast">
                 <div class="left">
                   <div class="left-line left-line-notlast">吊装内容：{{ item.dznr }}</div>
@@ -45,26 +44,11 @@
                   <div class="left-line left-line-notlast">作业开始时间：{{ item.zyksDate }}</div>
                   <div class="left-line">作业结束时间：{{ item.zyjsDate }}</div>
                 </div>
-                <div class="right"
-                     @click.stop="edit(item)"
-                     v-if="item.htStatus == 1">编辑</div>
-                <div class="right"
-                     @click.stop="toIndex2(item)"
-                     v-if="item.htStatus == 2">初审</div>
-                <div class="right"
-                      @click.stop="toIndex3(item)"
-                     v-if="item.htStatus == 3">有效</div>
-                <div class="right"
-                      @click.stop="toIndex3(item)"
-                     v-if="item.htStatus == 4">已验票</div>
-                <div class="right"
-                      @click.stop="toIndex3(item)"
-                     v-if="item.htStatus == 5">已终结</div>
+                 <div class="right">{{zypztList[item.htStatus].name}}</div>
               </div>
             </div>
           </div>
         </div>
-      </van-list>
     </van-pull-refresh>
   </van-list>
 </template>
@@ -90,7 +74,11 @@
         cbslist: [],
         selectCbs: {}, //选择的承包商
         confirmSelectCbs: {},
-        zypztList: [{
+        zypztList: [
+          {
+          name: '选择',
+          index: 0
+        },{
           name: "编辑",
           index: 1
         },
@@ -115,18 +103,36 @@
     },
     searchStatus: "",
     mixins: [mixin],
+    created () {
+      this.$store.dispatch("diaozhuang/cleanState");
+      this.$store.commit("diaozhuang/delete_KeepAlive", "diaozhuang_index");
+      this.$nextTick(() => {
+        this.$store.commit("diaozhuang/add_KeepAlive", "diaozhuang_index");
+      });
+    },
     methods: {
-		edit(item){
-			this.$router.push({path:'/page_3/diaozhuang/index',query:{zypcode:item.zypcode}});
-			localStorage.setItem('isfresh',"diaozhuanglist");
-    },
-    toIndex2(item){
-      this.$router.push({path:'/page_3/diaozhuang/index2',query:{zypcode:item.zypcode}});
-			localStorage.setItem('isfresh',"diaozhuanglist");
-    },
-    toIndex3(item){
-      this.$router.push({path:'/page_3/diaozhuang/index3',query:{zypcode:item.zypcode}});
-			localStorage.setItem('isfresh',"diaozhuanglist");
+      // 跳转至详情页
+    jumpToMorePage (status, code) {
+      localStorage.setItem('isfresh',"diaozhuanglist");
+      let path = '';
+      switch (Number(status)) {
+        case 1:
+          path += '/page_3/diaozhuang/index';
+          break;
+        case 2:
+          path += '/page_3/diaozhuang/index2';
+          break;
+        case 3:
+        case 4:
+        case 5:
+        case 6:
+          path += '/page_3/diaozhuang/index3';
+          break;
+      }
+      this.$router.push({
+          path: path,
+          query: { zypcode: code }
+        });
     },
       pageBack () {
         this.$router.push({

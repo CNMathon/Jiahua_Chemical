@@ -65,7 +65,7 @@
             <div class="item-title-item">库存</div>
           </div>
           <van-tab v-for="(item, index) in dangerInfo" :key="index" :title="item.text">
-            <div class="item-area" @click="jumpTo(item.route)">
+            <div class="item-area">
               <Item size="big" :info="item.info" />
             </div>
           </van-tab>

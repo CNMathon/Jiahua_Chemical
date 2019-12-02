@@ -154,10 +154,12 @@
     },
     created () {
       this.getPageData();
+      this.$store.dispatch("dongtu/cleanState");
+      this.$store.commit("dongtu/delete_KeepAlive", "dongtuindex");
+      this.$nextTick(() => {
+        this.$store.commit("dongtu/add_KeepAlive", "dongtuindex");
+      });
     }
-    // components: {
-    //   ListCard
-    // }
   };
 </script>
 

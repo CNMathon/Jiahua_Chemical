@@ -527,7 +527,6 @@ export default {
             console.log(item);
             this.sendData.harmAnalise.push(item - 1);
           });
-
           let workDeptLeader = this.reductionSelectUserObj({
             userName: info.workDeptLeaderName,
             userCode: info.workDeptLeader
@@ -538,11 +537,9 @@ export default {
           let guarder = this.reductionSelectUserObj(
             this.assemblyStrToUserObj(info.guarder, info.guarderName)
           );
-
           this.sendData.workDeptLeader = workDeptLeader;
           this.sendData.worker = worker;
           this.sendData.guarder = guarder;
-
           let specialWork = [];
           this.sendData.specialWork.map(items => {
             specialWork.push(this.list_1[items]);
@@ -563,11 +560,43 @@ export default {
               value: specialWork
             }
           });
-
+          this.getChilderList(info.id);
           console.log(this.sendData);
-        })
-        .catch(() => {});
+        }).catch((err) => {
+          console.log('===============报错', err);
+        });
     },
+    getChilderList (id) {
+    this.$api.page_3.htHseUpworkticketGetChildrenListData(
+      id,this.$userInfo.sessionId).then((res) => {
+      console.log('获得子表信息,主表id为', 
+        id);
+      console.log('获得子表信息', res);
+      this.setChildrenListView(res);
+      }).catch((err) => {
+        console.log('报错', err);
+      })
+  },
+  setChildrenListView (childData) {
+    let checked = {};
+    childData.forEach((item, inx) => {
+          if (item.qrzt && item.qrzt === 1) {
+            checked[item.xuhao] = {
+              checked: true,
+              img: item.confirmer,
+              id: item.id
+            };
+          } else {
+            checked[inx] = {
+              checked: false,
+              img: "",
+              id: item.id
+            };
+          }
+        });
+        this.checked = Object.values(checked);
+        console.log('this.checked', this.checked);
+  },
     Next() {
       console.log(this.actRuTask);
       if (this.actRuTask === "") {
@@ -748,23 +777,6 @@ export default {
         .htHseUpworkticketSave(sendData)
         .then(res => {
           console.log("???============主表id", res.message);
-          this.saveChilderList(this.HtHseUpworkticketSonParse(res.message));
-        })
-        .catch(() => {
-          console.log("失败");
-        });
-    },
-    saveChilderList(data) {
-      this.$api.page_3
-        .htHseUpworkticketSaveLit(data, this.$userInfo.sessionId)
-        .then(res => {
-          messageId = res.message;
-          this.$Toast.success({
-            message: "提交成功",
-            onClose() {
-              that.pageBack();
-            }
-          });
         })
         .catch(() => {
           console.log("失败");
@@ -810,7 +822,9 @@ export default {
       console.log("index: ", index);
       console.log("显示签名");
       this.xuhao = index;
-      this.signatureShow = true;
+      if (!this.checked[index].checked) {
+        this.signatureShow = true;
+      }
     },
     // 取消签名
     signatureCancel(index) {

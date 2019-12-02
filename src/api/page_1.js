@@ -21,7 +21,32 @@ const article = {
   	return axios.get(`${base.sqsta}dp/hseCBSCount`, {
     	params: params
     })
-  }
+  },
+  sipV1Sql1(params) {
+    return axios.get(`${base.jhec_8085}sip/v1/sql1`, {
+      params: params
+    })
+  },
+  sipV1Sql2(params) {
+    return axios.get(`${base.jhec_8085}sip/v1/sql2`, {
+      params: params
+    })
+  },
+  dpJhyhzgl(params) {
+    return axios.get(`${base.jhec_8085}dp/jhyhzgl`, {
+      params: params
+    })
+  },
+  dpJhpxhgl(params) {
+    return axios.get(`${base.jhec_8085}dp/jhpxhgl`, {
+      params: params
+    })
+  },
+  dpCzsgl(params) {
+    return axios.get(`${base.jhec_8085}dp/czsgl`, {
+      params: params
+    })
+  },
 };
 
 export default article;

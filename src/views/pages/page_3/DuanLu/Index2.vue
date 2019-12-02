@@ -352,9 +352,15 @@ export default {
           this.sendData.otherSafety = this.listData.otherSafety
           this.sendData.othercsTime = this.listData.othercsTime
           this.sendData.othercsComplier = this.listData.othercsComplier
-          this.sendData.workDept = this.reductionSelectDept(this.listData.zybm.fullName);
-          this.sendData.workCharger = this.reductionSelectUser(this.listData.zybmfzr.userName);
-          this.sendData.involveDept = this.reductionSelectDept(this.listData.involveDept);
+          this.sendData.workDept = [{
+            name:this.listData.zybm.officeName,
+            id:this.listData.zybm.id
+          }];
+          this.sendData.workCharger = this.reductionSelectUserObj(this.listData.zybmfzr);
+          this.sendData.involveDept = [{
+            name:this.listData.sjbm,
+            id:this.listData.involveDept
+          }];
           console.log(this.sendData)
         })
         .catch(() => {});

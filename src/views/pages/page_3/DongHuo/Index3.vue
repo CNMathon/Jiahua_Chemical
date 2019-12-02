@@ -426,7 +426,7 @@ export default {
   },
   beforeDestroy() {
     this.queryId = "";
-    this.$store.dispatch("dongtu/cleanState");
+    this.$store.dispatch("donghuo/cleanState");
   },
   methods: {
     updatakrqbzLimitation(name, val) {

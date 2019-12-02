@@ -420,7 +420,6 @@ export default {
         .then(res => {
           console.log(res);
           //  workDeptLeader worker9 guarder9
-          // this.reductionSelectUserObj(this.assemblyStrToUserObj(info.guardian, info.guardianCode));
           const info = res.list[0];
           this.oldInfo = info;
           this.sendData.id = info.id;
@@ -468,7 +467,8 @@ export default {
               key: "specialWork",
               value: specialWork
             }
-		  });
+      });
+       this.getChilderList(info.id);
 			//  初始化安全选项
           console.log(this.sendData);
         })
@@ -564,43 +564,42 @@ export default {
         //   })
         //   .catch(() => this.$Toast.clear());
       }
-	},
+	  },
 	HtHseUpworkticketSonParse (messageId) {
-		let sendSafeData = {
-        HtHseUpworkticketSon: [
+		let sendSafeData = [
           {
             fatherId: messageId,
             xuhao: 1,
             safetyMeasure: `作业人员身体条件符合要求`,
-            confirmer: this.checked[0] ? this.checked[0].img : 0,
+            confirmer: this.checked[0].img ? this.checked[0].img : '',
             qrzt: this.checked[0] ? 1 : 0
           },
           {
             fatherId: messageId,
             xuhao: 2,
             safetyMeasure: `作业人员着装符合工作要求`,
-            confirmer: this.checked[1] ? this.checked[1].img : 0,
+            confirmer: this.checked[1].img ? this.checked[1].img : '',
             qrzt: this.checked[1] ? 1 : 0
           },
           {
             fatherId: messageId,
             xuhao: 3,
             safetyMeasure: `作业人员佩戴合格的安全帽`,
-            confirmer: this.checked[2] ? this.checked[2].img : 0,
+            confirmer: this.checked[2].img ? this.checked[2].img : '',
             qrzt: this.checked[2] ? 1 : 0
           },
           {
             fatherId: messageId,
             xuhao: 4,
             safetyMeasure: `作业人员佩戴安全带，安全带高挂抵用`,
-            confirmer: this.checked[3] ? this.checked[3].img : 0,
+            confirmer: this.checked[3].img ? this.checked[3].img : '',
             qrzt: this.checked[3] ? 1 : 0
           },
           {
             fatherId: messageId,
             xuhao: 5,
             safetyMeasure: `作业人员携带有工具袋及安全绳`,
-            confirmer: this.checked[4] ? this.checked[4].img : 0,
+            confirmer: this.checked[4].img ? this.checked[4].img : '',
             qrzt: this.checked[4] ? 1 : 0
           },
           {
@@ -608,42 +607,42 @@ export default {
             xuhao: 6,
             safetyMeasure: `作业人员佩戴:${this.mask[0] == 1 ? "过滤式防毒面具或口罩" : ""},${
             this.mask[1] == 1 ? "空气呼吸器" : ""}`,
-            confirmer: this.checked[5] ? this.checked[5].img : 0,
+            confirmer: this.checked[5].img ? this.checked[5].img : '',
             qrzt: this.checked[5] ? 1 : 0
           },
           {
             fatherId: messageId,
             xuhao: 7,
             safetyMeasure: `现场搭设的脚手架、防护网、围栏符合安全规定`,
-            confirmer: this.checked[6] ? this.checked[6].img : 0,
+            confirmer: this.checked[6].img ? this.checked[6].img : '',
             qrzt: this.checked[6] ? 1 : 0
           },
           {
             fatherId: messageId,
             xuhao: 8,
             safetyMeasure: `垂直分层作业中间有隔离设施`,
-            confirmer: this.checked[7] ? this.checked[7].img : 0,
+            confirmer: this.checked[7].img ? this.checked[7].img : '',
             qrzt: this.checked[7] ? 1 : 0
           },
           {
             fatherId: messageId,
             xuhao: 9,
             safetyMeasure: `绳子、梯子符合安全规定`,
-            confirmer: this.checked[8] ? this.checked[8].img : 0,
+            confirmer: this.checked[8].img ? this.checked[8].img : '',
             qrzt: this.checked[8] ? 1 : 0
           },
           {
             fatherId: messageId,
             xuhao: 10,
             safetyMeasure: `石棉瓦等轻型棚的承重梁、柱能承重负荷的要求`,
-            confirmer: this.checked[9] ? this.checked[9].img : 0,
+            confirmer: this.checked[9].img ? this.checked[9].img : '',
             qrzt: this.checked[9] ? 1 : 0
           },
           {
             fatherId: messageId,
             xuhao: 11,
             safetyMeasure: `作业人员在石棉瓦等不承重物作业所搭设的承重板稳定牢固`,
-            confirmer: this.checked[10] ? this.checked[10].img : 0,
+            confirmer: this.checked[10].img ? this.checked[10].img : '',
             qrzt: this.checked[10] ? 1 : 0
           },
           {
@@ -651,21 +650,19 @@ export default {
             xuhao: 12,
             safetyMeasure: `采光,夜间作业照明符合作业要求, ${
             this.light == 0 ? "需采用并已采用" : "无需采用"}防爆灯`,
-            confirmer: this.checked[11] ? this.checked[11].img : 0,
+            confirmer: this.checked[11].img ? this.checked[11].img : '',
             qrzt: this.checked[11] ? 1 : 0
           },
           {
             fatherId: messageId,
             xuhao: 13,
             safetyMeasure: `30m 以上高处作业配备通讯、联络工具`,
-            confirmer: this.checked[12] ? this.checked[12].img : 0,
+            confirmer: this.checked[12].img ? this.checked[12].img : '',
             qrzt: this.checked[12] ? 1 : 0
           }
-        ],
-        __sid: this.$userInfo.sessionId
-      };
+        ];
 	  return sendSafeData;
-	},
+	  },
     // 发送数据
     postData() {
       // 检测到输入不完整直接退出函数
@@ -684,11 +681,11 @@ export default {
 	  sendData.__sid = this.$userInfo.sessionId;
 		//    添加还是修改
       if (this.$route.query.id) {
-		sendData.gczyCode = this.oldInfo.gczyCode;
-		sendData.applyDept = this.oldInfo.office.officeCode;
+		    sendData.gczyCode = this.oldInfo.gczyCode;
+		    sendData.applyDept = this.oldInfo.office.officeCode;
       	sendData.applicant = this.oldInfo.user.userCode;
       } else {
-		sendData.applyDept = this.$userInfo.officeCode;
+		    sendData.applyDept = this.$userInfo.officeCode;
       	sendData.applicant = this.$userInfo.userCode;
 	  }
       console.log(111111);
@@ -696,32 +693,65 @@ export default {
       this.$api.page_3
         .htHseUpworkticketSave(sendData)
         .then(res => {
-		  console.log('???============主表id', res.message);
-		  let sendSafeData = this.HtHseUpworkticketSonParse(res.message);
-          console.log(110111);
-		  console.log(sendSafeData);
-		  this.saveChilderList(this.HtHseUpworkticketSonParse(res.message));
+          console.log('???============主表id', res.message);
+          let sendSafeData = this.HtHseUpworkticketSonParse(res.message);
+              console.log(110111);
+          console.log(sendSafeData);
+          this.saveChilderList(this.HtHseUpworkticketSonParse(res.message));
         })
         .catch(() => {
-          console.log("失败");
+          console.log("失败1");
         });
-	},
+  },
+  getChilderList (id) {
+    this.$api.page_3.htHseUpworkticketGetChildrenListData(
+      id,this.$userInfo.sessionId).then((res) => {
+      console.log('获得子表信息,主表id为', 
+        id);
+      console.log('获得子表信息', res);
+      this.setChildrenListView(res);
+      }).catch((err) => {
+        console.log('报错', err);
+      })
+  },
+  setChildrenListView (childData) {
+    let checked = {};
+    childData.forEach((item, inx) => {
+          if (item.qrzt && item.qrzt === 1) {
+            checked[item.xuhao] = {
+              checked: true,
+              img: item.confirmer,
+              id: item.id
+            };
+          } else {
+            checked[inx] = {
+              checked: false,
+              img: "",
+              id: item.id
+            };
+          }
+        });
+        this.checked = Object.values(checked);
+        console.log('this.checked', this.checked);
+  },
 	saveChilderList (data) {
+    let that = this
 		this.$api.page_3
             .htHseUpworkticketSaveLit(data, this.$userInfo.sessionId)
             .then(res => {
-              messageId = res.message;
+              // messageId = res.message;
+              console.log('子表保存成功', res);
               this.$Toast.success({
                 message: "提交成功",
                 onClose() {
-                  that.pageBack();
+                  that.$router.go(-1)
                 }
               });
             })
             .catch(() => {
-              console.log("失败");
+              console.log("失败2");
             });
-	},
+	  },
     closeAction() {
       this.showPicker = false;
     },
@@ -759,10 +789,10 @@ export default {
     },
     // 显示签名
     showSignature(index) {
-      console.log("index: ", index);
-      console.log("显示签名");
       this.xuhao = index;
-      this.signatureShow = true;
+      if (!this.checked[index].checked) {
+        this.signatureShow = true;
+      }
     },
     // 取消签名
     signatureCancel(index) {

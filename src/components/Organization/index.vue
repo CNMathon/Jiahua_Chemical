@@ -1,6 +1,6 @@
 <template>
   <div class="select-user">
-    <van-nav-bar title="请选择" left-text="返回" left-arrow @click-left="pageBack" />
+    <van-nav-bar :title="title" left-text="返回" left-arrow @click-left="pageBack" />
     <div class="head">
       <van-search
         v-model="refName"
@@ -105,7 +105,9 @@ export default {
       storeModule: "",
       selectUser: false, // 选择用户
       max: 1,
+      min: 1,
       storeKey: "",
+      title: "请选择",
       radio: ""
     };
   },
@@ -114,6 +116,8 @@ export default {
     this.storeKey = this.$route.query.storeKey;
     this.results = this.$store.state[this.storeModule][this.storeKey];
     this.max = parseInt(this.$route.query.max);
+    this.min = parseInt(this.$route.query.min);
+    this.title = this.$route.query.title;
     this.officeTreeData();
     //
   },

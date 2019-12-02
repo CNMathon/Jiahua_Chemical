@@ -93,8 +93,11 @@ export default {
         duration: 0
       });
       this.$api.page_3
-        .getJobs({
-          __sid: localStorage.getItem("JiaHuaSessionId")
+        .GetUnDoApproveList({
+          PageSize: 10,
+          PageIndex: 1,
+          UserCode: localStorage.getItem("JiaHuaSessionId"),
+          PostList: [localStorage.getItem("JiaHuaOfficeCode")]
         })
         .then(res => {
           let list = res.Result;

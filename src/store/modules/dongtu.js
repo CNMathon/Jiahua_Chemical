@@ -1,5 +1,6 @@
 // initial state
 const state = {
+  keepAliveComponents: ["dongtuindex"],
   otherSpecial: [],
   hazardSb: [],
   guardian: [], //监护人
@@ -40,6 +41,14 @@ const mutations = {
         state[key] = [];
       }
     }
+  },
+  add_KeepAlive(state, name) {
+    if (state.keepAliveComponents.includes(name)) return;
+    state.keepAliveComponents.push(name);
+  },
+  delete_KeepAlive(state, name) {
+    const index = state.keepAliveComponents.indexOf(name);
+    index > -1 && state.keepAliveComponents.splice(index, 1);
   }
 };
 

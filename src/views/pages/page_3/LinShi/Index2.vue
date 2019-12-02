@@ -2,7 +2,7 @@
   <div class="mangban">
     <van-sticky>
       <van-nav-bar
-        v-if="htStatus!=='5'"
+        v-if="linshihtStatus!=='5'"
         title="临时用电"
         left-text="返回"
         right-text="操作"
@@ -80,14 +80,14 @@
       <!-- 用电结束时间 -->
       <cell-time disable v-model="sendData.powertimeEnd" title="用电结束时间" required></cell-time>
       <!-- 接线人 -->
-      <cell-select-user
+      <select-organization
         disable
         title="接线人"
         required
         :storeModule="storeModule"
         storeKey="connectRen"
         v-model="sendData.connectRen"
-      ></cell-select-user>
+      ></select-organization>
       <!-- 施工作业部门 -->
       <cell-select-department
         disable
@@ -98,41 +98,31 @@
         v-model="sendData.workDept"
       ></cell-select-department>
       <!-- 施工现场负责人 -->
-      <cell-select-user
+      <select-organization
         disable
         title="施工现场负责人"
         required
         :storeModule="storeModule"
         storeKey="workCharger"
         v-model="sendData.workCharger"
-      ></cell-select-user>
+      ></select-organization>
       <!-- 作业人 -->
-      <cell-select-user
+      <select-organization
         disable
         title="作业人"
         required
         :storeModule="storeModule"
         storeKey="workRen"
         v-model="sendData.workRen"
-      ></cell-select-user>
+      ></select-organization>
       <!-- 电工证号 -->
       <cell-input disable v-model="sendData.licenseCode" title="电工证号" required placeholder="手工录入"></cell-input>
     </div>
-    <!-- 签名 -->
-
-    <van-popup
-      class="popup"
-      v-model="signatureShow"
-      :close-on-click-overlay="false"
-      position="bottom"
-    >
-      <Canvas ref="signature" @save="saveCanvas" @cancel="cancelCanvas"></Canvas>
-    </van-popup>
 
     <van-action-sheet v-model="showPicker" :actions="actions" @select="onSelect" />
     <!-- 操作Popup -->
     <van-popup v-model="isShowAction" position="bottom" class="action">
-      <button v-if="htStatus==='2'" @click="postData">保存</button>
+      <button v-if="linshihtStatus==='2'" @click="postData">保存</button>
       <button @click="Next">工作流提交</button>
       <button @click="closeAction">取消</button>
     </van-popup>
@@ -145,7 +135,7 @@
       </div>
       <div class="confirm_list">
         <Signature
-          :disable="htStatus!=='2'"
+          :disable="linshihtStatus!=='2'"
           :checked="checked[0] ? checked[0].checked : false"
           :img="checked[0] ? checked[0].img : ''"
           @checked="showSignature(0)"
@@ -154,7 +144,7 @@
           <span slot>安装临时线路人员持有电工作业操作证</span>
         </Signature>
         <Signature
-          :disable="htStatus!=='2'"
+          :disable="linshihtStatus!=='2'"
           :checked="checked[1] ? checked[1].checked : false"
           :img="checked[1] ? checked[1].img : ''"
           @checked="showSignature(1)"
@@ -163,7 +153,7 @@
           <span slot>在防爆场所使用的临时电源、元器件和线路达到相应的防爆等级要求</span>
         </Signature>
         <Signature
-          :disable="htStatus!=='2'"
+          :disable="linshihtStatus!=='2'"
           :checked="checked[2] ? checked[2].checked : false"
           :img="checked[2] ? checked[2].img : ''"
           @checked="showSignature(2)"
@@ -172,7 +162,7 @@
           <span slot>临时用电的单项和混用线路采用五线制</span>
         </Signature>
         <Signature
-          :disable="htStatus!=='2'"
+          :disable="linshihtStatus!=='2'"
           :checked="checked[3] ? checked[3].checked : false"
           :img="checked[3] ? checked[3].img : ''"
           @checked="showSignature(3)"
@@ -181,7 +171,7 @@
           <span slot>临时用电线路在装置内不低于2.5m,道路不低于5m</span>
         </Signature>
         <Signature
-          :disable="htStatus!=='2'"
+          :disable="linshihtStatus!=='2'"
           :checked="checked[4] ? checked[4].checked : false"
           :img="checked[4] ? checked[4].img : ''"
           @checked="showSignature(4)"
@@ -190,7 +180,7 @@
           <span slot>临时用电线路架空进线未采用裸线,未在树或脚手架上架设</span>
         </Signature>
         <Signature
-          :disable="htStatus!=='2'"
+          :disable="linshihtStatus!=='2'"
           :checked="checked[5] ? checked[5].checked : false"
           :img="checked[5] ? checked[5].img : ''"
           @checked="showSignature(5)"
@@ -199,16 +189,16 @@
           <span slot>暗管埋设及地下电缆线路设有“走向标志”和“安全标志”,电缆埋深大于0.7m</span>
         </Signature>
         <Signature
-          :disable="htStatus!=='2'"
+          :disable="linshihtStatus!=='2'"
           :checked="checked[6] ? checked[6].checked : false"
-          :img="checked[6] ? checked[5].img : ''"
+          :img="checked[6] ? checked[6].img : ''"
           @checked="showSignature(6)"
           @cancel="signatureCancel(6)"
         >
           <span slot>现场临时用配电盘、箱有防雨措施</span>
         </Signature>
         <Signature
-          :disable="htStatus!=='2'"
+          :disable="linshihtStatus!=='2'"
           :checked="checked[7] ? checked[7].checked : false"
           :img="checked[7] ? checked[7].img : ''"
           @checked="showSignature(7)"
@@ -217,7 +207,7 @@
           <span slot>临时用电设施装有漏电保护器,移动工具、手持工具“一机一闸一保护”</span>
         </Signature>
         <Signature
-          :disable="htStatus!=='2'"
+          :disable="linshihtStatus!=='2'"
           :checked="checked[8] ? checked[8].checked : false"
           :img="checked[8] ? checked[8].img : ''"
           @checked="showSignature(8)"
@@ -225,42 +215,14 @@
         >
           <span slot>用电设备、线路容量、负荷符合要求</span>
         </Signature>
-        <!-- <Signature :checked="checked[9] ? checked[9].checked : false" :img="checked[9] ? checked[9].img : ''" @checked="showSignature(9)"
-				 @cancel="signatureCancel(9)">
-					<div slot>
-						其他安全措施:
-						<div class="content_lang_input">
-							<input type="text" v-model="otherSafe" />
-						</div>
-					</div>
-        </Signature>-->
-
-        <van-popup
-          class="popup"
-          v-model="signatureShow2"
-          :close-on-click-overlay="false"
-          position="bottom"
-        >
-          <Canvas ref="signature" @save="saveCanvas2" @cancel="cancelCanvas2"></Canvas>
-        </van-popup>
         <cell-textarea
-          :disable="htStatus!=='2'"
+          :disable="linshihtStatus!=='2'"
           v-model="sendData.otherSafety"
           title="其他安全措施"
           required
           placeholder="请输入其他安全措施"
         ></cell-textarea>
-        <div class="signature" v-if="htStatus==='2'" @click="signatureShow2 = true">
-          <span>签字</span>
-          <van-image
-            v-if="sendData.othercsComplier"
-            style="width:40px;margin-left:30px"
-            :src="sendData.othercsComplier"
-          ></van-image>
-          <van-icon style="float:right" name="edit" />
-          <span style="float:right;font-size:14px;margin-right:30px">{{sendData.othercsTime}}</span>
-        </div>
-        <div v-else class="signature">
+        <div class="signature" v-if="linshihtStatus==='2'" @click="showSignature2">
           <span>签字</span>
           <van-image
             v-if="sendData.othercsComplier"
@@ -274,33 +236,41 @@
 
       <div class="cell_group">
         <!-- 临时用电作业初审人 -->
-        <cell-value :disable="htStatus!=='2'" title="临时用电作业初审人" :value="$userInfo.userName"></cell-value>
+        <select-organization  
+        title="临时用电作业初审人" 
+        required 
+        v-model="sendData.priAppr" 
+        storeKey="priAppr"
+        disable
+        :storeModule="storeModule"
+        ></select-organization>
         <!-- 电源接入点 -->
-        <cell-input :disable="htStatus!=='2'" title="电源接入点" required :value="$userInfo.userName"></cell-input>
+        <cell-input  title="电源接入点" required :value="sendData.powerAp" :disable="linshihtStatus!== '2'"></cell-input>
         <!-- 临时用电接入人 -->
-        <cell-select-user
-          :disable="htStatus!=='2'"
+        <select-organization
           title="临时用电接入人"
           required
+          radio
           :storeModule="storeModule"
-          storeKey="connectRen"
-          v-model="sendData.connectRen"
-        ></cell-select-user>
+          storeKey="accessRen"
+          :disable="linshihtStatus!== '2'"
+          v-model="sendData.accessRen"
+        ></select-organization>
         <!-- 仅用执行人电工账号 -->
         <cell-input
-          :disable="htStatus!=='2'"
-          title="临时用电作业初审人"
+          title="供电执行人电工证号"
           required
-          :value="$userInfo.userName"
+          :disable="linshihtStatus!== '2'"
+          v-model="sendData.excuteLicense"
         ></cell-input>
       </div>
       <van-popup
-        class="popup"
+        class="popup dier"
         v-model="signatureShow"
         :close-on-click-overlay="false"
         position="bottom"
       >
-        <Canvas ref="signature" @save="saveCanvas" @cancel="cancelCanvas"></Canvas>
+        <Canvas id="linshiSignature" ref="signature1" @save="saveCanvas" @cancel="cancelCanvas"></Canvas>
       </van-popup>
     </div>
   </div>
@@ -313,7 +283,7 @@ import StepperPlus from "@/components/StepperPlus.vue";
 import Canvas from "@/components/Canvas.vue";
 import Signature from "../components/Signature.vue";
 export default {
-  name: "linshi",
+  name: "linshiindex2",
   mixins: [business],
   components: {
     LinShiConfirm,
@@ -324,14 +294,8 @@ export default {
   data() {
     return {
       storeModule: "linshi",
-      checked: [
-        {
-          checked: false,
-          image: ""
-        }
-      ],
       signatureShow: false,
-      signatureShow2: false,
+      security: 1, // 是安全签字 还是其他安全签字
       selectSignatureShow: Number,
       otherSafe: "",
       sendData: {
@@ -340,20 +304,19 @@ export default {
         otherSafety: "",
         othercsComplier: "",
         othercsTime: "",
-        workContent: "", //作业内容
-        workLocation: "", //作业地点
-        powerType: "", //用电方式
-        jworkVoltage: "", //工作电压
-        publicArea: "", //公共区域
-        devicePower: "", //用电设备及功率
-        hazardIdentification: [], //危害辨识
-        powertimeStart: "", //申请用电时间（起）
-        powertimeEnd: "", //申请用电时间（止）
-        connectRen: [], //接线人
-        workCharger: [], //施工现场负责人
-        workRen: [], //作业人
+        workContent: "", // 作业内容
+        workLocation: "", // 作业地点
+        powerType: "", // 用电方式
+        jworkVoltage: "", // 工作电压
+        publicArea: "", // 公共区域
+        devicePower: "", // 用电设备及功率
+        hazardIdentification: [], // 危害辨识
+        powertimeStart: "", // 申请用电时间（起）
+        powertimeEnd: "", // 申请用电时间（止）
+        connectRen: [], // 接线人
+        workCharger: [], // 施工现场负责人
+        workRen: [], // 作业人
         licenseCode: "", //电工证号
-
         lsydzypSafetyList: [
           {
             zypId: "",
@@ -363,9 +326,9 @@ export default {
             safetyStatus: Number
           }
         ],
-        accessRen: "", // 临时用电接入人
+        accessRen: [], // 临时用电接入人
         excuteLicense: "", // 供电执行人电工证号
-        priAppr: "", // 临时用电作业初审人
+        priAppr: [], // 临时用电作业初审人
         powerAp: "" // 电源接入点
       },
       powerTypeColumns: ["插座", "接线"], //用电方式
@@ -396,51 +359,47 @@ export default {
           index: 2
         }
       ],
+      checked:[],
       isShowAction: false,
       zypCode: 0,
       actRuTask: "",
       id: "",
-      htStatus: ""
+      linshihtStatus: ""
     };
   },
   computed: mapState({
     hazardIdentification: state => state.linshi.hazardIdentification,
-    connectRen: state => state.linshi.connectRen,
-    workCharger: state => state.linshi.workCharger,
-    workRen: state => state.linshi.workRen
+    accessRen: state => state.linshi.accessRen,
+    priAppr: state => state.linshi.priAppr,
   }),
-  created() {},
-  activated() {
-    console.log(22222222222222222222);
-    console.log(this.$route);
-    // 获取显示List序列
-    this.zypCode = this.$route.query.zypCode || "";
-    // 设置显示List
-    this.status = this.$route.query.status || 0;
-    console.log("this.zypCode: ", this.zypCode);
-    if (this.zypCode && sessionStorage.getItem("flag") === "1") {
-      this.getData();
-      sessionStorage.removeItem("flag");
-    }
+  created() {
+    this.initPage();
   },
-  // beforeDestroy() {
-  // 	this.$store.dispatch("linshi/cleanState");
-  // 	this.$destroy("LinShi");
-  // },
+  beforeDestroy () {
+	  this.zypCode = '';
+	  this.$store.dispatch("linshi/cleanState");
+  },
   methods: {
-    saveCanvas2(e) {
-      console.log(123);
-      console.log("e: ", e);
-      this.signatureShow2 = false;
-      this.sendData.othercsComplier = e;
-      this.sendData.othercsTime = this.$dayjs(new Date()).format(
-        "YYYY-MM-DD HH:mm"
-      );
+    initChecked () {
+      this.checked = [];
+      for (let i = 0;i < 9;i++) {
+        let obj = { checked: false };
+        this.checked.push(obj);
+      }
     },
-    // 取消签名
-    cancelCanvas2() {
-      console.log("取消签名");
-      this.signatureShow2 = false;
+    //  初始化页面
+    initPage() {
+      if (this.$route.query.zypCode) {
+        if (this.zypCode !== this.$route.query.zypCode) {
+          this.zypCode = this.$route.query.zypCode;
+          this.sendData.zypCode = this.$route.query.zypCode;
+          this.getData();
+        }
+      } else {
+        sendData.apprDept = this.$userInfo.officeName;
+        sendData.apprRen = this.$userInfo.userName;
+      }
+      this.initChecked();
     },
     ...mapMutations("linshi", {
       setTag: "setTag"
@@ -491,18 +450,24 @@ export default {
       }
     },
     getData() {
-      console.log("获取工作票内容");
+      this.$Toast.loading({
+        message: "加载中...",
+        forbidClick: true
+      });
       let sendData = {};
       sendData.id = this.zypCode;
       sendData.__sid = this.$userInfo.sessionId;
       this.$api.page_3
         .htHseLsydzypListDataById(sendData)
         .then(res => {
-          console.log(res);
+          this.$Toast.clear();
+          console.log("获取工作票内容", res);
+          this.linshihtStatus = res.htStatus;
           let info = res;
-          this.actRuTask = info.actRuTask ? info.actRuTask.id : "";
-          this.id = info.id;
-          this.htStatus = info.htStatus;
+          this.oldInfo = info;
+          this.sendData.id = info.id;
+          this.sendData.apprDept = info.sqbm.officeName;
+          this.sendData.apprRen = info.sqr.userName;
           this.sendData.workContent = info.workContent;
           this.sendData.workLocation = info.workLocation;
           this.sendData.powerType = Number(info.powerType ? info.powerType : 0);
@@ -517,11 +482,9 @@ export default {
           this.sendData.powertimeStart = info.powertimeStart;
           this.sendData.powertimeEnd = info.powertimeEnd;
           this.sendData.id = info.id;
-          this.sendData.apprDept = info.apprDept;
-          this.sendData.apprRen = info.apprRen;
-
           let hazardIdentification = [];
-          info.hazardIdentification.split(",").map(items => {
+          let hazarStr = info.hazardIdentification || "";
+          hazarStr.split(",").map(items => {
             hazardIdentification.push(this.list_1[items - 1]);
           });
           this.setTag({
@@ -530,16 +493,6 @@ export default {
               value: hazardIdentification
             }
           });
-
-          let workRen = [];
-          info.workRen.split(",").map(items => {
-            workRen.push({
-              userName: items
-            });
-          });
-
-          console.log(this.sendData);
-
           this.sendData.workDept = [
             {
               id: info.zybm.id,
@@ -548,42 +501,82 @@ export default {
               title: info.zybm.title
             }
           ];
+          //  connectRen 接线人  apprRen 申请人  workCharger 施工负责人
+          //   this.reductionSelectUserObj(this.assemblyStrToUserObj(info.guardian, info.guardianCode));
           this.sendData.connectRen = this.reductionSelectUserObj(info.jxr);
           this.sendData.workCharger = this.reductionSelectUserObj(info.zybmfzr);
-          this.sendData.workRen = workRen;
-
-          console.log(this.sendData);
+          this.sendData.workRen = this.reductionSelectUserObj(
+            this.assemblyStrToUserObj(info.workRen || "", info.zyrNames || "")
+          );
+           if (info.lsydzypSafetyList.length > 0) {
+            this.initChilderData(info.lsydzypSafetyList);
+          }
+          console.log('this.sendData.workRen',this.sendData.workRen);
+           this.sendData.accessRen= [], // 临时用电接入人
+           this.sendData.excuteLicense= info.excuteLicense, // 供电执行人电工证号
+           this.sendData.priAppr= [], // 临时用电作业初审人
+           this.sendData.powerAp= info.powerAp // 电源接入点
+          this.sendData.otherSafety = info.otherSafety;
+          this.sendData.othercsComplier= info.othercsComplier;
+          this.sendData.othercsTime = info.othercsTime;
+         
+          console.log('this.sendData', this.sendData);
         })
-        .catch(() => {});
+        .catch(err => {
+          this.$Toast.clear();
+          console.log("getdata 报错了", err);
+        });
     },
     saveCanvas(e) {
+      switch (this.security) {
+        case 1:
+          this.signatureShow = false;
+          // this.checked[this.selectSignatureShow] = {
+          //   checked: false,
+          //   img: ""
+          // };
+          this.checked[this.selectSignatureShow].checked = true;
+          this.checked[this.selectSignatureShow].img = e;
+          break;
+        case 2:
+          this.sendData.othercsComplier = e;
+          this.sendData.othercsTime = this.$dayjs(new Date()).format(
+            "YYYY-MM-DD HH:mm"
+          );
+          break;
+      }
       this.signatureShow = false;
-      this.checked[this.selectSignatureShow] = {
-        checked: false,
-        img: ""
-      };
-      this.checked[this.selectSignatureShow].img = e;
-      console.log("signatureShow: ");
     },
     onMaterialCancel() {
       this.materialShowShow = false;
     },
     cancelCanvas() {
-      this.checked[this.selectSignatureShow].checked = false;
-      this.checked[this.selectSignatureShow].img = "";
+      switch (this.security) {
+        case 1:
+          this.checked[this.selectSignatureShow].checked = false;
+          this.checked[this.selectSignatureShow].img = "";
+          break;
+        case 2:
+          this.sendData.othercsComplier = "";
+          this.sendData.othercsTime = ""
+          break;
+      }
       this.signatureShow = false;
+    },
+    showSignature2() {
+      this.security = 2; // 安全签字
+      this.signatureShow = true;
     },
     // 显示签名
     showSignature(index) {
-      console.log("index: ", index);
-      console.log("显示签名");
       this.selectSignatureShow = index;
-      this.signatureShow = true;
+      this.security = 1; // 安全签字
+      if (!this.checked[index].checked) {
+        this.signatureShow = true;
+      }
     },
     // 取消签名
     signatureCancel(index) {
-      console.log("index: ", index);
-      console.log("取消");
       this.checked[index].checked = false;
       this.checked[index].img = "";
     },
@@ -595,135 +588,26 @@ export default {
         "hazardIdentification",
         "list_1"
       );
-      console.log("sendData.workRen", sendData.workRen);
-      sendData.connectRen = this.userString(sendData.connectRen, "userName");
-      sendData.workCharger = this.userString(sendData.workCharger, "userName");
-      sendData.workRen = this.userString(sendData.workRen, "userName");
-      sendData.apprDept = this.$userInfo.officeName;
-      sendData.apprRen = this.$userInfo.userName;
+      sendData.connectRen = this.userString(sendData.connectRen, "userCode");
+      sendData.workCharger = this.userString(sendData.workCharger, "userCode");
+      sendData.workRen = this.userString(sendData.workRen, "userCode");
+      sendData.workDept = this.userString(sendData.workDept, "id");
       sendData.__sid = this.$userInfo.sessionId;
-
-      let messageId; // 主表查询返回的ID
-      (sendData.lsydzypSafetyList = [
-        {
-          zypId: messageId,
-          num: 1,
-          safetyCs: `安装临时线路人员持有电工作业操作证`,
-          affirmRen: this.checked[0] ? this.checked[0].img : 0,
-          safetyStatus: this.checked[0] ? 1 : 0
-        },
-        {
-          zypId: messageId,
-          num: 2,
-          safetyCs: `在防爆场所使用的临时电源、元器件和线路达到相应的防爆等级要求`,
-          affirmRen: this.checked[1] ? this.checked[1].img : 0,
-          safetyStatus: this.checked[1] ? 1 : 0
-        },
-        {
-          zypId: messageId,
-          num: 3,
-          safetyCs: `临时用电的单项和混用线路采用五线制`,
-          affirmRen: this.checked[2] ? this.checked[2].img : 0,
-          safetyStatus: this.checked[2] ? 1 : 0
-        },
-        {
-          zypId: messageId,
-          num: 4,
-          safetyCs: `临时用电线路在装置内不低于2.5m,道路不低于5m`,
-          affirmRen: this.checked[3] ? this.checked[3].img : 0,
-          safetyStatus: this.checked[3] ? 1 : 0
-        },
-        {
-          zypId: messageId,
-          num: 5,
-          safetyCs: `临时用电线路架空进线未采用裸线,未在树或脚手架上架设`,
-          affirmRen: this.checked[4] ? this.checked[4].img : 0,
-          safetyStatus: this.checked[4] ? 1 : 0
-        },
-        {
-          zypId: messageId,
-          num: 6,
-          safetyCs: `暗管埋设及地下电缆线路设有“走向标志”和“安全标志”,电缆埋深大于0.7m`,
-          affirmRen: this.checked[5] ? this.checked[5].img : 0,
-          safetyStatus: this.checked[5] ? 1 : 0
-        },
-        {
-          zypId: messageId,
-          num: 7,
-          safetyCs: `现场临时用配电盘、箱有防雨措施`,
-          affirmRen: this.checked[6] ? this.checked[6].img : 0,
-          safetyStatus: this.checked[6] ? 1 : 0
-        },
-        {
-          zypId: messageId,
-          num: 8,
-          safetyCs: `临时用电设施装有漏电保护器,移动工具、手持工具“一机一闸一保护”`,
-          affirmRen: this.checked[7] ? this.checked[7].img : 0,
-          safetyStatus: this.checked[7] ? 1 : 0
-        },
-        {
-          zypId: messageId,
-          num: 9,
-          safetyCs: `用电设备、线路容量、负荷符合要求`,
-          affirmRen: this.checked[8] ? this.checked[8].img : 0,
-          safetyStatus: this.checked[8] ? 1 : 0
-        },
-        {
-          zypId: messageId,
-          num: 10,
-          safetyCs: `${this.otherSafe}`,
-          affirmRen: this.checked[9] ? this.checked[9].img : 0,
-          safetyStatus: this.checked[9] ? 1 : 0
-        }
-      ]),
-        (sendData.accessRen = ""), // 临时用电接入人
-        (sendData.excuteLicense = ""), // 供电执行人电工证号
-        (sendData.priAppr = ""), // 临时用电作业初审人
-        (sendData.powerAp = ""); // 电源接入点
-
-      let ren0 = this.checked[0] ? this.checked[0].img : 0;
-      let ren1 = this.checked[1] ? this.checked[1].img : 1;
-      let ren2 = this.checked[2] ? this.checked[2].img : 2;
-      let ren3 = this.checked[3] ? this.checked[3].img : 3;
-      let ren4 = this.checked[4] ? this.checked[4].img : 4;
-      let ren5 = this.checked[5] ? this.checked[5].img : 5;
-      let ren6 = this.checked[6] ? this.checked[6].img : 6;
-      let ren7 = this.checked[7] ? this.checked[7].img : 7;
-      let ren8 = this.checked[8] ? this.checked[8].img : 8;
-      let ren9 = this.checked[9] ? this.checked[9].img : 9;
-
-      let sendSafeData1 = {
-        __sid: this.$userInfo.sessionId,
-        zypId: messageId,
-        num: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-        affirmRen: [ren0, ren1, ren2, ren3, ren4, ren5, ren6, ren7, ren8, ren9],
-        safetyStatus: [
-          this.checked[1] ? 1 : 0,
-          this.checked[2] ? 1 : 0,
-          this.checked[3] ? 1 : 0,
-          this.checked[4] ? 1 : 0,
-          this.checked[5] ? 1 : 0,
-          this.checked[6] ? 1 : 0,
-          this.checked[7] ? 1 : 0,
-          this.checked[8] ? 1 : 0,
-          this.checked[9] ? 1 : 0,
-          this.checked[10] ? 1 : 0
-        ],
-        safetyCs: [
-          `安装临时线路人员持有电工作业操作证`,
-          `在防爆场所使用的临时电源、元器件和线路达到相应的防爆等级要求`,
-          `临时用电的单项和混用线路采用五线制`,
-          `临时用电线路在装置内不低于2.5m,道路不低于5m`,
-          `临时用电线路架空进线未采用裸线,未在树或脚手架上架设`,
-          `暗管埋设及地下电缆线路设有“走向标志”和“安全标志”,电缆埋深大于0.7m`,
-          `现场临时用配电盘、箱有防雨措施`,
-          `临时用电设施装有漏电保护器,移动工具、手持工具“一机一闸一保护”`,
-          `用电设备、线路容量、负荷符合要求`,
-          `${this.otherSafe}`
-        ]
-      };
-
-      this.$api.page_3
+      if (this.$route.query.zypCode) {
+        sendData.apprDept = this.oldInfo.sqbm.officeCode;
+        sendData.apprRen = this.oldInfo.sqr.userCode;
+      } else {
+        sendData.apprDept = this.$userInfo.officeCode;
+        sendData.apprRen = this.$userInfo.userCode;
+      }  
+      // 安全 措施
+//       console.log('postData----sendData1', sendData);
+      sendData.lsydzypSafetyList = this.setChilderData(sendData.id);
+      sendData.accessRen = this.userString(sendData.accessRen, "userCode"); // 临时用电接入人 
+      sendData.priAppr = this.userString(sendData.priAppr, "userCode");// 临时用电作业初审人
+      //  其他安全措施
+      console.log('postData----sendData2', sendData);
+        this.$api.page_3
         .htHseLsydzypSave(sendData)
         .then(res => {
           console.log("res: ", res);
@@ -735,6 +619,92 @@ export default {
           });
         })
         .catch(() => {});
+    },
+    initChilderData (res) {
+      let checked = {};
+        console.log("临时用电子表", res);
+        res.forEach((item, inx) => {
+          if (item.safetyStatus && item.safetyStatus === 1) {
+            checked[item.num] = {
+              checked: true,
+              img: item.affirmRen,
+            };
+          } else {
+            checked[item.num] = {
+              checked: false,
+              img: "",
+            };
+          }
+        });
+        this.checked = Object.values(checked);
+    },
+    setChilderData (messageId) {
+       let lsydzypSafetyList = [
+        {
+          zypId: messageId,
+          num: 1,
+          safetyCs: `安装临时线路人员持有电工作业操作证`,
+          affirmRen: this.checked[0].checked ? this.checked[0].img : 0,
+          safetyStatus: this.checked[0].checked ? 1 : 0
+        },
+        {
+          zypId: messageId,
+          num: 2,
+          safetyCs: `在防爆场所使用的临时电源、元器件和线路达到相应的防爆等级要求`,
+          affirmRen: this.checked[1].checked ? this.checked[1].img : 0,
+          safetyStatus: this.checked[1].checked ? 1 : 0
+        },
+        {
+          zypId: messageId,
+          num: 3,
+          safetyCs: `临时用电的单项和混用线路采用五线制`,
+          affirmRen: this.checked[2].checked ? this.checked[2].img : 0,
+          safetyStatus: this.checked[2].checked ? 1 : 0
+        },
+        {
+          zypId: messageId,
+          num: 4,
+          safetyCs: `临时用电线路在装置内不低于2.5m,道路不低于5m`,
+          affirmRen: this.checked[3].checked ? this.checked[3].img : 0,
+          safetyStatus: this.checked[3].checked ? 1 : 0
+        },
+        {
+          zypId: messageId,
+          num: 5,
+          safetyCs: `临时用电线路架空进线未采用裸线,未在树或脚手架上架设`,
+          affirmRen: this.checked[4].checked ? this.checked[4].img : 0,
+          safetyStatus: this.checked[4].checked ? 1 : 0
+        },
+        {
+          zypId: messageId,
+          num: 6,
+          safetyCs: `暗管埋设及地下电缆线路设有“走向标志”和“安全标志”,电缆埋深大于0.7m`,
+          affirmRen: this.checked[5].checked ? this.checked[5].img : 0,
+          safetyStatus: this.checked[5].checked ? 1 : 0
+        },
+        {
+          zypId: messageId,
+          num: 7,
+          safetyCs: `现场临时用配电盘、箱有防雨措施`,
+          affirmRen: this.checked[6].checked ? this.checked[6].img : 0,
+          safetyStatus: this.checked[6].checked ? 1 : 0
+        },
+        {
+          zypId: messageId,
+          num: 8,
+          safetyCs: `临时用电设施装有漏电保护器,移动工具、手持工具“一机一闸一保护”`,
+          affirmRen: this.checked[7].checked ? this.checked[7].img : 0,
+          safetyStatus: this.checked[7].checked ? 1 : 0
+        },
+        {
+          zypId: messageId,
+          num: 9,
+          safetyCs: `用电设备、线路容量、负荷符合要求`,
+          affirmRen: this.checked[8].checked ? this.checked[8].img : 0,
+          safetyStatus: this.checked[8].checked ? 1 : 0
+        }
+      ];
+      return lsydzypSafetyList;
     },
     onSelect(item) {
       this.showPicker = false;
@@ -753,17 +723,13 @@ export default {
     }
   },
   watch: {
-    hazardIdentification(res) {
-      this.sendData.hazardIdentification = res;
+    accessRen(res) {
+      console.log('accessRen=============', res);
+      this.sendData.accessRen = res;
     },
-    connectRen(res) {
-      this.sendData.connectRen = res;
-    },
-    workCharger(res) {
-      this.sendData.workCharger = res;
-    },
-    workRen(res) {
-      this.sendData.workRen = res;
+    priAppr(res) {
+      console.log('priApprres=============', res);
+      this.sendData.priAppr = res;
     }
   }
 };

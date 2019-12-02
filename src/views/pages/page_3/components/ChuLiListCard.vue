@@ -3,13 +3,14 @@
     <div class="wochuli-list" :class="{'complete': complete}" v-for="(item, index) in info" :key="index">
       <div class="wochuli-list-content">
         <div>
-          <span>流程名称：隐患整改单</span>
-          <span class="wochuli-list-content-name">申请人：王大锤</span>
+          <span>流程名称：{{item.actReProcdef.name}}</span>
+          <span class="wochuli-list-content-name">申请人：{{item.createByName}}</span>
         </div>
-        <div class="wochuli-list-content-time">流程发起时间：2019-0923 17:33:00</div>
-        <div class="wochuli-list-content-time">任务开始时间：2019-0923 17:33:00</div>
+        <div class="wochuli-list-content-time">流程发起时间：{{item.startTime}}</div>
+        <div class="wochuli-list-content-time">任务开始时间：{{item.endTime}}</div>
       </div>
-      <div class="wochuli-list-auditBtn">{{complete ? '已终结' : '安全员审核'}}</div>
+      <!-- <div class="wochuli-list-auditBtn">{{complete ? '已终结' : '安全员审核'}}</div> -->
+      <div class="wochuli-list-auditBtn">{{item.proInsStatusName}}</div>
     </div>
 
   </div>

@@ -1,8 +1,10 @@
 // initial state
 const state = {
+  keepAliveComponents: ["diaozhuang_index"],
   whsb: [],
   zyfzr: [],
   jhr: [],
+  zydw: [],
   work_permit_1: {},
   work_permit_2: {},
   work_permit_3: {}
@@ -33,7 +35,8 @@ const actions = {
 // mutations
 const mutations = {
   setTag(state, { tags }) {
-	  localStorage.setItem("isfresh",false);
+    localStorage.setItem("isfresh",'false');
+    console.log(123)
     state[tags.key] = tags.value;
   },
   resetState(state) {
@@ -42,6 +45,14 @@ const mutations = {
         state[key] = [];
       }
     }
+  },
+  add_KeepAlive(state, name) {
+    if (state.keepAliveComponents.includes(name)) return;
+    state.keepAliveComponents.push(name);
+  },
+  delete_KeepAlive(state, name) {
+    const index = state.keepAliveComponents.indexOf(name);
+    index > -1 && state.keepAliveComponents.splice(index, 1);
   }
 };
 

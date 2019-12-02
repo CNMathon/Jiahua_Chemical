@@ -39,7 +39,7 @@
               <div class="top-item">缺陷验收</div>
             </div>
             <div class="bottom">
-              <div class="bottom-item">缺陷描述缺陷描述缺陷描述缺陷描述缺陷描述缺陷描述缺陷描述</div>
+              <div class="bottom-item">{{item.punishnorm}}</div>
             </div>
           </div>
         </label>

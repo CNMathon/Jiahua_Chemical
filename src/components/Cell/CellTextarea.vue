@@ -55,7 +55,7 @@ export default {
   position: relative;
   background-color: #ffffff;
   .cell_title {
-    width: 50%;
+    width: 100%;
     font-size: 28px;
     font-weight: 400;
     color: rgba(45, 44, 51, 1);

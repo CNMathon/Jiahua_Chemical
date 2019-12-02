@@ -81,6 +81,11 @@
     mixins: [mixin],
     created () {
       this.getListData(true);
+      this.$store.dispatch("gaochu/cleanState");
+      this.$store.commit("gaochu/delete_KeepAlive", "gaochuindex");
+      this.$nextTick(() => {
+        this.$store.commit("gaochu/add_KeepAlive", "gaochuindex");
+      });
     },
     methods: {
       pageBack () {

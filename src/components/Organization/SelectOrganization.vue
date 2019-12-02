@@ -14,7 +14,7 @@
 </template>
 <script>
 export default {
-  name: "cell_select_user",
+  name: "cell_select_Organization_User",
   model: {
     prop: "value",
     event: "input"
@@ -45,7 +45,8 @@ export default {
       type: Boolean,
       default: false
     },
-    max: 0
+    max: 0,
+    min: 1,
   },
   mounted(){
   },
@@ -55,10 +56,12 @@ export default {
       this.$router.push({
         path: "select_organization",
         query: {
+          title: this.title,
           storeModule: this.storeModule,
           storeKey: this.storeKey,
           radio: this.radio,
-          max: this.max
+          max: this.max,
+          min: this.min
         }
       });
     },
