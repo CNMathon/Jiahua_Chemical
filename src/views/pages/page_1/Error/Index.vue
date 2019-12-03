@@ -27,7 +27,24 @@ export default {
     DropDown,
     Item
   },
+  data() {
+    return {
+      listData: []
+    }
+  },
+  created() {
+    this.getPageList()
+  },
   methods: {
+    getPageList() {
+      this.$api.page_3
+        .apiAlarmHistoryAlarmRecords({
+          __sid: localStorage.JiaHuaSessionId
+        })
+        .then(res => {
+          console.log(`listData: `, res)
+        })
+    },
     pageBack() {
       this.$router.back();
     }

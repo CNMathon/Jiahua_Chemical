@@ -10,7 +10,7 @@
                 <div class="content-title">实时视频</div>
                 <Video></Video>
                 <div class="panel-list">
-                  <div class="panel-list-item" v-for="item in panelInfo_tab1">
+                  <div class="panel-list-item" v-for="(item, index) in panelInfo_tab1" :key="index">
                     <Panel :name="item.itemName" :unit="item.unit" :value="item.value"  size="big"></Panel>
                   </div>
                 </div>
@@ -31,7 +31,7 @@
                 <div class="content-title">实时视频</div>
                 <Video></Video>
                 <div class="panel-list">
-                  <div class="panel-list-item" v-for="item in panelInfo_tab2">
+                  <div class="panel-list-item" v-for="(item, index) in panelInfo_tab2" :key="index">
                     <Panel :name="item.itemName" :unit="item.unit" :value="item.value"  size="big"></Panel>
                   </div>
                 </div>
@@ -57,7 +57,7 @@
                 <div class="content-title">实时视频</div>
                 <Video></Video>
                 <div class="panel-list">
-                  <div class="panel-list-item" v-for="item in panelInfo_tab4">
+                  <div class="panel-list-item" v-for="(item, index) in panelInfo_tab4" :key="index">
                     <Panel :name="item.itemName" :unit="item.unit" :value="item.value"  size="big"></Panel>
                   </div>
                 </div>
@@ -78,7 +78,7 @@
                 <div class="content-title">实时视频</div>
                 <Video></Video>
                 <div class="panel-list">
-                  <div class="panel-list-item" v-for="item in panelInfo_tab5">
+                  <div class="panel-list-item" v-for="(item, index) in panelInfo_tab5" :key="index">
                     <Panel :name="item.itemName" :unit="item.unit" :value="item.value"  size="big"></Panel>
                   </div>
                 </div>
@@ -99,7 +99,7 @@
                 <div class="content-title">实时视频</div>
                 <Video></Video>
                 <div class="panel-list">
-                  <div class="panel-list-item" v-for="item in panelInfo_tab6">
+                  <div class="panel-list-item" v-for="(item, index) in panelInfo_tab6" :key="index">
                     <Panel :name="item.itemName" :unit="item.unit" :value="item.value"  size="big"></Panel>
                   </div>
                 </div>

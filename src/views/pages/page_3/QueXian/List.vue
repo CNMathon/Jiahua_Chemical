@@ -53,6 +53,7 @@ import { mixin } from "@/mixin/mixin";
 export default {
   data() {
     return {
+      storeModule: 'quexian',
       searchValue: "",
       listData: [],
       showPopup: true,
@@ -64,14 +65,15 @@ export default {
     pageJump(status, id) {
       if (status == 1) {
         this.jumpTo('/page_3/quexian/index', {
-          id: id
+          id: id,
+          status: status
         })
       }
     },
     onClickRight() {
-      this.$router.push({
-        path: "./index"
-      });
+      this.jumpTo('./index', {
+        status: 0
+      })
     },
     onClickMenu() {
       this.showPopup = true;

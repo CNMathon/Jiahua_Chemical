@@ -14,12 +14,12 @@
                   class="skeleton">
       <div class="cell_group">
         <!-- 申请部门 -->
-        <cell-value title="申请部门" :value="oldInfo.office?oldInfo.office.officeName:$userInfo.officeName" disable></cell-value>
+        <cell-value title="申请部门" :value="apply.dept" disable></cell-value>
       <!-- 申请人 -->
-      <cell-value title="申请人" :value="oldInfo.user?oldInfo.user.userName:$userInfo.userName" disable></cell-value>
+      <cell-value title="申请人" :value="apply.name" disable></cell-value>
         <!-- 作业票编号 -->
         <cell-value title="作业票编号"
-                    :value="$route.query.id"
+                    :value="apply.code"
                     disable></cell-value>
         <!-- 作业票状态 -->
         <cell-value title="作业票状态"
@@ -234,6 +234,11 @@
         fireCount: 0, // 消防数量
         lifelineCount: 0, // 救生绳
         gasCount: 0, // 气防装备
+        apply: {
+          name: '',
+          dept: '',
+          code: '',
+        },
         sendData: {
           zyContent: "", //作业内容
           devicename: "", //设备名称
@@ -324,6 +329,12 @@
             this.queryId = this.$route.query.id;
             this.getPageData();
           }
+        } else {
+          this.apply= {
+              name: this.$userInfo.userName,
+              code: '',
+              dept: this.$userInfo.officeName,
+            }
         }
       },
       // 显示签名
@@ -475,6 +486,11 @@
           .then(res => {
             let info = res.list[0];
             this.oldInfo = info;
+            this.apply= {
+              name: info.user.userName,
+              code: info.sxkjCode,
+              dept: info.office.officeName,
+            }
             console.log('获得服务器数据=====================================================', info);
             for (const key in this.sendData) {
               switch (key) {

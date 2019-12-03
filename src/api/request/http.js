@@ -57,6 +57,8 @@ const errorHandle = (status, other) => {
             tip('请求的资源不存在');
             break;
         case 500:
+        
+            throw(5555555)
             tip('服务器内部错误');
             break;
         default:

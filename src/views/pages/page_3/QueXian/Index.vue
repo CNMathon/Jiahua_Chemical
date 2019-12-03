@@ -7,75 +7,74 @@
       left-arrow
       @click-left="pageBack"
       @click-right="openAction"
+      fixed
     />
-    <div class="cell_group">
-      <!-- 空间设备 -->
-      <cell-select-device
-        title="空间设备"
-        required
-        :storeModule="storeModule"
-        storeKey="deviceName"
-        v-model="sendData.deviceName"
-      />
-      <!-- 发现人 -->
-      <cell-select-user
-        title="发现人"
-        required
-        :storeModule="storeModule"
-        storeKey="findPeopleName"
-        v-model="sendData.findPeopleName"
-      />
-      <!-- 缺陷描述 -->
-      <cell-textarea required v-model="sendData.description" title="缺陷描述" placeholder="请输入缺陷描述" />
-      <!-- 缺陷类型 -->
-      <cell-picker
-        v-model="sendData.defectType"
-        title="缺陷类型"
-        required
-        :columns="defectTypeColumnsName"
-      />
-      <!-- 缺陷类型 => Old Version -->
-      <!-- <div class="cell">
-        <div class="cell_title">
-          <span>缺陷类型</span>
-        </div>
-        <div class="cell_select" @click="defectTypeShow = true">
-          <span class="cell_select_text">{{ sendData.defectType.name || "请选择" }}</span>
-          <div class="cell_select_image">
-            <img src="./../../../../assets/images/select.svg" alt />
+    <van-skeleton title avatar :row="3" :loading="isLoading" class="fixed-first">
+      <div class="cell_group fixed-first">
+        <!-- 空间设备 -->
+        <cell-select-device
+          title="空间设备"
+          required
+          :storeModule="storeModule"
+          storeKey="deviceName"
+          v-model="sendData.deviceName"
+        />
+        <!-- 发现人 -->
+        <cell-select-user
+          title="发现人"
+          required
+          :storeModule="storeModule"
+          storeKey="findPeopleName"
+          v-model="sendData.findPeopleName"
+        />
+        <!-- 缺陷描述 -->
+        <cell-textarea required v-model="sendData.description" title="缺陷描述" placeholder="请输入缺陷描述" />
+        <!-- 缺陷类型 -->
+        <cell-picker
+          v-model="sendData.defectType"
+          title="缺陷类型"
+          required
+          :columns="defectTypeColumnsName"
+        />
+        <!-- 缺陷类型 => Old Version -->
+        <!-- <div class="cell">
+          <div class="cell_title">
+            <span>缺陷类型</span>
           </div>
-        </div>
-      </div>-->
-
-      <!-- 缺陷类别 -->
-      <cell-picker
-        v-model="sendData.category"
-        title="缺陷类别"
-        required
-        :columns="categoryColumnsName"
-      />
-
-      <!-- 缺陷类别 => Old Version -->
-      <!-- <div class="cell">
-        <div class="cell_title">
-          <span>缺陷类别</span>
-        </div>
-        <div class="cell_select" @click="categoryShow = true">
-          <span class="cell_select_text">{{ sendData.category.name || "请选择" }}</span>
-          <div class="cell_select_image">
-            <img src="./../../../../assets/images/select.svg" alt />
+          <div class="cell_select" @click="defectTypeShow = true">
+            <span class="cell_select_text">{{ sendData.defectType.name || "请选择" }}</span>
+            <div class="cell_select_image">
+              <img src="./../../../../assets/images/select.svg" alt />
+            </div>
           </div>
-        </div>
-      </div>-->
-      <!-- 发现时间 -->
-      <cell-time v-model="sendData.findDate" title="发现时间" />
-      <!-- 上传图片 -->
-      <cell-image
-        v-model="fileList"
-        :beforeRead="beforeRead"
-        :before-delete="beforeDelete"
-      />
-    </div>
+        </div>-->
+
+        <!-- 缺陷类别 -->
+        <cell-picker
+          v-model="sendData.category"
+          title="缺陷类别"
+          required
+          :columns="categoryColumnsName"
+        />
+
+        <!-- 缺陷类别 => Old Version -->
+        <!-- <div class="cell">
+          <div class="cell_title">
+            <span>缺陷类别</span>
+          </div>
+          <div class="cell_select" @click="categoryShow = true">
+            <span class="cell_select_text">{{ sendData.category.name || "请选择" }}</span>
+            <div class="cell_select_image">
+              <img src="./../../../../assets/images/select.svg" alt />
+            </div>
+          </div>
+        </div>-->
+        <!-- 发现时间 -->
+        <cell-time v-model="sendData.findDate" title="发现时间" />
+        <!-- 上传图片 -->
+        <cell-image v-model="fileList" :beforeRead="beforeRead" :before-delete="beforeDelete" />
+      </div>
+    </van-skeleton>
 
     <!-- <div class="next" @click="Next">提交</div> -->
     <van-popup v-model="isShowAction" position="bottom" class="action">
@@ -109,6 +108,7 @@ export default {
   mixins: [business, uploadFile],
   data() {
     return {
+      isLoading: false,
       isShowAction: false,
       storeModule: "quexian",
       sendData: {
@@ -118,7 +118,7 @@ export default {
         defectType: {}, // 缺陷类型
         category: {}, // 缺陷类别
         findPeopleName: [], // 发现人
-        deviceSpace: {},
+        deviceSpace: {}
       },
       defectTypeShow: false,
       categoryShow: false,
@@ -134,7 +134,7 @@ export default {
         { name: "一类缺陷", index: 0 },
         { name: "二类缺陷", index: 1 },
         { name: "三类缺陷", index: 2 }
-      ],
+      ]
     };
   },
   computed: {
@@ -146,12 +146,13 @@ export default {
     },
     fileUrlList() {
       let arr = [];
-      this.fileList.map(item => arr.push(item.fileUrl))
-      return arr
+      this.fileList.map(item => arr.push(item.fileUrl));
+      return arr;
     },
     ...mapState({
       findPeopleName: state => state.quexian.findPeopleName,
-      deviceName: state => state.quexian.deviceName
+      deviceName: state => state.quexian.deviceName,
+      indexId: state => state.quexian.indexId
     })
   },
   methods: {
@@ -170,12 +171,12 @@ export default {
         this.sendData.defectType, // 缺陷类型
         this.sendData.category, // 缺陷类别
         this.sendData.findDate, // 发现时间
-        this.fileList, // 上传图片
-      )
+        this.fileList // 上传图片
+      );
       if (empStat) {
-        console.error('用户表单输入不完整')
-        this.$notify('请输入完整的表单数据')
-        return
+        console.error("用户表单输入不完整");
+        this.$notify("请输入完整的表单数据");
+        return;
       }
       const that = this;
       let sendData = JSON.parse(JSON.stringify(this.sendData));
@@ -183,10 +184,10 @@ export default {
         sendData.findPeopleName,
         "userCode"
       );
-      sendData.htStatus = 1
-      sendData.deviceSpace.deviceCode = sendData.deviceName[0].deviceCode
-      sendData.deviceSpaceId = sendData.deviceName[0].id
-      sendData.htDeviceDefect_file = String(this.fileUrlList)
+      sendData.htStatus = 1;
+      sendData.deviceSpace.deviceCode = sendData.deviceName[0].deviceCode;
+      sendData.deviceSpaceId = sendData.deviceName[0].id;
+      sendData.htDeviceDefect_file = String(this.fileUrlList);
       // delete sendData.deviceName
       // sendData.device.deviceCode = ''
       // sendData.deviceId = ''
@@ -200,10 +201,37 @@ export default {
         .then(res => {
           console.log("res: ", res);
           this.$Toast.success({
-            message: "提交成功",
+            message: "提交成功"
           });
         })
         .catch(() => {});
+    },
+    // 初始化数据
+    initData() {
+      this.isLoading = true;
+      console.log("routeId: ", this.$route.query.id);
+      console.log(`vuexId: `, this.indexId);
+
+      this.$api.page_3
+        .htDeviceDefectForm({
+          __sid: localStorage.JiaHuaSessionId,
+          id: this.$route.query.id
+        })
+        .then(res => {
+          let listData = res.htDeviceDefect;
+          console.log(`listData: `, listData);
+          this.sendData.deviceName[0] = listData.device;
+          this.sendData.findPeopleName = this.reductionSelectUserObj({
+            fullName: listData.officeName,
+            userCode: listData.findPeopleCode,
+            userName: listData.findPeopleName
+          });
+          this.sendData.description = listData.description;
+          this.sendData.defectType = listData.defectType + 1;
+          this.sendData.category = listData.category;
+          this.sendData.findDate = listData.findDate;
+          this.isLoading = false;
+        });
     },
     onSelect(item) {
       this.sendData.defectType = item;
@@ -214,6 +242,17 @@ export default {
       this.sendData.category = item;
       // 点击选项时默认不会关闭菜单，可以手动关闭
       this.categoryShow = false;
+    },
+    clearPageData() {
+      this.sendData = {
+        deviceName: [], // 空间设备
+        description: "", // 缺陷描述
+        findDate: "", // 发现时间
+        defectType: {}, // 缺陷类型
+        category: {}, // 缺陷类别
+        findPeopleName: [], // 发现人
+        deviceSpace: {}
+      };
     }
   },
   watch: {
@@ -222,14 +261,38 @@ export default {
     },
     deviceName(res) {
       this.sendData.deviceName = res;
-      console.log(`change => deviceName`)
+      console.log(`change => deviceName`);
     }
   },
   created() {
-    console.log(`id: `, this.$route.query.id)
-    if (this.$route.query.id) {
-      
+    this.initData();
+    // if (this.$route.query.status == 0) {
+    //   // 是新增页
+    //   this.clearPageData();
+    // } else {
+    //   // 非新增页
+    //   this.$store.dispatch(`${this.storeModule}/changTag`, {
+    //     key: "indexId",
+    //     value: this.$route.query.id
+    //   });
+    // }
+  },
+  activated() {
+    console.log(this.$router)
+    if (this.$route.query.status == 0) {
+      // 是新增页
+      this.clearPageData();
+    } else {
+      // 非新增页
+      if (this.indexId !== this.$route.query.id) {
+        this.initData();
+      }
+      console.log(`routerQuery: `, this.$route.query);
+      // this.initData()
     }
+  },
+  deactivated() {
+    console.log("dddddd");
   }
 };
 </script>
@@ -237,7 +300,7 @@ export default {
 @import "@/assets/scss/cell.scss";
 .quexian {
   min-height: 100vh;
-  background-color: #f5f5f5;
+  // background-color: #f5f5f5;
   position: relative;
   .next {
     position: absolute;

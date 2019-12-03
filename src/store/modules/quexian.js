@@ -1,5 +1,6 @@
 // initial state
 const state = {
+  indexId: '',
   findPeopleName: [], // 发现人
   deviceName: [], // 空间设备
 };

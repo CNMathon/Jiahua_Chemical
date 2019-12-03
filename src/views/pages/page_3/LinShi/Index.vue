@@ -230,13 +230,13 @@ export default {
           .then(res => {
              console.log(1);
             this.$Toast.clear();
-            if (res.list[0].actRuTask) {
+            if (res.actRuTask) {
               console.log(1);
               let data = {
-                id: res.list[0].id,
+                id: res.id,
                 flowKey: "htHseLsydzypService",
                 comment: "",
-                "actRuTask.id": res.list[0].actRuTask.id,
+                "actRuTask.id": res.actRuTask.id,
                 btnSubmit: "审批",
                 __sid: localStorage.getItem("JiaHuaSessionId")
               };
@@ -250,7 +250,7 @@ export default {
                       query: {
                         groups: ress.groups.join(","),
                         taskId: ress.taskId,
-                        id: res.list[0].id,
+                        id: res.id,
                         type: "htHseLsydzypService"
                       }
                     });
@@ -262,7 +262,7 @@ export default {
             } else {
               console.log(2);
               let data = {
-                id: res.list[0].id,
+                id: res.id,
                 flowKey: "htHseLsydzypService",
                 __sid: localStorage.getItem("JiaHuaSessionId")
               };
@@ -276,7 +276,7 @@ export default {
                       query: {
                         groups: ress.groups.join(","),
                         taskId: ress.taskId,
-                        id: res.list[0].id,
+                        id: res.id,
                         type: "htHseLsydzypService"
                       }
                     });

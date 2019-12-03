@@ -5,6 +5,7 @@
 //开发环境
 const base = {
   sq: "http://47.96.148.87:8980/js/a/",
+  sqapi: "http://47.96.148.87:8980/",
   sqsta: "http://47.96.148.87:8980/js/static/",
 
   sq2: "http://mes.jhec.com.cn:8084/",

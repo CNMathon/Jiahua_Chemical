@@ -11,14 +11,14 @@
       />
     </van-sticky>
     <div class="cell_group">
-      <!-- 申请部门 -->
-      <cell-value title="申请部门" :value="oldInfo.office.officeName?oldInfo.office.officeName:$userInfo.officeName" disable></cell-value>
+       <!-- 申请部门 -->
+        <cell-value title="申请部门" :value="apply.dept" disable></cell-value>
       <!-- 申请人 -->
-      <cell-value title="申请人" :value="oldInfo.user.userName?oldInfo.user.userName:$userInfo.userName" disable></cell-value>
-      <!-- 作业票编号 -->
-      <cell-value title="作业票编号" :value="sendData.id" disable></cell-value>
-      <!-- 作业票编号 -->
-      <cell-value title="作业票编号" required v-if="initData.dhzypCode" :value="$userInfo.dhzypCode"></cell-value>
+        <cell-value title="申请人" :value="apply.name" disable></cell-value>
+        <!-- 作业票编号 -->
+        <cell-value title="作业票编号"
+                    :value="apply.code"
+                    disable></cell-value>
       <!-- 作业票状态 -->
       <cell-value title="作业票状态" required :value="htStatus(oldInfo.htStatus)" disable></cell-value>
       <!-- 受限空间所属空间 -->
@@ -246,7 +246,7 @@
           </div>
         </div>
         <!-- 分析时间 -->
-        <cell-time v-model="fx.fenxiTime" title="动火分析时间" disable></cell-time>
+        <cell-value v-model="fx.fenxiTime" title="动火分析时间" disable></cell-value>
         <!-- 分析点名称 -->
         <cell-input v-model="fx.fenxiParts" title="分析部位" required placeholder="手工录入"></cell-input>
         <!-- 分析人 -->
@@ -316,6 +316,11 @@ export default {
         "氢气（4.1~75）",
         "甲苯（1.2~7)"
       ],
+      apply: {
+        name: '',
+        dept: '',
+        code: '',
+      },
       fireCount: 0, // 消防数量
       lifelineCount: 0, // 救生绳
       gasCount: 0, // 气防装备
@@ -329,7 +334,7 @@ export default {
         zywhBs: [], //危害辨识
         zyStarttime: "", //作业开始时间
         zyEndtime: "", //作业结束时间
-        sxkjDanwei: "", // 受限空间所属空间
+        sxkjDanwei: [], // 受限空间所属空间
         guardian: [], // 监护人
         zyPrincipal: [], // 作业部门负责人
         zyRen: [], // 作业人
@@ -838,6 +843,11 @@ export default {
             ? res.list[0].actRuTask.id
             : "";
           this.id = res.list[0].id;
+          this.apply= {
+              name: info.user.userName,
+              code: info.sxkjCode,
+              dept: info.office.officeName,
+            }
           for (const key in this.sendData) {
             switch (key) {
               case "sxkjDanwei":

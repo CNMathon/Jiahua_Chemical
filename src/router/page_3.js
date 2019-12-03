@@ -302,6 +302,22 @@ const routes = {
       ]
     },
     {
+      path: "/page_3/notification",
+      name: "notification",
+      component: () => import("@/views/pages/page_3/notification/Home.vue"),
+      redirect: "/page_3/notification/index",
+      children: [
+        {
+          path: "/page_3/notification/index",
+          name: "notification_index",
+          component: () => import("@/views/pages/page_3/notification/Index.vue"),
+          meta: {
+            name: "消息通知"
+          }
+        },
+      ]
+    },
+    {
       path: "/page_3/kongjian",
       name: "kongjian",
       component: () => import("../views/pages/page_3/KongJian/Home.vue"),
@@ -795,17 +811,11 @@ const routes = {
           path: "/page_3/duanlu/index",
           name: "duanlu_index",
           component: () => import("../views/pages/page_3/DuanLu/Index.vue"),
-          meta: {
-            keepAlive: true //此组件需要被缓存
-          }
         },
         {
           path: "/page_3/duanlu/index2",
           name: "duanlu_index2",
           component: () => import("../views/pages/page_3/DuanLu/Index2.vue"),
-          meta: {
-            keepAlive: true //此组件需要被缓存
-          }
         },
         {
           path: "/page_3/duanlu/list",
@@ -845,7 +855,14 @@ const routes = {
           path: "/page_3/duanlu/select_organization",
           name: "duanlu_select_organization",
           component: () => import("../components/Organization/index.vue")
-        }
+        },
+        {
+          path: "/page_3/duanlu/duanlu_select_department",
+          name: "duanlu_select_department",
+          component: () =>
+            import("../views/pages/page_3/SelectDepartment/Index.vue"),
+            meta: {}
+        },
       ]
     },
     // 缺陷

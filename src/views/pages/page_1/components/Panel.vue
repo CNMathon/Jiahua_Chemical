@@ -70,9 +70,9 @@ export default {
     font-weight: 400;
     color: rgba(255, 255, 255, 1);
     line-height: 40px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    // overflow: hidden;
+    // text-overflow: ellipsis;
+    // white-space: nowrap;
   }
 }
 .big {
@@ -82,14 +82,14 @@ export default {
   .panel-value {
     font-size: 40px;
     font-weight: 500;
-    line-height: 100px;
+    line-height: 50px;
     span {
       font-size: 30px;
     }
   }
   .panel-unit {
     text-align: center;
-    font-size: 28px;
+    font-size: 25px;
     font-family: PingFangSC;
     font-weight: 400;
     color: rgba(255, 255, 255, 1);

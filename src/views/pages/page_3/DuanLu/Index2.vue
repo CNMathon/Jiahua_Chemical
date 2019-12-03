@@ -1,5 +1,6 @@
 <template>
   <div class="mangban">
+    <van-sticky>
     <van-nav-bar
       v-if='status!=="5"'
       title="断路安全"
@@ -9,20 +10,21 @@
       @click-left="pageBack"
       @click-right="openAction"
     />
-    <van-nav-bar
+      <van-nav-bar
       v-else
       title="断路安全"
       left-text="返回"
       left-arrow
       @click-left="pageBack"
     />
+    </van-sticky>
+  
     <div class="cell_group">
-      <!-- 申请部门 -->
-      <cell-value title="申请部门" :value="sendData.apprDept" disable></cell-value>
+      <cell-value title="申请部门" :value="apply.dept" disable></cell-value>
       <!-- 申请人 -->
-      <cell-value title="申请人" :value="sendData.apprRen" disable></cell-value>
+      <cell-value title="申请人" :value="apply.name" disable></cell-value>
       <!-- 作业票编号 -->
-      <cell-value title="作业票编号" :value="sendData.permitCode" disable></cell-value>
+      <cell-value title="作业票编号" :value="apply.code" disable></cell-value>
       <!-- 作业票状态 -->
       <cell-value title="作业票状态" value="编辑" disable></cell-value>
       <!-- 断路原因 -->
@@ -102,31 +104,12 @@
       </div>
       <div class="confirm_list">
         <Signature
-          :checked="checked[0] ? checked[0].checked : false"
-          :img="checked[0] ? checked[0].img : ''"
-          disable
-          @checked="showSignature(0)"
-          @cancel="signatureCancel(0)"
-        >
-          <div slot>作业前,制定交通组织方案(附后),并已通知相关部门或单位</div>
-        </Signature>
-        <Signature
-          :checked="checked[1] ? checked[1].checked : false"
-          :img="checked[1] ? checked[1].img : ''"
-          disable
-          @checked="showSignature(1)"
-          @cancel="signatureCancel(1)"
-        >
-          <div slot>作业前,在断路的路口和相关道路上设置交通警示标志,在作业区附近设置路栏、道路作业警示灯、导向标等交通警示设施</div>
-        </Signature>
-        <Signature
-          :checked="checked[2] ? checked[2].checked : false"
-          :img="checked[2] ? checked[2].img : ''"
-          disable
-          @checked="showSignature(2)"
-          @cancel="signatureCancel(2)"
-        >
-          <div slot>夜间作业设置警示红灯，并设置固定的围栏</div>
+                v-for="(safe, index) in checked" :key="index"
+                :checked="safe.safetyStatus === '1'"
+                :img="safe.affirmRen"
+                :disable="true"
+              >
+                <div slot>{{safe.safetyCs}}</div>
         </Signature>
       </div>
     </div>
@@ -168,7 +151,7 @@ import { uploadFile } from "@/mixin/uploadFile";
 import Canvas from "@/components/Canvas.vue";
 import Signature from "../components/Signature.vue";
 export default {
-  name: "duanlu",
+  name: "duanluindex",
   mixins: [business, uploadFile],
   components: {
     Signature,
@@ -182,6 +165,11 @@ export default {
   data() {
     return {
       id: 0,
+      apply: {
+        name: '',
+        dept: '',
+        code: '',
+      },
       storeModule: "duanlu",
       sendData: {
         reason: [], //断路原因
@@ -227,7 +215,7 @@ export default {
 			],
       canClean: false,
       actRuTask:'',
-      status:''
+      status: 1
     };
   },
   computed: mapState({
@@ -237,56 +225,29 @@ export default {
     involveDept:state=>state.duanlu.involveDept,
     workDept:state=>state.duanlu.workDept
   }),
-  // beforeDestroy() {
-  //   if (this.canClean) {
-  //     this.queryId = "";
-  //     this.$store.dispatch("duanlu/cleanState");
-  //   }
-  // },
-  activated() {
-		// console.log(111111)
-    // if (this.$route.query.status == undefined) {
-		// 	this.$store.dispatch("duanlu/cleanState");
-    //   this.sendData = {
-    //     reason: [], //断路原因
-    //     endangerSign: [], //危害辨识
-    //     offtimeStart: "", //断路时间（起）
-    //     offtimeEnd: "", //断路时间（止）
-    //     workCharger: [], //作业部门负责人
-    //     offExplain: "" //相关说明
-    //   };
-    // }
-    console.log("code:", this.$route.query.code);
-    if (this.$route.query.code&&sessionStorage.getItem('flag')=='1') {
-      this.sendData={
-        reason: [], //断路原因
-        endangerSign: [], //危害辨识
-        offtimeStart: "", //断路时间（起）
-        offtimeEnd: "", //断路时间（止）
-        workCharger: [], //作业部门负责人
-        involveDept:[],
-        workDept:[],
-        apprDept: "", // 申请部门
-        apprRen: "", // 申请人
-      }
-      this.getPageData();
-      sessionStorage.removeItem('flag')
-    }else if(!this.$route.query.code&&sessionStorage.getItem('flag')=='1'){
-      this.sendData={
-        reason: [], //断路原因
-        endangerSign: [], //危害辨识
-        offtimeStart: "", //断路时间（起）
-        offtimeEnd: "", //断路时间（止）
-        workCharger: [], //作业部门负责人
-        involveDept:[],
-        workDept:[],
-        apprDept: "", // 申请部门
-        apprRen: "", // 申请人
-      }
-      sessionStorage.removeItem('flag')
-    }
+   beforeDestroy() {
+    console.log('销毁');
+    this.queryId = "";
+    this.$store.dispatch("duanlu/cleanState");
+  },
+  created () {
+    this.pageInit();
   },
   methods: {
+    pageInit() {
+      if (this.$route.query.code) {
+        if (this.queryId !== this.$route.query.code) {
+          this.queryId = this.$route.query.code;
+          this.getPageData();
+        }
+      } else {
+        this.apply ={
+            name: this.$userInfo.userName,
+            dept: this.$userInfo.officeName,
+            code: '',
+          };
+      }
+    },
     // 工作流提交
     workflowSubmit() {
       if (this.$route.query.code == undefined) {
@@ -339,36 +300,42 @@ export default {
           id: this.$route.query.code
         })
         .then(res => {
+          let info = res;
           this.listData = res;
           this.isLoading = false;
-          console.log(this.listData);
           this.id = res.id
-          this.sendData.apprDept= this.listData.sqbm.officeName, // 申请部门
-          this.sendData.apprRen= this.listData.sqr.userName
-          this.actRuTask = this.listData.actRuTask?this.listData.actRuTask.id:''
-          this.status = this.listData.htStatus
-          this.sendData.offtimeEnd = this.listData.offtimeEnd
-          this.sendData.offtimeStart = this.listData.offtimeStart
+          this.status = info.htStatus;
+          console.log("断路", info);
+          this.sendData.apprDept= info.sqbm.officeCode, // 申请部门
+          this.sendData.apprRen= info.sqr.userCode
+          this.apply ={
+            name: info.sqr.userName,
+            dept: info.sqbm.officeName,
+            code: info.permitCode,
+          };
+          this.sendData.offtimeEnd = info.offtimeEnd
+          this.sendData.offtimeStart = info.offtimeStart
           this.sendData.reason = this.reductionSelectTag(
-                  this.listData.reason,
+                 info.reason,
                   this.list_1
                 );
           this.sendData.endangerSign = this.reductionSelectTag(
-                  this.listData.endangerSign,
+                  info.endangerSign,
                   this.list_2
                 );
-          this.sendData.otherSafety = this.listData.otherSafety
-          this.sendData.othercsTime = this.listData.othercsTime
-          this.sendData.othercsComplier = this.listData.othercsComplier
           this.sendData.workDept = [{
-            name:this.listData.zybm.officeName,
-            id:this.listData.zybm.id
+            name:info.zybm.officeName,
+            id:info.zybm.id
           }];
-          this.sendData.workCharger = this.reductionSelectUserObj(this.listData.zybmfzr);
+          this.sendData.workCharger = this.reductionSelectUserObj(info.zybmfzr);
           this.sendData.involveDept = [{
-            name:this.listData.sjbm,
-            id:this.listData.involveDept
+            name:info.sjbm,
+            id: info.involveDept
           }];
+         this.sendData.otherSafety = info.otherSafety;
+         this.sendData.othercsComplier = info.othercsComplier;
+         this.sendData.othercsTime = info.othercsTime;
+          this.checked = info.htHseDlzypSaftyList;
           console.log(this.sendData)
         })
         .catch(() => {});
@@ -399,14 +366,18 @@ export default {
       let htHseDtzyp_file = this.fileList.map(item => {
         return item.id;
       });
-      sendData.id = this.id
+      if(this.id !== ''){
+        sendData.id = this.id;
+      }
       sendData.reason = this.stringData("reason", "list_1");
       sendData.endangerSign = this.stringData("endangerSign", "list_2");
-      if (this.$route.query.code) {
-        sendData.apprDept = this.listData.sqbm.officeCode;
+      let listId = "";
+      if (this.queryId) {
+        sendData.applyDept = this.listData.sqbm.officeCode;
         sendData.applyer = this.listData.sqr.userCode;
+        listId = this.queryId;
       } else {
-        sendData.apprDept = this.$userInfo.officeCode;
+        sendData.applyDept = this.$userInfo.officeCode;
         sendData.applyer = this.$userInfo.userCode;
       }
       sendData.htHseDtzyp_file = htHseDtzyp_file.join(",");
@@ -414,49 +385,16 @@ export default {
       sendData.workDept = sendData.workDept[0].id
       sendData.involveDept = sendData.involveDept[0].id
       sendData.__sid = this.$userInfo.sessionId;
-      let List = [
-        {
-          num: 1,
-          safetyCs: `作业前,制定交通组织方案(附后),并已通知相关部门或单位`,
-          affirmRen: this.checked[0] ? this.checked[0].img : 0,
-          safetyStatus: this.checked[0] ? 1 : 0
-        },
-        {
-          num: 2,
-          safetyCs: `作业前,在断路的路口和相关道路上设置交通警示标志,在作业区附近设置路栏、道路作业警示灯、导向标等交通警示设施`,
-          affirmRen: this.checked[1] ? this.checked[1].img : 0,
-          safetyStatus: this.checked[1] ? 1 : 0
-        },
-        {
-          num: 3,
-          safetyCs: `夜间作业设置警示红灯，并设置固定的围栏`,
-          affirmRen: this.checked[2] ? this.checked[2].img : 0,
-          safetyStatus: this.checked[2] ? 1 : 0
-        }
-      ];
-      console.log(List);
-      if (again) {
-        // List.map(item => {
-        //   item.zypId = zypId;
-        // });
-        sendData.htHseDlzypSaftyList = List;
-      }
       console.log("sendData: ", sendData);
       this.$api.page_3
         .htHseDlzypSave(sendData, this.$userInfo.sessionId)
         .then(res => {
-          console.log("res: ", res);
-          if (again) {
-            this.$Toast.success({
+          this.$Toast.success({
               message: "提交成功",
               onClose() {
                 that.pageBack();
               }
             });
-          } else {
-            // 保存子表
-            this.postData(true, res.message);
-          }
         })
         .catch(() => {});
     },

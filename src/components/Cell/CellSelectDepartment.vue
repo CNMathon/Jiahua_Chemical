@@ -84,6 +84,16 @@ export default {
             max: this.max
           }
         });
+      }else if (this.storeModule==='duanlu') {
+        this.$router.push({
+          path: "/page_3/duanlu/duanlu_select_department",
+          query: {
+            storeModule: this.storeModule,
+            storeKey: this.storeKey,
+            radio: this.radio,
+            max: this.max
+          }
+        });
       } else{
         this.$router.push({
           path: "/page_3/kongjian/kongjian_select_department",

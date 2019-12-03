@@ -1,6 +1,24 @@
 <template>
   <div class="home">
-    <van-nav-bar title="业务管理" fixed />
+    <van-nav-bar title="业务管理" fixed>
+      <van-icon
+        name="label"
+        slot="right"
+        size="20px"
+        color="#f39800"
+        :info="noticeCount"
+        v-if="noticeCount != 0"
+        @click="jumpTo('/page_3/notification')"
+      />
+      <van-icon
+        name="label"
+        slot="right"
+        size="20px"
+        color="#f39800"
+        @click="jumpTo('/page_3/notification')"
+        v-else
+      />
+    </van-nav-bar>
     <div class="head fixed-first">
       <div class="head-nav" @click="toPage('./wochuli/index')">
         <div class="head-nav-image">
@@ -55,6 +73,7 @@ export default {
   name: "home",
   data() {
     return {
+      noticeCount: 0,
       nav: [
         {
           text: "热力机械工作票",
@@ -153,7 +172,20 @@ export default {
   methods: {
     toPage(router) {
       this.$router.push({ path: router });
+    },
+    noticeNum() {
+      this.$api.page_3
+        .msgUnreadMsg({
+          __sid: localStorage.JiaHuaSessionId
+        })
+        .then(res => {
+          console.log(`消息推送条数: `, res.count)
+          this.noticeCount = res.count 
+        })
     }
+  },
+  created() {
+    this.noticeNum()
   }
 };
 </script>

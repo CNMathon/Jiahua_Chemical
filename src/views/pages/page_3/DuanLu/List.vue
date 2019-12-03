@@ -76,7 +76,12 @@
   // import ListCard from "@/views/pages/page_3/components/DuanLuListCard";
   export default {
     created () {
-      this.getPageData();
+      this.getListData();
+      this.$store.dispatch("duanlu/cleanState");
+      this.$store.commit("duanlu/delete_KeepAlive", "duanluindex");
+      this.$nextTick(() => {
+        this.$store.commit("duanlu/add_KeepAlive", "duanluindex");
+      });
     },
     data () {
       return {
@@ -192,9 +197,6 @@
         }
       }
 
-    },
-    created () {
-      this.getListData()
     },
   };
 </script>

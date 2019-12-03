@@ -1,14 +1,16 @@
 <template>
   <div class="mangban">
-    <van-nav-bar
-      title="动土安全"
-      left-text="返回"
-      right-text="操作"
-      left-arrow
-      @click-left="pageBack"
-      @click-right="openAction"
-      fixed
-    />
+    <van-sticky>
+      <van-nav-bar
+        title="动土安全"
+        left-text="返回"
+        right-text="操作"
+        left-arrow
+        @click-left="pageBack"
+        @click-right="openAction"
+        fixed
+      />
+    </van-sticky>
     <div class="fixed-first">
       <van-skeleton title :row="3" :loading="isLoading" class="skeleton">
         <div class="app">

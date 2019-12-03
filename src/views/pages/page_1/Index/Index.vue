@@ -162,40 +162,20 @@
         <van-tab title="设备" class="tabs-box">
           <div class="proporty">
             <van-row class="head">
-              <van-col span="6">分厂名称</van-col>
-              <van-col span="6">特种设备数量</van-col>
-              <van-col span="6">关键设备数量</van-col>
-              <van-col span="6">主要设备数量</van-col>
+              <van-col span="4">分厂名称</van-col>
+              <van-col span="2">电气设备</van-col>
+              <van-col span="2">仪表设备</van-col>
+              <van-col span="2">机械设备</van-col>
+              <van-col span="2">化验设备</van-col>
+              <van-col span="2">安全附件</van-col>
             </van-row>
-            <van-row class="item">
-              <van-col span="6">动力中心</van-col>
-              <van-col span="6">80</van-col>
-              <van-col span="6">79</van-col>
-              <van-col span="6">79</van-col>
-            </van-row>
-            <van-row class="item">
-              <van-col span="6">烧碱厂</van-col>
-              <van-col span="6">79</van-col>
-              <van-col span="6">59</van-col>
-              <van-col span="6">59</van-col>
-            </van-row>
-            <van-row class="item">
-              <van-col span="6">脂肪醇厂</van-col>
-              <van-col span="6">97</van-col>
-              <van-col span="6">92</van-col>
-              <van-col span="6">92</van-col>
-            </van-row>
-            <van-row class="item">
-              <van-col span="6">硫酸厂</van-col>
-              <van-col span="6">91</van-col>
-              <van-col span="6">85</van-col>
-              <van-col span="6">85</van-col>
-            </van-row>
-            <van-row class="item">
-              <van-col span="6">新材料厂</van-col>
-              <van-col span="6">83</van-col>
-              <van-col span="6">91</van-col>
-              <van-col span="6">91</van-col>
+            <van-row class="item" v-for="(item, index) in deviceData" :key="index">
+              <van-col span="4">{{item.companyName}}</van-col>
+              <van-col span="2">{{item.elect}}</van-col>
+              <van-col span="2">{{item.watch}}</van-col>
+              <van-col span="2">{{item.mach}}</van-col>
+              <van-col span="2">{{item.chemi}}</van-col>
+              <van-col span="2">{{item.safe}}</van-col>
             </van-row>
           </div>
         </van-tab>
@@ -628,6 +608,7 @@ export default {
         cbscount: 0,
         cbsrycount: 0
       },
+      deviceData: [],
       date_1: new Date(),
       date_2: new Date(),
       ballData: [0, 0, 0, 0]
@@ -945,6 +926,7 @@ export default {
         })
         .then(res => {
           console.log('device: ', res)
+          this.deviceData = res
         })
     }
   },
@@ -1073,6 +1055,12 @@ export default {
     text-align: center;
     width: 90%;
     margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    *:nth-child(1){
+      line-height: 60px;
+      // color: red;
+    }
   }
   .item {
     font-size: 0.46875rem;
@@ -1080,10 +1068,16 @@ export default {
     color: #ffffff;
     background: #5677fc;
     width: 90%;
-    padding: 3% 0;
+    padding: 3% 2%;
     margin: 20px auto 0;
     text-align: center;
     border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    line-height: 50px;
+    *:nth-child(1){
+      // color: red;
+    }
     .van-col--8 {
       height: 16px;
       line-height: 16px;
