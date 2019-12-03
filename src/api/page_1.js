@@ -32,18 +32,34 @@ const article = {
       params: params
     })
   },
+  sipV1Sql3(params) {
+    return axios.get(`${base.jhec_8085}sip/v1/sql3`, {
+      params: params
+    })
+  },
+  sipV1Sql4(params) {
+    return axios.get(`${base.jhec_8085}sip/v1/sql4`, {
+      params: params
+    })
+  },
   dpJhyhzgl(params) {
-    return axios.get(`${base.jhec_8085}dp/jhyhzgl`, {
+    return axios.get(`${base.sqsta}dp/jhyhzgl`, {
       params: params
     })
   },
   dpJhpxhgl(params) {
-    return axios.get(`${base.jhec_8085}dp/jhpxhgl`, {
+    return axios.get(`${base.sqsta}dp/jhpxhgl`, {
       params: params
     })
   },
   dpCzsgl(params) {
-    return axios.get(`${base.jhec_8085}dp/czsgl`, {
+    return axios.get(`${base.sqsta}dp/czsgl`, {
+      params: params
+    })
+  },
+  // 空间设备专业类别分析
+  devicefinereportGetSpaceInfo(params) {
+    return axios.get(`${base.sq}devicefinereport/getSpaceInfo.json`, {
       params: params
     })
   },

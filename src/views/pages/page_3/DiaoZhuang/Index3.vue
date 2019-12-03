@@ -768,7 +768,7 @@ export default {
           this.sendData.qdzwzl = info.qdzwzl;
           this.sendData.zyksDate = info.zyksDate;
           this.sendData.zyjsDate = info.zyjsDate;
-          this.sendData.sqbm = info.sqbm;
+          this.sendData.sqbm = info.sqbmDept.officeName;
           this.sendData.sqr = info.sqr;
           this.sendData.zypcode = info.zypcode;
          this.work_permit_3.name  = info.dzzhjtsgzzyzh;

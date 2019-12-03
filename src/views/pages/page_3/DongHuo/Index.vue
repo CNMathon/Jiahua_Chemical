@@ -13,9 +13,9 @@
     </van-sticky>
     <div class="cell_group fixed-first">
       <!-- 申请部门 -->
-      <cell-value title="申请部门" required :value="$userInfo.officeName" disable></cell-value>
+      <cell-value title="申请部门" :value="oldInfo.office?oldInfo.office.officeName:$userInfo.officeName" disable></cell-value>
       <!-- 申请人 -->
-      <cell-value title="申请人" required :value="$userInfo.userName" disable></cell-value>
+      <cell-value title="申请人" :value="oldInfo.user?oldInfo.user.userName:$userInfo.userName" disable></cell-value>
       <!-- 作业票编号 -->
       <cell-value title="作业票编号" :value="oldInfo.dhzypCode" disable></cell-value>
       <!-- 作业票状态 -->
@@ -414,12 +414,15 @@ export default {
       // sendData.cbsPeoson = sendData.dhzyPrincipal.substr(0, 4) === 'CBS_' ? '2' : '1'
       sendData.dhzyRen = this.userString(sendData.dhzyRen, "userCode");
       console.log(this.$userInfo);
-      sendData.applyDept = this.$userInfo.officeCode;
-      sendData.applyRen = this.$userInfo.userCode;
       sendData.__sid = this.$userInfo.sessionId;
       if (this.$route.query.id) {
         sendData.id = this.oldInfo.id;
         sendData.dhzypCode = this.oldInfo.dhzypCode;
+        sendData.applyDept = this.oldInfo.office.officeCode;
+      	sendData.applyRen = this.oldInfo.user.userCode;
+      }else{
+        sendData.applyDept = this.$userInfo.officeCode;
+      	sendData.applyRen = this.$userInfo.userCode;
       }
       console.log('发送报文(空为创建，不为空为修改)'+this.queryId, sendData);
       this.$api.page_3

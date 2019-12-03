@@ -11,9 +11,9 @@
     />
     <div class="cell_group fixed-first">
       <!-- 申请部门 -->
-      <cell-value title="申请部门" required :value="$userInfo.officeName" disable></cell-value>
+      <cell-value title="申请部门" required :value="oldInfo.office.officeName" disable></cell-value>
       <!-- 申请人 -->
-      <cell-value title="申请人" required :value="$userInfo.userName" disable></cell-value>
+      <cell-value title="申请人" required :value="oldInfo.user.userName" disable></cell-value>
       <!-- 作业票编号 -->
       <cell-value title="作业票编号" :value="oldInfo.dhzypCode" disable></cell-value>
       <!-- 作业票状态 -->

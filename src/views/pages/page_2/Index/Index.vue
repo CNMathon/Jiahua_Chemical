@@ -39,7 +39,7 @@
       <van-row>
         <label v-for="(item, index) in MajHazNav" :key="index">
           <van-col span="6">
-            <div class="nav" @click="toPage(item.router)">
+            <div class="nav" @click="jumpTo(item.router)">
               <div class="nav-image">
                 <img :src="require(`@/assets/images/nav_${item.imageIndex}.svg`)" alt />
               </div>
@@ -320,19 +320,19 @@ export default {
         {
           text: "烧碱厂",
           color: "rgba(238, 116, 95, 0.1)",
-          router: "/shaojian",
+          router: "/page_1/danger/sj",
           imageIndex: 10
         },
         {
           text: "新材料",
           color: "rgba(78,169,232,0.1)",
-          router: "/gongyi",
+          router: "/page_1/danger/xcl",
           imageIndex: 12
         },
         {
           text: "硫酸",
           color: "rgba(96,150,248,0.1);",
-          router: "/liusuan",
+          router: "/page_1/danger/ls",
           imageIndex: 13
         }
       ],

@@ -154,7 +154,8 @@
             <van-row class="item" v-for="(item, index) in sql2Data" :key="index">
               <van-col span="8">{{item.name}}</van-col>
               <van-col span="8">{{item.allRate1 * 100}}</van-col>
-              <van-col span="8">{{item.allRate2 * 100}}</van-col>
+              <van-col span="8" v-if="item.allRate2 * 100 == 0">-</van-col>
+              <van-col span="8" v-else>{{item.allRate2 * 100}}</van-col>
             </van-row>
           </div>
         </van-tab>
@@ -629,7 +630,7 @@ export default {
       },
       date_1: new Date(),
       date_2: new Date(),
-      ballData: [0, 0, 0,0]
+      ballData: [0, 0, 0, 0]
       // ballData: {
       //   pxhg: 0,
       //   czsg: 0,
@@ -641,8 +642,8 @@ export default {
   mounted() {},
   methods: {
     testme() {
-      this.ballData = [1,0.5,0.84,0.32]
-      console.log(this.ballData)
+      this.ballData = [1, 0.5, 0.84, 0.32];
+      console.log(this.ballData);
     },
     // chartPanel 初始化
     // => 参数1 => chartPanel数据结构 => Array
@@ -819,7 +820,8 @@ export default {
         let arr = [
           {
             id: "dongli-fix",
-            value: res.value
+            value: res.value,
+            text: "动力中心"
           }
         ];
         finishCount++;
@@ -832,25 +834,36 @@ export default {
         // console.log("res_chartPanel", res_chartPanel);
         // console.log("res_envChartPanel", res_envChartPanel);
 
-        res_dataPanel.map(
-          (item, index) =>
-            (this.dataPanel[index].value = item.Value.toFixed(2))
-        );
-        res_chartPanel.map(
-          (item, index) =>
-            (this.chartPanel[index].value = item.Value.toFixed(2))
-        );
-        res_envChartPanel.map(
-          (item, index) =>
-            (this.envChartPanel[index].value = item.Value.toFixed(2))
-        );
+        // res_dataPanel.map(
+        //   (item, index) =>
+        //     (this.dataPanel[index].value = item.Value.toFixed(2))
+        // );
+        // res_chartPanel.map(
+        //   (item, index) =>
+        //     (this.chartPanel[index].value = item.Value.toFixed(2))
+        // );
+        // res_envChartPanel.map(
+        //   (item, index) =>
+        //     (this.envChartPanel[index].value = item.Value.toFixed(2))
+        // );
         this.echartDrawRing(arr);
       });
 
-      this.$api.page_1.sipV1Sql2().then(res => {
-        console.log(`sql2: `, res);
+      this.$api.page_1.sipV1Sql3().then(res => {
+        console.log(`sql3: `, res);
         this.sql2Data = res;
+        this.$api.page_1.sipV1Sql4().then(res => {
+          console.log(`sql4: `, res);
+          console.log(this.sql2Data)
+          res.map(item1 => {
+            this.sql2Data.filter(item2 => item2.name == item1.name)[0].allRate2 =
+              item1.allRate1;
+          });
+
+          // this.sql3Data = res;
+        });
       });
+
 
       this.$api.page_1
         .getRtMonTagInfosByNames({
@@ -902,20 +915,37 @@ export default {
         this.cbsCount.cbsrycount = res.cbsrycount;
       });
 
-      // this.$api.page_1.dpJhyhzgl().then(res => {
-      //   console.log(`ballData-yhzg`, res.split(":"));
-      //   ballData[0] = res.split(":");
-      // });
+      // Ball - 隐患
+      this.$api.page_1.dpJhyhzgl().then(res => {
+        let pointRes = this.toPoint(res.split(":")[1]);
+        console.log(`Ball - 隐患`, pointRes);
+        this.ballData[2] = pointRes;
+        console.log(`ballData`, this.ballData);
+      });
 
-      // this.$api.page_1.dpJhpxhgl().then(res => {
-      //   console.log(`ballData-pxhg`, res.split(":"));
-      //   ballData[1] = res.split(":");
-      // });
+      // Ball - 培训
+      this.$api.page_1.dpJhpxhgl().then(res => {
+        let pointRes = this.toPoint(res.split(":")[1]);
+        console.log(`Ball - 培训`, pointRes);
+        this.ballData[0] = pointRes;
+        console.log(`ballData`, this.ballData);
+      });
 
-      // this.$api.page_1.dpCzsgl().then(res => {
-      //   console.log(`ballData-czsg`, res.split(":"));
-      //   ballData[2] = res.split(":");
-      // });
+      // Ball - 持证上岗
+      this.$api.page_1.dpCzsgl().then(res => {
+        let pointRes = this.toPoint(res.split(":")[1]);
+        console.log(`Ball - 培训`, pointRes);
+        this.ballData[1] = pointRes;
+        console.log(`ballData`, this.ballData);
+      });
+
+      this.$api.page_1
+        .devicefinereportGetSpaceInfo({
+          __sid: localStorage.JiaHuaSessionId
+        })
+        .then(res => {
+          console.log('device: ', res)
+        })
     }
   },
   created() {

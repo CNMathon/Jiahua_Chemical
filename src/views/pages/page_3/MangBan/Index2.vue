@@ -11,11 +11,11 @@
     <div class="header-cell">
       <!-- 申请部门 -->
       <cell-value title="申请部门"
-                  :value="$userInfo.officeName"
+                  :value="oldInfo.office.officeName"
                   disable></cell-value>
       <!-- 申请人 -->
       <cell-value title="申请人"
-                  :value="$userInfo.userName"
+                  :value="oldInfo.user.userName"
                   disable></cell-value>
       <!-- 作业票编号 -->
       <cell-value title="作业票编号"
@@ -520,11 +520,18 @@
         let htHseMbzyp_file = this.fileList.map(item => {
           return item.id;
         });
+         if (this.$route.query.id) {
+          sendData.applyDept = this.oldInfo.office.officeName;
+          sendData.applyer = this.oldInfo.user.userName;
+          finSendData.applyDept = this.oldInfo.office.officeCode;//正式用
+          finSendData.applyer = this.oldInfo.office.userCode;//正式用
+        }else{
+          sendData.applyDept = this.$userInfo.officeName;
+          sendData.applyer = this.$userInfo.userName;
+          finSendData.applyDept = this.$userInfo.officeCode;//正式用
+          finSendData.applyer = this.$userInfo.userCode;//正式用
+        }
         console.log("file", htHseMbzyp_file);
-        sendData.applyDept = this.$userInfo.officeName;
-        sendData.applyer = this.$userInfo.userName;
-        finSendData.applyDept = this.$userInfo.officeCode;//正式用
-        finSendData.applyer = this.$userInfo.userCode;//正式用
         finSendData.mbzypCode = this.infoId
         finSendData.htHseMbzyp_file = htHseMbzyp_file.join(",");
         finSendData.scMan = this.userString(sendData.scMan, "userCode");

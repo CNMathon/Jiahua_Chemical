@@ -17,11 +17,11 @@
     <div class="header-cell">
       <!-- 申请部门 -->
       <cell-value title="申请部门"
-                  :value="$userInfo.officeName"
+                  :value="oldInfo.office.officeName"
                   disable></cell-value>
       <!-- 申请人 -->
       <cell-value title="申请人"
-                  :value="$userInfo.userName"
+                  :value="oldInfo.user.userName"
                   disable></cell-value>
       <!-- 作业票编号 -->
       <cell-value title="作业票编号"

@@ -11,9 +11,9 @@
     />
     <div class="cell_group fixed-first">
       <!-- 申请部门 -->
-      <cell-value title="申请部门" required :value="$userInfo.officeName" disable></cell-value>
+      <cell-value title="申请部门" required :value="oldInfo.office.officeName" disable></cell-value>
       <!-- 申请人 -->
-      <cell-value title="申请人" required :value="$userInfo.userName" disable></cell-value>
+      <cell-value title="申请人" required :value="oldInfo.user.userName" disable></cell-value>
       <!-- 作业票编号 -->
       <cell-value title="作业票编号" :value="oldInfo.dhzypCode" disable></cell-value>
       <!-- 作业票状态 -->
@@ -665,8 +665,8 @@ export default {
       sendData.fxRenB = this.userString(sendData.fxRenB || [], "userCode"); //分析人A
       sendData.fxRenC = this.userString(sendData.fxRenC || [], "userCode"); //分析人A
       // 结束
-      sendData.applyDept = this.$userInfo.officeCode;
-      sendData.applyRen = this.$userInfo.userCode;
+      sendData.applyDept = this.oldInfo.office.officeCode;
+      	sendData.applyRen = this.oldInfo.user.userCode;
       sendData.__sid = this.$userInfo.sessionId;
       sendData.id = this.oldInfo.id;
       sendData.dhzypCode = this.oldInfo.dhzypCode;

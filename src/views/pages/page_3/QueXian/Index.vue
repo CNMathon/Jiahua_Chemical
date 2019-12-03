@@ -154,12 +154,6 @@ export default {
       deviceName: state => state.quexian.deviceName
     })
   },
-  watch: {
-    deviceName(res) {
-      this.sendData.deviceName[0] = res.deviceName;
-      console.log('change')
-    }
-  },
   methods: {
     openAction() {
       this.isShowAction = true;
@@ -229,6 +223,12 @@ export default {
     deviceName(res) {
       this.sendData.deviceName = res;
       console.log(`change => deviceName`)
+    }
+  },
+  created() {
+    console.log(`id: `, this.$route.query.id)
+    if (this.$route.query.id) {
+      
     }
   }
 };

@@ -21,22 +21,22 @@
             <li>缺陷状态</li>
           </ul>
         </div>
-        <van-skeleton
-          title
-          :row="3"
-          :loading="isLoading"
-          class="skeleton"
-          v-for="(item, index) in 3"
-          :key="index"
-        ></van-skeleton>
-        <label v-for="(item, index) in listData" :key="index">
+        <van-skeleton title :row="3" :loading="isLoading" class="skeleton"></van-skeleton>
+        <label v-for="(item, index) in listData" :key="index" @click="pageJump(item.htStatus, item.id)">
           <!-- 此处在做完AJAX后需要判断是否为最后行 - class存在判断 -->
           <div class="donghuo-list-card donghuo-list-card-nolast">
             <div class="top">
-              <div class="top-item">03040898</div>
-              <div class="top-item">安全阀</div>
-              <div class="top-item">设备渗漏</div>
-              <div class="top-item">缺陷验收</div>
+              <div class="top-item">{{item.deviceSpace.deviceCode}}</div>
+              <div class="top-item">{{item.deviceSpace.deviceName}}</div>
+              <div class="top-item" v-if="item.defectType == 0">其他</div>
+              <div class="top-item" v-if="item.defectType == 1">设备渗漏</div>
+              <div class="top-item" v-if="item.defectType == 2">异常显示</div>
+              <div class="top-item" v-if="item.defectType == 3">连锁故障</div>
+              <div class="top-item" v-if="item.defectType == 4">性能下降</div>
+              <div class="top-item" v-if="item.defectType == 5">物理异常</div>
+              <div class="top-item" v-if="item.htStatus == 1">编辑</div>
+              <div class="top-item" v-if="item.htStatus == 2">审核</div>
+              <div class="top-item" v-if="item.htStatus == 3">有效执行</div>
             </div>
             <div class="bottom">
               <div class="bottom-item">{{item.punishnorm}}</div>
@@ -61,6 +61,13 @@ export default {
   },
   mixins: [mixin],
   methods: {
+    pageJump(status, id) {
+      if (status == 1) {
+        this.jumpTo('/page_3/quexian/index', {
+          id: id
+        })
+      }
+    },
     onClickRight() {
       this.$router.push({
         path: "./index"
@@ -70,20 +77,20 @@ export default {
       this.showPopup = true;
     },
     listSelect() {
-       this.$api.page_3
-         .htCbsBreakrulesmanageListData({
-           __sid: localStorage.getItem("JiaHuaSessionId")
-         })
-         .then(res => {
-           this.listData = res.list;
-           this.isLoading = false
-           console.log(this.listData)
-         });
+      this.$api.page_3
+        .htHseDzzypList({
+          __sid: localStorage.getItem("JiaHuaSessionId")
+        })
+        .then(res => {
+          this.listData = res.list;
+          this.isLoading = false;
+          console.log(`缺陷List: `, this.listData);
+        });
     }
   },
   created() {
-    this.listSelect()
-  },
+    this.listSelect();
+  }
 };
 </script>
 
@@ -137,7 +144,7 @@ export default {
 }
 
 .skeleton {
-  margin-bottom: 10px
+  margin-bottom: 10px;
 }
 
 .left-line-hor {
@@ -156,9 +163,24 @@ export default {
     justify-content: space-around;
     padding: 0 31px 0 34px;
     li {
-      width: 25%;
       text-align: center;
       font-size: 25px;
+      &:nth-child(1) {
+        width: 25%;
+        text-align: left;
+      }
+      &:nth-child(2) {
+        width: 35%;
+        text-align: center;
+      }
+      &:nth-child(3) {
+        width: 20%;
+        text-align: center;
+      }
+      &:nth-child(4) {
+        width: 20%;
+        text-align: right;
+      }
     }
   }
 }
@@ -172,16 +194,32 @@ export default {
 
 .top-item {
   width: 25%;
-  text-align: center;
+  // text-align: center;
   line-height: 40px;
   font-size: 27px;
+  &:nth-child(1) {
+    width: 25%;
+    text-align: left;
+  }
+  &:nth-child(2) {
+    width: 35%;
+    text-align: center;
+  }
+  &:nth-child(3) {
+    width: 20%;
+    text-align: center;
+  }
+  &:nth-child(4) {
+    width: 20%;
+    text-align: right;
+  }
 }
 
 .bottom-item {
   font-size: 25px;
-  overflow:hidden;
-  text-overflow:ellipsis;
-  white-space:nowrap
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 </style>
 

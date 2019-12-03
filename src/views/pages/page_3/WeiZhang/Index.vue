@@ -17,7 +17,7 @@
         :value="sendData.projectname.projectName || '点击选择'"
         iconName="search"
         arrow
-        @click="selectProject()"
+        @click="selectProject"
       />
       <!-- 违章名称 -->
       <cell-input v-model="sendData.breakrulename" title="违章名称" required placeholder="输入违章名称" />
@@ -203,12 +203,11 @@ export default {
         message: "加载中...",
         forbidClick: true
       });
-      let sendData = {
-        id: this.$route.query.id,
-        __sid: localStorage.JiaHuaSessionId
-      };
       this.$api.page_3
-        .Violation(sendData)
+        .Violation({
+          id: this.$route.query.id,
+          __sid: localStorage.JiaHuaSessionId
+        })
         .then(res => {
           this.$Toast.clear();
           let info = res.htCbsBreakrulesmanage;
@@ -218,7 +217,8 @@ export default {
             projectAddress: "",
             id: info.projectname
           };
-          this.sendData.breakrulename = info.breakrulename;
+          sendData.breakrulename = info.breakrulename
+          sendData.projectname.projectName = info.breakrulename;
           this.sendData.occurtime = info.occurtime;
           this.sendData.occursite = info.occursite;
           this.sendData.incidentdes = info.incidentdes;
@@ -242,6 +242,25 @@ export default {
         });
     },
     Next() {
+      this.isDataEmpty_throw({
+        data: [
+          this.sendData.projectname.projectName, // 项目名称
+          this.sendData.breakrulename, // 项目名称
+          this.sendData.breakruledept, // 违章单位
+          this.sendData.occurtime, // 发生时间
+          this.sendData.occursite, // 发生地点
+          this.sendData.checkuser, // 检察人员
+          this.sendData.breakruleuser, // 违章人员
+          this.sendData.wzstandard.normName, // 违章考核标准
+          this.sendData.breakruleproject.khcontent, // 违章项目
+          this.sendData.punishnorm, // 处罚标准
+          this.sendData.incidentdes, // 事件描述
+          this.fileList // 上传图片
+        ],
+        err: () => {
+          this.$notify('请输入将表单内容填写完整')
+        }
+      });
       this.isShowAction = false;
       this.$Toast.loading({
         message: "正在提交...",

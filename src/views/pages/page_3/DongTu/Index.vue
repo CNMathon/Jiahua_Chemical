@@ -604,7 +604,7 @@ export default {
       console.log("sendData", sendData);
       console.log("sendData", sendData.htHseDtzypSafetyList);
       this.$api.page_3
-        .htHseDtzypSave(sendData)
+        .htHseDtzypSave(sendData, this.$userInfo.sessionId)
         .then(() => {
           this.$Toast.success({
             message: "提交成功",

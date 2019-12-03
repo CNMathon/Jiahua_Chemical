@@ -724,7 +724,7 @@ export default {
           this.sendData.qdzwzl = info.qdzwzl;
           this.sendData.zyksDate = info.zyksDate;
           this.sendData.zyjsDate = info.zyjsDate;
-          this.sendData.sqbm = info.sqbm;
+          this.sendData.sqbm = info.sqbmDept.officeName;
           this.sendData.sqr = info.sqr;
           this.sendData.zypcode = info.zypcode;
           this.work_permit_3.name  = info.dzzhjtsgzzyzh;
@@ -825,6 +825,7 @@ export default {
           {
             dzzypId: messageId,
             xuhao: 1,
+            id:this.checked[0].id?this.checked[0].id:'',
             aqcsnr: `吊装质量大于等于40t的重物和土建工程主体结构;吊装物体虽不足40t,但形状复杂、刚度小、长径比大、精密贵重,作业条件特殊,已编制吊装作业方案,且经作业主管部门和安全管理部门审查,报主管(主管安全生产副总/总工程师批准)`,
             qrr: this.checked[0].img ? this.checked[0].img : '',
             qrzt: this.checked[0].checked ? 1 : 0
@@ -832,6 +833,7 @@ export default {
           {
             dzzypId: messageId,
             xuhao: 2,
+            id:this.checked[1].id?this.checked[1].id:'',
             aqcsnr: `指派专人监护,并监守岗位,非作业人员禁止入内`,
             qrr: this.checked[1].img ? this.checked[1].img : '',
             qrzt: this.checked[1].checked ? 1 : 0
@@ -839,6 +841,7 @@ export default {
           {
             dzzypId: messageId,
             xuhao: 3,
+            id:this.checked[2].id?this.checked[2].id:'',
             aqcsnr: `作业人员已按规定佩戴防护器具和个体防护用品`,
             qrr: this.checked[2].img ? this.checked[2].img : '',
             qrzt: this.checked[2].checked ? 1 : 0
@@ -846,6 +849,7 @@ export default {
           {
             dzzypId: messageId,
             xuhao: 4,
+            id:this.checked[3].id?this.checked[3].id:'',
             aqcsnr: `已与分厂(车间)负责人取得联系,建立联系信号`,
             qrr: this.checked[3].img ? this.checked[3].img : '',
             qrzt: this.checked[3].checked ? 1 : 0
@@ -853,6 +857,7 @@ export default {
           {
             dzzypId: messageId,
             xuhao: 5,
+            id:this.checked[4].id?this.checked[4].id:'',
             aqcsnr: `已在吊装现场设置安全警戒标志,无关人员不许进入作业现场； `,
             qrr: this.checked[4].img ? this.checked[4].img : '',
             qrzt: this.checked[4].checked ? 1 : 0
@@ -860,6 +865,7 @@ export default {
           {
             dzzypId: messageId,
             xuhao: 6,
+            id:this.checked[5].id?this.checked[5].id:'',
             aqcsnr: `室外作业遇到(大雪/暴雨/大雾/六级以上大风),已停止作业`,
             qrr: this.checked[5].img ? this.checked[5].img : '',
             qrzt: this.checked[5].checked ? 1 : 0
@@ -867,6 +873,7 @@ export default {
           {
             dzzypId: messageId,
             xuhao: 7,
+            id:this.checked[6].id?this.checked[6].id:'',
             aqcsnr: `检查起重吊装设备、钢丝绳、揽风绳、链条、吊钩等各种机具,保证安全可靠`,
             qrr: this.checked[6].img ? this.checked[6].img : '',
             qrzt: this.checked[6].checked ? 1 : 0
@@ -874,6 +881,7 @@ export default {
           {
             dzzypId: messageId,
             xuhao: 8,
+            id:this.checked[7].id?this.checked[7].id:'',
             aqcsnr: `明确分工、坚守岗位,并按规定的联络信号,统一指挥`,
             qrr: this.checked[7].img ? this.checked[7].img : '',
             qrzt: this.checked[7].checked ? 1 : 0
@@ -881,6 +889,7 @@ export default {
           {
             dzzypId: messageId,
             xuhao: 9,
+            id:this.checked[8].id?this.checked[8].id:'',
             aqcsnr: `将建筑物、构筑物作为锚点,需经土建工程部门审查核算并批准`,
             qrr: this.checked[8].img ? this.checked[8].img : '',
             qrzt: this.checked[8].checked ? 1 : 0
@@ -888,6 +897,7 @@ export default {
           {
             dzzypId: messageId,
             xuhao: 10,
+            id:this.checked[9].id?this.checked[9].id:'',
             aqcsnr: `吊装绳索、揽风绳、拖拉绳等避免同带电线路接触,并保持安全距离`,
             qrr: this.checked[9].img ? this.checked[9].img : '',
             qrzt: this.checked[9].checked ? 1 : 0
@@ -895,6 +905,7 @@ export default {
           {
             dzzypId: messageId,
             xuhao: 11,
+            id:this.checked[10].id?this.checked[10].id:'',
             aqcsnr: `人员随同吊装重物或吊装机械升降,应采取可靠的安全措施,并经过现场指挥人员批准`,
             qrr: this.checked[10].img ? this.checked[10].img : '',
             qrzt: this.checked[10].checked ? 1 : 0
@@ -902,6 +913,7 @@ export default {
           {
             dzzypId: messageId,
             xuhao: 12,
+            id:this.checked[11].id?this.checked[11].id:'',
             aqcsnr: `利用管道、管架、电杆、机电设备等作吊装锚点,不准吊装`,
             qrr: this.checked[11].img ? this.checked[11].img : '',
             qrzt: this.checked[11].checked ? 1 : 0
@@ -909,6 +921,7 @@ export default {
           {
             dzzypId: messageId,
             xuhao: 13,
+            id:this.checked[12].id?this.checked[12].id:'',
             aqcsnr: `悬吊重物下方站人、通行和工作,不准吊装`,
             qrr: this.checked[12].img ? this.checked[12].img : '',
             qrzt: this.checked[12].checked ? 1 : 0
@@ -916,6 +929,7 @@ export default {
           {
             dzzypId: messageId,
             xuhao: 14,
+            id:this.checked[13].id?this.checked[13].id:'',
             aqcsnr: `超负荷或重物质量不明,不准吊装`,
             qrr: this.checked[13].img ? this.checked[13].img : '',
             qrzt: this.checked[13].checked ? 1 : 0
@@ -923,6 +937,7 @@ export default {
           {
             dzzypId: messageId,
             xuhao: 15,
+            id:this.checked[14].id?this.checked[14].id:'',
             aqcsnr: `斜拉重物、重物埋在地下或重物坚固不牢,绳打结、绳不齐,不准吊装`,
             qrr: this.checked[14].img ? this.checked[14].img : '',
             qrzt: this.checked[14].checked ? 1 : 0
@@ -930,6 +945,7 @@ export default {
           {
             dzzypId: messageId,
             xuhao: 16,
+            id:this.checked[15].id?this.checked[15].id:'',
             aqcsnr: `棱角重物没有衬垫措施,不准吊装`,
             qrr: this.checked[15].img ? this.checked[15].img : '',
             qrzt: this.checked[15].checked ? 1 : 0
@@ -937,6 +953,7 @@ export default {
           {
             dzzypId: messageId,
             xuhao: 17,
+            id:this.checked[16].id?this.checked[16].id:'',
             aqcsnr: `安全装置失灵,不准吊装`,
             qrr: this.checked[16].img ? this.checked[16].img : '',
             qrzt: this.checked[16].checked ? 1 : 0
@@ -944,6 +961,7 @@ export default {
           {
             dzzypId: messageId,
             xuhao: 18,
+            id:this.checked[17].id?this.checked[17].id:'',
             aqcsnr: `用定型起重吊装机械(履带、轮胎、轿式吊车等)进行吊装作业,遵守该定型机械的操作规程`,
             qrr: this.checked[17].img ? this.checked[17].img : '',
             qrzt: this.checked[17].checked ? 1 : 0
@@ -951,6 +969,7 @@ export default {
           {
             dzzypId: messageId,
             xuhao: 19,
+            id:this.checked[18].id?this.checked[18].id:'',
             aqcsnr: `作业现场出现危险品泄漏,立即停止作业,撤离人员`,
             qrr: this.checked[18].img ? this.checked[18].img : '',
             qrzt: this.checked[18].checked ? 1 : 0
@@ -958,6 +977,7 @@ export default {
           {
             dzzypId: messageId,
             xuhao: 20,
+            id:this.checked[19].id?this.checked[19].id:'',
             aqcsnr: `作业完成后现场杂物已清理`,
             qrr: this.checked[19].img ? this.checked[19].img : '',
             qrzt: this.checked[19].checked ? 1 : 0
@@ -965,6 +985,7 @@ export default {
           {
             dzzypId: messageId,
             xuhao: 21,
+            id:this.checked[20].id?this.checked[20].id:'',
             aqcsnr: `吊装作业人员持有法定的有效的证件`,
             qrr: this.checked[20].img ? this.checked[20].img : '',
             qrzt: this.checked[20].checked ? 1 : 0
@@ -972,6 +993,7 @@ export default {
           {
             dzzypId: messageId,
             xuhao: 22,
+            id:this.checked[21].id?this.checked[21].id:'',
             aqcsnr: `地下通讯、网络电(光)缆、排水沟盖板,承重吊装机械的负重量已确认,保护措施已落实`,
             qrr: this.checked[21].img ? this.checked[21].img : '',
             qrzt: this.checked[21].checked ? 1 : 0
@@ -979,6 +1001,7 @@ export default {
           {
             dzzypId: messageId,
             xuhao: 23,
+            id:this.checked[22].id?this.checked[22].id:'',
             aqcsnr: `起吊物的质量${this.value}吨经确认,在吊装机械的承重范围`,
             qrr: this.checked[22].img ? this.checked[22].img : '',
             qrzt: this.checked[22].checked ? 1 : 0
@@ -986,6 +1009,7 @@ export default {
           {
             dzzypId: messageId,
             xuhao: 24,
+            id:this.checked[23].id?this.checked[23].id:'',
             aqcsnr: `在吊装高度的管线、电缆桥架已做好防护措施`,
             qrr: this.checked[23].img ? this.checked[23].img : '',
             qrzt: this.checked[23].checked ? 1 : 0
@@ -993,6 +1017,7 @@ export default {
           {
             dzzypId: messageId,
             xuhao: 25,
+            id:this.checked[24].id?this.checked[24].id:'',
             aqcsnr: `作业现场围栏、警戒线、警告牌、夜间警示灯已按要求设置`,
             qrr: this.checked[24].img ? this.checked[24].img : '',
             qrzt: this.checked[24].checked ? 1 : 0
@@ -1000,6 +1025,7 @@ export default {
           {
             dzzypId: messageId,
             xuhao: 26,
+            id:this.checked[25].id?this.checked[25].id:'',
             aqcsnr: `吊装作业人员持有法定的有效的证件`,
             qrr: this.checked[25].img ? this.checked[25].img : '',
             qrzt: this.checked[25].checked ? 1 : 0
@@ -1007,6 +1033,7 @@ export default {
           {
             dzzypId: messageId,
             xuhao: 27,
+            id:this.checked[26].id?this.checked[26].id:'',
             aqcsnr: `作业高度和转臂范围内,无架空线路`,
             qrr: this.checked[26].img ? this.checked[26].img : '',
             qrzt: this.checked[26].checked ? 1 : 0
@@ -1014,6 +1041,7 @@ export default {
           {
             dzzypId: messageId,
             xuhao: 28,
+            id:this.checked[27].id?this.checked[27].id:'',
             aqcsnr: `人员出入口和撤离安全措施已落实:  ${
               this.mask[0] == 1 ? "指示牌" : ""
             }, ${this.mask[1] == 1 ? "指示灯" : ""}`,
@@ -1023,6 +1051,7 @@ export default {
           {
             dzzypId: messageId,
             xuhao: 29,
+            id:this.checked[28].id?this.checked[28].id:'',
             aqcsnr: `夜间作业采用足够、充足照明，A防水型灯${
               this.Alight == 0 ? "36V" : this.Alight == 1 ? "24V" : "12V"
             }, 防爆型灯:  ${
@@ -1034,6 +1063,7 @@ export default {
           {
             dzzypId: messageId,
             xuhao: 30,
+            id:this.checked[29].id?this.checked[29].id:'',
             aqcsnr: `作业人员已佩戴防护器具`,
             qrr: this.checked[29].img ? this.checked[29].img : '',
             qrzt: this.checked[29].checked ? 1 : 0
@@ -1078,6 +1108,7 @@ export default {
           this.$Toast.success({
             message: "提交成功"
           });
+          this.setHtHseDzzyp(res.message)
           this.saveChilderList(this.setHtHseDzzyp(res.message), sendData.__sid);
         })
         .catch(err => {

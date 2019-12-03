@@ -14,9 +14,9 @@
     </van-sticky>
     <div class="cell_group">
       <!-- 申请部门 -->
-      <cell-value title="申请部门" :value="$userInfo.officeName" disable></cell-value>
+        <cell-value title="申请部门" :value="oldInfo.office.officeName?oldInfo.office.officeName:$userInfo.officeName" disable></cell-value>
       <!-- 申请人 -->
-      <cell-value title="申请人" :value="$userInfo.userName" disable></cell-value>
+      <cell-value title="申请人" :value="oldInfo.user.userName?oldInfo.user.userName:$userInfo.userName" disable></cell-value>
       <!-- 作业票编号 -->
       <cell-value title="作业票编号" :value="sendData.id" disable></cell-value>
       <!-- 作业票编号 -->
@@ -365,6 +365,7 @@ export default {
       actRuTask: "",
       id: "",
       htStatus: "",
+      oldInfo: {},
       fenxiCallBack: () => {},
       fenxiSignatureCallBack: () => {}
     };

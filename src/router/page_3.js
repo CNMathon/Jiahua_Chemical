@@ -982,6 +982,11 @@ const routes = {
           }
         },
         {
+          path: "/page_3/yinhuan/select_organization",
+          name: "yinhuan_select_organization",
+          component: () => import("../components/Organization/index.vue")
+        },
+        {
           path: "/page_3/yinhuan/list",
           name: "yinhuan_list",
           component: () => import("../views/pages/page_3/YinHuan/List.vue"),

@@ -19,7 +19,10 @@
             <!-- 此处在做完AJAX后需要判断是否为最后行 - class存在判断 -->
             <div class="donghuo-list-card donghuo-list-card-nolast">
               <div class="left">
-                <div class="left-line left-line-notlast">违章类型：{{item.breakrulename}}</div>
+                <div class="left-line left-line-notlast" v-if="item.breakruletype == 1">违章类型：违章指挥</div>
+                <div class="left-line left-line-notlast" v-if="item.breakruletype == 2">违章类型：违反劳动法</div>
+                <div class="left-line left-line-notlast" v-if="item.breakruletype == 3">违章类型：违章操作</div>
+                <div class="left-line left-line-notlast" v-if="item.breakruletype == 4">违章类型：违反十大禁令</div>
                 <div class="left-line left-line-notlast">发生地点：{{item.occursite}}</div>
                 <div class="left-line left-line-notlast">发生时间：{{item.occurtime}}</div>
               </div>

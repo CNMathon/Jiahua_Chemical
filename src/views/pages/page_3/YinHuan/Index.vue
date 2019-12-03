@@ -44,13 +44,21 @@
         </div>
       </div>
       <!-- 整改负责人 -->
-      <cell-select-users
+      <!-- <cell-select-users
         title="整改负责人"
         required
         :storeModule="storeModule"
         storeKey="rectificationCharge"
         v-model="rectificationCharge"
-      ></cell-select-users>
+      ></cell-select-users> -->
+      <select-organization 
+        title="整改负责人"
+        required
+        max="9"
+        :storeModule="storeModule"
+        storeKey="rectificationCharge"
+        v-model="rectificationCharge"
+      />
       <!-- 地点 -->
       <cell-input v-model="location" title="地点" required placeholder="输入地点"></cell-input>
       <!-- 隐患等级 -->
@@ -82,9 +90,9 @@
         </div>
         <div class="cell_other">
           <div class="upload">
-            <div class="upload_icon">
+            <!-- <div class="upload_icon">
               <van-icon name="photo-o" />
-            </div>
+            </div> -->
             <div class="upload_box">
               <van-uploader
                 :before-read="beforeRead"
@@ -98,13 +106,21 @@
         </div>
       </div>
       <!-- 验收负责人 -->
-      <cell-select-users
+      <!-- <cell-select-users
         title="验收负责人"
         required
         :storeModule="storeModule"
         storeKey="acceptanceCharge"
         v-model="acceptanceCharge"
-      ></cell-select-users>
+      ></cell-select-users> -->
+      <select-organization 
+        title="验收负责人"
+        required
+        max="9"
+        :storeModule="storeModule"
+        storeKey="acceptanceCharge"
+        v-model="acceptanceCharge"
+      />
     </div>
     <!-- <div class="next" @click="postData">提交</div> -->
     <van-popup v-model="isShowAction" position="bottom" class="action">
@@ -265,6 +281,27 @@ export default {
     },
     // 发送数据
     postData() {
+      this.isDataEmpty_throw({
+        data: [
+          this.rectificationName, // 整改单名称
+          this.rectificationCompany, // 整改公司
+          this.rectificationDepartment, // 整改部门或督察部门
+          this.rectificationCharge, // 整改负责人
+          this.location, // 地点
+          this.dangerLevel, // 隐患等级
+          this.dangerType, // 隐患类型
+          this.dangerSource, // 隐患来源
+          this.isPunish, // 是否处罚
+          this.punishMoney, // 处罚金额
+          this.isSuspendedColumns[this.isSuspended], // 是否处挂起
+          this.dangerDesc, // 隐患描述
+          this.fileList, // 上传图片
+          this.acceptanceCharge, // 验收负责人
+        ],
+        err: () => {
+          this.$notify('请输入将表单内容填写完整')
+        }
+      });
       const that = this;
       let rectificationCharge = [];
       this.rectificationCharge.forEach(item => {

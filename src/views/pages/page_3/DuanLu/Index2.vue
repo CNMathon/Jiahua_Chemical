@@ -18,9 +18,9 @@
     />
     <div class="cell_group">
       <!-- 申请部门 -->
-      <cell-value title="申请部门" :value="$userInfo.officeName" disable></cell-value>
+      <cell-value title="申请部门" :value="sendData.apprDept" disable></cell-value>
       <!-- 申请人 -->
-      <cell-value title="申请人" :value="$userInfo.userName" disable></cell-value>
+      <cell-value title="申请人" :value="sendData.apprRen" disable></cell-value>
       <!-- 作业票编号 -->
       <cell-value title="作业票编号" :value="sendData.permitCode" disable></cell-value>
       <!-- 作业票状态 -->
@@ -194,7 +194,9 @@ export default {
         involveDept:[],
         otherSafety:'',
         othercsComplier:'',
-        othercsTime:''
+        othercsTime:'',
+        apprDept: "", // 申请部门
+        apprRen: "", // 申请人
       },
       fileList: [], // 图片列表
       list_1: [
@@ -263,7 +265,9 @@ export default {
         offtimeEnd: "", //断路时间（止）
         workCharger: [], //作业部门负责人
         involveDept:[],
-        workDept:[]
+        workDept:[],
+        apprDept: "", // 申请部门
+        apprRen: "", // 申请人
       }
       this.getPageData();
       sessionStorage.removeItem('flag')
@@ -275,7 +279,9 @@ export default {
         offtimeEnd: "", //断路时间（止）
         workCharger: [], //作业部门负责人
         involveDept:[],
-        workDept:[]
+        workDept:[],
+        apprDept: "", // 申请部门
+        apprRen: "", // 申请人
       }
       sessionStorage.removeItem('flag')
     }
@@ -337,6 +343,8 @@ export default {
           this.isLoading = false;
           console.log(this.listData);
           this.id = res.id
+          this.sendData.apprDept= this.listData.sqbm.officeName, // 申请部门
+          this.sendData.apprRen= this.listData.sqr.userName
           this.actRuTask = this.listData.actRuTask?this.listData.actRuTask.id:''
           this.status = this.listData.htStatus
           this.sendData.offtimeEnd = this.listData.offtimeEnd
@@ -394,8 +402,13 @@ export default {
       sendData.id = this.id
       sendData.reason = this.stringData("reason", "list_1");
       sendData.endangerSign = this.stringData("endangerSign", "list_2");
-      sendData.applyDept = this.$userInfo.officeCode;
-      sendData.applyer = this.$userInfo.userCode;
+      if (this.$route.query.code) {
+        sendData.apprDept = this.listData.sqbm.officeCode;
+        sendData.applyer = this.listData.sqr.userCode;
+      } else {
+        sendData.apprDept = this.$userInfo.officeCode;
+        sendData.applyer = this.$userInfo.userCode;
+      }
       sendData.htHseDtzyp_file = htHseDtzyp_file.join(",");
       sendData.workCharger = sendData.workCharger[0].userCode
       sendData.workDept = sendData.workDept[0].id

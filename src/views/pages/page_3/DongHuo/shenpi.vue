@@ -15,7 +15,7 @@
                      required
                      v-model="comment"
                      placeholder="请输入审批意见"></cell-textarea>
-      <div v-if="status=='2'" class="huiqian">
+      <div v-if="status=='2'&&type=='huiqian'" class="huiqian">
         <span>会签节点</span>
         <p @click="check1" :class="zzb===1?'checked':'box'">制造部</p>
         <p @click="check2" :class="aqhbb===1?'checked':'box'">安全环保部</p>
@@ -56,7 +56,8 @@
         signatureShow:false,
         status:'',
         zzb:0,
-        aqhbb:0
+        aqhbb:0,
+        type:''
       };
     },
     mixins: [mixin],
@@ -65,6 +66,8 @@
       this.id = this.$route.query.id
       this.actRuTask = this.$route.query.actRuTask
       this.status = this.$route.query.status
+      this.type = this.$route.query.type
+      console.log(this.type)
     },
     methods: {
       //选中传1
@@ -103,7 +106,7 @@
           this.$notify("请签字");
         }  else {
           let data
-          if(this.status=='2'){
+          if(this.type=='huiqian'){
             data = {
               'id': this.id,
               'flowKey': 'htHseDhzypService',

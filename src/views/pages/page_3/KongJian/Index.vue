@@ -14,13 +14,9 @@
                   class="skeleton">
       <div class="cell_group">
         <!-- 申请部门 -->
-        <cell-value title="申请部门"
-                    :value="$userInfo.officeName"
-                    disable></cell-value>
-        <!-- 申请人 -->
-        <cell-value title="申请人"
-                    :value="$userInfo.userName"
-                    disable></cell-value>
+        <cell-value title="申请部门" :value="oldInfo.office?oldInfo.office.officeName:$userInfo.officeName" disable></cell-value>
+      <!-- 申请人 -->
+      <cell-value title="申请人" :value="oldInfo.user?oldInfo.user.userName:$userInfo.userName" disable></cell-value>
         <!-- 作业票编号 -->
         <cell-value title="作业票编号"
                     :value="$route.query.id"
@@ -407,12 +403,16 @@
         sendData.sxkjDanwei = this.userString(sendData.sxkjDanwei, "id");
         //sendData.applyDept = this.$userInfo.officeName;
         //sendData.applyRen = this.$userInfo.userName;
-        sendData.applyDept = this.$userInfo.officeCode;
-        sendData.applyRen = this.$userInfo.userCode;
+        
         sendData.__sid = this.$userInfo.sessionId;
         if (this.$route.query.id) {
           sendData.id = this.oldInfo.id;
           sendData.sxkjCode = this.oldInfo.sxkjCode;
+          sendData.applyDept = this.oldInfo.office.officeCode;
+          sendData.applyRen = this.oldInfo.user.userCode;
+        }else{
+          sendData.applyDept = this.$userInfo.officeCode;
+          sendData.applyRen = this.$userInfo.userCode;
         }
         //  储存 安装措施 aqcsjl zyjhcs 作业监护措施
         sendData.aqcsjl = [];

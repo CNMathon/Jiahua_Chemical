@@ -38,8 +38,8 @@
                   <div class="left-line left-line-notlast">作业内容：{{ item.workContent }}</div>
                   <div class="left-line left-line-notlast">作业地点：{{ item.workLocation }}</div>
                   <div class="left-line left-line-notlast">用电方式：{{ item.powerType === 1 ? "插座" : "插线" }}</div>
-                  <div class="left-line left-line-notlast">申请部门：{{ item.apprDept }}</div>
-                  <div class="left-line left-line-notlast">申请人：{{ item.apprRen }}</div>
+                  <div class="left-line left-line-notlast">申请部门：{{ item.sqbm?item.sqbm.officeName:'' }}</div>
+                  <div class="left-line left-line-notlast">申请人：{{ item.sqr?item.sqr.userName:'' }}</div>
                   <div class="left-line left-line-notlast">作业开始时间：{{ item.powertimeStart }}</div>
                   <div class="left-line">作业结束时间：{{ item.powertimeEnd }}</div>
                 </div>

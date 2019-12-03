@@ -20,7 +20,8 @@ const base = {
 
 //   sq2: "http://mes.jhec.com.cn:8084/",
 //   mes2: "http://mes.jhec.com.cn:8082/MIS/",
-//   mes3: "http://mes.jhec.com.cn:8083/JobManagement/api/services/JobManagement/mobileApi/"
+//   mes3: "http://mes.jhec.com.cn:8083/JobManagement/api/services/JobManagement/mobileApi/",
+//   jhec_8085: "http://mes.jhec.com.cn:8085/"
 // };
 
 export default base;

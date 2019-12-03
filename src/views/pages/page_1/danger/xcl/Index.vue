@@ -1,9 +1,9 @@
 <template>
   <div class="tempalta">
     <van-nav-bar title="新材料厂" left-text="返回" left-arrow @click-left="pageBack" fixed />
-    <van-tabs v-model="tabActive_1" class="fixed-first-tab">
+    <van-tabs color="#6096F8" v-model="tabActive_1" class="fixed-first-tab">
       <van-tab title="生产单元">
-        <van-tabs v-model="tabActive_1_1" type="card" class="sub-tab">
+        <van-tabs color="#6096F8" v-model="tabActive_1_1" type="card" class="sub-tab">
           <van-tab title="NMST-氯甲烷">
             <div class="tab-content">
               <div class="content">
@@ -50,7 +50,7 @@
         </van-tabs>
       </van-tab>
       <van-tab title="储存单元">
-        <van-tabs v-model="tabActive_1_1" type="card" class="sub-tab">
+        <van-tabs color="#6096F8" v-model="tabActive_1_1" type="card" class="sub-tab">
           <van-tab title="罐组一甲苯">
             <div class="tab-content">
               <div class="content">

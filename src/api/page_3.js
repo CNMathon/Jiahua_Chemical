@@ -99,10 +99,17 @@ const article = {
         });
     },
     // 动土作业票保存
-    htHseDtzypSave(params) {
-        return axios.post(
-            `${base.sq}dtzyp/htHseDtzyp/save`,
-            qs.stringify(params)
+    htHseDtzypSave(params, __sid) {
+        return axios(
+            {
+                method: 'POST',
+                url: `${base.sq}dtzyp/htHseDtzyp/save2`,
+                data: params,
+                headers: {
+                    'content-type': 'application/json; charset=utf-8',
+                    __sid: __sid
+                }
+            }
         );
     },
     // 高处作业作业票查询
@@ -212,6 +219,12 @@ const article = {
                 'Content-Type': 'application/json',
                 __sid: __sid
             }
+        });
+    },
+    // 设备缺陷列表
+    htHseDzzypList(params) {
+        return axios.get(`${base.sq}device/defect/htDeviceDefect/listData`, {
+            params: params
         });
     },
     // 设备缺陷保存

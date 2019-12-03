@@ -12,9 +12,9 @@
     </van-sticky>
     <div class="cell_group">
       <!-- 申请部门 -->
-      <cell-value title="申请部门" :value="$userInfo.officeName" disable></cell-value>
+      <cell-value title="申请部门" :value="oldInfo.office.officeName?oldInfo.office.officeName:$userInfo.officeName" disable></cell-value>
       <!-- 申请人 -->
-      <cell-value title="申请人" :value="$userInfo.userName" disable></cell-value>
+      <cell-value title="申请人" :value="oldInfo.user.userName?oldInfo.user.userName:$userInfo.userName" disable></cell-value>
       <!-- 作业票编号 -->
       <cell-value title="作业票编号" :value="sendData.id" disable></cell-value>
       <!-- 作业票编号 -->
@@ -363,6 +363,7 @@ export default {
       fenxi: [],
       actRuTask: "",
       id: "",
+      oldInfo:{},
       fenxiCallBack: () => {},
       fenxiSignatureCallBack: () => {}
     };
@@ -657,7 +658,7 @@ export default {
         ],
         fenxiTime: fenxiTime || "", // 数据
         fenxiren: fenxiren || "", // 分析人
-        fenxiParts: data[9] // 部位
+        fenxiParts: data[9], // 部位
       };
       return obj;
     },
@@ -739,8 +740,6 @@ export default {
       sendData.zyPrincipal = this.userString(sendData.zyPrincipal, "userCode");
       sendData.zyRen = this.userString(sendData.zyRen, "userCode");
       sendData.sxkjDanwei = this.userString(sendData.sxkjDanwei, "id");
-      sendData.applyDept = this.$userInfo.officeCode;
-      sendData.applyRen = this.$userInfo.userCode;
       sendData.__sid = this.$userInfo.sessionId;
       console.log(sendData);
       // 判断数据是否为空
@@ -768,6 +767,8 @@ export default {
       if (this.$route.query.id) {
         sendData.id = this.oldInfo.id;
         sendData.sxkjCode = this.oldInfo.sxkjCode;
+        sendData.applyDept = this.oldInfo.office.officeCode;
+        sendData.applyRen = this.oldInfo.user.userCode;
       }
       sendData = this.fenxiDeserialization(sendData);
       console.log("sendData", sendData);

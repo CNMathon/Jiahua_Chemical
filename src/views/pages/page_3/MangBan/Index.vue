@@ -10,13 +10,9 @@
     </van-sticky>
     <div class="header-cell">
       <!-- 申请部门 -->
-      <cell-value title="申请部门"
-                  :value="$userInfo.officeName"
-                  disable></cell-value>
+      <cell-value title="申请部门" :value="oldInfo.office?oldInfo.office.officeName:$userInfo.officeName" disable></cell-value>
       <!-- 申请人 -->
-      <cell-value title="申请人"
-                  :value="$userInfo.userName"
-                  disable></cell-value>
+      <cell-value title="申请人" :value="oldInfo.user?oldInfo.user.userName:$userInfo.userName" disable></cell-value>
       <!-- 作业票编号 -->
       <cell-value title="作业票编号"
                   :value="$userInfo.dhzypCode || oldInfo.dhzypCode"
@@ -391,19 +387,19 @@
             forbidClick: true
           });
           this.$api.page_3
-            .htHseMbzypListData({
-              mbzypCode: this.infoId,
-              __sid: localStorage.getItem("JiaHuaSessionId")
+            .htHseMbzypListDataById({
+              __sid: localStorage.getItem("JiaHuaSessionId"),
+              id: this.infoId
             })
             .then(res => {
               this.$Toast.clear()
-              if (res.list[0].actRuTask) {
+              if (res.actRuTask) {
                 console.log(1)
                 let data = {
-                  'id': res.list[0].id,
+                  'id': res.id,
                   'flowKey': 'htHseMbzypService',
                   'comment': '',
-                  'actRuTask.id': res.list[0].actRuTask.id,
+                  'actRuTask.id': res.actRuTask.id,
                   'btnSubmit': '审批',
                   __sid: localStorage.getItem("JiaHuaSessionId")
                 }
@@ -413,7 +409,7 @@
                     this.$router.push({ name: 'daibanren', query: {
                         groups: ress.groups.join(','),
                         taskId: ress.taskId,
-                        id: res.list[0].id,
+                        id: res.id,
                         type: 'htHseMbzypService'
                       }                    })
                   } else {
@@ -423,7 +419,7 @@
               } else {
                 console.log(2)
                 let data = {
-                  'id': res.list[0].id,
+                  'id': res.id,
                   'flowKey': 'htHseMbzypService',
                   __sid: localStorage.getItem("JiaHuaSessionId")
                 }
@@ -433,7 +429,7 @@
                     this.$router.push({                      name: 'daibanren', query: {
                         groups: ress.groups.join(','),
                         taskId: ress.taskId,
-                        id: res.list[0].id,
+                        id: res.id,
                         type: 'htHseMbzypService'
                       }                    })
                   } else {
@@ -543,10 +539,18 @@
           fourPipe: dataStrArr[3],
           __sid: sendData.__sid
         };
-        sendData.applyDept = this.$userInfo.officeName;
-        sendData.applyer = this.$userInfo.userName;
-        finSendData.applyDept = this.$userInfo.officeCode;//正式用
-        finSendData.applyer = this.$userInfo.userCode;//正式用
+        if (this.$route.query.id) {
+          sendData.applyDept = this.oldInfo.office.officeName;
+          sendData.applyer = this.oldInfo.user.userName;
+          finSendData.applyDept = this.oldInfo.office.officeCode;//正式用
+          finSendData.applyer = this.oldInfo.office.userCode;//正式用
+        }else{
+          sendData.applyDept = this.$userInfo.officeName;
+          sendData.applyer = this.$userInfo.userName;
+          finSendData.applyDept = this.$userInfo.officeCode;//正式用
+          finSendData.applyer = this.$userInfo.userCode;//正式用
+        }
+        
         finSendData.mbzypCode = this.infoId
         finSendData.scMan = this.userString(sendData.scMan, "userCode");
         finSendData.zyMan = this.userString(sendData.zyMan, "userCode");

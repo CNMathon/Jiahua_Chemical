@@ -200,7 +200,7 @@ export default {
       if (this.$route.query.zypCode) {
         if (this.zypCode !== this.$route.query.zypCode) {
           this.zypCode = this.$route.query.zypCode;
-          this.sendData.zypCode = this.$route.query.zypCode;
+          this.sendData.id = this.$route.query.zypCode;
           console.log("========获取数据");
           this.getData();
         }
@@ -223,11 +223,12 @@ export default {
           forbidClick: true
         });
         this.$api.page_3
-          .htHseLsydzypListData({
+          .htHseLsydzypListDataById({
             id: this.zypCode,
             __sid: localStorage.getItem("JiaHuaSessionId")
           })
           .then(res => {
+             console.log(1);
             this.$Toast.clear();
             if (res.list[0].actRuTask) {
               console.log(1);
@@ -315,7 +316,7 @@ export default {
           let info = res;
           this.oldInfo = info;
           console.log("1");
-          this.zypCode = info.zypCode;
+          this.zypCode = info.id;
           this.sendData.apprDept = info.sqbm.officeName;
           this.sendData.apprRen = info.sqr.userName;
           console.log("2");
