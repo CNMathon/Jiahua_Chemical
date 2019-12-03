@@ -40,16 +40,16 @@
     width: 80%;
     display: flex;
     // border-bottom: 1px solid gray;
+    padding-top: 10px;
+    padding-bottom: 30px;
     .text {
       width: 80%;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      padding-top: 0px;
-      padding-bottom: 30px;
       box-sizing: border-box;
       .title {
-        font-size: 35px; 
+        font-size: 30px; 
         // font-weight: bold;
       }
       .content {
@@ -58,6 +58,7 @@
       }
     }
     .time {
+      font-size: 28px;
       color: gray;
       width: 20%;
       text-align: right;

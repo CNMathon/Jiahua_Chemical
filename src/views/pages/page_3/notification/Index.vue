@@ -23,7 +23,25 @@ export default {
           time: "20:11",
           title: "动火安全审批",
           content: "配置内容已超时"
-        }
+        },
+        {
+          img: "https://img.fengz.me/images/2019/06/28/GlDp.jpg",
+          time: "20:11",
+          title: "动火安全审批",
+          content: "配置内容已超时"
+        },
+        {
+          img: "https://img.fengz.me/images/2019/06/28/GlDp.jpg",
+          time: "20:11",
+          title: "动火安全审批",
+          content: "配置内容已超时"
+        },
+        {
+          img: "https://img.fengz.me/images/2019/06/28/GlDp.jpg",
+          time: "20:11",
+          title: "动火安全审批",
+          content: "配置内容已超时"
+        },
       ]
     };
   },
