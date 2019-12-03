@@ -566,6 +566,7 @@ export default {
       }
 	  },
 	HtHseUpworkticketSonParse (messageId) {
+    console.log(this.checked)
 		let sendSafeData = [
           {
             fatherId: messageId,
@@ -573,7 +574,7 @@ export default {
             id:this.checked[0].id?this.checked[0].id:'',
             safetyMeasure: `作业人员身体条件符合要求`,
             confirmer: this.checked[0].img ? this.checked[0].img : '',
-            qrzt: this.checked[0] ? 1 : 0
+            qrzt: this.checked[0].checked ? 1 : 0
           },
           {
             fatherId: messageId,
@@ -581,7 +582,7 @@ export default {
             id:this.checked[1].id?this.checked[1].id:'',
             safetyMeasure: `作业人员着装符合工作要求`,
             confirmer: this.checked[1].img ? this.checked[1].img : '',
-            qrzt: this.checked[1] ? 1 : 0
+            qrzt: this.checked[1].checked ? 1 : 0
           },
           {
             fatherId: messageId,
@@ -589,7 +590,7 @@ export default {
             id:this.checked[2].id?this.checked[2].id:'',
             safetyMeasure: `作业人员佩戴合格的安全帽`,
             confirmer: this.checked[2].img ? this.checked[2].img : '',
-            qrzt: this.checked[2] ? 1 : 0
+            qrzt: this.checked[2].checked ? 1 : 0
           },
           {
             fatherId: messageId,
@@ -597,7 +598,7 @@ export default {
             id:this.checked[3].id?this.checked[3].id:'',
             safetyMeasure: `作业人员佩戴安全带，安全带高挂抵用`,
             confirmer: this.checked[3].img ? this.checked[3].img : '',
-            qrzt: this.checked[3] ? 1 : 0
+            qrzt: this.checked[3].checked ? 1 : 0
           },
           {
             fatherId: messageId,
@@ -605,7 +606,7 @@ export default {
             id:this.checked[4].id?this.checked[4].id:'',
             safetyMeasure: `作业人员携带有工具袋及安全绳`,
             confirmer: this.checked[4].img ? this.checked[4].img : '',
-            qrzt: this.checked[4] ? 1 : 0
+            qrzt: this.checked[4].checked ? 1 : 0
           },
           {
             fatherId: messageId,
@@ -614,7 +615,7 @@ export default {
             safetyMeasure: `作业人员佩戴:${this.mask[0] == 1 ? "过滤式防毒面具或口罩" : ""},${
             this.mask[1] == 1 ? "空气呼吸器" : ""}`,
             confirmer: this.checked[5].img ? this.checked[5].img : '',
-            qrzt: this.checked[5] ? 1 : 0
+            qrzt: this.checked[5].checked ? 1 : 0
           },
           {
             fatherId: messageId,
@@ -622,7 +623,7 @@ export default {
             id:this.checked[6].id?this.checked[6].id:'',
             safetyMeasure: `现场搭设的脚手架、防护网、围栏符合安全规定`,
             confirmer: this.checked[6].img ? this.checked[6].img : '',
-            qrzt: this.checked[6] ? 1 : 0
+            qrzt: this.checked[6].checked ? 1 : 0
           },
           {
             fatherId: messageId,
@@ -630,7 +631,7 @@ export default {
             id:this.checked[7].id?this.checked[7].id:'',
             safetyMeasure: `垂直分层作业中间有隔离设施`,
             confirmer: this.checked[7].img ? this.checked[7].img : '',
-            qrzt: this.checked[7] ? 1 : 0
+            qrzt: this.checked[7].checked ? 1 : 0
           },
           {
             fatherId: messageId,
@@ -638,7 +639,7 @@ export default {
             id:this.checked[8].id?this.checked[8].id:'',
             safetyMeasure: `绳子、梯子符合安全规定`,
             confirmer: this.checked[8].img ? this.checked[8].img : '',
-            qrzt: this.checked[8] ? 1 : 0
+            qrzt: this.checked[8].checked ? 1 : 0
           },
           {
             fatherId: messageId,
@@ -646,7 +647,7 @@ export default {
             id:this.checked[9].id?this.checked[9].id:'',
             safetyMeasure: `石棉瓦等轻型棚的承重梁、柱能承重负荷的要求`,
             confirmer: this.checked[9].img ? this.checked[9].img : '',
-            qrzt: this.checked[9] ? 1 : 0
+            qrzt: this.checked[9].checked ? 1 : 0
           },
           {
             fatherId: messageId,
@@ -654,7 +655,7 @@ export default {
             id:this.checked[10].id?this.checked[10].id:'',
             safetyMeasure: `作业人员在石棉瓦等不承重物作业所搭设的承重板稳定牢固`,
             confirmer: this.checked[10].img ? this.checked[10].img : '',
-            qrzt: this.checked[10] ? 1 : 0
+            qrzt: this.checked[10].checked ? 1 : 0
           },
           {
             fatherId: messageId,
@@ -663,7 +664,7 @@ export default {
             safetyMeasure: `采光,夜间作业照明符合作业要求, ${
             this.light == 0 ? "需采用并已采用" : "无需采用"}防爆灯`,
             confirmer: this.checked[11].img ? this.checked[11].img : '',
-            qrzt: this.checked[11] ? 1 : 0
+            qrzt: this.checked[11].checked ? 1 : 0
           },
           {
             fatherId: messageId,
@@ -671,7 +672,7 @@ export default {
             id:this.checked[12].id?this.checked[12].id:'',
             safetyMeasure: `30m 以上高处作业配备通讯、联络工具`,
             confirmer: this.checked[12].img ? this.checked[12].img : '',
-            qrzt: this.checked[12] ? 1 : 0
+            qrzt: this.checked[12].checked ? 1 : 0
           }
         ];
 	  return sendSafeData;
@@ -731,7 +732,7 @@ export default {
     let checked = {};
     childData.forEach((item, inx) => {
           if (item.qrzt && item.qrzt === 1) {
-            checked[item.xuhao] = {
+            checked[item.xuhao-1] = {
               checked: true,
               img: item.confirmer,
               id: item.id
@@ -783,7 +784,7 @@ export default {
     saveCanvas(e) {
       this.signatureShow = false;
       this.checked[this.xuhao] = {
-        checked: false,
+        checked: true,
         img: ""
       };
       this.checked[this.xuhao].img = e;

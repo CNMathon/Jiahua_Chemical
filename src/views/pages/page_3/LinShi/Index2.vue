@@ -245,7 +245,7 @@
         :storeModule="storeModule"
         ></select-organization>
         <!-- 电源接入点 -->
-        <cell-input  title="电源接入点" required :value="sendData.powerAp" :disable="linshihtStatus!== '2'"></cell-input>
+        <cell-input  title="电源接入点" required v-model="sendData.powerAp" :disable="linshihtStatus!== '2'"></cell-input>
         <!-- 临时用电接入人 -->
         <select-organization
           title="临时用电接入人"
@@ -465,7 +465,15 @@ export default {
           this.linshihtStatus = res.htStatus;
           let info = res;
           this.oldInfo = info;
+          this.actRuTask = res.actRuTask?res.actRuTask.id:''
           this.sendData.id = info.id;
+          this.sendData.priAppr =res.lsydcsr?[{
+            userName:res.lsydcsr.userName,
+            userCode:res.lsydcsr.userCode
+          }]: [{
+            userName:this.$userInfo.userName,
+            userCode:this.$userInfo.userCode
+          }]
           this.sendData.apprDept = info.sqbm.officeName;
           this.sendData.apprRen = info.sqr.userName;
           this.sendData.workContent = info.workContent;
@@ -512,9 +520,8 @@ export default {
             this.initChilderData(info.lsydzypSafetyList);
           }
           console.log('this.sendData.workRen',this.sendData.workRen);
-           this.sendData.accessRen= [], // 临时用电接入人
+           this.sendData.accessRen= this.reductionSelectUserObj(info.lsydjrr), // 临时用电接入人
            this.sendData.excuteLicense= info.excuteLicense, // 供电执行人电工证号
-           this.sendData.priAppr= [], // 临时用电作业初审人
            this.sendData.powerAp= info.powerAp // 电源接入点
           this.sendData.otherSafety = info.otherSafety;
           this.sendData.othercsComplier= info.othercsComplier;
@@ -588,6 +595,7 @@ export default {
         "hazardIdentification",
         "list_1"
       );
+      console.log(sendData.powerAp)
       sendData.connectRen = this.userString(sendData.connectRen, "userCode");
       sendData.workCharger = this.userString(sendData.workCharger, "userCode");
       sendData.workRen = this.userString(sendData.workRen, "userCode");
@@ -608,7 +616,7 @@ export default {
       //  其他安全措施
       console.log('postData----sendData2', sendData);
         this.$api.page_3
-        .htHseLsydzypSave(sendData)
+        .htHseLsydzypSave(sendData, this.$userInfo.sessionId)
         .then(res => {
           console.log("res: ", res);
           this.$Toast.success({

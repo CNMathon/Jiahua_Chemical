@@ -192,11 +192,13 @@ const article = {
     );
   },
   // 临时用电作业票保存、修改
-  htHseLsydzypSave(params) {
-    return axios.post(
-      `${base.sq}lsydzyp/htHseLsydzyp/save`,
-      qs.stringify(params)
-    );
+  htHseLsydzypSave(params,__sid) {
+    return axios.post(`${base.sq}lsydzyp/htHseLsydzyp/appSave`, params, {
+      headers: {
+        'Content-Type': 'application/json',
+        __sid: __sid
+      }
+    });
   },
   // 断路安全作业票查询
   htHseDlzypListData(params) {
@@ -222,7 +224,7 @@ const article = {
     });
   },
   // 设备缺陷列表
-  htHseDzzypList(params) {
+  htDeviceDefect(params) {
     return axios.get(`${base.sq}device/defect/htDeviceDefect/listData`, {
       params: params
     });
@@ -408,9 +410,8 @@ const article = {
   },
   // 已推送消息成功数
   apiAlarmHistoryAlarmRecords(params) {
-    return axios.post(
-      `${base.sqapi}api/Alarm/HistoryAlarmRecords`,
-      qs.stringify(params)
+    return axios.get(
+      `${base.jhec_8086}api/Alarm/HistoryAlarmRecords?${qs.stringify(params)}`
     );
   },
   // 获取作业详情

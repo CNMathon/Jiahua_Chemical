@@ -106,7 +106,7 @@
         <Signature
                 v-for="(safe, index) in checked" :key="index"
                 :checked="safe.safetyStatus === '1'"
-                :img="safe.affirmRen"
+                :img="safe.affirmRen!=='0'?safe.affirmRen:''"
                 :disable="true"
               >
                 <div slot>{{safe.safetyCs}}</div>
@@ -255,7 +255,7 @@ export default {
       }
     },
     Next() {
-      console.log(33333333333)
+      console.log(this.actRuTask)
         if (this.actRuTask === '') {
           console.log(2)
           let data = {
@@ -304,6 +304,8 @@ export default {
           this.listData = res;
           this.isLoading = false;
           this.id = res.id
+          this.actRuTask = res.actRuTask?res.actRuTask.id:''
+          console.log(this.actRuTask)
           this.status = info.htStatus;
           console.log("断路", info);
           this.sendData.apprDept= info.sqbm.officeCode, // 申请部门

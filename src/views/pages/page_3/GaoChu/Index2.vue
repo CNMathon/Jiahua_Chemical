@@ -771,6 +771,9 @@ export default {
         .htHseUpworkticketSave(sendData)
         .then(res => {
           console.log("???============主表id", res.message);
+          this.$Toast.success({
+            message: "提交成功",
+          });
         })
         .catch(() => {
           console.log("失败");

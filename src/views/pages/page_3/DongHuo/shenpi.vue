@@ -18,7 +18,7 @@
       <div v-if="status=='2'&&type=='huiqian'" class="huiqian">
         <span>会签节点</span>
         <p @click="check1" :class="zzb===1?'checked':'box'">制造部</p>
-        <p @click="check2" :class="aqhbb===1?'checked':'box'">安全环保部</p>
+        <p @click="check2" :class="ahb===1?'checked':'box'">安全环保部</p>
       </div>
     </div>
     
@@ -56,7 +56,7 @@
         signatureShow:false,
         status:'',
         zzb:0,
-        aqhbb:0,
+        ahb:0,
         type:''
       };
     },
@@ -79,10 +79,10 @@
         }
       },
       check2(){
-        if(this.aqhbb==0){
-          this.aqhbb = 1
+        if(this.ahb==0){
+          this.ahb = 1
         }else{
-          this.aqhbb = 0
+          this.ahb = 0
         }
       },
       saveCanvas(e) {
@@ -115,7 +115,7 @@
               'btnSubmit': '通过',
               extendVar:{
                 'zzb':this.zzb,
-                'aqhbb':this.aqhbb,
+                'ahb':this.ahb,
                 apprSignCode:this.apprSignCode
               },
               __sid: localStorage.getItem("JiaHuaSessionId")

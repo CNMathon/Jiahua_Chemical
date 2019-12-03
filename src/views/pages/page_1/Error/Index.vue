@@ -1,12 +1,7 @@
 <template>
   <div class="gongyi">
-    <van-nav-bar
-      title="异常报警"
-      left-text="返回"
-      left-arrow
-      @click-left="pageBack"
-    />
-    <div class="head">
+    <van-nav-bar title="异常报警" left-text="返回" left-arrow @click-left="pageBack" fixed />
+    <div class="head fixed-first">
       <div>
         <DropDown position="right"></DropDown>
       </div>
@@ -30,23 +25,33 @@ export default {
   data() {
     return {
       listData: []
-    }
+    };
   },
   created() {
-    this.getPageList()
+    this.getPageList();
   },
   methods: {
     getPageList() {
       this.$api.page_3
         .apiAlarmHistoryAlarmRecords({
-          __sid: localStorage.JiaHuaSessionId
+          __sid: localStorage.JiaHuaSessionId,
+          userid: "EMP_201900031",
+          regionid: "02",
+          queryTime: this.getFormatNowDate,
+          rows: 20,
+          status: 1
         })
         .then(res => {
-          console.log(`listData: `, res)
-        })
+          console.log(`listData: `, res.response.datas);
+        });
     },
     pageBack() {
       this.$router.back();
+    }
+  },
+  computed: {
+    getFormatNowDate() {
+      return `${new Date().getFullYear()}-${new Date().getMonth()}-${new Date().getDay()} ${new Date().getHours()}:${new Date().getMinutes()}`
     }
   }
 };

@@ -520,8 +520,8 @@
             dataStrArr[i] = `|||||||||||&|&`;
             continue;
           }
-          let pipePullOperator = pipe[i].pipePullOperator.map(item => item.userName);
-          let pipeBlockOperator = pipe[i].pipeBlockOperator.map(item => item.userName);
+          let pipePullOperator = pipe[i].pipePullOperator.map(item => item.userCode);
+          let pipeBlockOperator = pipe[i].pipeBlockOperator.map(item => item.userCode);
           dataStrArr[i] = `${pipe[i].pipeName}|${pipe[i].pipeMedium}|${pipe[i].pipeTemp}|${
             pipe[i].pipePressure
             }|${pipe[i].pipeMaterial}|${pipe[i].pipeSpec}|${
@@ -529,8 +529,8 @@
             }|${pipe[i].pipeBlockTime}|${pipe[i].pipePullTime}|${
             pipeBlockOperator.join(',')
             }|${pipePullOperator.join(',')}|${
-            pipe[i].pipeBlockGuardian[0].userName
-            }|${pipe[i].pipePullGuardian[0].userName}`;
+            pipe[i].pipeBlockGuardian[0].userCode
+            }|${pipe[i].pipePullGuardian[0].userCode}`;
         }
         let finSendData = {
           onePipe: dataStrArr[0],

@@ -38,13 +38,13 @@
         <div class="cell_value">
           <div class="cell_value_people">
             <div class="cell_input" @click="selectUser('work_permit_1')">
-              <span>{{ work_permit_1.name || "点击选择第一个" }}</span>
+              <span>{{ work_permit_1.name || "点击选择" }}</span>
               <van-icon name="plus" />
             </div>
-            <div class="cell_input" @click="selectUser('work_permit_2')">
+            <!-- <div class="cell_input" @click="selectUser('work_permit_2')">
 							<span>{{ work_permit_2.name || "点击选择第二个" }}</span>
 							<van-icon name="plus" />
-            </div>
+            </div> -->
           </div>
         </div>
       </div>

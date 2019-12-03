@@ -332,11 +332,11 @@ export default {
           this.isLoading = false;
           this.id = res.id
           console.log("断路", info);
-          this.sendData.apprDept= info.sqbm.officeCode, // 申请部门
+          this.sendData.apprDept= info.sqbm?info.sqbm.officeCode:'', // 申请部门
           this.sendData.apprRen= info.sqr.userCode
           this.apply ={
             name: info.sqr.userName,
-            dept: info.sqbm.officeName,
+            dept: info.sqbm?info.sqbm.officeName:'',
             code: info.permitCode,
           };
           this.sendData.offtimeEnd = info.offtimeEnd
@@ -422,7 +422,7 @@ export default {
       sendData.endangerSign = this.stringData("endangerSign", "list_2");
       let listId = "";
       if (this.queryId) {
-        sendData.applyDept = this.listData.sqbm.officeCode;
+        sendData.applyDept = this.listData.sqbm?this.listData.sqbm.officeCode:'';
         sendData.applyer = this.listData.sqr.userCode;
         listId = this.queryId;
       } else {

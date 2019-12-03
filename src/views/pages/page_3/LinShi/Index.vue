@@ -393,7 +393,7 @@ export default {
       }
       console.log("sendData", sendData);
       this.$api.page_3
-        .htHseLsydzypSave(sendData)
+        .htHseLsydzypSave(sendData, this.$userInfo.sessionId)
         .then(res => {
           console.log("res: ", res);
           this.$Toast.success({

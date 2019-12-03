@@ -80,7 +80,7 @@ export default {
     },
     listSelect() {
       this.$api.page_3
-        .htHseDzzypList({
+        .htDeviceDefect({
           __sid: localStorage.getItem("JiaHuaSessionId")
         })
         .then(res => {
