@@ -76,10 +76,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.app {
-  .list {
-    .item {
-    }
-  }
-}
 </style>
