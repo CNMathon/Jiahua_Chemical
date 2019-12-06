@@ -389,7 +389,7 @@ const article = {
   // 获取待办审批列表
   GetUnDoApproveList(params) {
     return axios.post(
-      `${base.mes3}GetUnDoApproveList`,
+      `${base.mes3}GetWebUnDoApproveList`,
       qs.stringify(params)
     );
   },
@@ -430,7 +430,8 @@ const article = {
   //工单保存
   deviceWorkOrderSave(params) {
     return axios.post(
-      `${base.sq}workorder/deviceWorkOrder/save?${qs.stringify(params)}`
+      `${base.sq}workorder/deviceWorkOrder/save`,
+      qs.stringify(params)
     );
   },
   //空间设备列表

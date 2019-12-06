@@ -25,6 +25,9 @@ const common = {
   },
   empUserList(params) {
     return axios.get(`${base.sq}sys/empUser/listData`, { params: params });
+  },
+  tasHistory (params) {
+    return axios.get(`${base.tagsHistory}`, { params: params });
   }
 };
 

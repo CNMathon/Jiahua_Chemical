@@ -81,7 +81,7 @@
               <Signature
                 v-for="(safe, index) in checked" :key="index"
                 :checked="safe.safetyStatus === 1"
-                :img="safe.affirmRen"
+                :img="safe.affirmRen!=='0'?safe.affirmRen:''"
                 :disable="true"
               >
                 <div slot>{{safe.safetyCs}}</div>
@@ -254,6 +254,7 @@ export default {
             query: {
               id: this.id,
               actRuTask: this.actRuTask,
+              status:'2'
             }
           })
         }
@@ -400,7 +401,7 @@ export default {
       console.log("e: ", e);
       this.signatureShow = false;
       this.sendData.othercsComplier = e;
-      this.sendData.othercsTime = this.$dayjs(new Date()).format("YYYY-MM-DD HH:mm")
+      this.sendData.othercsTime = this.$dayjs(new Date()).format("YYYY-MM-DD HH:mm:ss")
     },
     // 取消签名
     cancelCanvas() {

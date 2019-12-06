@@ -68,7 +68,7 @@
       <!-- 动火结束时间 -->
       <cell-time v-model="sendData.dhEndtime" title="动火结束时间" required></cell-time>
       <!-- 动火作业负责人 -->
-      <select-organization 
+      <select-organization
         title="动火作业负责人"
         required
         radio

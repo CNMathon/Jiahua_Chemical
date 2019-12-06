@@ -11,6 +11,8 @@ const state = {
   fxRen1: [], //分析人1
   fxRen2: [], //分析人2
   fxRen3: [], //分析人3
+  sqbm:[],
+  zyRen: [],
 };
 
 // getters

@@ -93,9 +93,34 @@ export default {
             duration: 1000,
             message: "登录成功",
             onClose() {
-              that.$router.replace({
-                path: "/"
-              });
+              switch (that.$route.query.to) {
+                case 'qd':
+                  console.log('qd')
+                  that.$router.replace({
+                    path: "/page_5/qrcode_qd",
+                    query: {
+                      code: that.$route.query.code
+                    }
+                  });
+                  break;
+
+                case 'ks':
+                  console.log('ks')
+                  that.$router.replace({
+                    path: "/page_5/qrcode_ks",
+                    query: {
+                      code: that.$route.query.code
+                    }
+                  });
+                  break;
+              
+                default:
+                  console.log('index')
+                  that.$router.replace({
+                    path: "/"
+                  });
+                  break;
+              }
             }
           });
         })
@@ -105,6 +130,7 @@ export default {
     }
   },
   created() {
+    console.log(this.$route)
     this.screenHeight = `${document.documentElement.clientHeight}px`;
     console.log(this.screenHeight);
   }

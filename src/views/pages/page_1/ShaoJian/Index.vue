@@ -2,7 +2,7 @@
   <div class="shaojian">
     <van-nav-bar title="烧碱" left-text="返回" left-arrow @click-left="pageBack" />
     <Search></Search>
-    <ActionBar></ActionBar>
+    <!-- <ActionBar></ActionBar> -->
     <div class="head">
       <div>
         <DropDown position="left"></DropDown>

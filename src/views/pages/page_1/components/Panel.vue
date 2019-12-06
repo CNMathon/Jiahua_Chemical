@@ -1,12 +1,12 @@
 <template>
   <div class="panel" :class="{ big: size === 'big' }">
-    <div class="panel-icon-row">
-      <!-- <div class="panel-icon">
+    <!-- <div class="panel-icon-row">
+      <div class="panel-icon">
         <van-icon class-prefix="iconfont" color="#DA615F" name="thermometer" size="18px" />
-      </div> -->
-    </div>
+      </div>
+    </div> -->
     <div class="panel-value" v-if="size === 'big'">
-      {{ value }}
+      <span>{{ value }}</span>
       <span>{{unit}}</span>
     </div>
     <!-- <div class="panel-value" v-else>{{ value }} {{unit}}</div> -->
@@ -35,6 +35,11 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.big {
+  display: flex;
+  justify-content: space-around;
+  flex-direction: column;
+}
 .panel {
   width: 164px;
   height: 189px;
@@ -83,6 +88,7 @@ export default {
     font-size: 40px;
     font-weight: 500;
     line-height: 50px;
+    
     span {
       font-size: 30px;
     }
@@ -96,4 +102,10 @@ export default {
     line-height: 40px;
   }
 }
+
+// .panel .big {
+//   display: flex;
+//   justify-content: space-around;
+//   flex-direction: column;
+// }
 </style>

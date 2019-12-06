@@ -28,7 +28,7 @@
 .refresh {
   .van-pull-refresh__track {
     .content {
-      height: 70vh;
+      min-height: 90vh;
     }
   }
 }
@@ -73,5 +73,11 @@
 
 .fixed-first-tab {
   margin-top: 90px !important;
+}
+
+.cell-no-padding {
+  padding: 0 !important;
+  padding-top: 40px !important;
+  padding-bottom: 40px !important;
 }
 </style>

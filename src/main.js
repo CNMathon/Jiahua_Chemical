@@ -25,6 +25,8 @@ import CellSelectProjects from "./components/Cell/CellSelectProjects.vue";
 import CellSelectTag from "./components/Cell/CellSelectTag.vue";
 import CellSelectDevice from "./components/Cell/CellSelectDevice.vue";
 import SelectOrganization from "./components/Organization/SelectOrganization.vue";
+import SelectDepartment from "./components/Department/SelectOrganization.vue";
+import SelectCompany from "./components/Company/SelectOrganization.vue";
 import JFilter from "./components/Filter/Filter.vue";
 import JFilterItem from "./components/Filter/FilterItem.vue";
 import FilterCell from "./components/Filter/FilterCell.vue";
@@ -79,6 +81,8 @@ Vue.component("j-filter-cell", FilterCell);
 Vue.component("j-filter-time", FilterTime);
 Vue.component("j-filter-search", FilterSearch);
 Vue.component("select-organization", SelectOrganization);
+Vue.component("select-department", SelectDepartment);
+Vue.component("select-company", SelectCompany);
 Vue.component('popup-action', PopupAction);
 Vue.mixin(Mixin); // Mixin
 // Vue.mixin(MixinUploadFile); // Mixin-UploadFile

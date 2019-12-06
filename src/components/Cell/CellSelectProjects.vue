@@ -172,6 +172,7 @@ export default {
           __sid: localStorage.getItem("JiaHuaSessionId")
         })
         .then(res => {
+          console.log(res)
           if (res.list.length === 0) {
             this.isListLoading = false;
             this.isListMore = true;

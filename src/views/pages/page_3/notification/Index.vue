@@ -17,32 +17,7 @@ export default {
   data() {
     return {
       isLoading: false,
-      pageList: [
-        {
-          img: "https://img.fengz.me/images/2019/06/28/GlDp.jpg",
-          time: "20:11",
-          title: "动火安全审批",
-          content: "配置内容已超时"
-        },
-        {
-          img: "https://img.fengz.me/images/2019/06/28/GlDp.jpg",
-          time: "20:11",
-          title: "动火安全审批",
-          content: "配置内容已超时"
-        },
-        {
-          img: "https://img.fengz.me/images/2019/06/28/GlDp.jpg",
-          time: "20:11",
-          title: "动火安全审批",
-          content: "配置内容已超时"
-        },
-        {
-          img: "https://img.fengz.me/images/2019/06/28/GlDp.jpg",
-          time: "20:11",
-          title: "动火安全审批",
-          content: "配置内容已超时"
-        },
-      ]
+      pageList: []
     };
   },
   components: {
@@ -57,17 +32,22 @@ export default {
         })
         .then(res => {
           this.isLoading = false
-          console.log(`listData: `, res.data);
-          res.list.map(res =>
+          console.log(`listData: `, res.data.list);
+          res.data.list.map(item =>
             this.pageList.push({
-              // img: item.
-              // time: item.
-              // title: item.
-              // content: item.
+              img: `http://pngimg.com/uploads/github/github_PNG40.png`,
+              time: item.sendDate,
+              title: item.msgContentEntity.title,
+              content: item.msgContentEntity.content
             })
           );
         });
-    }
+    },
+    // timeFormat(e) {
+    //   let date = Data(e)
+    //   let res = date.
+    //   return res
+    // }
   },
   created() {
     this.getPageList()

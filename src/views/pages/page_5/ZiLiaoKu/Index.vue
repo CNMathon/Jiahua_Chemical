@@ -6,31 +6,22 @@
     </van-sticky>
     <van-pull-refresh v-model="isLoading" @refresh="getPageData(true)" class="refresh">
       <div class="content">
-        <van-list
-          v-model="loading"
-          :finished="finished"
-          :error.sync="error"
-          error-text="请求失败，点击重新加载"
-          finished-text="没有更多了"
-          @load="getPageData()"
-        >
-          <div v-for="(item, index) in pageList" :key="index">
-            <div class="item">
-              <div class="item__left">
-                <div class="title">{{ item.fileName }}</div>
-                <div class="sub-title-father">
-                  <div class="sub-title">{{ item.createByname }}</div>
-                  <div class="sub-title time">上传时间：{{ item.createDate }}</div>
-                </div>
-                <div class="sub-title">备注：消防手册</div>
+        <div v-for="(item, index) in pageList" :key="index">
+          <div class="item">
+            <div class="item__left">
+              <div class="title">{{ item.fileName }}</div>
+              <div class="sub-title-father">
+                <div class="sub-title">{{ item.createByname }}</div>
+                <div class="sub-title time">上传时间：{{ item.createDate }}</div>
               </div>
-              <div class="item__right">
-                <div class="type">{{ item.fileType.toUpperCase() }}</div>
-                <div class="preview" @click="Preview(item)">预览</div>
-              </div>
+              <div class="sub-title">备注：消防手册</div>
+            </div>
+            <div class="item__right">
+              <div class="type">{{ item.fileType.toUpperCase() }}</div>
+              <div class="preview" @click="Preview(item)">预览</div>
             </div>
           </div>
-        </van-list>
+        </div>
       </div>
     </van-pull-refresh>
     <van-image-preview v-model="showPreview" :images="images"></van-image-preview>
@@ -101,14 +92,25 @@ export default {
     // 预览
     Preview(info) {
       console.log("info: ", info);
-      if (info.fileContentType.includes("image/")) {
-        console.log(1);
-        this.showPreview = true;
-        this.images.push(info);
-      } else {
-        this.$Notify({ type: "warning", message: "格式不支持预览" });
-      }
+      console.log(this.$api.page_5.getZiliaoPreview(info));
+      window.open(
+        this.$api.page_5.getZiliaoPreview(info)
+      );
+      
+      // window.location.href = this.$api.page_5.getZiliaoPreview(info)
+      // this.$router.push('https://baidu.com')
+      // this.$router.push(this.$api.page_5.getZiliaoPreview(info))
+      // if (info.fileContentType.includes("image/")) {
+      //   console.log(1);
+      //   this.showPreview = true;
+      //   this.images.push(info);
+      // } else {
+      //   this.$Notify({ type: "warning", message: "格式不支持预览" });
+      // }
     }
+  },
+  created() {
+    this.getPageData();
   }
 };
 </script>

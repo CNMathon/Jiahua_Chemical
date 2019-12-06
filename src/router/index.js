@@ -9,6 +9,10 @@ import page_component from "./component.js"; // 公共组件库
 
 Vue.use(VueRouter);
 
+// 白名单 - 不判断是否Login的页面
+// e.g => '/page_5/qrcode_qd'
+const whiteList = []
+
 const routes = [
   {
     path: "/",
@@ -35,12 +39,16 @@ const router = new VueRouter({
   }
 });
 router.beforeEach((to, _from, next) => {
+  // if (to.name == )
   if (to.name === "login") {
     next();
     return;
   } else {
     let sessionId = localStorage.getItem("JiaHuaSessionId");
-    if (sessionId === "" || sessionId === null || sessionId === undefined) {
+    console.log(whiteList)
+    if ((sessionId === "" || sessionId === null || sessionId === undefined) && whiteList.indexOf(to.path) == -1) {
+      console.log(to)
+      console.error('未登录，请先登录')
       next("/login");
       return;
     } else {

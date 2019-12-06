@@ -1,37 +1,47 @@
 <!-- 动火列表页 -->
 <template>
   <div class="home">
-    <van-nav-bar title="动火安全"
-                 left-text="返回"
-                 right-text="发起"
-                 left-arrow
-                 @click-left="pageBack"
-                 @click-right="onClickRight" />
-    <j-filter-bar v-model="searchValue"
-                  placeholder="请输入动火地点及内容名称"
-                  @search="getPageData('refresh')"
-                  @tap="showFilter = true"></j-filter-bar>
-    <j-filter v-model="showFilter"
-              @confirm="getPageData('refresh')">
-      <j-filter-search v-model="searchValues"
-                       @search="filterSearch"></j-filter-search>
-      <j-filter-item title="作业票状态"
-                     :actions="zypztList"
-                     @select="filterSelect_1"></j-filter-item>
-      <j-filter-item title="动火等级"
-                     :actions="dhLevelColumns"
-                     @select="filterSelect_2"></j-filter-item>
-      <j-filter-cell title="申请部门"></j-filter-cell>
-      <j-filter-cell title="申请人"></j-filter-cell>
+    <van-nav-bar
+      title="动火安全"
+      left-text="返回"
+      right-text="发起"
+      left-arrow
+      @click-left="pageBack"
+      @click-right="onClickRight"
+    />
+    <j-filter-bar
+      v-model="searchValue"
+      placeholder="请输入动火地点及内容名称"
+      @search="getPageData('refresh')"
+      @tap="showFilter = true"
+    ></j-filter-bar>
+    <j-filter v-model="showFilter" @confirm="getPageData('refresh')">
+      <j-filter-search v-model="searchValue" @search="getPageData('refresh')" />
+      <j-filter-item title="作业票状态" v-model="zypztValue" :actions="zypztList" @select="filterSelect_1" />
+      <j-filter-item title="动火等级" v-model="dhLevelValue" :actions="dhLevelColumns" @select="filterSelect_2" />
+      <!-- <j-filter-cell title="申请部门" /> -->
+      <!-- <cell-select-department title="申请部门" no-padding /> -->
+      <cell-select-department
+        title="申请部门"
+        radio
+        :storeModule="storeModule"
+        storeKey="sqbm"
+        v-model="sqbm"
+      />
+      <!-- <j-filter-cell title="申请人" /> -->
+      <select-organization 
+        title="申请人"
+        max="9"
+        :storeModule="storeModule"
+        storeKey="dhzyRen"
+        v-model="dhzyRen"
+        no-padding
+      />
     </j-filter>
     <div class="list-card-area">
       <div class="app">
-        <van-skeleton title
-                      :row="5"
-                      :loading="isFirstLoading"
-                      class="skeleton">
-          <van-pull-refresh v-model="isRefreshLoading"
-                            @refresh="getPageData('refresh')">
+        <van-skeleton title :row="5" :loading="isFirstLoading" class="skeleton">
+          <van-pull-refresh v-model="isRefreshLoading" @refresh="getPageData('refresh')">
             <!-- <van-list
               v-model="isListLoading"
               :finished="isListMore"
@@ -40,29 +50,24 @@
               finished-text="没有更多了"
               @load="getPageData('list')"
             >-->
-            <label v-for="(item, index) in listData"
-                   :key="index">
+            <label v-for="(item, index) in listData" :key="index">
               <!-- 此处在做完AJAX后需要判断是否为最后行 - class存在判断 -->
-              <div class="donghuo-list-card donghuo-list-card-nolast"
-                   @click="tap(item)">
+              <div class="donghuo-list-card donghuo-list-card-nolast" @click="tap(item)">
                 <div class="left">
                   <div class="left-line left-line-notlast">动火地点及内容：{{item.siteContent}}</div>
                   <div class="left-line left-line-notlast">动火级别：{{item.dhLevel}}</div>
-                  <div class="left-line left-line-notlast">申请部门：{{item.office?item.office.officeName:''}}</div>
+                  <div
+                    class="left-line left-line-notlast"
+                  >申请部门：{{item.office?item.office.officeName:''}}</div>
                   <div class="left-line left-line-notlast">申请人：{{item.user?item.user.userName:''}}</div>
                   <div class="left-line left-line-notlast">动火开始时间：{{item.dhStarttime}}</div>
                   <div class="left-line">动火结束时间：{{item.dhEndtime}}</div>
                 </div>
-                <div class="right"
-                     v-if="item.htStatus == 1">编辑</div>
-                <div class="right"
-                     v-if="item.htStatus == 2">初审</div>
-                <div class="right"
-                     v-if="item.htStatus == 3">有效</div>
-                <div class="right"
-                     v-if="item.htStatus == 4">已验票</div>
-                <div class="right"
-                     v-if="item.htStatus == 5">已终结</div>
+                <div class="right" v-if="item.htStatus == 1">编辑</div>
+                <div class="right" v-if="item.htStatus == 2">初审</div>
+                <div class="right" v-if="item.htStatus == 3">有效</div>
+                <div class="right" v-if="item.htStatus == 4">已验票</div>
+                <div class="right" v-if="item.htStatus == 5">已终结</div>
               </div>
             </label>
             <!-- </van-list> -->
@@ -74,221 +79,235 @@
 </template>
 
 <script>
-  import { mixin } from "@/mixin/mixin";
-  export default {
-    data () {
-      return {
-        searchValue: "", // 外层搜索框数据
-        searchValues: "", // 筛选搜索框数据
-        listData: [], // 列表数据
-        showPopup: true,
-        isFirstLoading: true, // 是否首次获取数据
-        isRefreshLoading: false, // 全局刷新状态 - 是否完成
-        isListLoading: false, // 瀑布流加载状态 - 是否完成加载
-        isListMore: false, // 瀑布流加载状态 - 是否还有更多数据
-        isListLoadingError: false, // 瀑布流加载状态 - 是否加载错误
-        showFilter: false, // 筛选状态 - 是否开启
-        zypztList: [
-          {
-            name: "编辑",
-            idnex: 1
-          },
-          {
-            name: "初审",
-            idnex: 2
-          },
-          {
-            name: "有效",
-            idnex: 3
-          },
-          {
-            name: "已验票",
-            idnex: 4
-          },
-          {
-            name: "已终结",
-            idnex: 5
-          }
-        ], // 作业票状态列表
-        dhLevelColumns: [
-          {
-            name: "制定位置特殊动火作业",
-            idnex: 5
-          },
-          {
-            name: "特殊",
-            idnex: 5
-          },
-          {
-            name: "|类",
-            idnex: 5
-          },
-          {
-            name: "||类",
-            idnex: 5
-          }
-        ], //动火等级
-        selectZypzt: "", // 选择的作业票状态
-        selectDhlevel: ""
-      };
-    },
-    mixins: [mixin],
-    created () {
-      this.getPageData();
-      this.$store.dispatch("donghuo/cleanState");
-      this.$store.commit("donghuo/delete_KeepAlive", "donghuoindex");
-      this.$store.commit("donghuo/delete_KeepAlive", "donghuoindex2");
-      this.$nextTick(() => {
-        this.$store.commit("donghuo/add_KeepAlive", "donghuoindex");
-        this.$store.commit("donghuo/add_KeepAlive", "donghuoindex2");
+import { mapState } from "vuex";
+import { mixin } from "@/mixin/mixin";
+export default {
+  data() {
+    return {
+      storeModule: 'donghuo',
+      dhLevelValue: "", // Value - 动火等级
+      zypztValue: "", // Value - 作业票状态
+      searchValue: "", // 外层搜索框数据
+      searchValues: "", // 筛选搜索框数据
+      listData: [], // 列表数据
+      showPopup: true,
+      isFirstLoading: true, // 是否首次获取数据
+      isRefreshLoading: false, // 全局刷新状态 - 是否完成
+      isListLoading: false, // 瀑布流加载状态 - 是否完成加载
+      isListMore: false, // 瀑布流加载状态 - 是否还有更多数据
+      isListLoadingError: false, // 瀑布流加载状态 - 是否加载错误
+      showFilter: false, // 筛选状态 - 是否开启
+      zypztList: [
+        {
+          name: "编辑",
+          index: 1
+        },
+        {
+          name: "初审",
+          index: 2
+        },
+        {
+          name: "有效",
+          index: 3
+        },
+        {
+          name: "已验票",
+          index: 4
+        },
+        {
+          name: "已终结",
+          index: 5
+        }
+      ], // 作业票状态列表
+      dhLevelColumns: [
+        {
+          name: "制定位置特殊动火作业",
+          index: 5
+        },
+        {
+          name: "特殊",
+          index: 5
+        },
+        {
+          name: "|类",
+          index: 5
+        },
+        {
+          name: "||类",
+          index: 5
+        }
+      ], //动火等级
+      selectZypzt: "", // 选择的作业票状态
+      selectDhlevel: ""
+    };
+  },
+  mixins: [mixin],
+  created() {
+    console.log(1)
+    this.getPageData();
+    this.$store.dispatch("donghuo/cleanState");
+    this.$store.commit("donghuo/delete_KeepAlive", "donghuoindex");
+    this.$store.commit("donghuo/delete_KeepAlive", "donghuoindex2");
+    this.$nextTick(() => {
+      this.$store.commit("donghuo/add_KeepAlive", "donghuoindex");
+      this.$store.commit("donghuo/add_KeepAlive", "donghuoindex2");
+    });
+  },
+  methods: {
+    pageBack() {
+      this.$router.push({
+        path: "/page_3/index"
       });
     },
-    methods: {
-      pageBack () {
+    tap(info) {
+      let dhzypCode = info.dhzypCode;
+      if (Number(info.htStatus) === 1) {
         this.$router.push({
-          path: "/page_3/index"
+          path: "../donghuo",
+          query: { id: dhzypCode }
         });
-      },
-      tap (info) {
-        let dhzypCode = info.dhzypCode;
-        if (Number(info.htStatus) === 1) {
-          this.$router.push({
-            path: "../donghuo",
-            query: { id: dhzypCode }
-          });
-        } else if (Number(info.htStatus) === 2) {
-          this.$api.page_3.getTaskInfo({
-            taskId:info.actRuTask.id,
-            __sid: localStorage.getItem("JiaHuaSessionId")}).then((res)=>{
-            console.log(res)
-            if(res.taskKey==='zyp-dh-01'){
+      } else if (Number(info.htStatus) === 2) {
+        this.$api.page_3
+          .getTaskInfo({
+            taskId: info.actRuTask.id,
+            __sid: localStorage.getItem("JiaHuaSessionId")
+          })
+          .then(res => {
+            console.log(res);
+            if (res.taskKey === "zyp-dh-01") {
               this.$router.push({
                 path: "../donghuo/index2",
                 query: { id: dhzypCode }
               });
-            }else if(res.taskKey==='zyp-dh1-01'){
+            } else if (res.taskKey === "zyp-dh1-01") {
               this.$router.push({
                 path: "../donghuo/index3",
                 query: { id: dhzypCode }
               });
-            }else{
+            } else {
               this.$router.push({
                 path: "../donghuo/index5",
                 query: { id: dhzypCode }
               });
             }
-          })
-          
-        } else {
-          this.$router.push({
-            path: "../donghuo/index3",
-            query: { id: dhzypCode }
           });
-        }
-      },
-      onClickRight () {
+      } else {
         this.$router.push({
-          path: "../donghuo"
+          path: "../donghuo/index3",
+          query: { id: dhzypCode }
         });
-      },
-      onClickMenu () {
-        this.showPopup = true;
-      },
-      // 获取页面数据
-      // => 'refresh' => 刷新数据
-      getPageData (where) {
-        if ((where = "refresh")) {
-          // this.pageNow = 1;
-          this.isRefreshLoading = true;
-        }
-
-        this.$api.page_3
-          .htHseDhzypListData({
-            siteContent: this.searchValue,
-            dhLevel: this.selectDhlevel,
-            __sid: localStorage.getItem("JiaHuaSessionId")
-          })
-          .then(res => {
-            if (res.list.length === 0) {
-              this.isListLoading = false;
-              this.isListMore = true;
-            }
-            this.listData = res.list;
-            this.isFirstLoading = false;
-
-            if ((where = "refresh")) {
-              // this.pageNow = 1;
-              this.isRefreshLoading = false;
-            }
-            if ((where = "list")) {
-              // this.pageNow = 1;
-              this.isListLoading = false;
-            }
-          });
-      },
-      confirmFilter () { },
-      filterSearch (e) { },
-      filterSelect_1 (e) {
-        this.selectZypzt = e.name;
-      },
-      filterSelect_2 (e) {
-        console.log(e.name);
-        this.selectDhlevel = e.name;
       }
+    },
+    onClickRight() {
+      this.$router.push({
+        path: "../donghuo"
+      });
+    },
+    onClickMenu() {
+      this.showPopup = true;
+    },
+    // 获取页面数据
+    // => 'refresh' => 刷新数据
+    getPageData(where) {
+      if ((where = "refresh")) {
+        // this.pageNow = 1;
+        this.isRefreshLoading = true;
+      }
+      console.log(this.sqbm)
+      this.$api.page_3
+        .htHseDhzypListData({
+          htStatus: this.zypztValue.index,
+          siteContent: this.searchValue,
+          dhLevel: this.dhLevelValue.index,
+          applyDept: this.sqbm.length>0?this.sqbm[0].id:'',
+          applyRen: this.dhzyRen.length>0?this.dhzyRen[0].userCode:'',
+          __sid: localStorage.getItem("JiaHuaSessionId")
+        })
+        .then(res => {
+          if (res.list.length === 0) {
+            this.isListLoading = false;
+            this.isListMore = true;
+          }
+          this.listData = res.list;
+          this.isFirstLoading = false;
+
+          if ((where = "refresh")) {
+            // this.pageNow = 1;
+            this.isRefreshLoading = false;
+          }
+          if ((where = "list")) {
+            // this.pageNow = 1;
+            this.isListLoading = false;
+          }
+        });
+    },
+    confirmFilter() {},
+    filterSearch(e) {},
+    filterSelect_1(e) {
+      this.selectZypzt = e.name;
+    },
+    filterSelect_2(e) {
+      console.log(e.name);
+      this.selectDhlevel = e.name;
     }
-  };
+  },
+  computed: mapState({
+    dhzyRen: state => state.donghuo.dhzyRen,
+    sqbm: state => state.donghuo.sqbm
+  }),
+};
 </script>
 
 <style lang="scss" scoped>
-  .donghuo {
-    background-color: #f5f5f5;
-  }
+.donghuo {
+  background-color: #f5f5f5;
+}
 
-  .list-card-area {
-    width: 90%;
-    margin: 0 auto;
-  }
+.list-card-area {
+  width: 90%;
+  margin: 0 auto;
+}
 
-  .icon {
-    display: flex;
-  }
+.icon {
+  display: flex;
+}
 
-  .popup {
-    padding: 20px 30px;
-  }
+.popup {
+  padding: 20px 30px;
+}
 
-  .donghuo-list-card {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    background-color: #6096f8;
-    padding: 22px 31px 15px 34px;
-    color: #ffffff;
-    border-radius: 10px;
-  }
+.donghuo-list-card {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  background-color: #6096f8;
+  padding: 22px 31px 15px 34px;
+  color: #ffffff;
+  border-radius: 10px;
+}
 
-  .donghuo-list-card-nolast {
-    margin-bottom: 20px;
-  }
+.donghuo-list-card-nolast {
+  margin-bottom: 20px;
+}
 
-  .left-line-notlast {
-    margin-bottom: 7px;
-  }
+.left-line-notlast {
+  margin-bottom: 7px;
+}
 
-  .left {
-    font-size: 0.8rem;
-    font-family: PingFangSC-Regular, PingFang SC;
-  }
+.left {
+  font-size: 0.8rem;
+  font-family: PingFangSC-Regular, PingFang SC;
+}
 
-  .right {
-    line-height: 118.3 * 2px;
-    font-size: 34px;
-    width: 112px;
-    text-align: center;
-    // color: red;
-  }
+.right {
+  line-height: 118.3 * 2px;
+  font-size: 34px;
+  width: 112px;
+  text-align: center;
+  // color: red;
+}
 
-  .skeleton {
-    margin-bottom: 10px;
-  }
+.skeleton {
+  margin-bottom: 10px;
+}
 </style>

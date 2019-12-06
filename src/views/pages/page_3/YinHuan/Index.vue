@@ -12,22 +12,38 @@
       <!-- 整改单名称 -->
       <cell-input v-model="rectificationName" title="整改单名称" required placeholder="输入整改单名称"></cell-input>
       <!-- 整改公司 -->
-      <div class="cell">
+      <!-- <div class="cell">
         <div class="cell_title">
           <span>整改公司</span>
           <span class="required">*</span>
         </div>
         <div class="cell_value">
           <div class="cell_input">
-            <input type="text" v-model="rectificationCompany" placeholder="整改公司名称" />
+            <input type="text" :value="rectificationCompany" placeholder="整改公司名称" />
           </div>
           <span class="cell_value_arrow">
             <van-icon name="search" />
           </span>
         </div>
-      </div>
+      </div> -->
+      <select-company
+        title="整改公司"
+        required
+        max="1"
+        :storeModule="storeModule"
+        storeKey="rectificationCompany"
+        v-model="rectificationCompany"
+      ></select-company>
+      <select-department 
+        title="整改部门或督察部门"
+        required
+        max="1"
+        :storeModule="storeModule"
+        storeKey="rectificationDepartment"
+        v-model="rectificationDepartment"
+      ></select-department>
       <!-- 违章单位 -->
-      <div class="cell">
+      <!-- <div class="cell">
         <div class="cell_title">
           <span>
             整改部门或
@@ -42,7 +58,7 @@
             <van-icon name="search" />
           </span>
         </div>
-      </div>
+      </div> -->
       <!-- 整改负责人 -->
       <!-- <cell-select-users
         title="整改负责人"
@@ -82,7 +98,7 @@
       <!-- 是否处挂起 -->
       <cell-value title="是否处挂起" :value="isSuspendedColumns[isSuspended]" required></cell-value>
       <!-- 隐患描述 -->
-      <cell-textarea title="隐患描述" required v-model="dangerDesc" placeholder="输入内容"></cell-textarea>
+      <cell-textarea title="隐患描述" required :value="dangerDesc" placeholder="输入内容"></cell-textarea>
       <!-- 上传图片 -->
       <div class="cell">
         <div class="cell_title">
@@ -144,7 +160,7 @@ export default {
       isShowAction: false,
       rectificationName: "", //整改单
       rectificationCompany: "", //整改公司
-      rectificationDepartment: "", //整改部门
+      rectificationDepartment: [], //整改部门
       rectificationCharge: [], //整改负责人
       location: "", //地点
       isPunish: "", //是否处罚
@@ -187,17 +203,21 @@ export default {
   },
   computed: mapState({
     acceptanceCharges: state => state.yinhuan.acceptanceCharge,
-    rectificationCharges: state => state.yinhuan.rectificationCharge
+    rectificationCharges: state => state.yinhuan.rectificationCharge,
+    rectificationDepartments:state=>state.yinhuan.rectificationDepartment,
+    rectificationCompanys:state=>state.yinhuan.rectificationCompany
   }),
   activated() {
     if (this.$route.query.id) {
       this.id = this.$route.query.id;
       this.getDataInfo();
     }
+    console.log(this.rectificationCompany)
+    console.log(this.location)
     if (sessionStorage.getItem("flag") === "1") {
-      (this.rectificationName = ""), //整改单
+        (this.rectificationName = ""), //整改单
         (this.rectificationCompany = ""), //整改公司
-        (this.rectificationDepartment = ""), //整改部门
+        (this.rectificationDepartment = []), //整改部门
         (this.rectificationCharge = []), //整改负责人
         (this.location = ""), //地点
         (this.isPunish = ""), //是否处罚
@@ -219,6 +239,12 @@ export default {
     // 验收负责人
     rectificationCharges(val) {
       this.rectificationCharge = val;
+    },
+    rectificationDepartments(val){
+      this.rectificationDepartment = val
+    },
+    rectificationCompanys(val){
+      this.rectificationCompany = val
     },
     //隐患等级
     dangerLevel(val) {
@@ -281,27 +307,27 @@ export default {
     },
     // 发送数据
     postData() {
-      this.isDataEmpty_throw({
-        data: [
-          this.rectificationName, // 整改单名称
-          this.rectificationCompany, // 整改公司
-          this.rectificationDepartment, // 整改部门或督察部门
-          this.rectificationCharge, // 整改负责人
-          this.location, // 地点
-          this.dangerLevel, // 隐患等级
-          this.dangerType, // 隐患类型
-          this.dangerSource, // 隐患来源
-          this.isPunish, // 是否处罚
-          this.punishMoney, // 处罚金额
-          this.isSuspendedColumns[this.isSuspended], // 是否处挂起
-          this.dangerDesc, // 隐患描述
-          this.fileList, // 上传图片
-          this.acceptanceCharge, // 验收负责人
-        ],
-        err: () => {
-          this.$notify('请输入将表单内容填写完整')
-        }
-      });
+      // this.isDataEmpty_throw({
+      //   data: [
+      //     this.rectificationName, // 整改单名称
+      //     this.rectificationCompany, // 整改公司
+      //     this.rectificationDepartment, // 整改部门或督察部门
+      //     this.rectificationCharge, // 整改负责人
+      //     this.location, // 地点
+      //     this.dangerLevel, // 隐患等级
+      //     this.dangerType, // 隐患类型
+      //     this.dangerSource, // 隐患来源
+      //     this.isPunish, // 是否处罚
+      //     this.punishMoney, // 处罚金额
+      //     this.isSuspendedColumns[this.isSuspended], // 是否处挂起
+      //     this.dangerDesc, // 隐患描述
+      //     this.fileList, // 上传图片
+      //     this.acceptanceCharge, // 验收负责人
+      //   ],
+      //   err: () => {
+      //     this.$notify('请输入将表单内容填写完整')
+      //   }
+      // });
       const that = this;
       let rectificationCharge = [];
       this.rectificationCharge.forEach(item => {
@@ -314,7 +340,7 @@ export default {
       let sendData = {
         rectificationName: this.rectificationName, //整改单
         rectificationCompany: this.rectificationCompany, //整改公司
-        rectificationDepartment: this.rectificationDepartment, //整改部门
+        rectificationDepartment: this.rectificationDepartment[0].id, //整改部门
         rectificationCharge: rectificationCharge.join(","), //整改负责人
         location: this.location, //地点
         isPunish: this.isPunish, //是否处罚

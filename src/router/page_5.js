@@ -119,7 +119,17 @@ const routes = {
                     props: true
                 }
             ]
-        }
+        },
+        {
+            path: '/page_5/qrcode_ks',
+            name: 'page_5_qrcode_ks',
+            component: () => import('../views/pages/page_5/qrcode_ks/Index.vue'),
+        },
+        {
+            path: '/page_5/qrcode_qd',
+            name: 'page_5_qrcode_qd',
+            component: () => import('../views/pages/page_5/qrcode_qd/Index.vue'),
+        },
     ]
 };
 

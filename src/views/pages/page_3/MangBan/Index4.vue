@@ -17,7 +17,7 @@
     <div class="header-cell">
       <!-- 申请部门 -->
       <cell-value title="申请部门"
-                  :value="oldInfo.office.officeName"
+                  :value="oldInfo.office?oldInfo.office.officeName:''"
                   disable></cell-value>
       <!-- 申请人 -->
       <cell-value title="申请人"
@@ -347,6 +347,9 @@
             if (info.onePipe.length > 14) {
               let arr = info.onePipe.split("|");
               console.log(arr)
+              let pipeBlockGuardian = [{'userName':arr[11].substr(0,arr[11].indexOf('&')),'userCode':arr[11].substr(arr[11].indexOf('&')+1,arr[11].length)}]
+              let pipePullGuardian = [{'userName':arr[12].substr(0,arr[12].indexOf('&')),'userCode':arr[12].substr(arr[12].indexOf('&')+1,arr[12].length)}]
+              console.log(pipePullGuardian)
               let obj = {
                 'pipeName': arr[0],
                 'pipeMedium': arr[1],
@@ -357,16 +360,19 @@
                 'pipeNumber': arr[6],
                 'pipePullTime': arr[7],
                 'pipeBlockTime': arr[8],
-                'pipeBlockOperator': this.reductionSelectUser(arr[9]),
-                'pipePullOperator': this.reductionSelectUser(arr[10]),
-                'pipeBlockGuardian': this.reductionSelectUser(arr[11]),
-                'pipePullGuardian': this.reductionSelectUser(arr[12]),
+                'pipeBlockOperator': this.reductionSelectUserObj(pipeBlockOperator),
+                'pipePullOperator': this.reductionSelectUserObj(pipePullOperator),
+                'pipeBlockGuardian': pipeBlockGuardian,
+                'pipePullGuardian': pipePullGuardian,
               }
               this.sendData.pipe.push(obj)
             }
             if (info.twoPipe.length > 14) {
               let arr = info.twoPipe.split("|");
               console.log(arr)
+              let pipeBlockGuardian = [{'userName':arr[11].substr(0,arr[11].indexOf('&')),'userCode':arr[11].substr(arr[11].indexOf('&')+1,arr[11].length)}]
+              let pipePullGuardian = [{'userName':arr[12].substr(0,arr[12].indexOf('&')),'userCode':arr[12].substr(arr[12].indexOf('&')+1,arr[12].length)}]
+              console.log(pipePullGuardian)
               let obj = {
                 'pipeName': arr[0],
                 'pipeMedium': arr[1],
@@ -377,16 +383,19 @@
                 'pipeNumber': arr[6],
                 'pipePullTime': arr[7],
                 'pipeBlockTime': arr[8],
-                'pipeBlockOperator': this.reductionSelectUser(arr[9]),
-                'pipePullOperator': this.reductionSelectUser(arr[10]),
-                'pipeBlockGuardian': this.reductionSelectUser(arr[11]),
-                'pipePullGuardian': this.reductionSelectUser(arr[12]),
+                'pipeBlockOperator': this.reductionSelectUserObj(pipeBlockOperator),
+                'pipePullOperator': this.reductionSelectUserObj(pipePullOperator),
+                'pipeBlockGuardian': pipeBlockGuardian,
+                'pipePullGuardian': pipePullGuardian,
               }
               this.sendData.pipe.push(obj)
             }
             if (info.threePipe.length > 14) {
               let arr = info.threePipe.split("|");
               console.log(arr)
+              let pipeBlockGuardian = [{'userName':arr[11].substr(0,arr[11].indexOf('&')),'userCode':arr[11].substr(arr[11].indexOf('&')+1,arr[11].length)}]
+              let pipePullGuardian = [{'userName':arr[12].substr(0,arr[12].indexOf('&')),'userCode':arr[12].substr(arr[12].indexOf('&')+1,arr[12].length)}]
+              console.log(pipePullGuardian)
               let obj = {
                 'pipeName': arr[0],
                 'pipeMedium': arr[1],
@@ -397,16 +406,19 @@
                 'pipeNumber': arr[6],
                 'pipePullTime': arr[7],
                 'pipeBlockTime': arr[8],
-                'pipeBlockOperator': this.reductionSelectUser(arr[9]),
-                'pipePullOperator': this.reductionSelectUser(arr[10]),
-                'pipeBlockGuardian': this.reductionSelectUser(arr[11]),
-                'pipePullGuardian': this.reductionSelectUser(arr[12]),
+                'pipeBlockOperator': this.reductionSelectUserObj(pipeBlockOperator),
+                'pipePullOperator': this.reductionSelectUserObj(pipePullOperator),
+                'pipeBlockGuardian': pipeBlockGuardian,
+                'pipePullGuardian': pipePullGuardian,
               }
               this.sendData.pipe.push(obj)
             }
             if (info.fourPipe.length > 14) {
               let arr = info.fourPipe.split("|");
               console.log(arr)
+              let pipeBlockGuardian = [{'userName':arr[11].substr(0,arr[11].indexOf('&')),'userCode':arr[11].substr(arr[11].indexOf('&')+1,arr[11].length)}]
+              let pipePullGuardian = [{'userName':arr[12].substr(0,arr[12].indexOf('&')),'userCode':arr[12].substr(arr[12].indexOf('&')+1,arr[12].length)}]
+              console.log(pipePullGuardian)
               let obj = {
                 'pipeName': arr[0],
                 'pipeMedium': arr[1],
@@ -417,10 +429,10 @@
                 'pipeNumber': arr[6],
                 'pipePullTime': arr[7],
                 'pipeBlockTime': arr[8],
-                'pipeBlockOperator': this.reductionSelectUser(arr[9]),
-                'pipePullOperator': this.reductionSelectUser(arr[10]),
-                'pipeBlockGuardian': this.reductionSelectUser(arr[11]),
-                'pipePullGuardian': this.reductionSelectUser(arr[12]),
+                'pipeBlockOperator': this.reductionSelectUserObj(pipeBlockOperator),
+                'pipePullOperator': this.reductionSelectUserObj(pipePullOperator),
+                'pipeBlockGuardian': pipeBlockGuardian,
+                'pipePullGuardian': pipePullGuardian,
               }
               this.sendData.pipe.push(obj)
             }
@@ -564,10 +576,10 @@
             }|${pipe[i].pipeMaterial}|${pipe[i].pipeSpec}|${
             pipe[i].pipeNumber
             }|${pipe[i].pipeBlockTime}|${pipe[i].pipePullTime}|${
-            pipe[i].pipeBlockOperator[0].userName
-            }|${pipe[i].pipePullOperator[0].userName}|${
-            pipe[i].pipeBlockGuardian[0].userName
-            }|${pipe[i].pipePullGuardian[0].userName}`;
+            pipeBlockOperator.join(',')
+            }|${pipePullOperator.join(',')}|${pipe[i].pipeBlockGuardian[0].userName}&${
+            pipe[i].pipeBlockGuardian[0].userCode
+            }|${pipe[i].pipePullGuardian[0].userName}&${pipe[i].pipePullGuardian[0].userCode}`;
         }
         let finSendData = {
           onePipe: dataStrArr[0],

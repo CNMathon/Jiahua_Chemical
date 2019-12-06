@@ -1,5 +1,12 @@
 <template>
-  <div class="cell" :class="[border ? 'border' : '',disable? 'disable': '']" @click="toSelectUser">
+  <div class="cell"
+    :class="[
+      border ? 'border' : '',
+      disable? 'disable': '',
+      noPadding ? 'cell-no-padding' : ''
+    ]"
+    @click="toSelectUser"
+  >
     <div class="cell_title">
       <span>{{ title }}</span>
       <span class="required" v-if="required">*</span>
@@ -29,6 +36,10 @@ export default {
     storeModule: String,
     storeKey: String,
     required: {
+      type: Boolean,
+      default: false
+    },
+    noPadding: {
       type: Boolean,
       default: false
     },

@@ -7,8 +7,8 @@
       </div>
     </div>
     <div class="list">
-      <div class="item" v-for="index in 8" :key="index">
-        <Item></Item>
+      <div class="item" v-for="(item, index) in listData" :key="index">
+        <Item :info="item" />
       </div>
     </div>
   </div>
@@ -17,7 +17,7 @@
 import DropDown from "../components/DropDown";
 import Item from "./components/Item";
 export default {
-  name: "gongyi",
+  name: "error",
   components: {
     DropDown,
     Item
@@ -36,13 +36,14 @@ export default {
         .apiAlarmHistoryAlarmRecords({
           __sid: localStorage.JiaHuaSessionId,
           userid: "EMP_201900031",
-          regionid: "02",
+          regionid: "0101001",
           queryTime: this.getFormatNowDate,
           rows: 20,
           status: 1
         })
         .then(res => {
           console.log(`listData: `, res.response.datas);
+          this.listData = res.response.datas
         });
     },
     pageBack() {
@@ -51,7 +52,7 @@ export default {
   },
   computed: {
     getFormatNowDate() {
-      return `${new Date().getFullYear()}-${new Date().getMonth()}-${new Date().getDay()} ${new Date().getHours()}:${new Date().getMinutes()}`
+      return `${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDay()} ${new Date().getHours()}:${new Date().getMinutes()}`
     }
   }
 };

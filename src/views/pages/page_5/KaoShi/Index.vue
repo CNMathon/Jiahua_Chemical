@@ -14,25 +14,20 @@
         title-inactive-color="#4A4A4A"
         animated
       >
-        <div v-for="(item,indexs) in pageList" :key="indexs">
-          <van-tab :title="item.title">
+        <div v-for="(items,indexs) in pageList" :key="indexs">
+          <van-tab :title="items.title">
+            <!-- {{items.info.list}} -->
             <van-pull-refresh
-              v-model="item.info.isLoading"
+              v-model="items.info.isLoading"
               @refresh="getPageData(true)"
               class="refresh"
             >
-              <van-list
-                v-model="item.info.loading"
-                :finished="item.info.finished"
-                finished-text="没有更多了"
-                @load="getPageData()"
-              >
-                <div class="tab-content">
-                  <label v-for="(item, index) in item.info.list" :key="index">
-                    <class-2 :info="item" :isEnd="indexs===1"></class-2>
-                  </label>
-                </div>
-              </van-list>
+              <div class="tab-content">
+                <!-- {{indexs}} -->
+                <label v-for="(item, index) in items.info.list" :key="index">
+                  <class-2 :info="item" :isEnd="indexs===1"></class-2>
+                </label>
+              </div>
             </van-pull-refresh>
           </van-tab>
         </div>
@@ -83,8 +78,60 @@ export default {
     };
     this.pageList[0].info = JSON.parse(JSON.stringify(obj));
     this.pageList[1].info = JSON.parse(JSON.stringify(obj));
+    this.getPageData1();
   },
   methods: {
+    getPageData1() {
+      let sendData = {
+        examCode: this.searchValue,
+        __sid: this.$userInfo.sessionId
+      };
+      if (this.tabActive === 1) {
+        sendData.isfinalsubmit = "1";
+      }
+      this.$api.page_5
+        .getMyTestHistory(sendData)
+        .then(res => {
+          console.log(`testHistory: `, res.list);
+          console.log(`nowList: `, res.list.filter(item => item.isfinalsubmit != 1));
+          console.log(`historyList: `, res.list.filter(item => item.isfinalsubmit == 1));
+          this.pageList[0].info.list = res.list.filter(
+            item => item.isfinalsubmit != 1
+          );
+          this.pageList[1].info.list = res.list.filter(
+            item => item.isfinalsubmit == 1
+          );
+
+          // // 加载状态结束
+          // _this.loading = false;
+          // _this.isLoading = false;
+          // _this.pageNow = _this.pageNow + 1;
+          // console.log(res.list.filter(
+          //   item => item.isfinalsubmit != 1
+          // ))
+          // console.log(res.list.filter(
+          //   item => item.isfinalsubmit != 1
+          // ))
+          // this.pageList[0].info.list = res.list.filter(
+          //   item => item.isfinalsubmit != 1
+          // )
+          // this.pageList[1].info.list = res.list.filter(
+          //   item => item.isfinalsubmit == 1
+          // )
+          // if (res.list === []) {
+          //   _this.finished = true;
+          //   return;
+          // }
+          // _this.list = refresh ? res.list : [..._this.list, ...res.list];
+          // _this.totalNumber = res.count;
+        })
+        .catch(() => {
+          // _this.error = true;
+          // _this.loading = false;
+          // _this.finished = false;
+          // _this.isLoading = false;
+        });
+    },
     // 获取考试数据
     getPageData(refresh = false) {
       let _this = this.pageList[this.tabActive].info;
@@ -110,10 +157,19 @@ export default {
       this.$api.page_5
         .getMyTestHistory(sendData)
         .then(res => {
+          console.log(`testHistory: `, res.list);
           // 加载状态结束
           _this.loading = false;
           _this.isLoading = false;
           _this.pageNow = _this.pageNow + 1;
+          console.log(res.list.filter(item => item.isfinalsubmit != 1));
+          console.log(res.list.filter(item => item.isfinalsubmit != 1));
+          this.pageList[0].info.list = res.list.filter(
+            item => item.isfinalsubmit != 1
+          );
+          this.pageList[1].info.list = res.list.filter(
+            item => item.isfinalsubmit == 1
+          );
           if (res.list === []) {
             _this.finished = true;
             return;

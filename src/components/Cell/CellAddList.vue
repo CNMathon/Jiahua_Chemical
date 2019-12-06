@@ -50,15 +50,30 @@ export default {
       content: [] // 内容
     } // 安全措施板块
   },
+  mounted(){
+    console.log(333)
+    console.log(this.value)
+  },  
   methods: {
     // testme() {
     //   console.log(this.value)
     // },
     addLine() {
-      console.log(this.value)
-      this.value.content.push(this.contentData);
+      this.value.content.push(this.contentData());
     },
-
+    contentData() {
+      let data = {
+        checked: false,
+        safe: this.value.modList.config[this.value.modList.value - 1],
+        stat: {
+          config: ["是", "否", "不涉及"],
+          value: [],
+        },
+        id: this.value.modList.id[this.value.modList.value - 1]
+      }
+      console.log(data)
+      return data
+    },
     delLine() {
       let arr = [];
       this.value.content.map(item => {
@@ -75,20 +90,6 @@ export default {
       srcConCol: ["是", "否", "不涉及"] // 安全措施内容Col
     };
   },
-  computed: {
-    // 数据样板 - content新增内容
-    contentData() {
-      return {
-        checked: false,
-        safe: this.value.modList.config[this.value.modList.value - 1],
-        stat: {
-          config: ["是", "否", "不涉及"],
-          value: [],
-        },
-        id: this.value.modList.id[this.value.modList.value - 1]
-      }
-    }
-  }
 };
 </script>
 

@@ -1,8 +1,8 @@
 <template>
-  <div
-    class="cell"
+  <div class="cell"
     :class="[
-      border ? 'border' : '',disable? 'disable': '',
+      border ? 'border' : '',
+      disable? 'disable': '',
       noPadding ? 'cell-no-padding' : ''
     ]"
     @click="toSelectUser"
@@ -21,7 +21,7 @@
 </template>
 <script>
 export default {
-  name: "cell_select_user",
+  name: "cell_select_Organization_User",
   model: {
     prop: "value",
     event: "input"
@@ -41,7 +41,7 @@ export default {
     },
     noPadding: {
       type: Boolean,
-      default: true,
+      default: false
     },
     value: Array,
     border: {
@@ -56,69 +56,27 @@ export default {
       type: Boolean,
       default: false
     },
-    max: 0
+    max: 0,
+    min: 1,
   },
   mounted(){
-    // console.log(`isPadding: `, this.isPadding)
   },
   methods: {
     toSelectUser() {
-      console.log(this.storeModule)
       if (this.disable) return;
-      if(this.storeModule==='diaozhuang'){
-        this.$router.push({
-          path: "/page_3/diaozhuang/diaozhuang_select_department",
-          query: {
-            storeModule: this.storeModule,
-            storeKey: this.storeKey,
-            radio: this.radio,
-            max: this.max
-          }
-        });
-      }else if (this.storeModule==='linshi') {
-        this.$router.push({
-          path: "/page_3/linshi/linshi_select_department",
-          query: {
-            storeModule: this.storeModule,
-            storeKey: this.storeKey,
-            radio: this.radio,
-            max: this.max
-          }
-        });
-      } else if (this.storeModule==='dongtu') {
-        this.$router.push({
-          path: "/page_3/dongtu/dongtu_select_department",
-          query: {
-            storeModule: this.storeModule,
-            storeKey: this.storeKey,
-            radio: this.radio,
-            max: this.max
-          }
-        });
-      }else if (this.storeModule==='duanlu') {
-        this.$router.push({
-          path: "/page_3/duanlu/duanlu_select_department",
-          query: {
-            storeModule: this.storeModule,
-            storeKey: this.storeKey,
-            radio: this.radio,
-            max: this.max
-          }
-        });
-      } else{
-        this.$router.push({
-          path: "/page_3/kongjian/kongjian_select_department",
-          query: {
-            storeModule: this.storeModule,
-            storeKey: this.storeKey,
-            radio: this.radio,
-            max: this.max
-          }
-        });
-      }
+      this.$router.push({
+        path: "select_department",
+        query: {
+          title: this.title,
+          storeModule: this.storeModule,
+          storeKey: this.storeKey,
+          radio: this.radio,
+          max: this.max,
+          min: this.min
+        }
+      });
     },
     showNames() {
-      console.log(789)
       console.log(this.value)
       if (this.value) {
         let arr = JSON.parse(JSON.stringify(this.value));

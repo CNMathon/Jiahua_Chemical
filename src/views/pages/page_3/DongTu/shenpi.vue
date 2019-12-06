@@ -15,6 +15,11 @@
                      required
                      v-model="comment"
                      placeholder="请输入审批意见"></cell-textarea>
+      <div v-if="status=='2'" class="huiqian">
+        <span>会签节点</span>
+        <p @click="check1" :class="zzbm===0?'checked':'box'">制造部门</p>
+        <p @click="check2" :class="ahbm===0?'checked':'box'">安环部门</p>
+      </div>
     </div>
     <div class="signature" @click="signatureShow = true">
           <span>签字</span>
@@ -47,7 +52,10 @@
         id: '',
         actRuTask: '',
         apprSignCode:"",
-        signatureShow:false
+        signatureShow:false,
+        zzbm:1,
+        ahbm:1,
+        status:'0'
       };
     },
     mixins: [mixin],
@@ -55,8 +63,23 @@
       console.log(this.$route.query)
       this.id = this.$route.query.id
       this.actRuTask = this.$route.query.actRuTask
+      this.status = this.$route.query.status
     },
     methods: {
+      check1(){
+        if(this.zzbm==1){
+          this.zzbm = 0
+        }else{
+          this.zzbm = 1
+        }
+      },
+      check2(){
+        if(this.ahbm==1){
+          this.ahbm = 0
+        }else{
+          this.ahbm = 1
+        }
+      },
       saveCanvas(e) {
         console.log(123)
         console.log("e: ", e);
@@ -77,18 +100,38 @@
           this.$notify("请填写审批意见");
         }else if(this.apprSignCode==''){
           this.$notify("请签字");
+        }else if(this.status=='2'&&this.zzbm==1&&this.ahbm==1){
+          this.$notify("会签节点至少选中1个");
         }  else {
-          let data = {
-            'id': this.id,
-            'flowKey': 'htHseDhzypService',
-            'comment': this.comment,
-            'actRuTask.id': this.actRuTask,
-            'btnSubmit': '通过',
-            extendVar:{
-              apprSignCode:this.apprSignCode
-            },
-            __sid: localStorage.getItem("JiaHuaSessionId")
+          let data
+          if(this.status=='2'){
+            data = {
+              'id': this.id,
+              'flowKey': 'htHseDtzypService',
+              'comment': this.comment,
+              'actRuTask.id': this.actRuTask,
+              'btnSubmit': '通过',
+              extendVar:{
+                'zzbm':this.zzbm,
+                'ahbm':this.ahbm,
+                apprSignCode:this.apprSignCode
+              },
+              __sid: localStorage.getItem("JiaHuaSessionId")
+            }
+          }else{
+            data = {
+              'id': this.id,
+              'flowKey': 'htHseDtzypService',
+              'comment': this.comment,
+              'actRuTask.id': this.actRuTask,
+              'btnSubmit': '通过',
+              extendVar:{
+                apprSignCode:this.apprSignCode
+              },
+              __sid: localStorage.getItem("JiaHuaSessionId")
+            }
           }
+          
           this.$api.page_3.approve(data).then((ress) => {
             console.log(ress)
             if (ress.result === 'true') {
@@ -99,11 +142,11 @@
                     groups: ress.groups.join(','),
                     taskId: ress.taskId,
                     id: this.id,
-                    type: 'htHseDhzypService'
+                    type: 'htHseDtzypService'
                   }                })
               } else {
                 console.log(44444444444444444)
-                this.$router.push({ path: '../donghuo/list' })
+                this.$router.push({ path: '../dongtu/list' })
               }
             } else {
               this.$notify(ress.message);
@@ -123,5 +166,24 @@
   box-sizing: border-box;
   align-items: center;
   justify-content: space-between;
+}
+.huiqian{
+  padding:30px;
+  font-size:0.875rem;
+  .box{
+    float: right;
+    margin: 0 10px;
+    padding: 2px 10px;
+    border: 1px solid #cbcbcb;
+    color: #cbcbcb;
+  }
+  .checked{
+    float: right;
+    margin: 0 10px;
+    padding: 2px 10px;
+    background: #108CD4;
+    color:#ffffff;
+    border:none
+  }
 }
 </style>

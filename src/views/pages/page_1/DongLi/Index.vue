@@ -18,8 +18,8 @@
     >
       <!-- <van-search placeholder="搜索" v-model="value" /> -->
       <van-tab title="总显">
-        <ActionBar></ActionBar>
-        <div class="panel-list">
+        <!-- <ActionBar></ActionBar> -->
+        <div class="panel-list panel-list-central">
           <van-row v-if="$route.query.from == 'index'">
             <label v-for="(item,index) in zongxian" :key="index">
               <label
@@ -42,7 +42,7 @@
       </van-tab>
       <van-tab title="锅炉">
         <Search></Search>
-        <ActionBar></ActionBar>
+        <!-- <ActionBar></ActionBar> -->
         <div class="head">
           <div>锅炉名称</div>
           <div>炉平均产量</div>
@@ -56,7 +56,7 @@
       </van-tab>
       <van-tab title="汽机">
         <Search></Search>
-        <ActionBar></ActionBar>
+        <!-- <ActionBar></ActionBar> -->
         <div class="head">
           <div>汽机名称</div>
           <div>平均发电量</div>
@@ -70,7 +70,7 @@
       </van-tab>
       <van-tab title="烟囱">
         <Search></Search>
-        <ActionBar></ActionBar>
+        <!-- <ActionBar></ActionBar> -->
         <div class="head">
           <div>烟囱名</div>
           <div>SO2</div>
@@ -214,6 +214,9 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.panel-list-central {
+  margin-top: 30px;
+}
 .dongli {
   .panel-list {
     width: 100%;

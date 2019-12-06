@@ -11,7 +11,7 @@
     <div class="header-cell">
       <!-- 申请部门 -->
       <cell-value title="申请部门"
-                  :value="oldInfo.office.officeName"
+                  :value="oldInfo.office?oldInfo.office.officeName:''"
                   disable></cell-value>
       <!-- 申请人 -->
       <cell-value title="申请人"
@@ -350,6 +350,9 @@
               let PullCode = new Array(PullName.length).fill('').join(',');
               let pipePullOperator = this.assemblyStrToUserObj(PullCode,arr[10]);
               let pipeBlockOperator = this.assemblyStrToUserObj(BlockCode,arr[9]);
+              let pipeBlockGuardian = [{'userName':arr[11].substr(0,arr[11].indexOf('&')),'userCode':arr[11].substr(arr[11].indexOf('&')+1,arr[11].length)}]
+              let pipePullGuardian = [{'userName':arr[12].substr(0,arr[12].indexOf('&')),'userCode':arr[12].substr(arr[12].indexOf('&')+1,arr[12].length)}]
+              console.log(pipePullGuardian)
               let obj = {
                 'pipeName': arr[0],
                 'pipeMedium': arr[1],
@@ -362,8 +365,8 @@
                 'pipeBlockTime': arr[8],
                 'pipeBlockOperator': this.reductionSelectUserObj(pipeBlockOperator),
                 'pipePullOperator': this.reductionSelectUserObj(pipePullOperator),
-                'pipeBlockGuardian': this.reductionSelectUserObj(this.reductionSelectUser(arr[11])),
-                'pipePullGuardian': this.reductionSelectUserObj(this.reductionSelectUser(arr[12])),
+                'pipeBlockGuardian': pipeBlockGuardian,
+                'pipePullGuardian': pipePullGuardian,
               }
               return obj;
             }
@@ -530,9 +533,9 @@
             pipe[i].pipeNumber
             }|${pipe[i].pipeBlockTime}|${pipe[i].pipePullTime}|${
             pipeBlockOperator.join(',')
-            }|${pipePullOperator.join(',')}|${
-            pipe[i].pipeBlockGuardian[0].userName
-            }|${pipe[i].pipePullGuardian[0].userName}`;
+            }|${pipePullOperator.join(',')}|${pipe[i].pipeBlockGuardian[0].userName}&${
+            pipe[i].pipeBlockGuardian[0].userCode
+            }|${pipe[i].pipePullGuardian[0].userName}&${pipe[i].pipePullGuardian[0].userCode}`;
         }
         let finSendData = {
           onePipe: dataStrArr[0],
@@ -546,11 +549,11 @@
           return item.id;
         });
         console.log("file", htHseMbzyp_file);
-        if (this.$route.query.id) {
-          sendData.applyDept = this.oldInfo.office.officeName;
+         if (this.$route.query.id) {
+          sendData.applyDept = this.oldInfo.office?this.oldInfo.office.officeName:'';
           sendData.applyer = this.oldInfo.user.userName;
-          finSendData.applyDept = this.oldInfo.office.officeCode;//正式用
-          finSendData.applyer = this.oldInfo.office.userCode;//正式用
+          finSendData.applyDept = this.oldInfo.office?this.oldInfo.office.officeCode:'';//正式用
+          finSendData.applyer = this.oldInfo.user.userCode;//正式用
         }else{
           sendData.applyDept = this.$userInfo.officeName;
           sendData.applyer = this.$userInfo.userName;

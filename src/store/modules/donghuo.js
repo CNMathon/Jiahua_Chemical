@@ -10,7 +10,8 @@ const state = {
   fxRenB: [], //分析人1
   fxRenC: [], //分析人1
   dhSup: [], //监火人
-  dhSupCbs:[]
+  dhSupCbs:[],
+  sqbm: []
 };
 
 // getters

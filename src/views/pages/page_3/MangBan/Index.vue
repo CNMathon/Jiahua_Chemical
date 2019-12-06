@@ -316,6 +316,9 @@
               let PullCode = new Array(PullName.length).fill('').join(',');
               let pipePullOperator = this.assemblyStrToUserObj(PullCode,arr[10]);
               let pipeBlockOperator = this.assemblyStrToUserObj(BlockCode,arr[9]);
+              let pipeBlockGuardian = [{'userName':arr[11].substr(0,arr[11].indexOf('&')),'userCode':arr[11].substr(arr[11].indexOf('&')+1,arr[11].length)}]
+              let pipePullGuardian = [{'userName':arr[12].substr(0,arr[12].indexOf('&')),'userCode':arr[12].substr(arr[12].indexOf('&')+1,arr[12].length)}]
+              console.log(pipePullGuardian)
               let obj = {
                 'pipeName': arr[0],
                 'pipeMedium': arr[1],
@@ -328,9 +331,10 @@
                 'pipeBlockTime': arr[8],
                 'pipeBlockOperator': this.reductionSelectUserObj(pipeBlockOperator),
                 'pipePullOperator': this.reductionSelectUserObj(pipePullOperator),
-                'pipeBlockGuardian': this.reductionSelectUserObj(this.reductionSelectUser(arr[11])),
-                'pipePullGuardian': this.reductionSelectUserObj(this.reductionSelectUser(arr[12])),
+                'pipeBlockGuardian': pipeBlockGuardian,
+                'pipePullGuardian': pipePullGuardian,
               }
+              console.log(pipeBlockGuardian)
               return obj;
             }
             if (info.onePipe.length > 14) {
@@ -520,17 +524,17 @@
             dataStrArr[i] = `|||||||||||&|&`;
             continue;
           }
-          let pipePullOperator = pipe[i].pipePullOperator.map(item => item.userCode);
-          let pipeBlockOperator = pipe[i].pipeBlockOperator.map(item => item.userCode);
+          let pipePullOperator = pipe[i].pipePullOperator.map(item => item.userName);
+          let pipeBlockOperator = pipe[i].pipeBlockOperator.map(item => item.userName);
           dataStrArr[i] = `${pipe[i].pipeName}|${pipe[i].pipeMedium}|${pipe[i].pipeTemp}|${
             pipe[i].pipePressure
             }|${pipe[i].pipeMaterial}|${pipe[i].pipeSpec}|${
             pipe[i].pipeNumber
             }|${pipe[i].pipeBlockTime}|${pipe[i].pipePullTime}|${
             pipeBlockOperator.join(',')
-            }|${pipePullOperator.join(',')}|${
+            }|${pipePullOperator.join(',')}|${pipe[i].pipeBlockGuardian[0].userName}&${
             pipe[i].pipeBlockGuardian[0].userCode
-            }|${pipe[i].pipePullGuardian[0].userCode}`;
+            }|${pipe[i].pipePullGuardian[0].userName}&${pipe[i].pipePullGuardian[0].userCode}`;
         }
         let finSendData = {
           onePipe: dataStrArr[0],
@@ -540,10 +544,10 @@
           __sid: sendData.__sid
         };
         if (this.$route.query.id) {
-          sendData.applyDept = this.oldInfo.office.officeName;
+          sendData.applyDept = this.oldInfo.office?this.oldInfo.office.officeName:'';
           sendData.applyer = this.oldInfo.user.userName;
-          finSendData.applyDept = this.oldInfo.office.officeCode;//正式用
-          finSendData.applyer = this.oldInfo.office.userCode;//正式用
+          finSendData.applyDept = this.oldInfo.office?this.oldInfo.office.officeCode:'';//正式用
+          finSendData.applyer = this.oldInfo.user.userCode;//正式用
         }else{
           sendData.applyDept = this.$userInfo.officeName;
           sendData.applyer = this.$userInfo.userName;

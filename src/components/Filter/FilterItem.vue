@@ -59,6 +59,10 @@ export default {
       default: "name"
     }
   },
+  model: {
+    prop: "value",
+    event: "change"
+  },
   data() {
     return {
       id: Math.round(Math.random() * 10),
@@ -70,12 +74,16 @@ export default {
   watch: {
     showSheet(showSheet) {
       if (showSheet) this.getStyleObject();
+    },
+    value(e) {
+      console.log(e)
+      this.$emit('change', e)
     }
   },
   mounted() {
     if (this.actions.length > 0)
       this.value = this.actions[this.defaultIndex][this.valueKey];
-  },
+    },
   methods: {
     onSelect(e) {
       this.value = e;

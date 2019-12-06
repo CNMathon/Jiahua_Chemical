@@ -2,7 +2,7 @@
   <div class="liusuan">
     <van-nav-bar title="脂肪醇" left-text="返回" left-arrow @click-left="pageBack" />
     <Search></Search>
-    <ActionBar nodrop></ActionBar>
+    <!-- <ActionBar nodrop></ActionBar> -->
     <div class="head">
       <div>卡片名称</div>
       <div>位号</div>

@@ -163,8 +163,8 @@ const mixin = {
       res += '%'
       return res
     },
-    toPoint(content) {
-      let res = content.replace("%", "");
+    toPoint( per ) {
+      let res = per.replace("%", "");
       res = res / 100;
       return res;
     },

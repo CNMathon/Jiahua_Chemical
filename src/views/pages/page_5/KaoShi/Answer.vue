@@ -93,6 +93,20 @@ export default {
       time: "2小时"
     };
   },
+  created() {
+    // this.$api.page_5
+    //   .submitMyPaper(data, this.$userInfo.sessionId)
+    //   .then(res => {
+    //     if (res.remainMinutes == 0) {
+    //       this.$Toast.success({
+    //           message: "考试已结束",
+    //           onClose() {
+    //             that.pageBack();
+    //           }
+    //         });
+    //     }
+    //   })
+  },
   mounted() {
     // 获取考试数据
     this.getPageData();
@@ -203,6 +217,7 @@ export default {
       }
     },
     stopExam(isFinalSubmit = 0) {
+      console.log(`isFinalSubmit: `, isFinalSubmit)
       let sendData = {
         id: this.$route.query.id,
         userCode: this.$userInfo.userCode,

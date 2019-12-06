@@ -3,7 +3,7 @@
     <van-nav-bar title="新材料" left-text="返回" left-arrow @click-left="pageBack" fixed/>
     <van-skeleton title :row="3" :loading="isLoading" class="fixed-first">
       <Search></Search>
-      <ActionBar nodrop />
+      <!-- <ActionBar nodrop /> -->
       <div class="head">
         <div>
           <DropDown position="left" :values="dropDownValue" />

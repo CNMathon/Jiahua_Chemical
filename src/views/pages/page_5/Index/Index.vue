@@ -102,18 +102,18 @@
         >
           <van-tab title="我的考试任务">
             <div class="tab-content">
-              <label v-for="(item, index) in testTask.studyTask" :key="index">
+              <label v-for="(item, index) in testData.now" :key="index">
                 <class-2 :info="item" v-if="index < 3"></class-2>
               </label>
-              <div class="null" v-if="testTask.studyTask.length === 0">暂无数据</div>
+              <div class="null" v-if="testData.now.length === 0">暂无数据</div>
             </div>
           </van-tab>
           <van-tab title="我的考试历史">
             <div class="tab-content">
-              <label v-for="(item, index) in testTask.historyTask" :key="index">
+              <label v-for="(item, index) in testData.history" :key="index">
                 <class-2 :info="item" v-if="index < 3" isEnd></class-2>
               </label>
-              <div class="null" v-if="testTask.historyTask.length === 0">暂无数据</div>
+              <div class="null" v-if="testData.history.length === 0">暂无数据</div>
             </div>
           </van-tab>
         </van-tabs>
@@ -161,7 +161,7 @@ export default {
         }
       ],
       swiperData: [],
-      testHistory: [], //总记录
+      // testHistory: [], //总记录
       studyData: {
         studyTask: [],
         historyTask: []
@@ -169,6 +169,10 @@ export default {
       testTask: {
         studyTask: [],
         historyTask: []
+      },
+      testData: {
+        now: [],
+        history: [],
       }
     };
   },
@@ -176,7 +180,7 @@ export default {
     if (this.load) return;
     this.getHomePage();
     this.getMyTest();
-    this.getMyTestHistory();
+    // this.getMyTestHistory();
     this.getMyStudy();
     this.getUserName();
   },
@@ -211,35 +215,43 @@ export default {
         })
         .catch(() => {});
     },
-    // 获取待考试列表
+    // 获取考试列表
     getMyTest() {
-      let sendData = {
-        pageNo: 1,
-        pageSize: 10,
-        __sid: this.$userInfo.sessionId
-      };
       this.$api.page_5
-        .getMyTestHistory(sendData)
+        .getMyTestHistory({
+          pageNo: 1,
+          pageSize: 10,
+          __sid: this.$userInfo.sessionId
+        })
         .then(res => {
-          this.testTask.studyTask = res.list;
+          console.log(`testData: `, res.list)
+          // this.testTask.studyTask = res.list;
+          res.list.map(item => {
+            console.log(item)
+            if (item.isfinalsubmit == 1) {
+              this.testData.history.push(item)
+            } else {
+              this.testData.now.push(item)
+            }
+          })
         })
         .catch(() => {});
     },
     // 获取考试历史
-    getMyTestHistory() {
-      let sendData = {
-        isfinalsubmit: 1,
-        pageNo: 1,
-        pageSize: 10,
-        __sid: this.$userInfo.sessionId
-      };
-      this.$api.page_5
-        .getMyTestHistory(sendData)
-        .then(res => {
-          this.testTask.historyTask = res.list;
-        })
-        .catch(() => {});
-    },
+    // getMyTestHistory() {
+    //   let sendData = {
+    //     isfinalsubmit: 1,
+    //     pageNo: 1,
+    //     pageSize: 10,
+    //     __sid: this.$userInfo.sessionId
+    //   };
+    //   this.$api.page_5
+    //     .getMyTestHistory(sendData)
+    //     .then(res => {
+    //       this.testTask.historyTask = res.list;
+    //     })
+    //     .catch(() => {});
+    // },
     onChange(index) {
       this.current = index;
     },

@@ -120,6 +120,7 @@
         const that = this;
         function todo (statusList, path, moreInfo = null) {
           if (status == statusList) {
+            console.log(11111111111111)
             that.$router.push({
               path: path,
               query: {

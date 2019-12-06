@@ -73,7 +73,28 @@ const article = {
     // 获取地址前缀
     getSQ() {
         return base.sq;
-    }
+    },
+    getZiliaoPreview(params) {
+        let completion = (e) => {
+            if (e < 10) {
+                return`0` + String(e)
+            }
+            return e
+        }
+        let date = `${new Date(params.updateDate).getFullYear()}-${completion(new Date(params.updateDate).getMonth() + 1)}-${completion(new Date(params.updateDate).getDate())}`
+        return `${base.sq}upload/zxksupload/${date}/${params.id}_pdf.pdf`
+    },
+    // 获取二维码培训签到数据
+    pxzxHtZxksPxzxListData(params) {
+        return axios.get(`${base.sq}pxzx/htZxksPxzx/listData`, {
+            params: params
+        });
+    },
+    // 获取二维码考试签到数据
+    myexamMyexamListData(params) {
+        return axios.get(`${base.sq}myexam/myexam/listData`, {
+            params: params
+        });
+    },
 };
-
 export default article;

@@ -19,6 +19,11 @@ const routes = {
       }
     },
     {
+      path: "/page_1/tagsThistory",
+      name: "tagsThistory",
+      component: () => import("../components/TagHistory/index.vue"),
+    },
+    {
       path: "/page_1/danger",
       component: () => import("../views/pages/page_1/danger/Home.vue"),
       // redirect: "/page_1/index",

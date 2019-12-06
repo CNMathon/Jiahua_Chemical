@@ -1,9 +1,9 @@
 <template>
   <div class="item">
     <div class="left">
-      <div class="time">2018-08-11 14:35</div>
+      <div class="time">{{info.AlarmTime}}</div>
       <div class="content">
-        报警内容报警内容报警内容报警内容报警内容报警内容报警内容报警内容报警内容报警内内容
+        {{info.AlarmName}}
       </div>
       <div class="address">
         <van-icon
@@ -11,7 +11,7 @@
           name="location"
           color="#6096F8"
           size="0.75rem"
-        />报警地点报警地点
+        />{{info.AlarmOrigin}}
       </div>
     </div>
     <div class="right">
@@ -24,14 +24,17 @@
             color="#D81E06"
           />
         </div>
-        <div class="title">报警中</div>
+        <div class="title">{{info.AlarmState}}</div>
       </div>
     </div>
   </div>
 </template>
 <script>
 export default {
-  name: "item"
+  name: "item",
+  props: {
+    info: Array
+  }
 };
 </script>
 <style lang="scss" scoped>

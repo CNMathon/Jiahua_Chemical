@@ -473,6 +473,31 @@ export default {
         index: 0,
         value: ""
       },
+      zypztList: [
+          {
+          name: '选择',
+          index: 0
+        },{
+          name: "编辑",
+          index: 1
+        },
+        {
+          name: "初审",
+          index: 2
+        },
+        {
+          name: "审核",
+          index: 3
+        },
+        {
+          name: "有效",
+          index: 4
+        },
+        {
+          name: "已终结",
+          index: 5
+        }
+      ], // 作业票状态列表
       dzgjmcColumns: ["吊车", "行车", "把杆"],
       materialColumns: ["吊车", "行车", "把杆"],
       currentDate: new Date(),

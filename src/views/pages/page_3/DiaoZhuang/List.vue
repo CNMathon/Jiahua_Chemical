@@ -87,11 +87,11 @@
           index: 2
         },
         {
-          name: "有效",
+          name: "审核",
           index: 3
         },
         {
-          name: "已验票",
+          name: "有效",
           index: 4
         },
         {

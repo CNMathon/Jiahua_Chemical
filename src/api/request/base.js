@@ -10,6 +10,7 @@ const base = {
 
   sq2: "http://mes.jhec.com.cn:8084/",
   mes2: "http://mes.jhec.com.cn:8082/MIS/",
+  tagsHistory: "http://mes.jhec.com.cn:8082/RestCharts/api/GetFixIntervalValuesArrByNames",
   mes3: "http://mes.jhec.com.cn:8083/JobManagement/api/services/JobManagement/mobileApi/",
   jhec_8085: "http://mes.jhec.com.cn:8085/",
   jhec_8086: "http://mes.jhec.com.cn:8086/",
@@ -23,7 +24,8 @@ const base = {
 //   sq2: "http://mes.jhec.com.cn:8084/",
 //   mes2: "http://mes.jhec.com.cn:8082/MIS/",
 //   mes3: "http://mes.jhec.com.cn:8083/JobManagement/api/services/JobManagement/mobileApi/",
-//   jhec_8085: "http://mes.jhec.com.cn:8085/"
+//   jhec_8085: "http://mes.jhec.com.cn:8085/",
+//   jhec_8086: "http://mes.jhec.com.cn:8086/",
 // };
 
 export default base;

@@ -4,7 +4,7 @@
     <van-skeleton title :row="3" :loading="isLoading" class="fixed-first">
       <div class="fixed-first">
         <Search></Search>
-        <ActionBar nodrop />
+        <!-- <ActionBar nodrop /> -->
         <div class="head">
           <div>参考描述</div>
           <div>位号</div>

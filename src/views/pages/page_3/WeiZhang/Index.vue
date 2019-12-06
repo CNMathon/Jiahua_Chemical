@@ -60,16 +60,16 @@
       <cell-value
         title="违章项目"
         required
-        :value="'点击选择'"
+        :value="sendData.breakruleproject.khcontent || '点击选择'"
         iconName="search"
         arrow
-        @click="selectProjects()"
+        @click="selectProjects"
       />
-      <div class="breakruleproject" v-if="sendData.breakruleproject !== {}">
+      <!-- <div class="breakruleproject" v-if="sendData.breakruleproject !== {}">
         <div class="breakruleproject__item">
           <div class="breakruleproject__title">{{sendData.breakruleproject.khcontent}}</div>
         </div>
-      </div>
+      </div> -->
       <cell-picker
         title="违章类型"
         required
@@ -212,30 +212,33 @@ export default {
           this.$Toast.clear();
           let info = res.htCbsBreakrulesmanage;
           console.log("info: ", info);
-          this.sendData.projectname = {
-            projectName: "",
-            projectAddress: "",
-            id: info.projectname
-          };
-          sendData.breakrulename = info.breakrulename
-          sendData.projectname.projectName = info.breakrulename;
-          this.sendData.occurtime = info.occurtime;
-          this.sendData.occursite = info.occursite;
-          this.sendData.incidentdes = info.incidentdes;
-          this.sendData.breakruletype = Number(info.breakruletype);
-          this.sendData.punishnorm = info.punishnorm || "";
-          let obj = {
-            userCode: info.checkuser,
+          this.sendData.projectname = info.pro
+          this.sendData.breakrulename = info.breakrulename
+          this.sendData.breakruledept = info.commpany
+          this.sendData.occurtime = `${info.occurtime.split(':')[0]}:${info.occurtime.split(':')[1]}`
+          this.sendData.occursite = info.occursite
+          this.sendData.checkuser = [{
+            userCode: info.jcry.refCode,
             userName: info.jcry.userName
-          };
-          let arr = [];
-          arr.push(obj);
-          this.sendData.checkuser = arr;
+          }]
+          this.sendData.breakruleuser = [{
+            userCode: 'userCode',
+            userName: info.breakruleuser
+          }]
           this.sendData.wzstandard = {
             normName: info.wzstandard,
-            normNub: info.wzstandardid
-          };
-          this.sendData.breakruledept = info.cbs.cbsName || "";
+            normNub: info.wzstandardid,
+          }
+          this.sendData.breakruleproject = {
+            id: info.pro.id,
+            isNewRecord: info.pro.isNewRecord,
+            khcontent: info.pro.projectName,
+            khnorm: info.punishnorm,
+          }
+          this.sendData.breakruletype = info.breakruletype
+          this.sendData.punishnorm = info.punishnorm
+          this.sendData.incidentdes = info.incidentdes
+          // this.sendData.
         })
         .catch(() => {
           this.$Toast.clear();

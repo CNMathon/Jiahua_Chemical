@@ -137,7 +137,12 @@ const routes = {
           meta: {
             keepAlive: false //此组件不需要被缓存
           }
-        }
+        },
+        {
+          path: "/page_3/gongdanguanli/select_organization",
+          name: "gongdanguanli_select_organization",
+          component: () => import("../components/Organization/index.vue")
+        },
       ]
     },
     // 电气第一种工作票
@@ -281,7 +286,10 @@ const routes = {
         {
           path: "/page_3/donghuo/list",
           name: "donghuo_list",
-          component: () => import("../views/pages/page_3/DongHuo/List.vue")
+          component: () => import("../views/pages/page_3/DongHuo/List.vue"),
+          meta: {
+            keepAlive: true //此组件不需要被缓存
+          }
         },
         {
           path: "/page_3/donghuo/select",
@@ -298,6 +306,11 @@ const routes = {
           path: "/page_3/donghuo/select_organization",
           name: "donghuo_select_organization",
           component: () => import("../components/Organization/index.vue")
+        },
+        {
+          path: "/page_3/donghuo/select_department",
+          name: "donghuo_select_department",
+          component: () => import("../components/Department/index.vue")
         }
       ]
     },
@@ -354,7 +367,10 @@ const routes = {
         {
           path: "/page_3/kongjian/list",
           name: "kongjian_list",
-          component: () => import("../views/pages/page_3/KongJian/List.vue")
+          component: () => import("../views/pages/page_3/KongJian/List.vue"),
+          meta: {
+            keepAlive: true
+          }
         },
         {
           path: "/page_3/kongjian/analysis",
@@ -739,6 +755,12 @@ const routes = {
           props: true
         },
         {
+          path: "/page_3/dongtu/index3",
+          name: "dongtu_index",
+          component: () => import("../views/pages/page_3/DongTu/Index3.vue"),
+          props: true
+        },
+        {
           path: "/page_3/dongtu/dongtu_select_department",
           name: "dongtu_select_department",
           component: () =>
@@ -1002,6 +1024,16 @@ const routes = {
           path: "/page_3/yinhuan/select_organization",
           name: "yinhuan_select_organization",
           component: () => import("../components/Organization/index.vue")
+        },
+        {
+          path: "/page_3/yinhuan/select_department",
+          name: "yinhuan_select_department",
+          component: () => import("../components/Department/index.vue")
+        },
+        {
+          path: "/page_3/yinhuan/select_company",
+          name: "yinhuan_select_company",
+          component: () => import("../components/Company/index.vue")
         },
         {
           path: "/page_3/yinhuan/list",

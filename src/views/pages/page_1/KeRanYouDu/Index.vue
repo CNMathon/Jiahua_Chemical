@@ -143,31 +143,37 @@ export default {
           info: [
             {
               title: "甲醇",
-              enText: "GS5301",
+              enText: "ZFCC_GS5301",
               value: "",
               unit: ""
             },
             {
               title: "甲醇",
-              enText: "GS6101",
+              enText: "ZFCC_GS6101",
               value: "",
               unit: ""
             },
             {
               title: "甲醇",
-              enText: "GS20107a",
+              enText: "ZFCC_GS20107A",
               value: "",
               unit: ""
             },
             {
               title: "氢气",
-              enText: "GS20110a",
+              enText: "ZFCC_GS20110A",
               value: "",
               unit: ""
             },
             {
               title: "氢气",
-              enText: "GS2001",
+              enText: "ZFCC_GS2001",
+              value: "",
+              unit: ""
+            },
+            {
+              title: "气体报警",
+              enText: "ZFCC_GS20111",
               value: "",
               unit: ""
             }
@@ -230,7 +236,7 @@ export default {
               this.tabList[2].info[index2].unit = item2.Unit;
             });
           res
-            .filter((element1, index1) => index1 > 13 && index1 <= 18)
+            .filter((element1, index1) => index1 > 13 && index1 <= 19)
             .map((item2, index2) => {
               this.tabList[3].info[index2].value = item2.Value.toFixed(2);
               this.tabList[3].info[index2].unit = item2.Unit;
@@ -243,7 +249,7 @@ export default {
             res.filter((element, index1) => index1 > 7 && index1 <= 13)
           );
           console.log(
-            res.filter((element, index) => index > 13 && index <= 18)
+            res.filter((element, index) => index > 13 && index <= 19)
           );
           // res.map((item, index) => {
           //   this.tabList[index].value = item.Value.toFixed(2);

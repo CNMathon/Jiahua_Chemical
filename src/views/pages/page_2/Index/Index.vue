@@ -7,7 +7,7 @@
       <van-row>
         <label v-for="(item, index) in nav" :key="index">
           <van-col span="6" v-if="index <= 2">
-            <div class="nav" @click="toPage(item.router)">
+            <div class="nav" @click="jumpTo(item.router)">
               <div class="nav-image">
                 <img :src="require(`@/assets/images/nav_${index + 9}.svg`)" alt />
               </div>
@@ -65,7 +65,7 @@
             <div class="item-title-item">库存</div>
           </div>
           <van-tab v-for="(item, index) in dangerInfo" :key="index" :title="item.text">
-            <div class="item-area">
+            <div class="item-area" @click="dangerInfoJumping(index)">
               <Item size="big" :info="item.info" />
             </div>
           </van-tab>
@@ -79,14 +79,14 @@
         <van-tab title="入网口数据">
           <div class="panel-list">
             <div class="panel-list-item" v-for="(item, index) in envEntData" :key="index">
-              <Panel size="big" :name="item.text" :value="item.value" />
+              <Panel size="big" :name="item.text" :value="item.value" :unit="item.unit" />
             </div>
           </div>
         </van-tab>
         <van-tab title="雨排水排放数据">
           <div class="panel-list">
             <div class="panel-list-item" v-for="(item, index) in envRainData" :key="index">
-              <Panel size="big" :name="item.text" :value="item.value"></Panel>
+              <Panel size="big" :name="item.text" :value="item.value" :unit="item.unit" />
             </div>
           </div>
         </van-tab>
@@ -159,25 +159,25 @@ export default {
               itemName: "硫磺",
               enName: "LSC_LH_VV026",
               factory: "硫酸厂",
-              value: "..."
+              value: "加载中..."
             },
             {
               itemName: "发烟硫酸",
               enName: "LSC_FYLS_VV014A",
               factory: "硫酸厂",
-              value: "..."
+              value: "加载中..."
             },
             {
               itemName: "氯磺酸",
               enName: "LSC_LHS",
               factory: "硫酸厂",
-              value: "..."
+              value: "加载中..."
             },
             {
               itemName: "盐酸",
               enName: "SJC_YS",
               factory: "烧碱厂",
-              value: "..."
+              value: "加载中..."
             }
           ]
         },
@@ -186,7 +186,7 @@ export default {
           route: "/page_1/keranyoudu",
           info: [
             {
-              itemName: "硫磺123",
+              itemName: "硫磺",
               factory: "硫酸厂",
               value: "89"
             },
@@ -256,13 +256,13 @@ export default {
         {
           text: "新材料",
           color: "rgba(78,169,232,0.1)",
-          router: "/xincailiao_1",
+          router: "/page_1/xincailiao_1",
           query: {}
         },
         {
           text: "硫酸",
           color: "rgba(96,150,248,0.1);",
-          router: "/liusuan_1",
+          router: "/page_1/liusuan_1",
           query: {
             mode: 1
           }
@@ -339,58 +339,62 @@ export default {
       envEntData: [
         {
           text: "PH",
-          value: "8"
+          enText: "SCLZ_AI_0001",
+          value: "",
+          unit: ''
         },
         {
           text: "COD",
-          value: "450 mg/l"
+          enText: "SCLZ_AI_0002",
+          value: "",
+          unit: ''
         },
         {
           text: "氨氮",
-          value: "30 mg/l"
+          enText: "SCLZ_AI_0003",
+          value: "",
+          unit: ''
         },
         {
           text: "总磷",
-          value: "8 mg/l"
+          enText: "SCLZ_AI_001",
+          value: "",
+          unit: ''
         },
         {
-          text: "MLSS",
-          value: "400"
-        },
-        {
-          text: "入网流量",
-          value: "256 m²/h"
+          text: "流量",
+          enText: "SCLZ_FI_0002.VAL",
+          value: "",
+          unit: ''
         }
       ],
       envRainData: [
         {
-          text: "PH",
-          value: "123"
+          text: "河西",
+          enText: "SCLZ_AI_0006",
+          value: "",
+          unit: ''
         },
         {
-          text: "COD",
-          value: "400 mg/l"
-        },
-        {
-          text: "氨氮",
-          value: "28 mg/l"
-        },
-        {
-          text: "总磷",
-          value: "10 mg/l"
-        },
-        {
-          text: "MLSS",
-          value: "402"
-        },
-        {
-          text: "入网流量",
-          value: "352 m²/h"
+          text: "河西COD",
+          enText: "SCLZ_AI_0007",
+          value: "",
+          unit: ''
         }
       ]
     };
   },
   methods: {
+    dangerInfoJumping(e) {
+      switch (e) {
+        case 0:
+          this.jumpTo('/page_2/weihuakucun')
+          break;
+        case 1:
+          this.jumpTo('/page_1/keranyoudu')
+          break;
+      }
+    },
     getWeihuaData() {
       this.isLoading = true;
       let tagNames = [];
@@ -415,6 +419,47 @@ export default {
           this.isLoading = false;
         });
     },
+    getHuanbaoData() {
+      let http = {
+        // 入网口数据
+        ent: () => {
+          let tagNames = [];
+          this.envEntData.map(item => tagNames.push(item.enText));
+          this.$api.page_1
+            .getRtMonTagInfosByNames({
+              tagNames: String(tagNames)
+            })
+            .then(res => {
+              console.log(`entData: `, res);
+              res.map((item, index) => {
+                // console.log(this.envEntData)
+                this.envEntData[index].value = item.Value.toFixed(2);
+                this.envEntData[index].unit = item.Unit;
+                // this.listData[index].unit = item.Unit;
+              });
+            });
+        },
+        // 雨排水数据
+        rain: () => {
+          let tagNames = [];
+          this.envRainData.map(item => tagNames.push(item.enText));
+          this.$api.page_1
+            .getRtMonTagInfosByNames({
+              tagNames: String(tagNames)
+            })
+            .then(res => {
+              console.log(`rainData: `, res);
+              res.map((item, index) => {
+                // console.log(this.envRainData)
+                this.envRainData[index].value = item.Value.toFixed(2);
+                this.envRainData[index].unit = item.Value.Unit;
+              });
+            });
+        }
+      };
+      http.ent()
+      http.rain()
+    },
     toPage(router, text) {
       this.$router.push({ path: `/page_1${router}`, query: { text: text } });
     },
@@ -437,7 +482,8 @@ export default {
     }
   },
   created() {
-    this.getWeihuaData()
+    this.getWeihuaData();
+    this.getHuanbaoData();
   }
 };
 </script>

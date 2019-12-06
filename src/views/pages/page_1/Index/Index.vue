@@ -53,7 +53,7 @@
             </van-row>
             <!-- 数据面板 -->
             <div class="rongliang">
-              <div class="box" v-for="(item, index) in dataPanel" :key="index">
+              <div class="box" v-for="(item, index) in dataPanel" :key="index" @click="tolinerEchart(item.enText,item.unit)">
                 <p class="p1">
                   <span>{{item.value}}</span>
                   <span>{{item.unit}}</span>
@@ -622,6 +622,15 @@ export default {
   },
   mounted() {},
   methods: {
+    tolinerEchart (name,unit) {
+      this.$router.push({
+        path: './tagsThistory',
+        query: {
+          tagsName: name,
+          unit: unit
+        }
+      })
+    },
     testme() {
       this.ballData = [1, 0.5, 0.84, 0.32];
       console.log(this.ballData);

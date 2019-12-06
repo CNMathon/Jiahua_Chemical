@@ -1,7 +1,9 @@
 // initial state
 const state = {
   acceptanceCharge: [],
-  rectificationCharge: []
+  rectificationCharge: [],
+  rectificationDepartment:[],
+  rectificationCompany:[]
 };
 
 // getters

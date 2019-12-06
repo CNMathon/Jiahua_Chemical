@@ -20,7 +20,7 @@
       <!-- 作业票编号 -->
       <cell-value title="作业票编号" :value="sendData.zypcode" disable></cell-value>
       <!-- 作业票状态 -->
-      <cell-value title="作业票状态" value="编辑" disable></cell-value>
+      <cell-value title="作业票状态" :value="status?zypztList[status].name:''" disable></cell-value>
       <!-- 吊装内容 -->
       <cell-textarea disable v-model="sendData.dznr" title="吊装内容" required placeholder="请输入吊装内容"></cell-textarea>
       <!-- 吊装地点 -->
@@ -495,22 +495,15 @@
     >
       <Canvas ref="signature" @save="saveCanvas2" @cancel="cancelCanvas2"></Canvas>
     </van-popup>
-    <cell-textarea
-      disable
-      v-model="sendData.otherSafety"
-      title="其他安全措施"
-      required
-      placeholder="请输入其他安全措施"
-    ></cell-textarea>
+    <cell-textarea disable v-model="sendData.qtaqcs" title="其他安全措施" required placeholder="请输入其他安全措施"></cell-textarea>
     <div class="signature">
       <span>签字</span>
       <van-image
-        v-if="sendData.othercsComplier"
+        v-if="sendData.qtaqcsBzr"
         style="width:40px;margin-left:30px"
-        :src="sendData.othercsComplier"
+        :src="sendData.qtaqcsBzr"
       ></van-image>
-      <van-icon style="float:right" name="edit" />
-      <span style="float:right;font-size:14px;margin-right:30px">{{sendData.othercsTime}}</span>
+      <span style="float:right;font-size:14px;margin-right:30px">{{sendData.qtaqcsTime}}</span>
     </div>
     <!-- 操作Popup -->
     <van-popup v-model="showPicker" position="bottom" class="action">
@@ -554,6 +547,31 @@ export default {
         qtaqcs: "",
         qtaqcsTime: ""
       },
+      zypztList: [
+          {
+          name: '选择',
+          index: 0
+        },{
+          name: "编辑",
+          index: 1
+        },
+        {
+          name: "初审",
+          index: 2
+        },
+        {
+          name: "审核",
+          index: 3
+        },
+        {
+          name: "有效",
+          index: 4
+        },
+        {
+          name: "已终结",
+          index: 5
+        }
+      ], // 作业票状态列表
       Alight: 0,
       light: 0,
       mask: [0, 1],

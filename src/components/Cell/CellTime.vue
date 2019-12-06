@@ -12,7 +12,6 @@
         ref="van-datetime-picker"
         v-model="selectTime"
         :type="type"
-        :min-date="minDate"
         @cancel="timeShow = false"
         @confirm="onTimeConfirm"
       />
@@ -46,13 +45,17 @@ export default {
     type: {
       type: String,
       default: "datetime"
+    },
+    minTime: {
+      type: String,
+      default: ''
     }
   },
   data() {
     return {
       values: "",
       timeShow: false,
-      minDate: new Date(),
+      minDate: this.minTime,
       selectTime: new Date(),
       pickerTime: ""
     };
