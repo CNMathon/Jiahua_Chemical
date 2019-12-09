@@ -1,11 +1,13 @@
 // initial state
 const state = {
-  keepAliveComponents: ["dongtuindex"],
+  keepAliveComponents: ["dongtuList","dongtuindex"],
   otherSpecial: [],
   hazardSb: [],
   guardian: [], //监护人
   dtMan: [], //作业部门负责人
-  dtDept:[]
+  dtDept:[],
+  sqbm:[],
+  dhzyRen:[]
 };
 
 // getters

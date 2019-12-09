@@ -93,12 +93,18 @@ export default {
     Preview(info) {
       console.log("info: ", info);
       console.log(this.$api.page_5.getZiliaoPreview(info));
-      window.open(
-        this.$api.page_5.getZiliaoPreview(info)
-      );
+      // window.open(
+      //   this.$api.page_5.getZiliaoPreview(info)
+      // );
+      // history.pushState(null, null, 'http://www.baidu.com');
+      location.href = this.$api.page_5.getZiliaoPreview(info)
       
       // window.location.href = this.$api.page_5.getZiliaoPreview(info)
-      // this.$router.push('https://baidu.com')
+    //    let routeUrl = this.$router.resolve({
+    //       path: "https://baidu.com",
+    //       query: {id:96}
+    //  });
+    //  window.open(routeUrl.href, '_self');
       // this.$router.push(this.$api.page_5.getZiliaoPreview(info))
       // if (info.fileContentType.includes("image/")) {
       //   console.log(1);

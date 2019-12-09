@@ -18,21 +18,24 @@
     <j-filter v-model="showFilter" @confirm="getPageData">
       <j-filter-search v-model="searchValues" @search="filterSearch"></j-filter-search>
       <j-filter-item title="作业票状态" :actions="zypztList" @select="filterSelect_1"></j-filter-item>
-      <cell-select-department
+      <select-department
         title="申请部门"
         radio
         :storeModule="storeModule"
         storeKey="sqbm"
         v-model="sqbm"
+        no-padding
       />
       <select-organization 
         title="申请人"
         max="9"
         :storeModule="storeModule"
-        storeKey="zyRen"
-        v-model="zyRen"
+        storeKey="dhzyRen"
+        v-model="dhzyRen"
         no-padding
       />
+      <!-- 清空搜索条件 -->
+      <div class="clear-button"  @click="clearfilter">清空条件</div>
     </j-filter>
     <div class="list-card-area">
       <div class="app">
@@ -72,7 +75,7 @@
 import { mapState } from "vuex";
 import { mixin } from "@/mixin/mixin";
 export default {
-  name: "kongjian_list",
+  name: "kongjianList",
   data() {
     return {
       storeModule: 'kongjian',
@@ -80,7 +83,7 @@ export default {
       searchValue: "",
       searchValues: "",
       zypztList: [
-        { index: -1, name: "请选择" },
+        { index: '', name: "请选择" },
         { index: 1, name: "编辑" },
         { index: 2, name: "初审" },
         { index: 3, name: "审核" },
@@ -96,28 +99,44 @@ export default {
   mixins: [mixin],
   created() {
     this.getPageData();
-    this.$store.dispatch("kongjian/cleanState");
-    this.$store.commit("kongjian/delete_KeepAlive", "kongjianindex");
-    this.$store.commit("kongjian/delete_KeepAlive", "kongjianindex2");
-    this.$nextTick(() => {
-      this.$store.commit("kongjian/add_KeepAlive", "kongjianindex");
-      this.$store.commit("kongjian/add_KeepAlive", "kongjianindex2");
-    });
+    this.initKongjianPage();
+  },
+  activated(){
   },
   methods: {
+    clearfilter () {
+      this.initKongjianPage();
+      this.searchValue = "";
+      this.status ="";
+      this.applyDept = [];
+      this.applyRen = [];
+      this.showFilter = false;
+      this.getPageData();
+    },
+    initKongjianPage () {
+      this.$store.dispatch("kongjian/cleanState");
+      this.$nextTick(() => {
+        this.$store.commit("kongjian/add_KeepAlive", "kongjianList");
+        this.$store.commit("kongjian/add_KeepAlive", "kongjianindex");
+        this.$store.commit("kongjian/add_KeepAlive", "kongjianindex2");
+      });
+    },
     pageBack() {
       this.$router.push({
         path: "/page_3/index"
       });
     },
+    
     getPageData() {
       this.isLoading = true;
+      console.log(this.sqbm)
+      console.log(this.dhzyRen)
       this.$api.page_3
         .htHseSxkjzypListData({
           zyContent: this.searchValue,
           htStatus: this.status,
-          applyDept: this.sqbm[0].id,
-          applyRen: this.sqRen[0].userCode,
+          applyDept: this.sqbm.length>0?this.sqbm[0].id:'',
+          applyRen: this.dhzyRen.length>0?this.dhzyRen[0].userCode:'',
           __sid: localStorage.getItem("JiaHuaSessionId")
         })
         .then(res => {
@@ -128,12 +147,14 @@ export default {
         });
     },
     onClickRight() {
+      this.initKongjianPage();
       this.$router.push({
         path: "../kongjian"
       });
     },
     // 跳转至详情页
     jumpToMorePage(status, code) {
+      this.initKongjianPage();
       if (Number(status) === 1) {
         this.$router.push({
           path: "../kongjian",
@@ -164,7 +185,7 @@ export default {
     }
   },
   computed: mapState({
-    zyRen: state => state.kongjian.zyRen,
+    dhzyRen: state => state.kongjian.dhzyRen,
     sqbm: state => state.kongjian.sqbm
   }),
 };

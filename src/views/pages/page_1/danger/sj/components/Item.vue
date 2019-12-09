@@ -1,6 +1,6 @@
 <template>
   <div class="guolu">
-    <div class="main" v-for="(item, index) in info" :key="index">
+    <div class="main" v-for="(item, index) in info" :key="index" @click="jumpTo(`/page_1/tagsThistory`, {tagsNameShow: item.itemName, tagsName: item.enName, unit:item.unit})">
       <div class="number">{{item.itemName}}</div>
       <div class="proportion">{{item.value}}{{item.unit}}</div>
     </div>

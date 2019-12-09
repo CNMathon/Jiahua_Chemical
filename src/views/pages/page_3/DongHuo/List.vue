@@ -21,12 +21,13 @@
       <j-filter-item title="动火等级" v-model="dhLevelValue" :actions="dhLevelColumns" @select="filterSelect_2" />
       <!-- <j-filter-cell title="申请部门" /> -->
       <!-- <cell-select-department title="申请部门" no-padding /> -->
-      <cell-select-department
+      <select-department
         title="申请部门"
         radio
         :storeModule="storeModule"
         storeKey="sqbm"
         v-model="sqbm"
+        no-padding
       />
       <!-- <j-filter-cell title="申请人" /> -->
       <select-organization 
@@ -37,6 +38,8 @@
         v-model="dhzyRen"
         no-padding
       />
+      <!-- 清空搜索条件 -->
+      <div class="clear-button"  @click="clearfilter">清空条件</div>
     </j-filter>
     <div class="list-card-area">
       <div class="app">
@@ -55,7 +58,7 @@
               <div class="donghuo-list-card donghuo-list-card-nolast" @click="tap(item)">
                 <div class="left">
                   <div class="left-line left-line-notlast">动火地点及内容：{{item.siteContent}}</div>
-                  <div class="left-line left-line-notlast">动火级别：{{item.dhLevel}}</div>
+                  <div class="left-line left-line-notlast">动火级别：{{dhLevelColumns[item.dhLevel].name}}</div>
                   <div
                     class="left-line left-line-notlast"
                   >申请部门：{{item.office?item.office.officeName:''}}</div>
@@ -82,6 +85,7 @@
 import { mapState } from "vuex";
 import { mixin } from "@/mixin/mixin";
 export default {
+  name: 'donghuoList',
   data() {
     return {
       storeModule: 'donghuo',
@@ -98,6 +102,7 @@ export default {
       isListLoadingError: false, // 瀑布流加载状态 - 是否加载错误
       showFilter: false, // 筛选状态 - 是否开启
       zypztList: [
+        { index: '', name: "请选择" },
         {
           name: "编辑",
           index: 1
@@ -120,21 +125,22 @@ export default {
         }
       ], // 作业票状态列表
       dhLevelColumns: [
+        { index: '', name: "请选择" },
         {
           name: "制定位置特殊动火作业",
-          index: 5
+          index: 1
         },
         {
           name: "特殊",
-          index: 5
+          index: 2
         },
         {
           name: "|类",
-          index: 5
+          index: 3
         },
         {
           name: "||类",
-          index: 5
+          index: 4
         }
       ], //动火等级
       selectZypzt: "", // 选择的作业票状态
@@ -143,17 +149,38 @@ export default {
   },
   mixins: [mixin],
   created() {
-    console.log(1)
+    console.log("创建");
     this.getPageData();
+    this.initDonghuoPage();
+  },
+  activated(){
+    console.log("激活");
+    if(sessionStorage.getItem('success')=='1'){
+      this.initDonghuoPage();
+      this.getPageData();
+      sessionStorage.removeItem('success')
+    }
+  },
+  destroyed () {
     this.$store.dispatch("donghuo/cleanState");
-    this.$store.commit("donghuo/delete_KeepAlive", "donghuoindex");
-    this.$store.commit("donghuo/delete_KeepAlive", "donghuoindex2");
-    this.$nextTick(() => {
-      this.$store.commit("donghuo/add_KeepAlive", "donghuoindex");
-      this.$store.commit("donghuo/add_KeepAlive", "donghuoindex2");
-    });
   },
   methods: {
+    clearfilter () {
+      this.initDonghuoPage();
+      this.showFilter = false;
+      this.zypztValue = "";
+      this.searchValue = "";
+      this.dhLevelValue = "";
+      this.getPageData();
+    },
+    initDonghuoPage () {
+      this.$store.dispatch("donghuo/cleanState");
+      this.$nextTick(() => {
+        this.$store.commit("donghuo/add_KeepAlive", "donghuoList");
+        this.$store.commit("donghuo/add_KeepAlive", "donghuoindex");
+        this.$store.commit("donghuo/add_KeepAlive", "donghuoindex2");
+      });
+    },
     pageBack() {
       this.$router.push({
         path: "/page_3/index"
@@ -199,6 +226,7 @@ export default {
       }
     },
     onClickRight() {
+      this.initDonghuoPage();
       this.$router.push({
         path: "../donghuo"
       });
@@ -309,5 +337,15 @@ export default {
 
 .skeleton {
   margin-bottom: 10px;
+}
+.clear-button{
+  width: 100%;
+  padding: 10px ;
+  text-align: center;
+  color: #1989fa;
+  border: 1px solid #1989fa;
+  margin-bottom: 15px;
+  cursor: pointer;
+  // border: 1px solid #ff976a93;
 }
 </style>

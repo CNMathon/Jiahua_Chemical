@@ -11,7 +11,7 @@ export const uploadFile = {
       console.log(`begin => beforeRead`)
       let imageRegex = /^image\/(jpeg|jpg|png)/;
       if (!imageRegex.test(file.type)) {
-        alert("图片类型必须是jpeg,jpg,png中的一种");
+        this.$notify("图片类型必须是jpeg,jpg,png中的一种");
         return false;
       }
       const formdata = new FormData();

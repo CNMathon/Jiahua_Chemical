@@ -1,12 +1,7 @@
 <template>
   <div class="cheng-bao-shang-detali">
     <van-sticky>
-      <van-nav-bar
-        title="承包商详情"
-        left-text="返回"
-        left-arrow
-        @click-left="pageBack"
-      />
+      <van-nav-bar title="承包商详情" left-text="返回" left-arrow @click-left="pageBack" />
     </van-sticky>
     <van-tabs
       v-model="active"
@@ -18,161 +13,60 @@
     >
       <van-pull-refresh v-model="isLoading" @refresh="getDataList(true)">
         <van-tab title="基本信息">
-          <van-list
-            v-model="info[0].loading"
-            :finished="info[0].finished"
-            :error.sync="info[0].error"
-            error-text="请求失败，点击重新加载"
-            finished-text="没有更多了"
-            @load="getDataList"
-          >
-            <label v-for="(item, index) in info[0].list" :key="index">
-              <div class="tab-title">公司信息</div>
-              <cell-value title="承包商名称" :value="item.cbsName"></cell-value>
-              <cell-value
-                title="承包商类型"
-                :value="judgeType(item.cbsType)"
-              ></cell-value>
-              <cell-value
-                title="公司性质"
-                :value="judgeGS(item.companyType)"
-              ></cell-value>
-              <cell-value
-                title="法人代表"
-                :value="item.cbsRepresentative"
-              ></cell-value>
-              <cell-value
-                title="公司地址"
-                :value="item.companyAddress"
-              ></cell-value>
-              <cell-value
-                title="注册地址"
-                :value="item.registerAddress"
-              ></cell-value>
-              <cell-value
-                title="公司电话"
-                :value="item.companyTel"
-              ></cell-value>
-              <cell-value
-                title="公司传真"
-                :value="item.companyFax"
-              ></cell-value>
-              <cell-value title="公司邮箱" :value="item.email"></cell-value>
-              <cell-value title="成立日期" :value="item.foundDate"></cell-value>
-              <cell-value title="注册资本" :value="item.registerCapital"></cell-value>
-              <div class="tab-title">财务信息</div>
-              <cell-value
-                title="银行信用等级"
-                :value="item.cbsCommpanyBankCredit"
-              ></cell-value>
-              <cell-value
-                title="开户名称"
-                :value="item.cbsCommpanyOpenName"
-              ></cell-value>
-              <cell-value
-                title="开户银行"
-                :value="item.cbsCommpanyOpenBank"
-              ></cell-value>
-              <cell-value
-                title="银行账号"
-                :value="item.cbsCommpanyBankName"
-              ></cell-value>
-              <cell-value
-                title="纳税识别号"
-                :value="item.cbsCommpanyTaxpayer"
-              ></cell-value>
-              <cell-value
-                title="统一社会信用代码"
-                :value="item.cbsCommpanyTyshCreditCode"
-              ></cell-value>
-              <cell-value
-                title="营业执照号码"
-                :value="item.cbsCommpanyBusinessLicense"
-              ></cell-value>
-            </label>
-          </van-list>
+          <label v-for="(item, index) in info[0].list" :key="index">
+            <div class="tab-title">公司信息</div>
+            <cell-value title="承包商名称" :value="item.cbsName"></cell-value>
+            <cell-value title="承包商类型" :value="judgeType(item.cbsType)"></cell-value>
+            <cell-value title="公司性质" :value="judgeGS(item.companyType)"></cell-value>
+            <cell-value title="法人代表" :value="item.cbsRepresentative"></cell-value>
+            <cell-value title="公司地址" :value="item.companyAddress"></cell-value>
+            <cell-value title="注册地址" :value="item.registerAddress"></cell-value>
+            <cell-value title="公司电话" :value="item.companyTel"></cell-value>
+            <cell-value title="公司传真" :value="item.companyFax"></cell-value>
+            <cell-value title="公司邮箱" :value="item.email"></cell-value>
+            <cell-value title="成立日期" :value="item.foundDate"></cell-value>
+            <cell-value title="注册资本" :value="String(item.registerCapital)"></cell-value>
+            <div class="tab-title">财务信息</div>
+            <cell-value title="银行信用等级" :value="item.cbsCommpanyBankCredit"></cell-value>
+            <cell-value title="开户名称" :value="item.cbsCommpanyOpenName"></cell-value>
+            <cell-value title="开户银行" :value="item.cbsCommpanyOpenBank"></cell-value>
+            <cell-value title="银行账号" :value="item.cbsCommpanyBankName"></cell-value>
+            <cell-value title="纳税识别号" :value="item.cbsCommpanyTaxpayer"></cell-value>
+            <cell-value title="统一社会信用代码" :value="item.cbsCommpanyTyshCreditCode"></cell-value>
+            <cell-value title="营业执照号码" :value="item.cbsCommpanyBusinessLicense"></cell-value>
+          </label>
         </van-tab>
         <van-tab title="资质材料">
-          <van-list
-            v-model="info[1].loading"
-            :finished="info[1].finished"
-            :error.sync="info[1].error"
-            error-text="请求失败，点击重新加载"
-            finished-text="没有更多了"
-            @load="getDataList"
-          >
-            <label v-for="(item, index) in info[1].list" :key="index">
-              <div class="content">
-                <cell-value
-                  title="资质证件名称"
-                  :value="item.matirialList"
-                ></cell-value>
-                <cell-value
-                  title="证件编号"
-                  :value="item.credentialsCode"
-                ></cell-value>
-                <cell-value
-                  title="有效日期"
-                  :value="item.validDate"
-                ></cell-value>
-                <cell-value
-                  disabled
-                  :value="item.credentialsDescribe"
-                  title="证件描述"
-                ></cell-value>
-                <cell-other title="附件清单">
-                  <div class="file-list" v-if="fujian[index].length > 0">
-                    <label v-for="(items, indexs) in fujian[index]" :key="indexs">
-                      <div class="file-item">
-                        <div @click="downLoadFile(items.fileUrl)" class="file-name">{{items.fileName}}</div>
-                        
-                      </div>
-                    </label>
-                  </div>
-                  <div class="no-file" v-else>无附件</div>
-                </cell-other>
-              </div>
-            </label>
-          </van-list>
+          <label v-for="(item, index) in info[1].list" :key="index">
+            <div class="content">
+              <cell-value title="资质证件名称" :value="item.matirialList"></cell-value>
+              <cell-value title="证件编号" :value="item.credentialsCode"></cell-value>
+              <cell-value title="有效日期" :value="item.validDate"></cell-value>
+              <cell-value disabled :value="item.credentialsDescribe" title="证件描述"></cell-value>
+              <cell-other title="附件清单">
+                <div class="file-list" v-if="fujian[index].length > 0">
+                  <label v-for="(items, indexs) in fujian[index]" :key="indexs">
+                    <div class="file-item">
+                      <div @click="downLoadFile(items.fileUrl)" class="file-name">{{items.fileName}}</div>
+                    </div>
+                  </label>
+                </div>
+                <div class="no-file" v-else>无附件</div>
+              </cell-other>
+            </div>
+          </label>
         </van-tab>
         <van-tab title="联系人列表">
-          <van-list
-            v-model="info[2].loading"
-            :finished="info[2].finished"
-            :error.sync="info[2].error"
-            error-text="请求失败，点击重新加载"
-            finished-text="没有更多了"
-            @load="getDataList"
-          >
-            <label v-for="(item, index) in info[2].list" :key="index">
-              <div class="content">
-                <cell-value
-                  title="联系人姓名"
-                  :value="item.contactsName"
-                ></cell-value>
-                <cell-value
-                  title="联系人所属部门"
-                  :value="item.contactsDept"
-                ></cell-value>
-                <cell-value
-                  title="联系人职务"
-                  :value="item.contactsPost"
-                ></cell-value>
-                <cell-value
-                  title="联系人电话"
-                  :value="item.contactsTel"
-                ></cell-value>
-                <cell-value
-                  title="电子邮箱"
-                  :value="item.email || '暂无邮箱'"
-                ></cell-value>
-                <cell-value
-                  title="备注"
-                  :value="item.remarks"
-                ></cell-value>
-              </div>
-            </label>
-          </van-list>
+          <label v-for="(item, index) in info[2].list" :key="index">
+            <div class="content">
+              <cell-value title="联系人姓名" :value="item.contactsName"></cell-value>
+              <cell-value title="联系人所属部门" :value="item.contactsDept"></cell-value>
+              <cell-value title="联系人职务" :value="item.contactsPost"></cell-value>
+              <cell-value title="联系人电话" :value="item.contactsTel"></cell-value>
+              <cell-value title="电子邮箱" :value="item.email || '暂无邮箱'"></cell-value>
+              <cell-value title="备注" :value="item.remarks"></cell-value>
+            </div>
+          </label>
         </van-tab>
       </van-pull-refresh>
     </van-tabs>
@@ -219,14 +113,16 @@ export default {
           totalNumber: 10 //总条数
         }
       ],
-      fujian:[]
+      fujian: []
     };
   },
-  created() {},
+  created() {
+    this.getDataList();
+  },
   methods: {
     //下载附件
-    downLoadFile(url){
-      window.open('http://mes1.jhec.com.cn:8080'+url)
+    downLoadFile(url) {
+      window.open("http://mes1.jhec.com.cn:8080" + url);
     },
     // 承包商详情
     getDataList(refresh = false) {
@@ -268,10 +164,10 @@ export default {
             info.finished = true;
             return;
           }
-          
+
           info.list = refresh ? res.list : [...info.list, ...res.list];
           info.totalNumber = res.count;
-          console.log(info)
+          console.log(info);
           if (this.active === 1) {
             res.list.map((element, index) => {
               this.getFileList(element.id, index);
@@ -314,8 +210,8 @@ export default {
       this.$api.page_4
         .fileList(sendData)
         .then(res => {
-          this.fujian.push(res)
-          console.log(this.fujian)
+          this.fujian.push(res);
+          console.log(this.fujian);
         })
         .catch(() => {});
     }
@@ -361,7 +257,7 @@ export default {
           font-size: 28px;
           color: rgba(56, 117, 229, 1);
           line-height: 28px;
-          text-align:right;
+          text-align: right;
         }
       }
     }

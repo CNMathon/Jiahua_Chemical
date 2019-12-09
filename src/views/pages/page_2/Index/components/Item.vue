@@ -2,8 +2,11 @@
   <div class="guolu">
     <div class="main" v-for="(item, index) in info" :key="index">
       <div class="number">{{item.itemName}}</div>
-      <div class="value">
+      <div class="value" v-if="type == 0">
         {{item.factory}}
+      </div>
+      <div class="value" v-if="type == 1">
+        {{item.enName}}
       </div>
       <div class="proportion">{{item.value}}</div>
     </div>
@@ -13,7 +16,8 @@
 export default {
   name: "guoLu",
   props: {
-    info: Array
+    info: Array,
+    type: Number
   }
 };
 </script>

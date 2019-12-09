@@ -1,66 +1,38 @@
 <template>
   <div class="cheng-bao-shang-ren-yuan">
     <van-sticky>
-      <van-nav-bar
-        title="承包商人员信息"
-        left-text="返回"
-        left-arrow
-        @click-left="pageBack"
-      />
-      <j-filter-bar
-        v-model="searchValue"
-        @search="getPageData(true)"
-        @tap="setShowFilter()"
-      ></j-filter-bar>
+      <van-nav-bar title="承包商人员信息" left-text="返回" left-arrow @click-left="pageBack" />
+      <j-filter-bar v-model="searchValue" @search="getPageData(true)" @tap="setShowFilter()"></j-filter-bar>
     </van-sticky>
     <j-filter v-model="showFilter" @confirm="confirmFilter">
-      <j-filter-search
-        v-model="searchValues"
-        @search="filterSearch"
-      ></j-filter-search>
-      <j-filter-item
-        title="承包商"
-        :actions="cbslist"
-        :valueKey="'cbsName'"
-        @select="filterSelect_1"
-      ></j-filter-item>
+      <j-filter-search v-model="searchValues" @search="filterSearch"></j-filter-search>
+      <j-filter-item title="承包商" :actions="cbslist" :valueKey="'cbsName'" @select="filterSelect_1"></j-filter-item>
     </j-filter>
     <van-pull-refresh v-model="isLoading" @refresh="getPageData(true)">
-      <van-list
-        v-model="loading"
-        :finished="finished"
-        :error.sync="error"
-        error-text="请求失败，点击重新加载"
-        finished-text="没有更多了"
-        @load="getPageData()"
-      >
-        <div class="list">
-          <div v-for="(item, index) in pageList" :key="index">
-            <div class="item">
-              <div class="info">
-                <div class="left">
-                  <div class="title">
-                    <div class="text">员工姓名：{{ item.empName }}</div>
-                    <div class="text">性别：{{ judgeUserSex(item.sex) }}</div>
-                  </div>
-                  <div class="title">
-                    <div class="text">
-                      年龄：{{ judgeAge(item.birthday) }}岁
-                    </div>
-                  </div>
-                  <div class="title">
-                    <div class="text">身份证号码：{{ item.empIdnumber }}</div>
-                  </div>
+      <div class="list">
+        <div v-for="(item, index) in pageList" :key="index">
+          <div class="item">
+            <div class="info">
+              <div class="left">
+                <div class="title">
+                  <div class="text">员工姓名：{{ item.empName }}</div>
+                  <div class="text">性别：{{ judgeUserSex(item.sex) }}</div>
                 </div>
-                <div class="right">
-                  <div class="btn" @click="toDetail(item.id)">查看详情</div>
+                <div class="title">
+                  <div class="text">年龄：{{ judgeAge(item.birthday) }}岁</div>
+                </div>
+                <div class="title">
+                  <div class="text">身份证号码：{{ item.empIdnumber }}</div>
                 </div>
               </div>
-              <div class="sub-title">承包商名称：{{ item.cbs.cbsName }}</div>
+              <div class="right">
+                <div class="btn" @click="toDetail(item.id)">查看详情</div>
+              </div>
             </div>
+            <div class="sub-title">承包商名称：{{ item.cbs.cbsName }}</div>
           </div>
         </div>
-      </van-list>
+      </div>
     </van-pull-refresh>
   </div>
 </template>
@@ -132,15 +104,15 @@ export default {
         this.isLoading = false;
         return;
       }
-      if(this.searchValue!=''){
-        this.confirmSelectCbs.cbsName=undefined
+      if (this.searchValue != "") {
+        this.confirmSelectCbs.cbsName = undefined;
       }
-      console.log(this.confirmSelectCbs.cbsName)
+      console.log(this.confirmSelectCbs.cbsName);
       let sendData = {
         pageNo: this.pageNow,
         pageSize: this.pageSize,
         empName: this.searchValue,
-        'cbs.cbsName':this.confirmSelectCbs.cbsName,
+        "cbs.cbsName": this.confirmSelectCbs.cbsName,
         __sid: this.$userInfo.sessionId
       };
       this.$api.page_4
@@ -204,6 +176,9 @@ export default {
     toDetail(id) {
       this.$router.push({ path: `./detail/${id}` });
     }
+  },
+  created() {
+    this.getPageData();
   }
 };
 </script>

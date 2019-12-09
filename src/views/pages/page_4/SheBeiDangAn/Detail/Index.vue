@@ -201,7 +201,7 @@ export default {
         },
         {
           title: "描述",
-          value: "123"
+          value: ""
         }
       ],
       loadingStat: [
@@ -317,7 +317,7 @@ export default {
           filterAss("设备类别", resMain.deviceCategory);
           filterAss("设备位号", resMain.devicePosition);
           filterAss("设备类型", resMain.deviceType);
-          filterAss("所属部门", resMain.spaceDept);
+          filterAss("所属部门", resMain.officeName);
           filterAss("专业类别", resMain.specialtyType);
           filterAss("设备位置", resMain.deviceLocation);
           filterAss("有效状态", resMain.spaceState == 0 ? "有效" : "无效");

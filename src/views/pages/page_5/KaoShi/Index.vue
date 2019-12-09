@@ -5,7 +5,10 @@
       <van-search v-model="searchValue" placeholder="搜索" shape="round" @search="getPageData(true)"></van-search>
     </van-sticky>
 
+
     <div class="content">
+    <!-- <div class="nodata">暂无数据</div> -->
+    <!-- <is-nodata /> -->
       <van-tabs
         v-model="tabActive"
         color="#6096F8"

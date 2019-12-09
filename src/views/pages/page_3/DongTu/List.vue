@@ -20,8 +20,24 @@
       <j-filter-item title="作业票状态"
                      :actions="zypztList"
                      @select="filterSelect_1"></j-filter-item>
-      <j-filter-cell title="申请部门"></j-filter-cell>
-      <j-filter-cell title="申请人"></j-filter-cell>
+      <select-department
+        title="申请部门"
+        radio
+        :storeModule="storeModule"
+        storeKey="sqbm"
+        v-model="sqbm"
+        no-padding
+      />
+      <!-- <j-filter-cell title="申请人" /> -->
+      <select-organization 
+        title="申请人"
+        max="9"
+        :storeModule="storeModule"
+        storeKey="dhzyRen"
+        v-model="dhzyRen"
+        no-padding
+      />
+      <div class="clear-button"  @click="clearfilter">清空条件</div>
     </j-filter>
     <div class="list-card-area fixed-first">
       <div class="app">
@@ -61,16 +77,19 @@
 </template>
 
 <script>
+  import { mapState } from "vuex";
   import { mixin } from "@/mixin/mixin";
   // import ListCard from "@/views/pages/page_3/components/DongTuListCard";
   export default {
+    name: "dongtuList",
     data () {
       return {
+        storeModule: 'dongtu',
         showFilter: false,
         searchValue: "",
         searchValues: "",
         zypztList: [
-          { index: -1, name: "请选择" },
+          { index: '', name: "请选择" },
           { index: 1, name: "编辑" },
           { index: 2, name: "初审" },
           { index: 3, name: "有效" },
@@ -83,13 +102,39 @@
       };
     },
     mixins: [mixin],
+    created () {
+      this.getPageData();
+      this.initDongTuPage();
+    },
+    activated () {
+
+    },
+    computed: mapState({
+      dhzyRen: state => state.dongtu.dhzyRen,
+      sqbm: state => state.dongtu.sqbm
+    }),
     methods: {
+      clearfilter () {
+      this.initDongTuPage();
+      this.status = '';
+      this.searchValue = '';
+      this.showFilter = false;
+      this.getPageData();
+      },
+      initDongTuPage () {
+        this.$store.dispatch("dongtu/cleanState");
+        this.$nextTick(() => {
+          this.$store.commit("dongtu/add_KeepAlive", "dongtuList");
+          this.$store.commit("dongtu/add_KeepAlive", "dongtuindex");
+        });
+      },
       pageBack () {
         this.$router.push({
           path: "/page_3/index"
         });
       },
       onClickRight () {
+        this.initDongTuPage();
         this.$router.push({
           path: "../dongtu"
         });
@@ -100,7 +145,9 @@
           .htHseDtzypListData({
             __sid: localStorage.getItem("JiaHuaSessionId"),
             htStatus: this.status,
-            dtSite: this.searchValue
+            dtSite: this.searchValue,
+            applyDept: this.sqbm.length>0?this.sqbm[0].id:'',
+            applyer: this.dhzyRen.length>0?this.dhzyRen[0].userCode:'',
           })
           .then(res => {
             this.listData = res.list;
@@ -117,6 +164,7 @@
       //   });
       // },
       jumpToMorePage (status, code) {
+        this.initDongTuPage();
         const that = this;
         function todo (statusList, path, moreInfo = null) {
           if (status == statusList) {
@@ -153,14 +201,6 @@
       confirmFilter () { },
       filterSearch () { },
     },
-    created () {
-      this.getPageData();
-      this.$store.dispatch("dongtu/cleanState");
-      this.$store.commit("dongtu/delete_KeepAlive", "dongtuindex");
-      this.$nextTick(() => {
-        this.$store.commit("dongtu/add_KeepAlive", "dongtuindex");
-      });
-    }
   };
 </script>
 

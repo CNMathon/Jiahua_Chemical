@@ -1,5 +1,5 @@
 <template>
-  <div class="guolu">
+  <div class="guolu" @click="jumpTo(`/page_1/tagsThistory?tagsNameShow=${desc}&tagsName=${id}&unit=${unit}`)">
     <div class="values desc">{{desc}}</div>
     <div class="values id">{{id}}</div>
     <div class="number value">

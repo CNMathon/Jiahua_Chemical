@@ -12,7 +12,7 @@
       <div>值</div>
     </div>
     <div class="list">
-      <div class="item" v-for="(item,index) in list" :key="index">
+      <div class="item" v-for="(item,index) in list" :key="index" @click="jumpTo(`/page_1/tagsThistory?tagsNameShow=${item.name}&tagsName=${item.key}&unit=${item.unit}`)">
         <Item :info="item"></Item>
       </div>
     </div>

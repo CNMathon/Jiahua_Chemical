@@ -320,7 +320,7 @@ export default {
         "临时用电",
         "盲板抽堵",
         "吊装",
-        "动土",
+        "受限空间",
         "断路作业"
       ],
       list_2: [
@@ -498,9 +498,7 @@ export default {
       console.log("index: ", index);
       console.log("显示签名");
       this.selectSignatureShow = index;
-      if (!this.checked[index].checked) {
-        this.signatureShow = true;
-      }
+      this.signatureShow = true;
     },
     signatureCancel(index) {
       console.log("index: ", index);
@@ -761,8 +759,8 @@ export default {
             }
           }
           this.apply ={
-            name: info.office.officeName,
-            dept: info.user.userName,
+            name: info.user.userName,
+            dept: info.office.officeName,
             code: info.dtzypCode,
           };
           // this.sendData.applyDept = this.oldInfo.office.officeName;

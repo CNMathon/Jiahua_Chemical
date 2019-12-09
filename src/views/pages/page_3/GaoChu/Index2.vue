@@ -12,13 +12,13 @@
     </van-sticky>
     <div class="cell_group">
       <!-- 申请部门 -->
-      <cell-value title="申请部门" :value="oldInfo.office.officeName?oldInfo.office.officeName:$userInfo.officeName" disable></cell-value>
+      <cell-value title="申请部门" :value="oldInfo.office?oldInfo.office.officeName:$userInfo.officeName" disable></cell-value>
       <!-- 申请人 -->
       <cell-value title="申请人" :value="oldInfo.user.userName?oldInfo.user.userName:$userInfo.userName" disable></cell-value>
       <!-- 作业票编号 -->
-      <cell-value title="作业票编号" disable :value="sendData.id" disabled></cell-value>
+      <cell-value title="作业票编号" disable :value="oldInfo.gczyCode" disabled></cell-value>
       <!-- 作业票状态 -->
-      <cell-value title="作业票状态" disable value="编辑" disabled></cell-value>
+      <cell-value title="作业票状态" disable :value="zypztList[oldInfo.htStatus].name" disabled></cell-value>
       <!-- 作业内容 -->
       <cell-textarea
         title="作业内容"
@@ -232,10 +232,10 @@
           <span>
             采光,夜间作业照明符合作业要求,
             <span
-              :class="light == 0? 'seclct_tag is_select': 'seclct_tag'"
+              :class="light === 0? 'seclct_tag is_select': 'seclct_tag'"
               @click="light = 0"
             >需采用并已采用</span>
-            <span :class="light == 1? 'seclct_tag is_select': 'seclct_tag'" @click="light = 1">无需采用</span>
+            <span :class="light === 1? 'seclct_tag is_select': 'seclct_tag'" @click="light = 1">无需采用</span>
             防爆灯
           </span>
         </Signature>
@@ -265,8 +265,8 @@
       >
         <Canvas ref="signature" @save="saveCanvas2" @cancel="cancelCanvas2"></Canvas>
       </van-popup>
-      <cell-textarea v-model="sendData.otherSafety" title="其他安全措施" required placeholder="请输入其他安全措施"></cell-textarea>
-      <div class="signature" @click="signatureShow2 = true">
+      <cell-textarea v-model="sendData.otherSafety" title="其他安全措施" required placeholder="请输入其他安全措施" :disable="!nextByVerify()"></cell-textarea>
+      <div class="signature" @click="signatureShow2 =  nextByVerify()">
         <span>签字</span>
         <van-image
           v-if="sendData.othercsComplier"
@@ -293,8 +293,8 @@ export default {
     return {
       signatureShow2: false,
       storeModule: "gaochu",
-      light: 0,
-      mask: [0, 1],
+      light: '',
+      mask: ['', ''],
       sendData: {
         othercsComplier: "",
         otherSafety: "",
@@ -353,6 +353,14 @@ export default {
           image: ""
         }
       ],
+      zypztList: [ // 作业票状态列表
+          { index: '', name: "请选择" },
+          { index: 1, name: "编辑" },
+          { index: 2, name: "初审" },
+          { index: 3, name: "审核" },
+          { index: 4, name: "有效" },
+          { index: 5, name: "已终结" }
+        ],
       signatureShow: false,
       xuhao: Number,
       actions: [
@@ -395,6 +403,14 @@ export default {
   // 	this.$store.dispatch("gaochu/cleanState");
   // },
   methods: {
+     nextByVerify () {
+      if (this.oldInfo.nextBy) {
+        console.log("this.oldInfo.nextBy.includes(this.$userInfo.userCode);", this.oldInfo.nextBy.includes(this.$userInfo.userCode));
+        return this.oldInfo.nextBy.includes(this.$userInfo.userCode);
+      } else {
+        return false;
+      } 
+    },
     saveCanvas2(e) {
       console.log(123);
       console.log("e: ", e);
@@ -819,9 +835,7 @@ export default {
       console.log("index: ", index);
       console.log("显示签名");
       this.xuhao = index;
-      if (!this.checked[index].checked) {
-        this.signatureShow = true;
-      }
+      this.signatureShow = true;
     },
     // 取消签名
     signatureCancel(index) {

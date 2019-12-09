@@ -32,7 +32,7 @@
             </label>
           </van-row>
           <van-row v-else>
-            <label v-for="(item,index) in zongxian" :key="index">
+            <label v-for="(item,index) in zongxian" :key="index" @click="jumpTo(`/page_1/tagsThistory?tagsNameShow=${item.name}`)">
               <van-col span="12" class="pannel3-area">
                 <Panel3 size="big" :name="item.name" :value="item.value" :unit="item.unit"></Panel3>
               </van-col>

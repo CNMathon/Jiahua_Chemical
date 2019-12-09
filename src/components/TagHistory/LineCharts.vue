@@ -33,20 +33,32 @@ export default {
     return {
       grid: { left: 40, right: 20, top: 10, bottom: 20 },
       locTitle: {
-        text: "单位：" + this.title,
+        text: this.title,
         textStyle: {
           color: "#333333",
           fontSize: 12
         },
-        left: 40,
+        left: 10,
         top: 10
+      },
+      xAxis: {
+        name:'时间',
+        nameLocation: 'end',
+        axisTick: {
+          show: false
+        },
+        axisLabel: {
+          show: false
+        },
+        data: [],
       },
       yAxis: {
         axisLine: {
           show: true,
           lineStyle: {
             color: "#D9D9D9"
-          }
+          },
+          data: [],
         },
         axisTick: {
           show: false
@@ -55,7 +67,6 @@ export default {
           show: false
         }
       },
-    
       chartExtend: {
         barWidth: "14px"
       },
@@ -89,22 +100,21 @@ export default {
     paserData (data) {
       let columns = [];
       let rows = [];
-      // let str = '';
-      // if (data.length > 0) {
-      //   str = new Date(data[0][0]).toLocaleTimeString() + '至' +  new Date(data[data.length - 1][0]).toLocaleTimeString();
-      //   str = "date";
-      // } else {
-      //   str = '没有有效数据';
-      // }
+      let xData= [];
+      let yData= [];
       data.forEach((item) => {
         let time = new Date (item[0]);
-        let obj = {}
-        obj.date = (time.getMonth() + 1) + '/' + time.getDay() + ' ' + time.getHours() + ':' + time.getMinutes() ;
+        let obj = {};
+        obj.date = (time.getMonth() + 1) + '/' + time.getDate() + ' ' + time.getHours() + ':' + time.getMinutes() ;
         obj.value = item[1];
+        yData.push(item[1]);
+        xData.push(obj.date);
         rows.push(obj);
       });
       rows.splice(rows.length - 1 ,1);
       this.chartData.rows = rows;
+      // this.xAxis.data = xData;
+      // this.yData.data = yData;
     }
   }
 };

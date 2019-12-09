@@ -87,7 +87,7 @@
           <div class="head_2">确认</div>
           <div class="head_3">确认人</div>
         </div>
-        <div class="confirm_list" v-if="childrenData[0]">
+        <div class="confirm_list" v-if="childrenData.length > 0">
           <Signature
             :checked="childrenData[0].safetyStatus === 1"
             disable
@@ -258,7 +258,7 @@
               <van-uploader
                 :before-read="beforeRead"
                 :before-delete="beforeDelete"
-                v-model="fileListA"
+                v-model="fileList"
                 preview-size="5rem"
               />
             </div>
@@ -365,7 +365,8 @@ export default {
       isShowAction: false,
       oldInfo: {}, //主表信息
       childrenData: [], //子表信息
-      fileListA: [],
+      fileList: [],
+      fileListA:[],
       signatureA: "",
       signatureATime: "",
       actRuTask: "",
@@ -382,7 +383,14 @@ export default {
     },
     fxRenC(res) {
       this.sendData.fxRenC = res;
-    }
+    },
+    fileList (res) {
+      console.log('fileListA res', res);
+      this.fileListA = res.map((item) => {
+        return item.url;
+      });
+       console.log('fileListA res', this.fileListA );
+    },
   },
   computed: mapState({
     fxRenA: state => state.donghuo.fxRenA,
@@ -554,6 +562,9 @@ export default {
         });
     },
     Next() {
+      if (!this.isDataEdit()) {
+        return;
+      }
       if (this.actRuTask === "") {
         console.log(2);
         let data = {
@@ -599,16 +610,21 @@ export default {
           __sid: localStorage.getItem("JiaHuaSessionId")
         })
         .then(res => {
-          console.log("mylistDataD=======", res);
-          this.childrenData = res;
+          this.initListDataD(res);
           this.$Toast.clear();
-          this.$forceUpdate();
         })
         .catch(() => {
           this.$Toast.clear();
         });
     },
-
+    initListDataD(data) {
+      //  this.checked
+      let checked = {};
+      data.forEach(item => {
+        checked[parseInt(item.num) - 1] = item;
+      });
+      this.childrenData = Object.values(checked);
+    },
     // 判断数据输入的完整性
     // true => 输入完整
     // false => 有问题的输入
@@ -642,6 +658,7 @@ export default {
     },
     // 主表保存
     postData() {
+      
       // 检测到输入不完整直接退出函数
       if (!this.isDataEdit()) {
         return;
@@ -662,14 +679,16 @@ export default {
       sendData.dhzyRen = this.userString(sendData.dhzyRen, "userCode");
       // 添加动火分析 dhfxTimeC fxdNameC krqbzLimitationC fxRenC- fxDataC
       sendData.fxRenA = this.userString(sendData.fxRenA || [], "userCode"); //分析人A
-      sendData.fxRenB = this.userString(sendData.fxRenB || [], "userCode"); //分析人A
-      sendData.fxRenC = this.userString(sendData.fxRenC || [], "userCode"); //分析人A
+      sendData.fxRenB = this.userString(sendData.fxRenB || [], "userCode"); //分析人B
+      sendData.fxRenC = this.userString(sendData.fxRenC || [], "userCode"); //分析人C
       // 结束
       sendData.applyDept = this.oldInfo.office.officeCode;
       	sendData.applyRen = this.oldInfo.user.userCode;
       sendData.__sid = this.$userInfo.sessionId;
       sendData.id = this.oldInfo.id;
       sendData.dhzypCode = this.oldInfo.dhzypCode;
+      // fileListA 主表保存 附件
+      console.log('fileList', this.fileList);
       const that = this;
       this.$api.page_3
         .htHseDhzypSave(sendData)
@@ -686,7 +705,18 @@ export default {
         .catch(() => {
           this.$Toast.clear();
         });
-    }
+    },
+    // donghuoFileList (id,file) {
+    //   this.$api.page_3.fileList({
+    //     __t: new Date().getTime(),
+    //     bizKey: id,
+    //     bizType: 'htHseDhzyp_file',
+    //     uploadType: 'all',
+    //     fileMd5: file,
+    //     fileName: '',
+    //     file: '',
+    //   }).then(() => {})
+    // }
   }
 };
 </script>

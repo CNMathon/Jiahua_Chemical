@@ -604,6 +604,7 @@ export default {
         });
     },
     Next() {
+      
       if (this.actRuTask === "") {
         console.log(2);
         let data = {
@@ -664,29 +665,13 @@ export default {
     // true => 输入完整
     // false => 有问题的输入
     isDataEdit() {
-      // 动火分析时间
-      if (!this.sendData.dhfxTimeA) {
-        this.$notify("请选择动火分析时间");
-        return false;
-      }
-      // 分析点名称
-      if (!this.sendData.fxdNameA) {
-        this.$notify("请输入分析点名称");
-        return false;
-      }
-      // 可燃气爆炸极限
-      if (!this.sendData.krqbzLimitationA) {
-        this.$notify("请选择可燃气爆炸极限");
-        return false;
-      }
-      // 分析数据
-      if (!this.sendData.fxDataA) {
-        this.$notify("分析数据");
-        return false;
-      }
       // 分析人
-      if (this.sendData.fxRenA.length === 0) {
-        this.$notify("请选择分析人");
+      if (this.sendData.dhSup.length === 0) {
+        this.$notify("请选择监火人");
+        return false;
+      }
+      if (this.sendData.dhSupCbs.length === 0) {
+        this.$notify("请选择承包商监火人");
         return false;
       }
       return true;

@@ -19,11 +19,11 @@
                   disable></cell-value>
       <!-- 作业票编号 -->
       <cell-value title="作业票编号"
-                  value
+                  :value="oldInfo?oldInfo.mbzypCode:''"
                   disable></cell-value>
       <!-- 作业票状态 -->
       <cell-value title="作业票状态"
-                  value="编辑"
+                  :value="zypztList[oldInfo.htStatus].name"
                   disable></cell-value>
     </div>
     <div class="cell_group"
@@ -208,6 +208,16 @@
           index: 0,
           value: ""
         },
+        zypztList: [
+          // 作业票状态列表
+          { name: "请选择", index: '' },
+          { name: "编辑", index: 1 },
+          { name: "提交资料", index: 2 },
+          { name: "初审", index: 3 },
+          { name: "审核", index: 4 },
+          { name: "有效", index: 5 },
+          { name: "结束", index: 6 }
+        ],
         materialColumns: ["碳钢", "不锈钢", "塑料", "聚四氟乙烯"],
         timeShow: false,
         currentDate: new Date(),
@@ -468,9 +478,7 @@
       // 显示签名
       showSignature (index) {
         this.selectSignatureShow = index;
-        if (!this.checked[index].checked) {
-          this.signatureShow = true;
-        } 
+         this.signatureShow = true;
       },
       // 取消签名
       signatureCancel (index) {

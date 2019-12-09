@@ -1,6 +1,6 @@
 // initial state
 const state = {
-  keepAliveComponents: ["donghuoindex", "donghuoindex2"],
+  keepAliveComponents: ["donghuoList", "donghuoindex", "donghuoindex2"],
   dhWay: [],
   otherSpecial: [],
   hazardSb: [],
@@ -36,7 +36,6 @@ const actions = {
     commit("resetState");
   }
 };
-
 // mutations
 const mutations = {
   setTag(state, { tags }) {

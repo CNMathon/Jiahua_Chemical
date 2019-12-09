@@ -5,7 +5,9 @@ const state = {
   endangerSign: [],
   workCharger: [], //作业部门负责人
   workDept:[],
-  involveDept:[]
+  involveDept:[],
+  sqbm:[],
+  dhzyRen:[]
 };
 
 // getters

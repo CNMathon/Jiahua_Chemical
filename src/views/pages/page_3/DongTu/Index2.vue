@@ -196,7 +196,6 @@ export default {
   },
   beforeDestroy() {
     this.queryId = "";
-    this.$store.dispatch("dongtu/cleanState");
   },
   methods: {
     pageInit() {

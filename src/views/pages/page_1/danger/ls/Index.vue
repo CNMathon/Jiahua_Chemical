@@ -6,7 +6,7 @@
         <div class="content-title">实时视频</div>
         <Video></Video>
         <div class="panel-list">
-          <div class="panel-list-item" v-for="item in panelInfo_tab1">
+          <div class="panel-list-item" v-for="(item, index) in panelInfo_tab1" :key="index" @click="jumpTo(`/page_1/tagsThistory`, {tagsNameShow: item.itemName, tagsName: item.enName, unit: item.unit})">
             <Panel :name="item.itemName" :unit="item.unit" :value="item.value"  size="big"></Panel>
           </div>
         </div>

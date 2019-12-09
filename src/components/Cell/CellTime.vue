@@ -1,5 +1,5 @@
 <template>
-  <div class="cell" :class="[border ? 'border' : '',disable? 'disable': '']">
+  <div class="cell" :class="[border ? 'border' : '',disable? 'disable': '',noPadding ? 'cell-no-padding' : '']">
     <div class="cell_title">
       <span>{{ title }}</span>
       <span class="required" v-if="required">*</span>
@@ -14,6 +14,7 @@
         :type="type"
         @cancel="timeShow = false"
         @confirm="onTimeConfirm"
+        :min-date="now"
       />
     </van-popup>
   </div>
@@ -49,12 +50,21 @@ export default {
     minTime: {
       type: String,
       default: ''
+    },
+    noPadding: {
+      type: Boolean,
+      default: false
+    },
+    startTime:{
+      type: String,
+      default: ''
     }
   },
   data() {
     return {
       values: "",
       timeShow: false,
+      now:new Date(),
       minDate: this.minTime,
       selectTime: new Date(),
       pickerTime: ""
@@ -62,6 +72,7 @@ export default {
   },
   methods: {
     showTime() {
+      console.log(new Date(this.startTime).getTime())
       console.log(this.disable);
       if (!this.disable) {
         console.log(this.timeShow);
@@ -78,10 +89,23 @@ export default {
     },
     // 确认时间选择
     onTimeConfirm(val) {
-      console.log(val);
-      this.value = val;
-      this.values = val;
-      this.timeShow = false;
+      console.log(1)
+      if(this.startTime){
+        console.log(2)
+        if(val.getTime()/1000-new Date(this.startTime).getTime()/1000>28800){
+          console.log(val.getTime());
+          this.value = val;
+          this.values = val;
+          this.timeShow = false;
+        }else{
+          this.$notify("结束时间必须大于开始时间8小时");
+        }
+      }else{
+          this.value = val;
+          this.values = val;
+          this.timeShow = false;
+      }
+      
     },
     showText() {
       console.log(

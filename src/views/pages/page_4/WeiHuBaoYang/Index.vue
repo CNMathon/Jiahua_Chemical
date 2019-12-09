@@ -40,14 +40,7 @@
       ></j-filter-item>
     </j-filter>
     <van-pull-refresh v-model="isLoading" @refresh="getPageData(true)">
-      <van-list
-        v-model="loading"
-        :finished="finished"
-        :error.sync="error"
-        error-text="请求失败，点击重新加载"
-        finished-text="没有更多了"
-        @load="getPageData()"
-      >
+      
         <div class="list">
           <div v-for="(item, index) in 3" :key="index">
             <div class="item" @click="toDetail(index)">
@@ -73,7 +66,6 @@
             </div>
           </div>
         </div>
-      </van-list>
     </van-pull-refresh>
   </div>
 </template>
@@ -188,6 +180,9 @@ export default {
       let path = ["yu_fang", "bao_yang", "run_hua"];
       this.$router.push({ path: `./${path[index]}/${index}` });
     }
+  },
+  created() {
+    this.getPageData()
   }
 };
 </script>

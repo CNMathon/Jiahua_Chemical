@@ -1,122 +1,127 @@
 <template>
   <div class="pei-xun">
-    <van-nav-bar title="教育培训"></van-nav-bar>
-    <div class="top">
-      <div class="card">
-        <div class="head">
-          <div class="header">
-            <img
-              class="header-img"
-              :src="require(`@/assets/images/gen_${gender}.svg`)"
-              alt
-              srcset
-            />
+    <van-nav-bar
+      title="教育培训"
+      fixed
+    />
+    <div class="main fixed-first">
+      <div class="top">
+        <div class="card">
+          <div class="head">
+            <div class="header">
+              <img
+                class="header-img"
+                :src="require(`@/assets/images/gen_${gender}.svg`)"
+                alt
+                srcset
+              />
+            </div>
+            <div class="name">{{ userName }}</div>
           </div>
-          <div class="name">{{ userName }}</div>
+          <van-swipe class="swipe" :show-indicators="false" @change="onChange">
+            <label v-for="(item, index) in swiperData" :key="index">
+              <van-swipe-item>
+                <div class="title">{{ item.name }}</div>
+                <div class="nav-list">
+                  <label v-for="(items, indexs) in item.list" :key="indexs">
+                    <div class="nav">
+                      <div class="nav-title" :class="`err_${indexs}`">{{ items.value }}</div>
+                      <div class="nav-sub-title">{{ items.label }}</div>
+                    </div>
+                  </label>
+                </div>
+              </van-swipe-item>
+            </label>
+          </van-swipe>
         </div>
-        <van-swipe class="swipe" :show-indicators="false" @change="onChange">
-          <label v-for="(item, index) in swiperData" :key="index">
-            <van-swipe-item>
-              <div class="title">{{ item.name }}</div>
-              <div class="nav-list">
-                <label v-for="(items, indexs) in item.list" :key="indexs">
-                  <div class="nav">
-                    <div class="nav-title" :class="`err_${indexs}`">{{ items.value }}</div>
-                    <div class="nav-sub-title">{{ items.label }}</div>
-                  </div>
+        <div class="custom-indicator">
+          <div
+            v-for="(item, index) in 3"
+            :key="index"
+            class="custom-indicator-item"
+            :class="{ active: index === current }"
+          ></div>
+        </div>
+      </div>
+      <div class="nav-content">
+        <div class="nav-item" v-for="(item, index) in nav" :key="index" @click="toPage(item.router)">
+          <div class="img">
+            <img :src="require(`@/assets/images/study_${index + 1}.svg`)" alt srcset />
+          </div>
+          <div class="title">{{ item.text }}</div>
+        </div>
+      </div>
+      <div class="content">
+        <div class="head">
+          <div class="tip"></div>
+          <div class="title">我的学习</div>
+          <div class="icon" @click="toPage('./xue_xi')">
+            <van-icon name="arrow" />
+          </div>
+        </div>
+        <div class="tab">
+          <van-tabs
+            v-model="tabActive_1"
+            color="#6096F8"
+            :duration="0.5"
+            title-active-color="#3875E5"
+            title-inactive-color="#4A4A4A"
+            animated
+          >
+            <van-tab title="我的学习任务">
+              <div class="tab-content">
+                <label v-for="(item, index) in studyData.studyTask" :key="index">
+                  <class-1 :info="item" v-if="index < 3"></class-1>
                 </label>
+                <div class="null" v-if="studyData.studyTask.length === 0">暂无数据</div>
               </div>
-            </van-swipe-item>
-          </label>
-        </van-swipe>
-      </div>
-      <div class="custom-indicator">
-        <div
-          v-for="(item, index) in 3"
-          :key="index"
-          class="custom-indicator-item"
-          :class="{ active: index === current }"
-        ></div>
-      </div>
-    </div>
-    <div class="nav-content">
-      <div class="nav-item" v-for="(item, index) in nav" :key="index" @click="toPage(item.router)">
-        <div class="img">
-          <img :src="require(`@/assets/images/study_${index + 1}.svg`)" alt srcset />
-        </div>
-        <div class="title">{{ item.text }}</div>
-      </div>
-    </div>
-    <div class="content">
-      <div class="head">
-        <div class="tip"></div>
-        <div class="title">我的学习</div>
-        <div class="icon" @click="toPage('./xue_xi')">
-          <van-icon name="arrow" />
+            </van-tab>
+            <van-tab title="我的学习历史">
+              <div class="tab-content">
+                <label v-for="(item, index) in studyData.historyTask" :key="index">
+                  <class-1 :info="item" v-if="index < 3" isStart></class-1>
+                </label>
+                <div class="null" v-if="studyData.historyTask.length === 0">暂无数据</div>
+              </div>
+            </van-tab>
+          </van-tabs>
         </div>
       </div>
-      <div class="tab">
-        <van-tabs
-          v-model="tabActive_1"
-          color="#6096F8"
-          :duration="0.5"
-          title-active-color="#3875E5"
-          title-inactive-color="#4A4A4A"
-          animated
-        >
-          <van-tab title="我的学习任务">
-            <div class="tab-content">
-              <label v-for="(item, index) in studyData.studyTask" :key="index">
-                <class-1 :info="item" v-if="index < 3"></class-1>
-              </label>
-              <div class="null" v-if="studyData.studyTask.length === 0">暂无数据</div>
-            </div>
-          </van-tab>
-          <van-tab title="我的学习历史">
-            <div class="tab-content">
-              <label v-for="(item, index) in studyData.historyTask" :key="index">
-                <class-1 :info="item" v-if="index < 3" isStart></class-1>
-              </label>
-              <div class="null" v-if="studyData.historyTask.length === 0">暂无数据</div>
-            </div>
-          </van-tab>
-        </van-tabs>
-      </div>
-    </div>
-    <div class="content">
-      <div class="head">
-        <div class="tip tips"></div>
-        <div class="title">我的考试</div>
-        <div class="icon" @click="toPage('./kao_shi')">
-          <van-icon name="arrow" />
+      <div class="content">
+        <div class="head">
+          <div class="tip tips"></div>
+          <div class="title">我的考试</div>
+          <div class="icon" @click="toPage('./kao_shi')">
+            <van-icon name="arrow" />
+          </div>
         </div>
-      </div>
-      <div class="tab">
-        <van-tabs
-          v-model="tabActive_2"
-          color="#FC942C"
-          :duration="0.5"
-          title-active-color="#FC942C"
-          title-inactive-color="#4A4A4A"
-          animated
-        >
-          <van-tab title="我的考试任务">
-            <div class="tab-content">
-              <label v-for="(item, index) in testData.now" :key="index">
-                <class-2 :info="item" v-if="index < 3"></class-2>
-              </label>
-              <div class="null" v-if="testData.now.length === 0">暂无数据</div>
-            </div>
-          </van-tab>
-          <van-tab title="我的考试历史">
-            <div class="tab-content">
-              <label v-for="(item, index) in testData.history" :key="index">
-                <class-2 :info="item" v-if="index < 3" isEnd></class-2>
-              </label>
-              <div class="null" v-if="testData.history.length === 0">暂无数据</div>
-            </div>
-          </van-tab>
-        </van-tabs>
+        <div class="tab">
+          <van-tabs
+            v-model="tabActive_2"
+            color="#FC942C"
+            :duration="0.5"
+            title-active-color="#FC942C"
+            title-inactive-color="#4A4A4A"
+            animated
+          >
+            <van-tab title="我的考试任务">
+              <div class="tab-content">
+                <label v-for="(item, index) in testData.now" :key="index">
+                  <class-2 :info="item" v-if="index < 3"></class-2>
+                </label>
+                <div class="null" v-if="testData.now.length === 0">暂无数据</div>
+              </div>
+            </van-tab>
+            <van-tab title="我的考试历史">
+              <div class="tab-content">
+                <label v-for="(item, index) in testData.history" :key="index">
+                  <class-2 :info="item" v-if="index < 3" isEnd></class-2>
+                </label>
+                <div class="null" v-if="testData.history.length === 0">暂无数据</div>
+              </div>
+            </van-tab>
+          </van-tabs>
+        </div>
       </div>
     </div>
   </div>

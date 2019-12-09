@@ -80,4 +80,18 @@
   padding-top: 40px !important;
   padding-bottom: 40px !important;
 }
+.clear-button{
+  width: 100%;
+  padding: 10px ;
+  text-align: center;
+  color: #1989fa;
+  border: 1px solid #1989fa;
+  margin-bottom: 15px;
+  cursor: pointer;
+  // border: 1px solid #ff976a93;
+}
+.ptb-0{
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
 </style>

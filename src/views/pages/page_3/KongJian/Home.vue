@@ -11,6 +11,7 @@
 export default {
   computed: {
     cachedViews() {
+      console.log("this.$store.state.kongjian.keepAliveComponents", this.$store.state.kongjian.keepAliveComponents);
       return this.$store.state.kongjian.keepAliveComponents;
     }
   }

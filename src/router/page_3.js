@@ -245,6 +245,11 @@ const routes = {
           }
         },
         {
+          path: "/page_3/donghuo/select_department",
+          name: "donghuo_select_department",
+          component: () => import("../components/Department/index.vue")
+        },
+        {
           path: "/page_3/donghuo/index",
           name: "donghuo_index",
           component: () => import("../views/pages/page_3/DongHuo/Index.vue"),
@@ -287,9 +292,9 @@ const routes = {
           path: "/page_3/donghuo/list",
           name: "donghuo_list",
           component: () => import("../views/pages/page_3/DongHuo/List.vue"),
-          meta: {
-            keepAlive: true //此组件不需要被缓存
-          }
+          // meta: {
+          //   keepAlive: true //此组件不需要被缓存
+          // }
         },
         {
           path: "/page_3/donghuo/select",
@@ -361,16 +366,16 @@ const routes = {
         },
         {
           path: "/page_3/kongjian/select_user",
-          name: "DongTu_SelectUser",
+          name: "kongjian_SelectUser",
           component: () => import("../views/pages/page_3/SelectUser/Index.vue")
         },
         {
           path: "/page_3/kongjian/list",
           name: "kongjian_list",
           component: () => import("../views/pages/page_3/KongJian/List.vue"),
-          meta: {
-            keepAlive: true
-          }
+          // meta: {
+          //   keepAlive: true
+          // }
         },
         {
           path: "/page_3/kongjian/analysis",
@@ -380,6 +385,11 @@ const routes = {
           meta: {
             name: "受限空间-安全分析"
           }
+        },
+        {
+          path: "/page_3/kongjian/select_department",
+          name: "kongjian_select_department",
+          component: () => import("../components/Department/index.vue")
         },
         {
           path: "/page_3/kongjian/add_analysis",
@@ -435,6 +445,11 @@ const routes = {
           }
         },
         {
+          path: "/page_3/mangban/select_department",
+          name: "mangban_select_department",
+          component: () => import("../components/Department/index.vue")
+        },
+        {
           path: "/page_3/mangban/index",
           name: "mangban_index",
           component: () => import("../views/pages/page_3/MangBan/Index.vue")
@@ -462,7 +477,7 @@ const routes = {
         {
           path: "/page_3/mangban/list",
           name: "mangban_list",
-          component: () => import("../views/pages/page_3/MangBan/List.vue")
+          component: () => import("../views/pages/page_3/MangBan/List.vue"),
         },
         {
           path: "/page_3/mangban/add_device",
@@ -503,6 +518,11 @@ const routes = {
           }
         },
         {
+          path: "/page_3/gaochu/select_department",
+          name: "gaochu_select_department",
+          component: () => import("../components/Department/index.vue")
+        },
+        {
           path: "/page_3/gaochu/index",
           name: "gaochu_index",
           component: () => import("../views/pages/page_3/GaoChu/Index.vue"),
@@ -521,9 +541,6 @@ const routes = {
           path: "/page_3/gaochu/list",
           name: "gaochu_list",
           component: () => import("../views/pages/page_3/GaoChu/List.vue"),
-          meta: {
-            keepAlive: false //此组件不需要被缓存
-          }
         },
         {
           path: "/page_3/gaochu/select",
@@ -572,6 +589,11 @@ const routes = {
           meta: {
             name: "审批"
           }
+        },
+        {
+          path: "/page_3/diaozhuang/select_department",
+          name: "diaozhuang_select_department",
+          component: () => import("../components/Department/index.vue")
         },
         {
           path: "/page_3/diaozhuang/index",
@@ -670,6 +692,11 @@ const routes = {
           }
         },
         {
+          path: "/page_3/linshi/select_department",
+          name: "linshi_select_department",
+          component: () => import("../components/Department/index.vue")
+        },
+        {
           path: "/page_3/linshi/index",
           name: "linshi_index",
           component: () => import("../views/pages/page_3/LinShi/Index.vue"),
@@ -683,9 +710,6 @@ const routes = {
           path: "/page_3/linshi/list",
           name: "linshi_list",
           component: () => import("../views/pages/page_3/LinShi/List.vue"),
-          meta: {
-            keepAlive: false //此组件不需要被缓存
-          }
         },
         {
           path: "/page_3/linshi/linshi_select_department",
@@ -749,6 +773,11 @@ const routes = {
           props: true
         },
         {
+          path: "/page_3/dongtu/select_department",
+          name: "dongtu_select_department",
+          component: () => import("../components/Department/index.vue")
+        },
+        {
           path: "/page_3/dongtu/index2",
           name: "dongtu_index",
           component: () => import("../views/pages/page_3/DongTu/Index2.vue"),
@@ -777,9 +806,6 @@ const routes = {
           path: "/page_3/dongtu/list",
           name: "dongtu_list",
           component: () => import("../views/pages/page_3/DongTu/List.vue"),
-          meta: {
-            keepAlive: false //此组件不需要被缓存
-          }
         },
         {
           path: "/page_3/dongtu/select",
@@ -830,6 +856,11 @@ const routes = {
           }
         },
         {
+          path: "/page_3/duanlu/select_department",
+          name: "duanlu_select_department",
+          component: () => import("../components/Department/index.vue")
+        },
+        {
           path: "/page_3/duanlu/index",
           name: "duanlu_index",
           component: () => import("../views/pages/page_3/DuanLu/Index.vue"),
@@ -844,7 +875,7 @@ const routes = {
           name: "duanlu_list",
           component: () => import("../views/pages/page_3/DuanLu/List.vue"),
           meta: {
-            keepAlive: false //此组件不需要被缓存
+            keepAlive: true //此组件不需要被缓存
           }
         },
         {

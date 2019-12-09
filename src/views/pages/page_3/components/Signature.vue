@@ -5,7 +5,7 @@
     </div>
     <!-- v-model="localChecked" -->
     <div class="confirm_item_check success">
-      <van-checkbox  v-model="localChecked" :click="showSignature(0)" checked-color="#07c160"  :disabled="disable"></van-checkbox>
+      <van-checkbox  :value="localChecked"  @click="showSignature" checked-color="#07c160"  :disabled="disable"></van-checkbox>
     </div>
     <div class="confirm_item_signature" v-if="img">
       <van-image width="100%" height="100%" fit="scale-down" :src="img" />
@@ -41,29 +41,20 @@ export default {
   },
   watch: {
     checked (val) {
+      console.log('checked new val', val);
       this.localChecked = val;
     },
-    localChecked(val) {
-      // this.tempChecked
-      //   this.checked = false
-      // if (this.disable) {
-      //   if (this.isDataEmpty(this.tempChecked)) {
-      //     this.tempChecked = !this.checked
-      //     console.log('tempChecked：', this.tempChecked)
-      //   }
-      //   this.checked = this.tempChecked
-      //   console.log('赋值后的checked：', this.tempChecked)
-      //   return
-      // };
-      if (val) {
-        this.changeChecked(val);
+  },
+  methods: {
+    showSignature($event) {
+      console.log('$event', $event);
+      if (this.disable) {return}
+      if ($event) {
+        this.changeChecked();
       } else {
         this.cancel();
       }
-    }
-  },
-  methods: {
-    showSignature() {},
+    },
     changeChecked() {
       this.$emit("checked");
     },

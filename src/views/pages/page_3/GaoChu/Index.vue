@@ -16,7 +16,7 @@
       <!-- 申请人 -->
       <cell-value title="申请人" :value="oldInfo.user?oldInfo.user.userName:$userInfo.userName" disable></cell-value>
       <!-- 作业票编号 -->
-      <cell-value title="作业票编号" :value="sendData.id" disable></cell-value>
+      <cell-value title="作业票编号" :value="oldInfo.gczyCode" disable></cell-value>
       <!-- 作业票状态 -->
       <cell-value title="作业票状态" value="编辑" disable></cell-value>
       <!-- 作业内容 -->
@@ -48,7 +48,7 @@
       <!-- 作业开始时间 -->
       <cell-time v-model="sendData.startTime" title="作业开始时间" required></cell-time>
       <!-- 作业结束时间 -->
-      <cell-time v-model="sendData.endTime" title="作业结束时间" required></cell-time>
+      <cell-time v-model="sendData.endTime" :startTime="sendData.startTime" title="作业结束时间" required></cell-time>
       <!-- 作业部门负责人 -->
       <select-organization
         max="1"
@@ -198,12 +198,12 @@
           @cancel="signatureCancel(11)"
         >
           <span>
-            采光,夜间作业照明符合作业要求,
+            采光,夜间作业照明符合作业要求,{{light}}
             <span
-              :class="light == 0? 'seclct_tag is_select': 'seclct_tag'"
+              :class="light === 0? 'seclct_tag is_select': 'seclct_tag'"
               @click="light = 0"
             >需采用并已采用</span>
-            <span :class="light == 1? 'seclct_tag is_select': 'seclct_tag'" @click="light = 1">无需采用</span>
+            <span :class="light === 1? 'seclct_tag is_select': 'seclct_tag'" @click="light = 1">无需采用</span>
             防爆灯
           </span>
         </Signature>
@@ -240,8 +240,8 @@ export default {
   data() {
     return {
       storeModule: "gaochu",
-      light: 0,
-      mask: [0, 1],
+      light: '',
+      mask: ['', ''],
       sendData: {
         workContent: "", //作业内容
         workAddress: "", //作业地点
@@ -469,10 +469,9 @@ export default {
             }
       });
        this.getChilderList(info.id);
-			//  初始化安全选项
+			  //  初始化安全选项
           console.log(this.sendData);
-        })
-        .catch(() => {});
+      }).catch(() => {});
     },
     Next() {
       if (!this.$route.query.gczyCode) {
@@ -662,7 +661,7 @@ export default {
             xuhao: 12,
             id:this.checked[11].id?this.checked[11].id:'',
             safetyMeasure: `采光,夜间作业照明符合作业要求, ${
-            this.light == 0 ? "需采用并已采用" : "无需采用"}防爆灯`,
+            this.light === 0 ? "需采用并已采用" : this.light === 1 ? "无需采用" : ''}防爆灯`,
             confirmer: this.checked[11].img ? this.checked[11].img : '',
             qrzt: this.checked[11].checked ? 1 : 0
           },
@@ -679,6 +678,10 @@ export default {
 	  },
     // 发送数据
     postData() {
+      this.$Toast.loading({
+        message: "加载中...",
+        forbidClick: true
+      });
       // 检测到输入不完整直接退出函数
       if (!this.isDataEdit()) {
         return;
@@ -804,9 +807,7 @@ export default {
     // 显示签名
     showSignature(index) {
       this.xuhao = index;
-      if (!this.checked[index].checked) {
-        this.signatureShow = true;
-      }
+      this.signatureShow = true;
     },
     // 取消签名
     signatureCancel(index) {

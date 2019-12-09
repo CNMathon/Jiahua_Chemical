@@ -1,6 +1,6 @@
 <!-- 动火列表页 -->
 <template>
-  <van-list class="home">
+  <div class="home" >
     <van-sticky>
       <van-nav-bar title="高处安全"
                    left-text="返回"
@@ -20,8 +20,24 @@
       <j-filter-item title="作业票状态"
                      :actions="zypztList"
                      @select="filterSelect_1"></j-filter-item>
-      <j-filter-cell title="申请部门"></j-filter-cell>
-      <j-filter-cell title="申请人"></j-filter-cell>
+      <select-department
+        title="申请部门"
+        radio
+        :storeModule="storeModule"
+        storeKey="sqbm"
+        v-model="sqbm"
+        no-padding
+      />
+      <!-- <j-filter-cell title="申请人" /> -->
+      <select-organization 
+        title="申请人"
+        max="9"
+        :storeModule="storeModule"
+        storeKey="dhzyRen"
+        v-model="dhzyRen"
+        no-padding
+      />
+      <div class="clear-button"  @click="clearfilter">清空条件</div>
     </j-filter>
     <van-pull-refresh v-model="isLoading"
                       @refresh="getListData(true)">
@@ -45,14 +61,17 @@
           </div>
         </div>
     </van-pull-refresh>
-  </van-list>
+  </div>
 </template>
 
 <script>
+  import { mapState } from "vuex";
   import { mixin } from "@/mixin/mixin";
   export default {
+    name: 'gaochuList',
     data () {
       return {
+        storeModule: 'gaochu',
         isLoading: false, //页面是否正在下拉刷新
         error: false, //加载错误
         loading: false, //页面是否在加载中
@@ -68,11 +87,11 @@
         selectCbs: {}, //选择的承包商
         confirmSelectCbs: {},
         zypztList: [ // 作业票状态列表
-          { index: -1, name: "请选择" },
+          { index: '', name: "请选择" },
           { index: 1, name: "编辑" },
           { index: 2, name: "初审" },
-          { index: 3, name: "有效" },
-          { index: 4, name: "已验票" },
+          { index: 3, name: "审核" },
+          { index: 4, name: "有效" },
           { index: 5, name: "已终结" }
         ],
         status: "",
@@ -81,13 +100,23 @@
     mixins: [mixin],
     created () {
       this.getListData(true);
-      this.$store.dispatch("gaochu/cleanState");
-      this.$store.commit("gaochu/delete_KeepAlive", "gaochuindex");
-      this.$nextTick(() => {
-        this.$store.commit("gaochu/add_KeepAlive", "gaochuindex");
-      });
+      this.initGaoChuPage();
     },
     methods: {
+      clearfilter () {
+      this.initGaoChuPage();
+      this.searchValue = '';
+      this.status = '';
+      this.showFilter = false;
+      this.getListData(true);
+      },
+      initGaoChuPage () {
+        this.$store.dispatch("gaochu/cleanState");
+        this.$nextTick(() => {
+          this.$store.commit("gaochu/add_KeepAlive", "gaochuList");
+          this.$store.commit("gaochu/add_KeepAlive", "gaochuindex");
+        });
+      },
       pageBack () {
         this.$router.push({
           path: "/page_3/index"
@@ -113,6 +142,8 @@
         sendData.__sid = this.$userInfo.sessionId;
         sendData.workContent = this.searchValue;
         sendData.htStatus = this.status;
+        sendData.applyDept= this.sqbm.length>0?this.sqbm[0].id:'',
+        sendData.applyRen= this.dhzyRen.length>0?this.dhzyRen[0].userCode:'',
         this.$api.page_3
           .htHseUpworkticketListData(sendData)
           .then(res => {
@@ -120,6 +151,7 @@
             // 加载状态结束
             this.loading = false;
             this.isLoading = false;
+            // this.finished = false;
             this.pageNow = this.pageNow + 1;
             if (res.list === []) {
               this.finished = true;
@@ -150,11 +182,13 @@
       },
       confirmFilter () { },
       onClickRight () {
+        this.initGaoChuPage();
         this.$router.push({
           path: "../gaochu"
         });
       },
       toDetail (id, status) {
+        this.initGaoChuPage();
         sessionStorage.setItem('flag', '1');
         if (parseInt(id) === 1) {
           this.$router.push({ path: '/page_3/gaochu/index', query: { gczyCode: status } })
@@ -164,7 +198,11 @@
           this.$router.push({ path: '/page_3/gaochu/index3', query: { gczyCode: status } })
         }
       },
-    }
+    },
+    computed: mapState({
+      dhzyRen: state => state.gaochu.dhzyRen,
+      sqbm: state => state.gaochu.sqbm
+    }),
   };
 </script>
 

@@ -18,9 +18,9 @@
       <!-- 申请人 -->
       <cell-value title="申请人" :value="oldInfo.user.userName?oldInfo.user.userName:$userInfo.userName" disable></cell-value>
       <!-- 作业票编号 -->
-      <cell-value title="作业票编号" disable :value="sendData.id"></cell-value>
+      <cell-value title="作业票编号" disable :value="oldInfo.gczyCode"></cell-value>
       <!-- 作业票状态 -->
-      <cell-value title="作业票状态" disable value="编辑"></cell-value>
+      <cell-value title="作业票状态" disable :value="zypztList[oldInfo.htStatus].name"></cell-value>
       <!-- 作业内容 -->
       <cell-textarea
         title="作业内容"
@@ -233,10 +233,10 @@
           <span>
             采光,夜间作业照明符合作业要求,
             <span
-              :class="light == 0? 'seclct_tag is_select': 'seclct_tag'"
+              :class="light === 0? 'seclct_tag is_select': 'seclct_tag'"
               @click="light = 0"
             >需采用并已采用</span>
-            <span :class="light == 1? 'seclct_tag is_select': 'seclct_tag'" @click="light = 1">无需采用</span>
+            <span :class="light === 1? 'seclct_tag is_select': 'seclct_tag'" @click="light = 1">无需采用</span>
             防爆灯
           </span>
         </Signature>
@@ -300,8 +300,16 @@ export default {
     return {
       signatureShow2: false,
       storeModule: "gaochu",
-      light: 0,
-	  mask: [0, 1],
+      light: '',
+      mask: ['', ''],
+    zypztList: [ // 作业票状态列表
+          { index: '', name: "请选择" },
+          { index: 1, name: "编辑" },
+          { index: 2, name: "初审" },
+          { index: 3, name: "审核" },
+          { index: 4, name: "有效" },
+          { index: 5, name: "已终结" }
+        ],
 	  oldInfo: {},
       sendData: {
         othercsComplier: "",
@@ -822,9 +830,7 @@ export default {
       console.log("index: ", index);
       console.log("显示签名");
       this.xuhao = index;
-      if (!this.checked[index].checked) {
-        this.signatureShow = true;
-      }
+      this.signatureShow = true;
     },
     // 取消签名
     signatureCancel(index) {

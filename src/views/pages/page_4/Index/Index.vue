@@ -1,21 +1,26 @@
 <template>
   <div class="shuju">
-    <van-nav-bar title="信息查询"></van-nav-bar>
-    <div class="content" v-for="(item, index) in nav" :key="index">
-      <div class="content-title">{{ item.title }}</div>
-      <van-row>
-        <van-col span="6" v-for="(items, indexs) in item.navs" :key="indexs">
-          <div class="nav" @click="toPage(items.router)">
-            <div class="nav-image">
-              <img
-                :src="require(`@/assets/images/msg_${items.image}.svg`)"
-                alt
-              />
+    <van-nav-bar
+      title="信息查询"
+      fixed
+    />
+    <div class="app fixed-first">
+      <div class="content" v-for="(item, index) in nav" :key="index">
+        <div class="content-title">{{ item.title }}</div>
+        <van-row>
+          <van-col span="6" v-for="(items, indexs) in item.navs" :key="indexs">
+            <div class="nav" @click="toPage(items.router)">
+              <div class="nav-image">
+                <img
+                  :src="require(`@/assets/images/msg_${items.image}.svg`)"
+                  alt
+                />
+              </div>
+              <div class="nav-text">{{ items.text }}</div>
             </div>
-            <div class="nav-text">{{ items.text }}</div>
-          </div>
-        </van-col>
-      </van-row>
+          </van-col>
+        </van-row>
+      </div>
     </div>
   </div>
 </template>

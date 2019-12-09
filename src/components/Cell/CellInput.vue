@@ -10,7 +10,7 @@
         :placeholder="placeholder"
         :disabled="disable"
         ref="cell_input"
-        :value="value"
+        :value="locaValue"
         @input="$emit('input', $event.target.value)"
       />
       <slot name="right"></slot>
@@ -39,6 +39,16 @@ export default {
     disable: {
       type: Boolean,
       default: false
+    }
+  },
+  data () {
+    return {
+      locaValue: this.value
+    }
+  },
+  watch: {
+    value (val) {
+      this.locaValue = val;
     }
   }
 };

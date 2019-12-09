@@ -14,47 +14,38 @@
           @click="changeTabActive(1)"
         >书签设备</div>
       </div>
-      <j-filter-bar v-model="searchValue" @search="search" @tap="showFilter = true"></j-filter-bar>
+      <j-filter-bar v-model="deviceName" @search="getPageData(true)" @tap="showFilter = true"></j-filter-bar>
     </van-sticky>
     <j-filter v-model="showFilter" @confirm="confirmFilter">
       <j-filter-search v-model="searchValues" @search="filterSearch"></j-filter-search>
       <j-filter-item title="专业类别" :actions="sheetActions_1" @select="filterSelect_1"></j-filter-item>
       <j-filter-item title="所属分厂" :actions="sheetActions_2" @select="filterSelect_2"></j-filter-item>
     </j-filter>
-    <van-pull-refresh v-model="isLoading" @refresh="getPageData(true)">
-      <div class="device-head">
-        <div class="device-head__item">设备名称</div>
-        <div class="device-head__item">设备位号</div>
-        <div class="device-head__item">专业类别</div>
-        <div class="device-head__item">书签</div>
-      </div>
-      <van-list
-        v-model="loading"
-        :finished="finished"
-        :error.sync="error"
-        error-text="请求失败，点击重新加载"
-        finished-text="没有更多了"
-        @load="getPageData()"
-      >
-        <div v-for="(item, index) in 2" :key="index">
-          <div class="device-list" v-if="index === active">
-            <div v-for="(items, indexs) in pageList" :key="indexs">
-              <div class="device-item" @click="toDetail(items.id)">
-                <div class="device-item__infos">{{items.deviceName}}</div>
-                <div class="device-item__infos">{{items.devicePosition}}</div>
-                <div class="device-item__infos" v-text="setSpecialtyType(items.specialtyType)"></div>
-                <div class="device-item__infos">
-                  <van-icon
-                    class-prefix="iconfont"
-                    :name="index ? 'is_add_device' : 'add_device'"
-                    :color="index ? '#6096F8' : '#9A9A9A'"
-                  />
-                </div>
+    <div class="device-head">
+      <div class="device-head__item">设备名称</div>
+      <div class="device-head__item">设备位号</div>
+      <div class="device-head__item">专业类别</div>
+      <div class="device-head__item">书签</div>
+    </div>
+    <van-pull-refresh v-model="loading" @refresh="getPageData(true)">
+      <div v-for="(item, index) in 2" :key="index">
+        <div class="device-list" v-if="index === active">
+          <div v-for="(items, indexs) in pageList" :key="indexs">
+            <div class="device-item" @click="toDetail(items.id)">
+              <div class="device-item__infos">{{items.deviceName}}</div>
+              <div class="device-item__infos">{{items.devicePosition}}</div>
+              <div class="device-item__infos" v-text="setSpecialtyType(items.specialtyType)"></div>
+              <div class="device-item__infos" @click.stop="favorite">
+                <van-icon
+                  class-prefix="iconfont"
+                  :name="index ? 'is_add_device' : 'add_device'"
+                  :color="index ? '#6096F8' : '#9A9A9A'"
+                />
               </div>
             </div>
           </div>
         </div>
-      </van-list>
+      </div>
     </van-pull-refresh>
   </div>
 </template>
@@ -109,7 +100,7 @@ export default {
       console.log(this.searchValues);
     },
     filterSelect_1(e) {
-      console.log("e: ", e,e.id,e.name);
+      console.log("e: ", e, e.id, e.name);
       this.specialtyType = e.id === -1 ? "" : e.id;
     },
     filterSelect_2(e) {
@@ -171,6 +162,10 @@ export default {
     toDetail(id) {
       console.log(id);
       this.$router.push({ path: `./detail?id=${id}` });
+    },
+    // 收藏
+    favorite() {
+      console.log(123)
     },
     //设置设备类别
     setSpecialtyType(type) {

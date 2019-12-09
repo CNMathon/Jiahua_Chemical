@@ -1,6 +1,6 @@
 // initial state
 const state = {
-  keepAliveComponents: ["linshiindex", "linshiindex2"],
+  keepAliveComponents: ["linshiList","linshiindex", "linshiindex2"],
   hazardIdentification: [],
   connectRen: [], //接线人
   workCharger: [], //施工现场负责人
@@ -8,6 +8,8 @@ const state = {
   workDept:[],
   accessRen: [], // 临时用电接入人
   priAppr: [], // 临时用电作业初审人
+  sqbm:[],
+  dhzyRen:[]
 };
 
 // getters

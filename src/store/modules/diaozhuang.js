@@ -1,13 +1,15 @@
 // initial state
 const state = {
-  keepAliveComponents: ["diaozhuang_index"],
+  keepAliveComponents: ["diaozhuangList","diaozhuang_index"],
   whsb: [],
   zyfzr: [],
   jhr: [],
   zydw: [],
   work_permit_1: {},
   work_permit_2: {},
-  work_permit_3: {}
+  work_permit_3: {},
+  sqbm:[],
+  dhzyRen:[]
 };
 
 // getters

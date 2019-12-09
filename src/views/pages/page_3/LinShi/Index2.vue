@@ -14,9 +14,13 @@
     </van-sticky>
     <div class="cell_group">
       <!-- 申请部门 -->
-      <cell-value disable title="申请部门" required :value="sendData.apprDept"></cell-value>
+      <cell-value title="申请部门" :value="apply.dept" disable></cell-value>
       <!-- 申请人 -->
-      <cell-value disable title="申请人" required :value="sendData.apprRen"></cell-value>
+      <cell-value title="申请人" :value="apply.name" disable></cell-value>
+      <!-- 作业票编号 -->
+      <cell-value title="作业票编号" :value="apply.code" disable></cell-value>
+      <!-- 作业票状态 -->
+      <cell-value title="作业票状态" :value="zypztList[oldInfo.htStatus || 0].name" disable></cell-value>
       <!-- 作业内容 -->
       <cell-textarea
         disable
@@ -44,7 +48,7 @@
       <!-- 工作电压 -->
       <cell-picker
         disable
-        v-model="sendData.jworkVoltage"
+        v-model="sendData.workVoltage"
         title="工作电压"
         required
         :columns="jworkVoltageColumns"
@@ -71,7 +75,7 @@
         required
         title="危害辨识"
         storeKey="hazardIdentification"
-        :tagList="hazardIdentification"
+        :tagList="sendData.hazardIdentification"
         :showList="list_1"
         :storeModule="storeModule"
       ></cell-select-tag>
@@ -93,6 +97,7 @@
         disable
         title="施工作业部门"
         required
+        :noPadding="false"
         :storeModule="storeModule"
         storeKey="workDept"
         v-model="sendData.workDept"
@@ -235,7 +240,7 @@
       </div>
 
       <div class="cell_group">
-        <!-- 临时用电作业初审人 -->
+        <!-- 临时用电作业初审人 otherSafety othercsComplier othercsTime-->
         <select-organization  
         title="临时用电作业初审人" 
         required 
@@ -293,6 +298,12 @@ export default {
   },
   data() {
     return {
+      apply: {
+        name: '',
+        dept: '',
+        code: '',
+      },
+      oldInfo: {},
       storeModule: "linshi",
       signatureShow: false,
       security: 1, // 是安全签字 还是其他安全签字
@@ -307,7 +318,7 @@ export default {
         workContent: "", // 作业内容
         workLocation: "", // 作业地点
         powerType: "", // 用电方式
-        jworkVoltage: "", // 工作电压
+        workVoltage: "", // 工作电压
         publicArea: "", // 公共区域
         devicePower: "", // 用电设备及功率
         hazardIdentification: [], // 危害辨识
@@ -364,20 +375,36 @@ export default {
       zypCode: 0,
       actRuTask: "",
       id: "",
-      linshihtStatus: ""
+      linshihtStatus: "",
+      zypztList: [
+          { index: '', name: "请选择" },
+          { index: 1, name: "编辑" },
+          { index: 2, name: "初审" },
+          { index: 3, name: "有效" },
+          { index: 4, name: "已验票" },
+          { index: 5, name: "已终结" }
+        ], // 作业票状态列表
     };
   },
   computed: mapState({
-    hazardIdentification: state => state.linshi.hazardIdentification,
     accessRen: state => state.linshi.accessRen,
     priAppr: state => state.linshi.priAppr,
   }),
+  watch: {
+    accessRen(res) {
+      console.log('accessRen=============', res);
+      this.sendData.accessRen = res;
+    },
+    priAppr(res) {
+      console.log('priApprres=============', res);
+      this.sendData.priAppr = res;
+    }
+  },
   created() {
     this.initPage();
   },
   beforeDestroy () {
 	  this.zypCode = '';
-	  this.$store.dispatch("linshi/cleanState");
   },
   methods: {
     initChecked () {
@@ -471,15 +498,15 @@ export default {
             userName:res.lsydcsr.userName,
             userCode:res.lsydcsr.userCode
           }]: [{
-            userName:this.$userInfo.userName,
-            userCode:this.$userInfo.userCode
+            userName:res.nextBy,
+            userCode:res.nextBy,
           }]
           this.sendData.apprDept = info.sqbm.officeName;
           this.sendData.apprRen = info.sqr.userName;
           this.sendData.workContent = info.workContent;
           this.sendData.workLocation = info.workLocation;
           this.sendData.powerType = Number(info.powerType ? info.powerType : 0);
-          this.sendData.jworkVoltage = Number(
+          this.sendData.workVoltage = Number(
             info.workVoltage ? info.workVoltage : 0
           );
           this.sendData.publicArea = Number(
@@ -490,17 +517,17 @@ export default {
           this.sendData.powertimeStart = info.powertimeStart;
           this.sendData.powertimeEnd = info.powertimeEnd;
           this.sendData.id = info.id;
-          let hazardIdentification = [];
+          this.sendData.hazardIdentification = [];
           let hazarStr = info.hazardIdentification || "";
           hazarStr.split(",").map(items => {
-            hazardIdentification.push(this.list_1[items - 1]);
+            this.sendData.hazardIdentification.push(this.list_1[items - 1]);
           });
-          this.setTag({
-            tags: {
-              key: "hazardIdentification",
-              value: hazardIdentification
-            }
-          });
+          // this.setTag({
+          //   tags: {
+          //     key: "hazardIdentification",
+          //     value: hazardIdentification
+          //   }
+          // });
           this.sendData.workDept = [
             {
               id: info.zybm.id,
@@ -520,13 +547,17 @@ export default {
             this.initChilderData(info.lsydzypSafetyList);
           }
           console.log('this.sendData.workRen',this.sendData.workRen);
-           this.sendData.accessRen= this.reductionSelectUserObj(info.lsydjrr), // 临时用电接入人
+           this.sendData.accessRen= this.reductionSelectUserObj(info.lsydjrr || {}), // 临时用电接入人
            this.sendData.excuteLicense= info.excuteLicense, // 供电执行人电工证号
            this.sendData.powerAp= info.powerAp // 电源接入点
           this.sendData.otherSafety = info.otherSafety;
           this.sendData.othercsComplier= info.othercsComplier;
           this.sendData.othercsTime = info.othercsTime;
-         
+         this.apply ={
+            name: info.sqr.userName,
+            dept: info.sqbm.officeName,
+            code: info.zypCode,
+          };
           console.log('this.sendData', this.sendData);
         })
         .catch(err => {
@@ -578,17 +609,118 @@ export default {
     showSignature(index) {
       this.selectSignatureShow = index;
       this.security = 1; // 安全签字
-      if (!this.checked[index].checked) {
-        this.signatureShow = true;
-      }
+      this.signatureShow = true;
     },
     // 取消签名
     signatureCancel(index) {
       this.checked[index].checked = false;
       this.checked[index].img = "";
     },
+       paramVerify () {
+      let jump = true;
+      let keylist =Object.keys(this.sendData);
+      for (let i=0; i < keylist.length; i++) {
+        switch (keylist[i]) {
+          case 'workContent':
+            console.log('this.sendData.workContent', this.sendData.workContent);
+            jump = this.sendData.workContent !== '';
+            break;
+            case 'workLocation':
+              console.log('this.sendData.workLocation', this.sendData.workLocation);
+              jump = this.sendData.workLocation !== '';
+            break;
+            case 'powerType':
+              console.log('this.sendData.powerType', this.sendData.powerType);
+              jump = this.sendData.powerType !== '';
+            break;
+            case 'workVoltage':
+              console.log('this.sendData.workVoltage', this.sendData.workVoltage);
+              jump = this.sendData.workVoltage !== '';
+            break;
+            case 'publicArea':
+              console.log('this.sendData.publicArea', this.sendData.workVoltage);
+              jump = this.sendData.publicArea !== '';
+            break;
+            case 'devicePower':
+              console.log('this.sendData.devicePower', this.sendData.devicePower);
+              jump = this.sendData.devicePower !== '';
+            break;
+            case 'hazardIdentification':
+              console.log('this.sendData.hazardIdentification', this.hazardIdentification);
+              jump = this.sendData.hazardIdentification.length > 0;
+            break;
+            case 'powertimeStart':
+              console.log('this.sendData.powertimeStart', this.sendData.powertimeStart);
+              jump = this.sendData.powertimeStart !== '';
+            break;
+            case 'powertimeEnd':
+              console.log('this.sendData.powertimeEnd', this.sendData.powertimeEnd);
+               jump = this.sendData.powertimeEnd !== '';
+            break;
+            case 'connectRen':
+              console.log('this.sendData.connectRen', this.sendData.connectRen);
+              if (this.sendData.powerType === 2 && this.sendData.connectRen.length > 0) {
+                jump = true;
+              } else {
+                this.$notify('必须选择接线人');
+                jump = false;
+              }
+            break;
+            case 'workCharger':
+              console.log('this.sendData.workCharger', this.sendData.workCharger);
+              jump = this.sendData.workCharger.length > 0;
+            break;
+            case 'workRen':
+              console.log('this.sendData.workRen', this.sendData.workRen);
+              jump = this.sendData.workRen.length > 0;
+            break;
+            case 'workDept':
+              console.log('this.sendData.workDept', this.sendData.workDept.length > 0);
+              jump = this.sendData.workDept.length > 0;
+            break;
+            case 'licenseCode':
+              console.log('this.sendData.licenseCode', this.sendData.licenseCode !== '');
+              jump = this.sendData.licenseCode !== '';
+            break;
+            case 'accessRen':
+              console.log('this.sendData.accessRen', this.sendData.accessRen);
+              jump = this.sendData.accessRen.length > 0;
+            break;
+            case 'excuteLicense':
+              console.log('this.sendData.excuteLicense', this.sendData.excuteLicense);
+              jump = this.sendData.excuteLicense !== '';
+            break;
+            case 'powerAp':
+              console.log('this.sendData.powerAp', this.sendData.powerAp);
+              jump = this.sendData.powerAp !== '';
+            break;
+            case 'otherSafety':
+               console.log('this.sendData.otherSafety', this.sendData.otherSafety);
+              jump = this.sendData.otherSafety !== '';
+            break;
+            case 'othercsComplier':
+               console.log('this.sendData.othercsComplier', this.sendData.othercsComplier);
+              jump = this.sendData.othercsComplier !== '';
+            break;
+            case 'othercsTime':
+               console.log('this.sendData.othercsTime', this.sendData.othercsTime);
+               console.log('this.sendData.othercsTime', this.sendData.othercsTime !== '');
+               console.log('this.sendData.othercsTime', jump);
+              jump = this.sendData.othercsTime !== '';
+            break;
+        }
+        if (!jump) {
+          return false;
+        }
+      }
+      return true;
+    },
     // 发送数据
     postData() {
+      if (!this.paramVerify()) {
+        this.$notify("请填写完整的数据");
+        return
+      }
       const that = this;
       let sendData = JSON.parse(JSON.stringify(this.sendData));
       sendData.hazardIdentification = this.stringData(
@@ -609,10 +741,9 @@ export default {
         sendData.apprRen = this.$userInfo.userCode;
       }  
       // 安全 措施
-//       console.log('postData----sendData1', sendData);
       sendData.lsydzypSafetyList = this.setChilderData(sendData.id);
       sendData.accessRen = this.userString(sendData.accessRen, "userCode"); // 临时用电接入人 
-      sendData.priAppr = this.userString(sendData.priAppr, "userCode");// 临时用电作业初审人
+      delete sendData.priAppr;// 临时用电作业初审人
       //  其他安全措施
       console.log('postData----sendData2', sendData);
         this.$api.page_3
@@ -730,16 +861,6 @@ export default {
       this.isShowAction = false;
     }
   },
-  watch: {
-    accessRen(res) {
-      console.log('accessRen=============', res);
-      this.sendData.accessRen = res;
-    },
-    priAppr(res) {
-      console.log('priApprres=============', res);
-      this.sendData.priAppr = res;
-    }
-  }
 };
 </script>
 <style lang="scss" scoped>

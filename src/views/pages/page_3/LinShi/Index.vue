@@ -12,11 +12,11 @@
     </van-sticky>
     <div class="cell_group">
       <!-- 申请部门 -->
-      <cell-value title="申请部门" :value="sendData.apprDept" disable></cell-value>
+      <cell-value title="申请部门" :value="apply.dept" disable></cell-value>
       <!-- 申请人 -->
-      <cell-value title="申请人" :value="sendData.apprRen" disable></cell-value>
+      <cell-value title="申请人" :value="apply.name" disable></cell-value>
       <!-- 作业票编号 -->
-      <cell-value title="作业票编号" :value="sendData.zypCode" disable></cell-value>
+      <cell-value title="作业票编号" :value="apply.code" disable></cell-value>
       <!-- 作业票状态 -->
       <cell-value title="作业票状态" value="编辑" disable></cell-value>
       <!-- 作业内容 -->
@@ -27,7 +27,7 @@
       <cell-picker v-model="sendData.powerType" title="用电方式" required :columns="powerTypeColumns"></cell-picker>
       <!-- 工作电压 -->
       <cell-picker
-        v-model="sendData.jworkVoltage"
+        v-model="sendData.workVoltage"
         title="工作电压"
         required
         :columns="jworkVoltageColumns"
@@ -48,7 +48,7 @@
       <!-- 用电开始时间 -->
       <cell-time v-model="sendData.powertimeStart" title="用电开始时间" required></cell-time>
       <!-- 用电结束时间 -->
-      <cell-time v-model="sendData.powertimeEnd" title="用电结束时间" required></cell-time>
+      <cell-time v-model="sendData.powertimeEnd" :startTime="sendData.powertimeStart" title="用电结束时间" required></cell-time>
       <!-- 接线人 -->
       <select-organization
         title="接线人"
@@ -57,11 +57,13 @@
         :storeModule="storeModule"
         storeKey="connectRen"
         v-model="sendData.connectRen"
+        :disable="sendData.powerType !== 2"
       ></select-organization>
       <!-- 施工作业部门 -->
       <cell-select-department
         title="施工作业部门"
         required
+        :noPadding="false"
         :storeModule="storeModule"
         storeKey="workDept"
         v-model="sendData.workDept"
@@ -107,15 +109,20 @@ export default {
       zypCode: 0,
       oldInfo: {},
       storeModule: "linshi",
+      apply: {
+        name: '',
+        dept: '',
+        code: '',
+      },
       sendData: {
         zypCode: "",
         apprDept: "", // 申请部门
         apprRen: "", // 申请人
         workContent: "", //作业内容
         workLocation: "", //作业地点
-        powerType: 0, //用电方式
-        jworkVoltage: 0, //工作电压
-        publicArea: 0, //公共区域
+        powerType: "", //用电方式
+        workVoltage: "", //工作电压
+        publicArea: "", //公共区域
         devicePower: "", //用电设备及功率
         hazardIdentification: [], //危害辨识
         powertimeStart: "", //申请用电时间（起）
@@ -204,9 +211,12 @@ export default {
           console.log("========获取数据");
           this.getData();
         }
-      } else {
-        this.sendData.apprDept = this.$userInfo.officeName;
-        this.sendData.apprRen = this.$userInfo.userName;
+      }  else {
+        this.apply ={
+            name: this.$userInfo.userName,
+            dept: this.$userInfo.officeName,
+            code: '',
+          };
       }
     },
     /**
@@ -315,15 +325,13 @@ export default {
           console.log("获取工作票内容", res);
           let info = res;
           this.oldInfo = info;
-          console.log("1");
           this.zypCode = info.id;
           this.sendData.apprDept = info.sqbm.officeName;
           this.sendData.apprRen = info.sqr.userName;
-          console.log("2");
           this.sendData.workContent = info.workContent;
           this.sendData.workLocation = info.workLocation;
           this.sendData.powerType = Number(info.powerType ? info.powerType : 0);
-          this.sendData.jworkVoltage = Number(
+          this.sendData.workVoltage = Number(
             info.workVoltage ? info.workVoltage : 0
           );
           this.sendData.publicArea = Number(
@@ -365,14 +373,96 @@ export default {
           this.sendData.workRen = this.reductionSelectUserObj(
             this.assemblyStrToUserObj(info.workRen || "", info.zyrNames || "")
           );
+          this.apply ={
+            name: info.sqr.userName,
+            dept: info.sqbm.officeName,
+            code: info.zypCode,
+          };
         })
         .catch(err => {
           this.$Toast.clear();
           console.log("getdata 报错了", err);
         });
     },
+    paramVerify () {
+      let jump = true;
+      let keylist =Object.keys(this.sendData);
+      for (let i=0; i < keylist.length; i++) {
+        switch (keylist[i]) {
+          case 'workContent':
+            console.log('this.sendData.workContent', this.sendData.workContent);
+            jump = this.sendData.workContent !== '';
+            break;
+            case 'workLocation':
+              console.log('this.sendData.workLocation', this.sendData.workLocation);
+              jump = this.sendData.workLocation !== '';
+            break;
+            case 'powerType':
+              console.log('this.sendData.powerType', this.sendData.powerType);
+              jump = this.sendData.powerType !== '';
+            break;
+            case 'workVoltage':
+              console.log('this.sendData.workVoltage', this.sendData.workVoltage);
+              jump = this.sendData.workVoltage !== '';
+            break;
+            case 'publicArea':
+              console.log('this.sendData.publicArea', this.sendData.workVoltage);
+              jump = this.sendData.publicArea !== '';
+            break;
+            case 'devicePower':
+              console.log('this.sendData.devicePower', this.sendData.devicePower);
+              jump = this.sendData.devicePower !== '';
+            break;
+            case 'hazardIdentification':
+              console.log('this.sendData.hazardIdentification', this.hazardIdentification);
+              jump = this.sendData.hazardIdentification.length > 0;
+            break;
+            case 'powertimeStart':
+              console.log('this.sendData.powertimeStart', this.sendData.powertimeStart);
+              jump = this.sendData.powertimeStart !== '';
+            break;
+            case 'powertimeEnd':
+              console.log('this.sendData.powertimeEnd', this.sendData.powertimeEnd);
+               jump = this.sendData.powertimeEnd !== '';
+            break;
+            case 'connectRen':
+              console.log('this.sendData.connectRen', this.sendData.connectRen);
+              if (this.sendData.powerType === 2 && this.sendData.connectRen.length > 0) {
+                jump = true;
+              } else {
+                this.$notify('必须选择接线人');
+                jump = false;
+              }
+            break;
+            case 'workCharger':
+              console.log('this.sendData.workCharger', this.sendData.workCharger);
+              jump = this.sendData.workCharger.length > 0;
+            break;
+            case 'workRen':
+              console.log('this.sendData.workRen', this.sendData.workRen);
+              jump = this.sendData.workRen.length > 0;
+            break;
+            case 'workDept':
+              console.log('this.sendData.workDept', this.sendData.workDept.length > 0);
+              jump = this.sendData.workDept.length > 0;
+            break;
+            case 'licenseCode':
+              console.log('this.sendData.licenseCode', this.sendData.licenseCode !== '');
+              jump = this.sendData.licenseCode !== '';
+            break;
+        }
+        if (!jump) {
+          return false;
+        }
+      }
+      return true;
+    },
     // 发送数据
     postData() {
+      if (!this.paramVerify()) {
+        this.$notify("请填写完整的数据");
+        return
+      }
       const that = this;
       let sendData = JSON.parse(JSON.stringify(this.sendData));
       sendData.hazardIdentification = this.stringData(

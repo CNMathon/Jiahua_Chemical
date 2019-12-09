@@ -5,6 +5,7 @@ import store from "./store/index";
 import Vant from "vant";
 import "vant/lib/index.css";
 import VCharts from "v-charts";
+import IsNodata from "./components/IsNodata.vue";
 import CellInput from "./components/Cell/CellInput.vue";
 import CellImage from "./components/Cell/CellImage.vue";
 import CellValue from "./components/Cell/CellValue.vue";
@@ -56,6 +57,7 @@ Vue.prototype.$imageUrl = "http://47.96.148.87:8980/js"; // 将api挂载到vue�
 Vue.use(Vant);
 Vue.use(VCharts);
 Vue.config.productionTip = false;
+Vue.component("is-nodata", IsNodata);
 Vue.component("cell-input", CellInput);
 Vue.component("cell-image", CellImage);
 Vue.component("cell-value", CellValue);

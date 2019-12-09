@@ -109,37 +109,42 @@ export default {
       this.$router.back();
     },
     claim(){
-      console.log(this.User[this.radio].userCode)
-      let data = {
-        __sid: localStorage.getItem("JiaHuaSessionId"),
-        id:this.$route.query.id,
-        task_id:this.$route.query.taskId,
-        user_code:this.User[this.radio].userCode
-      }
-      this.$api.page_3.claim(data).then((res)=>{
-        if(res.result=='true'){
-          this.$Toast.success('签收任务成功！')
-          if(this.$route.query.type=='htHseDhzypService'){
-            this.$router.push({name:'donghuo_list'})
-          }else if(this.$route.query.type=='htHseSxkjzypService'){
-            this.$router.push({name:'kongjian_list'})
-          }else if(this.$route.query.type=='htHseMbzypService'){
-            this.$router.push({name:'mangban_list'})
-          }else if(this.$route.query.type=='htHseUpworkticketService'){
-            this.$router.push({name:'gaochu_list'})
-          }else if(this.$route.query.type=='htHseDzzypService'){
-            this.$router.push({name:'diaozhuang_list'})
-          }else if(this.$route.query.type=='htHseLsydzypService'){
-            this.$router.push({name:'linshi_list'})
-          }else if(this.$route.query.type=='htHseDtzypService'){
-            this.$router.push({name:'dongtu_list'})
-          }else if(this.$route.query.type=='htHseDlzypService'){
-            this.$router.push({name:'duanlu_list'})
-          }
-        }else{
-          this.$Toast.fail('操作失败')
+      console.log(this.radio)
+      if(this.radio!==''){
+        let data = {
+          __sid: localStorage.getItem("JiaHuaSessionId"),
+          id:this.$route.query.id,
+          task_id:this.$route.query.taskId,
+          user_code:this.User[this.radio].userCode
         }
-      }).catch(() => this.$Toast.clear());
+        this.$api.page_3.claim(data).then((res)=>{
+          if(res.result=='true'){
+            this.$Toast.success('签收任务成功！')
+            if(this.$route.query.type=='htHseDhzypService'){
+              sessionStorage.setItem('success','1')
+              this.$router.push({name:'donghuo_list'})
+            }else if(this.$route.query.type=='htHseSxkjzypService'){
+              this.$router.push({name:'kongjian_list'})
+            }else if(this.$route.query.type=='htHseMbzypService'){
+              this.$router.push({name:'mangban_list'})
+            }else if(this.$route.query.type=='htHseUpworkticketService'){
+              this.$router.push({name:'gaochu_list'})
+            }else if(this.$route.query.type=='htHseDzzypService'){
+              this.$router.push({name:'diaozhuang_list'})
+            }else if(this.$route.query.type=='htHseLsydzypService'){
+              this.$router.push({name:'linshi_list'})
+            }else if(this.$route.query.type=='htHseDtzypService'){
+              this.$router.push({name:'dongtu_list'})
+            }else if(this.$route.query.type=='htHseDlzypService'){
+              this.$router.push({name:'duanlu_list'})
+            }
+          }else{
+            this.$Toast.fail('操作失败')
+          }
+        }).catch(() => this.$Toast.clear());
+      }else{
+        this.$notify("请勾选待办人");
+      }
     }
   }
 };

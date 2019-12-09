@@ -20,8 +20,23 @@
       <j-filter-item title="作业票状态"
                      :actions="zypStatusList"
                      @select="filterSelect_2"></j-filter-item>
-      <j-filter-cell title="申请部门"></j-filter-cell>
-      <j-filter-cell title="申请人"></j-filter-cell>
+      <select-department
+        title="申请部门"
+        radio
+        :storeModule="storeModule"
+        storeKey="sqbm"
+        v-model="sqbm"
+        no-padding
+      />
+      <!-- <j-filter-cell title="申请人" /> -->
+      <select-organization 
+        title="申请人"
+        max="9"
+        :storeModule="storeModule"
+        storeKey="dhzyRen"
+        v-model="dhzyRen"
+        no-padding
+      />
     </j-filter>
     <div class="list-card-area">
       <div class="app">
@@ -72,6 +87,7 @@
 </template>
 
 <script>
+  import { mapState } from "vuex";
   import { mixin } from "@/mixin/mixin";
   // import ListCard from "@/views/pages/page_3/components/DuanLuListCard";
   export default {
@@ -85,11 +101,12 @@
     },
     data () {
       return {
+        storeModule: 'duanlu',
         showFilter: false,
         searchValue: "",
         searchValues: "",
         zypztList: [ // 作业票状态列表
-          { index: -1, name: "请选择" },
+          { index: '', name: "请选择" },
           { index: 1, name: "修理马路" },
           { index: 2, name: "开挖埋设水管" },
           { index: 3, name: "埋设电缆" },
@@ -98,7 +115,7 @@
           { index: 6, name: "管道" }
         ],
         zypStatusList: [
-          { index: -1, name: "请选择" },
+          { index: '', name: "请选择" },
           { index: 1, name: "编辑" },
           { index: 2, name: "初审" },
           { index: 3, name: "审核" },
@@ -160,7 +177,9 @@
           .htHseDlzypListData({
             __sid: localStorage.getItem("JiaHuaSessionId"),
             reason: this.reason,
-            htStatus: this.status
+            htStatus: this.status,
+            applyDept: this.sqbm.length>0?this.sqbm[0].id:'',
+            applyer: this.dhzyRen.length>0?this.dhzyRen[0].userCode:'',
           })
           .then(res => {
             this.listData = res.list;
@@ -198,6 +217,10 @@
       }
 
     },
+    computed: mapState({
+      dhzyRen: state => state.duanlu.dhzyRen,
+      sqbm: state => state.duanlu.sqbm
+    }),
   };
 </script>
 

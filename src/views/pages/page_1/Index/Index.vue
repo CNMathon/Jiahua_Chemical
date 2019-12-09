@@ -11,19 +11,21 @@
         @click="toPage('./error')"
       />
     </van-nav-bar>
-    <van-skeleton title :row="3" class="fixed-first" :loading="isLoading">
-      <van-tabs
-        style="margin-top:45px"
-        color="#33A4E8"
-        title-inactive-color="#333333"
-        title-active-color="#33A4E8"
-        @change="changeTab"
-      >
-        <div slot="nav-rights" class="nav-right">
-          <van-icon name="bars" size="20px" />
-        </div>
-        <van-tab title="生产" class="tabs-box">
-          <div>
+
+    <van-tabs
+      style="margin-top:45px"
+      color="#33A4E8"
+      title-inactive-color="#333333"
+      title-active-color="#33A4E8"
+      @change="changeTab"
+    >
+      <div slot="nav-rights" class="nav-right">
+        <van-icon name="bars" size="20px" />
+      </div>
+      <van-tab title="生产" class="tabs-box">
+        <div>
+          <!-- 仪表盘 -->
+          <div class="dashboard">
             <van-row>
               <van-col span="6">
                 <!-- <div style="width:100%;height:100px" id="dongli"></div> -->
@@ -51,9 +53,16 @@
               </van-col>
               <van-col span="6"></van-col>
             </van-row>
-            <!-- 数据面板 -->
+          </div>
+          <!-- 数据面板 -->
+          <van-skeleton title :row="3" :loading="loadingState.rongliang" class="rongliang-ske">
             <div class="rongliang">
-              <div class="box" v-for="(item, index) in dataPanel" :key="index" @click="tolinerEchart(item.enText,item.unit)">
+              <div
+                class="box"
+                v-for="(item, index) in dataPanel"
+                :key="index"
+                @click="tolinerEchart(item.enText, item.unit, item.text)"
+              >
                 <p class="p1">
                   <span>{{item.value}}</span>
                   <span>{{item.unit}}</span>
@@ -62,162 +71,163 @@
               </div>
               <div style="clear:both"></div>
             </div>
-          </div>
-        </van-tab>
-        <van-tab title="安全" class="tabs-box">
-          <div class="safeMsg">
-            <van-row class="tip">
-              <van-col span="11">当日承包商数量：{{this.cbsCount.cbscount}}</van-col>
-              <van-col style="text-align:right" span="13">当日承包商人员数量：{{cbsCount.cbsrycount}}</van-col>
-            </van-row>
-          </div>
-          <div class="tszyBox">
-            <div class="title">当日公司特殊作业</div>
-            <van-row class="tip">
-              <van-col span="6" v-for="(item, index) in spWork" :key="index">
-                <p>{{item.text}}</p>
-                <p>{{item.value}}</p>
-              </van-col>
-            </van-row>
-          </div>
-          <div class="tszyBox">
-            <div class="title">重大危险源监控</div>
-            <van-row class="tip">
-              <van-col span="8" @click="jumpTo('/page_1/danger/sj')">
-                <img src="img/nav_1.ffd7a07c.svg" />
-                <p>烧碱</p>
-              </van-col>
-              <van-col span="8" @click="jumpTo('/page_1/danger/xcl')">
-                <img src="img/nav_2.3c77d78b.svg" />
-                <p>新材料</p>
-              </van-col>
-              <van-col span="8" @click="jumpTo('/page_1/danger/ls')">
-                <img src="img/nav_3.6e07cf35.svg" />
-                <p>硫酸</p>
-              </van-col>
-            </van-row>
-          </div>
-          <div class="tszyBox">
-            <div class="title">重点监管的危险化工工艺</div>
-            <van-row class="tip">
-              <van-col span="8">
-                <img src="img/nav_1.ffd7a07c.svg" />
-                <p>烧碱</p>
-              </van-col>
-              <van-col span="8">
-                <img src="img/nav_2.3c77d78b.svg" />
-                <p>新材料</p>
-              </van-col>
-              <van-col span="8">
-                <img src="img/nav_3.6e07cf35.svg" />
-                <p>硫酸</p>
-              </van-col>
-            </van-row>
-          </div>
-        </van-tab>
-        <van-tab title="环保" class="tabs-box">
-          <van-row>
-            <van-col span="6">
-              <div style="width:100%;height:100px" id="so2"></div>
-            </van-col>
-            <van-col span="6">
-              <div style="width:100%;height:100px" id="nox"></div>
-            </van-col>
-            <van-col span="6">
-              <div style="width:100%;height:100px" id="yanchen"></div>
-            </van-col>
-            <van-col span="6">
-              <div style="width:100%;height:100px" id="cod"></div>
+          </van-skeleton>
+        </div>
+      </van-tab>
+      <van-tab title="安全" class="tabs-box">
+        <div class="safeMsg">
+          <van-row class="tip">
+            <van-col span="11">当日承包商数量：{{this.cbsCount.cbscount}}</van-col>
+            <van-col style="text-align:right" span="13">当日承包商人员数量：{{cbsCount.cbsrycount}}</van-col>
+          </van-row>
+        </div>
+        <div class="tszyBox">
+          <div class="title">当日公司特殊作业</div>
+          <van-row class="tip">
+            <van-col span="6" v-for="(item, index) in spWork" :key="index">
+              <p>{{item.text}}</p>
+              <p>{{item.value}}</p>
             </van-col>
           </van-row>
-          <van-row>
-            <van-col span="6">
-              <div style="width:100%;height:100px" id="andan"></div>
+        </div>
+        <div class="tszyBox">
+          <div class="title">重大危险源监控</div>
+          <van-row class="tip">
+            <van-col span="8" @click="jumpTo('/page_1/danger/sj')">
+              <img src="img/nav_1.ffd7a07c.svg" />
+              <p>烧碱</p>
             </van-col>
-            <van-col span="6">
-              <div style="width:100%;height:100px" id="ph"></div>
+            <van-col span="8" @click="jumpTo('/page_1/danger/xcl')">
+              <img src="img/nav_2.3c77d78b.svg" />
+              <p>新材料</p>
             </van-col>
-            <van-col span="6">
-              <div style="width:100%;height:100px" id="voc"></div>
+            <van-col span="8" @click="jumpTo('/page_1/danger/ls')">
+              <img src="img/nav_3.6e07cf35.svg" />
+              <p>硫酸</p>
             </van-col>
-            <van-col span="6"></van-col>
           </van-row>
-        </van-tab>
-        <van-tab title="能源" class="tabs-box"></van-tab>
-        <van-tab title="质量" class="tabs-box">
-          <div class="proporty">
-            <van-row class="head">
-              <van-col span="8">分厂名称</van-col>
-              <van-col span="8">原材料合格率(%)</van-col>
-              <van-col span="8">产品合格率(%)</van-col>
-            </van-row>
-            <van-row class="item" v-for="(item, index) in sql2Data" :key="index">
-              <van-col span="8">{{item.name}}</van-col>
-              <van-col span="8">{{item.allRate1 * 100}}</van-col>
-              <van-col span="8" v-if="item.allRate2 * 100 == 0">-</van-col>
-              <van-col span="8" v-else>{{item.allRate2 * 100}}</van-col>
-            </van-row>
-          </div>
-        </van-tab>
-        <van-tab title="设备" class="tabs-box">
-          <div class="proporty">
-            <van-row class="head">
-              <van-col span="4">分厂名称</van-col>
-              <van-col span="2">电气设备</van-col>
-              <van-col span="2">仪表设备</van-col>
-              <van-col span="2">机械设备</van-col>
-              <van-col span="2">化验设备</van-col>
-              <van-col span="2">安全附件</van-col>
-            </van-row>
-            <van-row class="item" v-for="(item, index) in deviceData" :key="index">
-              <van-col span="4">{{item.companyName}}</van-col>
-              <van-col span="2">{{item.elect}}</van-col>
-              <van-col span="2">{{item.watch}}</van-col>
-              <van-col span="2">{{item.mach}}</van-col>
-              <van-col span="2">{{item.chemi}}</van-col>
-              <van-col span="2">{{item.safe}}</van-col>
-            </van-row>
-          </div>
-        </van-tab>
-      </van-tabs>
-      <div class="content">
-        <div class="content-title">生产运行 (嘉化能源)</div>
+        </div>
+        <div class="tszyBox">
+          <div class="title">重点监管的危险化工工艺</div>
+          <van-row class="tip">
+            <van-col span="8">
+              <img src="img/nav_1.ffd7a07c.svg" />
+              <p>烧碱</p>
+            </van-col>
+            <van-col span="8">
+              <img src="img/nav_2.3c77d78b.svg" />
+              <p>新材料</p>
+            </van-col>
+            <van-col span="8">
+              <img src="img/nav_3.6e07cf35.svg" />
+              <p>硫酸</p>
+            </van-col>
+          </van-row>
+        </div>
+      </van-tab>
+      <van-tab title="环保" class="tabs-box">
         <van-row>
-          <van-col span="6" v-for="(item, index) in nav1" :key="index">
-            <div class="nav" @click="toPage(item.router)">
-              <div class="nav-image">
-                <img :src="require(`@/assets/images/nav_${index}.svg`)" alt />
-              </div>
-              <div class="nav-text">{{ item.text }}</div>
-            </div>
+          <van-col span="6">
+            <div style="width:100%;height:100px" id="so2"></div>
+          </van-col>
+          <van-col span="6">
+            <div style="width:100%;height:100px" id="nox"></div>
+          </van-col>
+          <van-col span="6">
+            <div style="width:100%;height:100px" id="yanchen"></div>
+          </van-col>
+          <van-col span="6">
+            <div style="width:100%;height:100px" id="cod"></div>
           </van-col>
         </van-row>
-      </div>
-      <div class="content">
-        <div class="content-title">生产运行 (嘉福新材料)</div>
         <van-row>
-          <van-col span="6" v-for="(item, index) in nav2" :key="index">
-            <div class="nav" @click="jumpTo(item.router, item.query)">
-              <div class="nav-image">
-                <img :src="require(`@/assets/images/nav_${index}.svg`)" alt />
-              </div>
-              <div class="nav-text">{{ item.text }}</div>
-            </div>
+          <van-col span="6">
+            <div style="width:100%;height:100px" id="andan"></div>
           </van-col>
+          <van-col span="6">
+            <div style="width:100%;height:100px" id="ph"></div>
+          </van-col>
+          <van-col span="6">
+            <div style="width:100%;height:100px" id="voc"></div>
+          </van-col>
+          <van-col span="6"></van-col>
         </van-row>
-      </div>
-      <div class="content">
-        <div class="content-title">安全环保</div>
-        <div class="ball-area">
-          <!-- <div slot="nav-rights" class="nav-right" @click="toPage('./shebei')">
+      </van-tab>
+      <van-tab title="能源" class="tabs-box"></van-tab>
+      <van-tab title="质量" class="tabs-box">
+        <div class="proporty">
+          <van-row class="head">
+            <van-col span="8">分厂名称</van-col>
+            <van-col span="8">原材料合格率(%)</van-col>
+            <van-col span="8">产品合格率(%)</van-col>
+          </van-row>
+          <van-row class="item" v-for="(item, index) in sql2Data" :key="index">
+            <van-col span="8">{{item.name}}</van-col>
+            <van-col span="8">{{(item.allRate1 * 100).toFixed(2)}}</van-col>
+            <van-col span="8" v-if="item.allRate2 * 100 == 0">-</van-col>
+            <van-col span="8" v-else>{{(item.allRate2 * 100).toFixed(2)}}</van-col>
+          </van-row>
+        </div>
+      </van-tab>
+      <van-tab title="设备" class="tabs-box">
+        <div class="proporty">
+          <van-row class="head">
+            <van-col span="4">分厂名称</van-col>
+            <van-col span="2">电气设备</van-col>
+            <van-col span="2">仪表设备</van-col>
+            <van-col span="2">机械设备</van-col>
+            <van-col span="2">化验设备</van-col>
+            <van-col span="2">安全附件</van-col>
+          </van-row>
+          <van-row class="item" v-for="(item, index) in deviceData" :key="index">
+            <van-col span="4">{{item.companyName}}</van-col>
+            <van-col span="2">{{item.elect}}</van-col>
+            <van-col span="2">{{item.watch}}</van-col>
+            <van-col span="2">{{item.mach}}</van-col>
+            <van-col span="2">{{item.chemi}}</van-col>
+            <van-col span="2">{{item.safe}}</van-col>
+          </van-row>
+        </div>
+      </van-tab>
+    </van-tabs>
+    <div class="content">
+      <div class="content-title">生产运行 (嘉化能源)</div>
+      <van-row>
+        <van-col span="6" v-for="(item, index) in nav1" :key="index">
+          <div class="nav" @click="toPage(item.router)">
+            <div class="nav-image">
+              <img :src="require(`@/assets/images/nav_${index}.svg`)" alt />
+            </div>
+            <div class="nav-text">{{ item.text }}</div>
+          </div>
+        </van-col>
+      </van-row>
+    </div>
+    <div class="content">
+      <div class="content-title">生产运行 (嘉福新材料)</div>
+      <van-row>
+        <van-col span="6" v-for="(item, index) in nav2" :key="index">
+          <div class="nav" @click="jumpTo(item.router, item.query)">
+            <div class="nav-image">
+              <img :src="require(`@/assets/images/nav_${index}.svg`)" alt />
+            </div>
+            <div class="nav-text">{{ item.text }}</div>
+          </div>
+        </van-col>
+      </van-row>
+    </div>
+    <div class="content">
+      <div class="content-title">安全环保</div>
+      <div class="ball-area">
+        <!-- <div slot="nav-rights" class="nav-right" @click="toPage('./shebei')">
             <van-icon name="bars" size="20px" />
-          </div>-->
-          <div class="tabs-box-item" v-for="(item, index) in ballData" :key="index">
-            <Liquidfill :type="index" :value="item"></Liquidfill>
-          </div>
+        </div>-->
+        <div class="tabs-box-item" v-for="(item, index) in ballData" :key="index">
+          <Liquidfill :type="index" :value="item"></Liquidfill>
         </div>
       </div>
-      <!-- <div class="content">
+    </div>
+    <!-- <div class="content">
         <div class="content-title">重要设备状态</div>
         <van-tabs
           color="#33A4E8"
@@ -248,8 +258,8 @@
             </div>
           </van-tab>
         </van-tabs>
-      </div>-->
-      <!-- <div class="content">
+    </div>-->
+    <!-- <div class="content">
         <div class="content-title">启停时间</div>
         <SelectTime v-model="date_1"></SelectTime>
         <div>
@@ -262,8 +272,26 @@
         <div>
           <LineCharts></LineCharts>
         </div>
-      </div>-->
-    </van-skeleton>
+    </div>-->
+    <div class="content">
+      <div class="content-title">环保实时监测</div>
+      <van-skeleton title :row="3" :loading="loadingState.envRealtimeMon">
+        <div class="proporty">
+          <van-row class="head">
+            <van-col span="6">参数描述</van-col>
+            <van-col span="6">标准值</van-col>
+            <van-col span="6">实时值</van-col>
+            <van-col span="6">单位</van-col>
+          </van-row>
+          <van-row class="item" v-for="(item, index) in envRealtimeMon" :key="index">
+            <van-col span="6">{{item.name}}</van-col>
+            <van-col span="6">{{(item.allRate1 * 100).toFixed(2)}}</van-col>
+            <van-col span="6">{{(item.allRate2 * 100).toFixed(2)}}</van-col>
+            <van-col span="6">{{(item.allRate2 * 100).toFixed(2)}}</van-col>
+          </van-row>
+        </div>
+      </van-skeleton>
+    </div>
   </div>
 </template>
 
@@ -290,7 +318,13 @@ export default {
   },
   data() {
     return {
-      isLoading: true,
+      loadingState: {
+        envRealtimeMon: false,
+        rongliang: false,
+        dashBoard: false
+      },
+      envRealtimeMon: [],
+      isLoading: false,
       nav1: [
         {
           text: "动力中心",
@@ -611,29 +645,24 @@ export default {
       deviceData: [],
       date_1: new Date(),
       date_2: new Date(),
-      ballData: [0, 0, 0, 0]
-      // ballData: {
-      //   pxhg: 0,
-      //   czsg: 0,
-      //   yhzg: 0,
-      //   dbpfhg: 0
-      // }
+      // ballData: [0, 0, 0, 0]
+      ballData: [0, 0, 0]
     };
   },
   mounted() {},
   methods: {
-    tolinerEchart (name,unit) {
+    getEnvRealtimeMon() {
+      this.loadingState.envRealtimeMon = true;
+    },
+    tolinerEchart(name, unit, cnName) {
       this.$router.push({
-        path: './tagsThistory',
+        path: "./tagsThistory",
         query: {
           tagsName: name,
-          unit: unit
+          unit: unit,
+          tagsNameShow: cnName
         }
-      })
-    },
-    testme() {
-      this.ballData = [1, 0.5, 0.84, 0.32];
-      console.log(this.ballData);
+      });
     },
     // chartPanel 初始化
     // => 参数1 => chartPanel数据结构 => Array
@@ -784,7 +813,6 @@ export default {
     getPageList() {
       let tagNames = [];
       let finishCount = 0;
-      this.isLoading = false;
 
       // let promise = new Promise((resolve, reject) => {
       //   if (finishCount == 3) {
@@ -803,7 +831,7 @@ export default {
 
       console.log(tagNames);
       console.log(String(tagNames));
-
+      this.loadingState.dashBoard = true;
       // 动力中心 - fix
       this.$api.page_1.sipV1Sql1().then(res => {
         console.log(`动力中心fix: `, res);
@@ -836,6 +864,7 @@ export default {
         //   (item, index) =>
         //     (this.envChartPanel[index].value = item.Value.toFixed(2))
         // );
+        this.loadingState.dashBoard = false;
         this.echartDrawRing(arr);
       });
 
@@ -844,22 +873,24 @@ export default {
         this.sql2Data = res;
         this.$api.page_1.sipV1Sql4().then(res => {
           console.log(`sql4: `, res);
-          console.log(this.sql2Data)
+          console.log(this.sql2Data);
           res.map(item1 => {
-            this.sql2Data.filter(item2 => item2.name == item1.name)[0].allRate2 =
-              item1.allRate1;
+            this.sql2Data.filter(
+              item2 => item2.name == item1.name
+            )[0].allRate2 = item1.allRate1;
           });
 
           // this.sql3Data = res;
         });
       });
 
-
+      this.loadingState.rongliang = true;
       this.$api.page_1
         .getRtMonTagInfosByNames({
           tagNames: String(tagNames)
         })
         .then(res => {
+          this.loadingState.rongliang = false;
           console.log(res);
           finishCount++;
           let res_dataPanel = res.filter((item, index) => index <= 9);
@@ -934,13 +965,14 @@ export default {
           __sid: localStorage.JiaHuaSessionId
         })
         .then(res => {
-          console.log('device: ', res)
-          this.deviceData = res
-        })
+          console.log("device: ", res);
+          this.deviceData = res;
+        });
     }
   },
   created() {
     this.getPageList();
+    this.getEnvRealtimeMon();
   }
 };
 </script>
@@ -953,6 +985,7 @@ export default {
     margin-top: 24px;
     background: #ffffff;
     .content-title {
+      margin-bottom: 10px;
       padding: 16px 30px;
       font-size: 30px;
       font-weight: 500;
@@ -1066,9 +1099,8 @@ export default {
     margin: 0 auto;
     display: flex;
     justify-content: space-between;
-    *:nth-child(1){
+    * {
       line-height: 60px;
-      // color: red;
     }
   }
   .item {
@@ -1084,7 +1116,7 @@ export default {
     display: flex;
     justify-content: space-between;
     line-height: 50px;
-    *:nth-child(1){
+    *:nth-child(1) {
       // color: red;
     }
     .van-col--8 {
@@ -1100,8 +1132,10 @@ export default {
 .fixed-first {
   margin-top: 46px;
 }
+.rongliang-ske {
+  margin-top: 40px;
+}
 .rongliang {
-  margin-top: 30px;
   .box {
     width: 30%;
     float: left;

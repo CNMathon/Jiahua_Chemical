@@ -59,14 +59,19 @@
         @click="toDetail"
       >
         <div class="danger-content">
-          <div class="item-title">
-            <div class="item-title-item">危化品</div>
-            <div class="item-title-item">分厂</div>
-            <div class="item-title-item">库存</div>
-          </div>
           <van-tab v-for="(item, index) in dangerInfo" :key="index" :title="item.text">
+            <div class="item-title" v-if="index == 0">
+              <div class="item-title-item">危化品</div>
+              <div class="item-title-item">分厂</div>
+              <div class="item-title-item">库存</div>
+            </div>
+            <div class="item-title" v-if="index == 1">
+              <div class="item-title-item">名称</div>
+              <div class="item-title-item">位号</div>
+              <div class="item-title-item">值</div>
+            </div>
             <div class="item-area" @click="dangerInfoJumping(index)">
-              <Item size="big" :info="item.info" />
+              <Item size="big" :info="item.info" :type="index" />
             </div>
           </van-tab>
         </div>
@@ -78,14 +83,14 @@
       <van-tabs color="#33A4E8" title-inactive-color="#333333" title-active-color="#33A4E8">
         <van-tab title="入网口数据">
           <div class="panel-list">
-            <div class="panel-list-item" v-for="(item, index) in envEntData" :key="index">
+            <div class="panel-list-item" v-for="(item, index) in envEntData" :key="index" @click="jumpTo(`/page_1/tagsThistory`, {tagsNameShow: item.text, tagsName: item.enText, unit: item.unit})">
               <Panel size="big" :name="item.text" :value="item.value" :unit="item.unit" />
             </div>
           </div>
         </van-tab>
         <van-tab title="雨排水排放数据">
           <div class="panel-list">
-            <div class="panel-list-item" v-for="(item, index) in envRainData" :key="index">
+            <div class="panel-list-item" v-for="(item, index) in envRainData" :key="index" @click="jumpTo(`/page_1/tagsThistory`, {tagsNameShow: item.text, tagsName: item.enText, unit: item.unit})">
               <Panel size="big" :name="item.text" :value="item.value" :unit="item.unit" />
             </div>
           </div>
@@ -159,25 +164,25 @@ export default {
               itemName: "硫磺",
               enName: "LSC_LH_VV026",
               factory: "硫酸厂",
-              value: "加载中..."
+              value: ""
             },
             {
               itemName: "发烟硫酸",
               enName: "LSC_FYLS_VV014A",
               factory: "硫酸厂",
-              value: "加载中..."
+              value: ""
             },
             {
               itemName: "氯磺酸",
               enName: "LSC_LHS",
               factory: "硫酸厂",
-              value: "加载中..."
+              value: ""
             },
             {
               itemName: "盐酸",
               enName: "SJC_YS",
               factory: "烧碱厂",
-              value: "加载中..."
+              value: ""
             }
           ]
         },
@@ -186,24 +191,28 @@ export default {
           route: "/page_1/keranyoudu",
           info: [
             {
-              itemName: "硫磺",
+              itemName: "液氯包装东北氯气",
+              enName: "SJC_AIA_1302",
               factory: "硫酸厂",
-              value: "89"
+              value: ""
             },
             {
-              itemName: "发烟硫酸",
+              itemName: "液氯储槽东南氯气",
+              enName: "SJC_AIA_1303",
               factory: "硫酸厂",
-              value: "70"
+              value: ""
             },
             {
-              itemName: "氯磺酸",
+              itemName: "液氯包装房内氯气",
+              enName: "SJC_DAIA_1114",
               factory: "硫酸厂",
-              value: "86"
+              value: ""
             },
             {
-              itemName: "盐酸",
+              itemName: "液氯汽化厂房氯气",
+              enName: "SJC_DAIA_2811",
               factory: "烧碱厂",
-              value: "71"
+              value: ""
             }
           ]
         },
@@ -238,19 +247,19 @@ export default {
         {
           text: "动力中心",
           color: "rgba(23, 193, 149, 0.1)",
-          router: "/dongli",
+          router: "/page_1/dongli",
           query: {}
         },
         {
           text: "烧碱",
           color: "rgba(238, 116, 95, 0.1)",
-          router: "/shaojian",
+          router: "/page_1/shaojian",
           query: {}
         },
         {
           text: "脂肪醇",
           color: "rgba(237, 246, 252, 1)",
-          router: "/zhifangchun",
+          router: "/page_1/zhifangchun",
           query: {}
         },
         {
@@ -419,6 +428,30 @@ export default {
           this.isLoading = false;
         });
     },
+    getYouduData() {
+      this.isLoading = true;
+      let tagNames = [];
+
+      // 拼接查询参数
+      this.dangerInfo[1].info.map(item => tagNames.push(item.enName));
+
+      console.log(tagNames);
+      console.log(String(tagNames));
+
+      this.$api.page_1
+        .getRtMonTagInfosByNames({
+          tagNames: String(tagNames)
+        })
+        .then(res => {
+          console.log("res", res);
+
+          res.map((item, index) => {
+            this.dangerInfo[1].info[index].value = item.Value.toFixed(2);
+            // this.listData[index].unit = item.Unit;
+          });
+          this.isLoading = false;
+        });
+    },
     getHuanbaoData() {
       let http = {
         // 入网口数据
@@ -484,6 +517,7 @@ export default {
   created() {
     this.getWeihuaData();
     this.getHuanbaoData();
+    this.getYouduData();
   }
 };
 </script>

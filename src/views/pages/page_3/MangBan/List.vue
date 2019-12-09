@@ -18,9 +18,30 @@
       <j-filter-item title="作业票状态"
                      :actions="zypztList"
                      @select="filterSelect_1"></j-filter-item>
-      <j-filter-cell title="申请部门"></j-filter-cell>
-      <j-filter-cell title="申请人"></j-filter-cell>
-      <j-filter-time title="创建时间"></j-filter-time>
+      <select-department
+        title="申请部门"
+        radio
+        :storeModule="storeModule"
+        storeKey="sqbm"
+        v-model="sqbm"
+        no-padding
+      />
+      <!-- <j-filter-cell title="申请人" /> -->
+      <select-organization 
+        title="申请人"
+        max="9"
+        :storeModule="storeModule"
+        storeKey="dhzyRen"
+        v-model="dhzyRen"
+        no-padding
+      />
+      <cell-time v-model="startTime"
+                 title="开始时间" no-padding/>
+      <!-- 抽时间 -->
+      <cell-time v-model="endTime"
+                 title="结束时间" no-padding />
+                 <!-- 清空搜索条件 -->
+      <div class="clear-button"  @click="clearfilter">清空条件</div>
     </j-filter>
     <div class="list-card-area">
       <div class="app">
@@ -50,16 +71,21 @@
 </template>
 
 <script>
+  import { mapState } from "vuex";
   import { mixin } from "@/mixin/mixin";
   export default {
+    name: "mangbanList",
     data () {
       return {
+        storeModule: 'mangban',
         showFilter: false,
         searchValue: "",
         searchValues: "",
+        startTime:'',
+        endTime:'',
         zypztList: [
           // 作业票状态列表
-          { name: "请选择", index: -1 },
+          { name: "请选择", index: '' },
           { name: "编辑", index: 1 },
           { name: "提交资料", index: 2 },
           { name: "初审", index: 3 },
@@ -75,16 +101,30 @@
     },
     mixins: [mixin],
     created () {
+      console.log(222)
       this.getPageData();
+      this.initMangbanPage();
+    },
+    methods: {
+      clearfilter () {
+      this.this.initMangbanPage();
+      this.searchValue = '';
+      this.searchStatus = '';
+      this.startTime = '';
+      this.endTime= '';
+      this.showFilter = false;
+      this.getPageData();
+    },
+    initMangbanPage () {
       this.$store.dispatch("mangban/cleanState");
-      this.$store.commit("mangban/delete_KeepAlive", "mangbanindex");
       this.$nextTick(() => {
+        this.$store.commit("mangban/add_KeepAlive", "mangbanList");
         this.$store.commit("mangban/add_KeepAlive", "mangbanindex");
       });
     },
-    methods: {
       // 跳转至详情页
       jumpToMorePage (status, code) {
+        this.this.initMangbanPage();
         let path = '';
         switch (Number(status)) {
           case 1:
@@ -114,6 +154,7 @@
       },
       // 右侧文字点击文案
       onClickRight () {
+        this.initMangbanPage();
         this.$router.push({
           path: "../mangban"
         });
@@ -126,6 +167,10 @@
           .htHseMbzypListData({
             pipe: this.searchValue,
             htStatus: this.searchStatus,
+            applyDept: this.sqbm.length>0?this.sqbm[0].id:'',
+            applyRen: this.dhzyRen.length>0?this.dhzyRen[0].userCode:'',
+            createDate_gte:this.startTime,
+            createDate_lte:this.endTime,
             __sid: localStorage.getItem("JiaHuaSessionId")
           })
           .then(res => {
@@ -149,7 +194,12 @@
         console.log(e);
         this.searchStatus = e.index;
       }
-    }
+    },
+    computed: mapState({
+      dhzyRen: state => state.mangban.dhzyRen,
+      sqbm: state => state.mangban.sqbm
+    })
+    
   };
 </script>
 

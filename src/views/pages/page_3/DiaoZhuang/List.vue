@@ -25,8 +25,24 @@
       <j-filter-item title="作业票状态"
                      :actions="zypztList"
                      @select="filterSelect_1"></j-filter-item>
-      <j-filter-cell title="申请部门"></j-filter-cell>
-      <j-filter-cell title="申请人"></j-filter-cell>
+      <select-department
+        title="申请部门"
+        radio
+        :storeModule="storeModule"
+        storeKey="sqbm"
+        v-model="sqbm"
+        no-padding
+      />
+      <!-- <j-filter-cell title="申请人" /> -->
+      <select-organization 
+        title="申请人"
+        max="9"
+        :storeModule="storeModule"
+        storeKey="dhzyRen"
+        v-model="dhzyRen"
+        no-padding
+      />
+      <div class="clear-button"  @click="clearfilter">清空条件</div>
     </j-filter>
     <van-pull-refresh v-model="isLoading"
                       @refresh="getListData(true)">
@@ -54,12 +70,15 @@
 </template>
 
 <script>
+  import { mapState } from "vuex";
   import {
     mixin
   } from "@/mixin/mixin";
   export default {
+    name: 'diaozhuangList',
     data () {
       return {
+        storeModule: 'diaozhuang',
         isLoading: false, //页面是否正在下拉刷新
         error: false, //加载错误
         loading: false, //页面是否在加载中
@@ -77,7 +96,7 @@
         zypztList: [
           {
           name: '选择',
-          index: 0
+          index: ''
         },{
           name: "编辑",
           index: 1
@@ -104,15 +123,27 @@
     searchStatus: "",
     mixins: [mixin],
     created () {
-      this.$store.dispatch("diaozhuang/cleanState");
-      this.$store.commit("diaozhuang/delete_KeepAlive", "diaozhuang_index");
-      this.$nextTick(() => {
-        this.$store.commit("diaozhuang/add_KeepAlive", "diaozhuang_index");
-      });
+      this.getListData(true);
+      this.initDiaoZhuangPage();
     },
     methods: {
+      clearfilter () {
+      this.initDiaoZhuangPage();
+      this.searchValue = '';
+      this.searchStatus = '';
+      this.showFilter = false;
+      this.getListData(true);
+      },
+      initDiaoZhuangPage () {
+        this.$store.dispatch("diaozhuang/cleanState");
+        this.$nextTick(() => {
+          this.$store.commit("diaozhuang/add_KeepAlive", "diaozhuangList");
+          this.$store.commit("diaozhuang/add_KeepAlive", "diaozhuang_index");
+        });
+      },
       // 跳转至详情页
     jumpToMorePage (status, code) {
+      this.initDiaoZhuangPage();
       localStorage.setItem('isfresh',"diaozhuanglist");
       let path = '';
       switch (Number(status)) {
@@ -157,8 +188,10 @@
         }
         let sendData = {};
         sendData.__sid = this.$userInfo.sessionId;
-        sendData.sqr = this.searchValue;
+        sendData.dznr = this.searchValue;
         sendData.htStatus = this.searchStatus;
+        sendData.sqbm= this.sqbm.length>0?this.sqbm[0].id:'',
+        sendData.sqr_code= this.dhzyRen.length>0?this.dhzyRen[0].userCode:'',
         this.$api.page_3
           .htHseDzzypList(sendData)
           .then(res => {
@@ -192,12 +225,17 @@
       confirmFilter () { },
       onClickRight () {
 		  
-		  localStorage.setItem("isfresh",true);
+      localStorage.setItem("isfresh",true);
+      this.initDiaoZhuangPage();
         this.$router.push({
           path: "../diaozhuang"
         });
       }
-    }
+    },
+    computed: mapState({
+      dhzyRen: state => state.diaozhuang.dhzyRen,
+      sqbm: state => state.diaozhuang.sqbm
+    }),
   };
 </script>
 

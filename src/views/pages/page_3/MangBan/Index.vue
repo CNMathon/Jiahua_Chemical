@@ -15,11 +15,11 @@
       <cell-value title="申请人" :value="oldInfo.user?oldInfo.user.userName:$userInfo.userName" disable></cell-value>
       <!-- 作业票编号 -->
       <cell-value title="作业票编号"
-                  :value="$userInfo.dhzypCode || oldInfo.dhzypCode"
+                  :value="oldInfo?oldInfo.mbzypCode:''"
                   disable></cell-value>
       <!-- 作业票状态 -->
       <cell-value title="作业票状态"
-                  :value="htStatus(oldInfo.htStatus)"
+                  :value="oldInfo.htStatus?zypztList[oldInfo.htStatus].name:''"
                   disable></cell-value>
     </div>
     <div class="cell_group"
@@ -186,10 +186,10 @@
         timeShow: false,
         currentDate: new Date(),
         list_1: [
-          "登高",
           "动火",
+          "登高",
           "临时用电",
-          "盲板抽堵",
+          "受限空间",
           "吊装",
           "动土",
           "断路作业"
@@ -259,7 +259,17 @@
           }
         ],
         signatureShow: false,
-        oldInfo: {}
+        oldInfo: {},
+        zypztList: [
+          // 作业票状态列表
+          { name: "请选择", index: '' },
+          { name: "编辑", index: 1 },
+          { name: "提交资料", index: 2 },
+          { name: "初审", index: 3 },
+          { name: "审核", index: 4 },
+          { name: "有效", index: 5 },
+          { name: "结束", index: 6 }
+        ],
       };
     },
     computed: mapState({
@@ -467,9 +477,7 @@
       // 显示签名
       showSignature (index) {
         this.selectSignatureShow = index;
-        if ( !this.checked[index].checked) {
-          this.signatureShow = true;
-        } 
+        this.signatureShow = true;
       },
       // 取消签名
       signatureCancel (index) {
@@ -498,8 +506,14 @@
           value: value
         };
       },
-
+      dataParamVerify () {
+        return this.pipeVerify()&&this.sendData.scMan.length > 0 &&  this.sendData.zyMan> 0 && this.sendData.otherSpecial> 0; // 生产部门作业负责人
+      },
       postData () {
+        if (!this.dataParamVerify()) {
+          this.$notify('请完成数据填写');
+          return;
+        }
         let sendData = JSON.parse(JSON.stringify(this.sendData));
         let pipe = sendData.pipe;
         let dataStrArr = [];
@@ -607,8 +621,51 @@
           }
         });
       },
+      // 管道验证
+      pipeVerify () {
+        let jump =true;
+        for (let i =0; i <this.sendData.pipe.length; i++ ) {
+          let item = this.sendData.pipe[i];
+          let valueList = Object.values(item).slice(0,7);
+          console.log('valueList', valueList);
+          if (valueList.includes('')) {
+            this.$notify('管道数据不为空');
+            return false;
+          }
+          if (item.pipePullTime === '' && item.pipeBlockTime !== '') {
+            this.$notify('堵时间不能为空');
+            return false;
+          }
+          if (item.pipePullTime !== '' && item.pipeBlockTime === '') {
+            this.$notify('抽时间不能为空');
+            return false;
+          }
+          if (item.pipeBlockOperator.length > 0 &&  item.pipePullOperator.length === 0) {
+            this.$notify('抽作业人不能为空');
+            return false;
+          }
+          if (item.pipeBlockOperator.length === 0 &&  item.pipePullOperator.length > 0) {
+            this.$notify('堵作业人不能为空');
+            return false;
+          }
+          if (item.pipeBlockGuardian.length > 0 &&  item.pipePullGuardian.length === 0) {
+            this.$notify('抽监护人不能为空');
+            return false;
+          }
+          if (item.pipeBlockGuardian.length === 0 &&  item.pipePullGuardian.length > 0) {
+            this.$notify('堵监护人不能为空');
+            return false;
+          }
+          return jump;
+          //  c抽赌逻辑
+        }
+      },
       // 新增管道
       addDevice () {
+        if (!this.pipeVerify()) {
+          return
+        }
+        console.log('添加=============');
         if (this.sendData.pipe.length < 4) {
           this.sendData.pipe.push({
             pipeName: "", // 设备管道名称
@@ -639,52 +696,52 @@
         this.sendData.otherSpecial = res;
       },
       pipeBlockOperator1 (res) {
-        this.sendData.pipe[0].pipeBlockOperator = res;
+        if(this.sendData.pipe[0]) this.sendData.pipe[0].pipeBlockOperator = res;
       },
       pipePullOperator1 (res) {
-        this.sendData.pipe[0].pipePullOperator = res;
+       if(this.sendData.pipe[0])  this.sendData.pipe[0].pipePullOperator = res;
       },
       pipeBlockGuardian1 (res) {
-        this.sendData.pipe[0].pipeBlockGuardian = res;
+        if(this.sendData.pipe[0]) this.sendData.pipe[0].pipeBlockGuardian = res;
       },
       pipePullGuardian1 (res) {
-        this.sendData.pipe[0].pipePullGuardian = res;
+        if(this.sendData.pipe[0]) this.sendData.pipe[0].pipePullGuardian = res;
       },
       pipeBlockOperator2 (res) {
-        this.sendData.pipe[1].pipeBlockOperator = res;
+        if(this.sendData.pipe[1]) this.sendData.pipe[1].pipeBlockOperator = res;
       },
       pipePullOperator2 (res) {
-        this.sendData.pipe[1].pipePullOperator = res;
+        if(this.sendData.pipe[1])this.sendData.pipe[1].pipePullOperator = res;
       },
       pipeBlockGuardian2 (res) {
-        this.sendData.pipe[1].pipeBlockGuardian = res;
+        if(this.sendData.pipe[1])this.sendData.pipe[1].pipeBlockGuardian = res;
       },
       pipePullGuardian2 (res) {
-        this.sendData.pipe[1].pipePullGuardian = res;
+        if(this.sendData.pipe[1])this.sendData.pipe[1].pipePullGuardian = res;
       },
       pipeBlockOperator3 (res) {
-        this.sendData.pipe[2].pipeBlockOperator = res;
+        if(this.sendData.pipe[2])this.sendData.pipe[2].pipeBlockOperator = res;
       },
       pipePullOperator3 (res) {
-        this.sendData.pipe[2].pipePullOperator = res;
+        if(this.sendData.pipe[2])this.sendData.pipe[2].pipePullOperator = res;
       },
       pipeBlockGuardian3 (res) {
-        this.sendData.pipe[2].pipeBlockGuardian = res;
+        if(this.sendData.pipe[2])this.sendData.pipe[2].pipeBlockGuardian = res;
       },
       pipePullGuardian3 (res) {
-        this.sendData.pipe[2].pipePullGuardian = res;
+        if(this.sendData.pipe[2])this.sendData.pipe[2].pipePullGuardian = res;
       },
       pipeBlockOperator4 (res) {
-        this.sendData.pipe[3].pipeBlockOperator = res;
+        if(this.sendData.pipe[3])this.sendData.pipe[3].pipeBlockOperator = res;
       },
       pipePullOperator4 (res) {
-        this.sendData.pipe[3].pipePullOperator = res;
+        if(this.sendData.pipe[3])this.sendData.pipe[3].pipePullOperator = res;
       },
       pipeBlockGuardian4 (res) {
-        this.sendData.pipe[3].pipeBlockGuardian = res;
+        if(this.sendData.pipe[3])this.sendData.pipe[3].pipeBlockGuardian = res;
       },
       pipePullGuardian4 (res) {
-        this.sendData.pipe[3].pipePullGuardian = res;
+        if(this.sendData.pipe[3])this.sendData.pipe[3].pipePullGuardian = res;
       }
     }
   };

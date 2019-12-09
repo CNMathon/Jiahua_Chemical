@@ -26,11 +26,11 @@
                     :value="htStatus(oldInfo.htStatus)"
                     disable></cell-value>
         <!-- 受限空间所属单位 -->
-        <cell-select-department title="受限空间所属单位"
+        <select-department title="受限空间所属单位"
                                 required
                                 :storeModule="storeModule"
                                 storeKey="sxkjDanwei"
-                                v-model="sendData.sxkjDanwei"></cell-select-department>
+                                v-model="sendData.sxkjDanwei"></select-department>
         <!-- 作业内容 -->
         <cell-textarea title="作业内容"
                        required
@@ -66,6 +66,7 @@
                    v-model="sendData.zyStarttime"></cell-time>
         <!-- 作业结束时间 -->
         <cell-time title="作业结束时间"
+                    :startTime="sendData.zyStarttime"
                    v-model="sendData.zyEndtime"
                    required></cell-time>
         <!-- 作业部门负责人 -->
@@ -159,19 +160,19 @@
               <div slot>作业监护措施
                 <span>
                   消防器材：
-                  <van-stepper :min="0"
+                  <van-field   class="ptb-0"
                                v-model="fireCount" />
                 </span>
                 <!-- <div>、救生绳</div> -->
                 <span>
                   救生绳
-                  <van-stepper :min="0"
+                  <van-field  class="ptb-0"
                                v-model="lifelineCount" />
                 </span>
                 <!-- <div>、气防装备</div> -->
                 <span>
                   气防装备：
-                  <van-stepper :min="0"
+                  <van-field   class="ptb-0"
                                v-model="gasCount" />
                 </span>
               </div>
@@ -231,8 +232,8 @@
       return {
         initData: {},
         storeModule: "kongjian",
-        fireCount: 0, // 消防数量
-        lifelineCount: 0, // 救生绳
+        fireCount: "", // 消防数量
+        lifelineCount: "", // 救生绳
         gasCount: 0, // 气防装备
         apply: {
           name: '',
@@ -267,13 +268,11 @@
           "断路作业"
         ],
         list_2: [
-          "火灾",
-          "爆炸",
-          "中毒",
-          "窒息",
-          "烫伤",
-          "灼伤",
+          "火灾、爆炸",
+          "中毒和窒息",
+          "化学灼伤",
           "机械伤害",
+          "触电",
           "高处坠落"
         ],
         selectSignatureShow: Number,
@@ -339,6 +338,7 @@
       },
       // 显示签名
       showSignature (index) {
+        console.log('this.signatureImg', this.signatureImg);
         if (this.signatureImg === "") {
           this.signatureShow = true;
         }
@@ -346,13 +346,18 @@
         this.selectSignatureShow = index;
       },
       selectChecked (index) {
-        this.checked[index].checked = true;
+        this.checked[index].checked = !this.checked[index].checked;
+        if (this.checked.every((item) => { return !item.checked })) {
+          console.log('c清除签名');
+          this.signatureImg = '';
+        }
       },
       // 取消签名
       signatureCancel (index) {
         this.checked[index].checked = false;
         // 如果所有的数据都为false 那么清除签名
         if (this.checked.every((item) => { return !item.checked })) {
+          console.log('c清除签名');
           this.signatureImg = '';
         }
       },

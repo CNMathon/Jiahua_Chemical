@@ -1,47 +1,35 @@
 <template>
   <div class="qian-dao">
     <van-sticky>
-      <van-nav-bar
-        title="培训签到"
-        left-text="返回"
-        left-arrow
-        @click-left="pageBack"
-      />
+      <van-nav-bar title="培训签到" left-text="返回" left-arrow @click-left="pageBack" />
     </van-sticky>
-    <van-pull-refresh
-      v-model="isLoading"
-      @refresh="getPageData()"
-      class="refresh"
-    >
-      <div class="content">
-        <div v-for="(item, index) in pageList" :key="index">
-          <div class="item" @click="checkIn(index)">
-            <div class="item__head">
-              <div class="title van-ellipsis">安全生产知识培训</div>
-              <div class="tap">签到</div>
-            </div>
-            <div class="item__content">
-              <div class="text">
-                <div class="text__item">培训部门：{{ item.pxDept }}</div>
-                <div class="text__item">培训负责人：{{ item.pxRen }}</div>
+    <van-skeleton title avatar :row="3" :loading="isSkeLoading">
+      <van-pull-refresh v-model="isLoading" @refresh="getPageData" class="refresh">
+        <div class="nodata" v-if="!isSkeLoading && pageList.length == 0">暂无数据</div>
+        <div class="content">
+          <div v-for="(item, index) in pageList" :key="index">
+            <div class="item" @click="checkIn(index)">
+              <div class="item__head">
+                <div class="title van-ellipsis">安全生产知识培训</div>
+                <div class="tap">签到</div>
               </div>
-              <div class="text">
-                <div class="text__item">
-                  培训等级：{{ judgeUserLv(item.pxLevel) }}
+              <div class="item__content">
+                <div class="text">
+                  <div class="text__item">培训部门：{{ item.pxDept }}</div>
+                  <div class="text__item">培训负责人：{{ item.pxRen }}</div>
                 </div>
-                <div class="text__item">
-                  培训方式：{{ judgeUserType(item.pxWay) }}
+                <div class="text">
+                  <div class="text__item">培训等级：{{ judgeUserLv(item.pxLevel) }}</div>
+                  <div class="text__item">培训方式：{{ judgeUserType(item.pxWay) }}</div>
                 </div>
-              </div>
-              <div class="text">培训课时：{{ item.pxHours }}课时</div>
-              <div class="text">
-                培训时间：{{ item.starttime }}-{{ item.endtime }}
+                <div class="text">培训课时：{{ item.pxHours }}课时</div>
+                <div class="text">培训时间：{{ item.starttime }}-{{ item.endtime }}</div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </van-pull-refresh>
+      </van-pull-refresh>
+    </van-skeleton>
   </div>
 </template>
 <script>
@@ -52,18 +40,22 @@ export default {
   data() {
     return {
       isLoading: false, //页面是否正在下拉刷新
+      isSkeLoading: false,
       pageList: [], //页面数据
       searchValue: "",
       showPreview: false,
       images: []
     };
   },
-  mounted() {
-    this.getPageData();
+  created() {
+    this.getPageData(`ske`);
   },
   methods: {
     // 获取资料库数据
-    getPageData() {
+    getPageData(where) {
+      if (where == "ske") {
+        this.isSkeLoading = true;
+      }
       let sendData = {
         pageNo: this.pageNow,
         pageSize: this.pageSize,
@@ -76,8 +68,11 @@ export default {
           // 加载状态结束
           this.isLoading = false;
           this.pageList = res;
-          console.log(1111111);
+          // console.log(1111111);
           console.log(res);
+          if (where == "ske") {
+            this.isSkeLoading = false;
+          }
         })
         .catch(() => {
           this.isLoading = false;
@@ -111,10 +106,15 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.nodata {
+  text-align: center;
+  font-size: 15px;
+  margin-top: 30px;
+}
 .qian-dao {
   width: 100vw;
   min-height: 100vh;
-  background-color: #f6f6f6;
+  // background-color: #f6f6f6;
 }
 .content {
   padding: 20px 30px;

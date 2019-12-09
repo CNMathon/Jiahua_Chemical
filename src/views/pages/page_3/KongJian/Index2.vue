@@ -22,12 +22,12 @@
       <!-- 作业票状态 -->
       <cell-value title="作业票状态" required :value="htStatus(oldInfo.htStatus)" disable></cell-value>
       <!-- 受限空间所属空间 -->
-      <cell-select-department title="受限空间所属单位"
+      <select-department title="受限空间所属单位"
                                 required
                                 disable
                                 :storeModule="storeModule"
                                 storeKey="sxkjDanwei"
-                                v-model="sendData.sxkjDanwei"></cell-select-department>
+                                v-model="sendData.sxkjDanwei"></select-department>
       <!-- 作业内容 -->
       <cell-textarea
         title="作业内容"
@@ -172,23 +172,25 @@
             :img="checked[9] && checked[9].checked ? signatureImg : ''"
             disable
           >
-            <div slot>
-              作业监护措施{{checked[9].checked}}
-              <span>
-                消防器材：
-                <van-stepper :min="0" v-model="fireCount" />
-              </span>
-              <!-- <div>、救生绳</div> -->
-              <span>
-                救生绳
-                <van-stepper :min="0" v-model="lifelineCount" />
-              </span>
-              <!-- <div>、气防装备</div> -->
-              <span>
-                气防装备：
-                <van-stepper :min="0" v-model="gasCount" />
-              </span>
-            </div>
+            <div slot>作业监护措施
+                <span>
+                  消防器材：
+                  <van-field   class="ptb-0"
+                               v-model="fireCount" />
+                </span>
+                <!-- <div>、救生绳</div> -->
+                <span>
+                  救生绳
+                  <van-field  class="ptb-0"
+                               v-model="lifelineCount" />
+                </span>
+                <!-- <div>、气防装备</div> -->
+                <span>
+                  气防装备：
+                  <van-field   class="ptb-0"
+                               v-model="gasCount" />
+                </span>
+              </div>
             <!-- fireCount lifelineCount  gasCount-->
           </Signature>
           <Signature
@@ -321,9 +323,9 @@ export default {
         dept: '',
         code: '',
       },
-      fireCount: 0, // 消防数量
-      lifelineCount: 0, // 救生绳
-      gasCount: 0, // 气防装备
+      fireCount: "", // 消防数量
+      lifelineCount: "", // 救生绳
+      gasCount: "", // 气防装备
       showFenxiSelect: false,
       sendData: {
         zyContent: "", //作业内容
@@ -734,7 +736,6 @@ export default {
         return false;
       }
     },
-
     // 发送数据
     postData() {
       const that = this;
@@ -850,68 +851,50 @@ export default {
             }
           for (const key in this.sendData) {
             switch (key) {
-              case "sxkjDanwei":
+                case "sxkjDanwei":
                   if (info[key]) this.sendData[key] = [{id:info.offices.id,name:info.offices.officeName,pId:'',title:info.offices.officeName}];
                   break;
-              case "guardian":
-                if (info[key])
-                  this.sendData[key] = this.reductionSelectUserObj(
-                    this.assemblyStrToUserObj(info.guardian, info.guardianCode)
-                  );
-                break;
-              case "zyRen":
-                if (info[key])
-                  this.sendData[key] = this.reductionSelectUserObj(
-                    this.assemblyStrToUserObj(info.zyRen, info.zyRencode)
-                  );
-                break;
-              case "zyPrincipal":
-                if (info[key])
-                  this.sendData[key] = this.reductionSelectUserObj(
-                    this.assemblyStrToUserObj(
-                      info.zyPrincipal,
-                      info.zyPrincipalCode
-                    )
-                  );
-                break;
-              case "querenman":
-                if (info[key]) this.signatureImg = info[key];
-                this.sendData[key] = info[key];
-                break;
-              // 安装措施
-              case "aqcsjl":
-                if (info[key])
-                  info[key].split(",").forEach(item => {
-                    this.selectChecked(item - 1);
+                case "guardian":
+                  if (info[key]) this.sendData[key] = this.reductionSelectUserObj(this.assemblyStrToUserObj(info.guardian, info.guardianCode));
+                  break;
+                case "zyRen":
+                  if (info[key]) this.sendData[key] = this.reductionSelectUserObj(this.assemblyStrToUserObj(info.zyRen, info.zyRencode));
+                  break;
+                case "zyPrincipal":
+                  if (info[key]) this.sendData[key] = this.reductionSelectUserObj(this.assemblyStrToUserObj(info.zyPrincipal, info.zyPrincipalCode));
+                  break;
+                case "querenman":
+                  if (info[key]) this.signatureImg = info[key]; this.sendData[key] = info[key];
+                  break;
+                // 安装措施
+                case "aqcsjl":
+                  if (info[key]) info[key].split(',').forEach((item) => {
+                    this.selectChecked(item - 1); this.sendData[key] = info[key];
                   });
-                this.sendData[key] = info[key];
-              // 作业监护措施
-              case "zyjhcs":
-                if (info[key])
-                  info[key].split(",").forEach((item, index) => {
+                // 作业监护措施
+                case "zyjhcs":
+                  if (info[key]) info[key].split(',').forEach((item, index) => {
                     if (index === 0) this.fireCount = item;
                     if (index === 1) this.lifelineCount = item;
                     if (index === 2) this.gasCount = item;
-                  });
-                break;
-              case "zyOtherspecial":
-                if (info[key])
-                  this.sendData[key] = this.reductionSelectTag(
+                  });;
+                  break;
+                case "zyOtherspecial":
+                  if (info[key]) this.sendData[key] = this.reductionSelectTag(
                     info[key],
                     this.list_1
                   );
-                break;
-              case "zywhBs":
-                if (info[key])
-                  this.sendData[key] = this.reductionSelectTag(
+                  break;
+                case "zywhBs":
+                  if (info[key]) this.sendData[key] = this.reductionSelectTag(
                     info[key],
                     this.list_2
                   );
-                break;
-              default:
-                this.sendData[key] = info[key];
-                break;
-            }
+                  break;
+                default:
+                  this.sendData[key] = info[key];
+                  break;
+              }
           }
           if (info.fenxiren) {
             this.fenxiParse(info);

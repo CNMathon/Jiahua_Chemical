@@ -26,7 +26,7 @@
       <!-- 吊装工具名称 -->
       <cell-picker v-model="sendData.dzgjmc" title="吊装工具名称" required :columns="dzgjmcColumns"></cell-picker>
       <!-- 起吊重物重量（t） -->
-      <cell-input v-model="sendData.qdzwzl" title="起吊重物重量（t）" required placeholder="手工录入"></cell-input>
+      <cell-input :value="sendData.qdzwzl"  @input="qdzwzlVerify" title="起吊重物重量（t）" required placeholder="手工录入"></cell-input>
       <!-- 吊装人员及特殊工种作业证号 -->
       <div class="cell">
         <div class="cell_title">
@@ -38,13 +38,13 @@
         <div class="cell_value">
           <div class="cell_value_people">
             <div class="cell_input" @click="selectUser('work_permit_1')">
-              <span>{{ work_permit_1.name || "点击选择" }}</span>
+              <span>{{ work_permit_1.name || "点击选择第一个" }}</span>
               <van-icon name="plus" />
             </div>
-            <!-- <div class="cell_input" @click="selectUser('work_permit_2')">
+            <div class="cell_input" @click="selectUser('work_permit_2')">
 							<span>{{ work_permit_2.name || "点击选择第二个" }}</span>
 							<van-icon name="plus" />
-            </div> -->
+            </div>
           </div>
         </div>
       </div>
@@ -75,7 +75,7 @@
       <!-- 作业开始时间 -->
       <cell-time title="作业开始时间" v-model="sendData.zyksDate" :maxTime="sendData.zyjsDate" required></cell-time>
       <!-- 作业结束时间 -->
-      <cell-time title="作业结束时间" v-model="sendData.zyjsDate" :minTime="sendData.zyksDate" required></cell-time>
+      <cell-time title="作业结束时间" v-model="sendData.zyjsDate" :startTime="sendData.zyksDate" :minTime="sendData.zyksDate" required></cell-time>
       <!-- 作业负责人 -->
       <select-organization
         title="作业负责人"
@@ -91,6 +91,7 @@
         title="作业单位"
         required
         radio
+        :noPadding="false"
         :storeModule="storeModule"
         storeKey="zydw"
         :value="sendData.zydw"
@@ -98,7 +99,7 @@
       ></cell-select-department>
       <!-- 监护人 -->
       <select-organization
-        title="负责人"
+        title="监护人"
         :max="2"
         :value="sendData.jhr"
         required
@@ -299,8 +300,7 @@
             @cancel="signatureCancel(22)"
           >
             <div slot>
-              起吊物的质量
-              <van-stepper v-model="value" />吨经确认,在吊装机械的承重范围；
+              起吊物的质量{{value}}吨经确认,在吊装机械的承重范围；
             </div>
           </Signature>
           <Signature
@@ -448,6 +448,7 @@ export default {
   data() {
     return {
       zypcode: "0", //详情编号
+      httpStatus: false,
       oldInfo: {},
       storeModule: "diaozhuang",
       sendData: {
@@ -467,7 +468,7 @@ export default {
       Alight: 0,
       light: 0,
       mask: [0, 1],
-      value: 5,
+      value: 6,
       materialShowShow: false,
       material: {
         index: 0,
@@ -568,19 +569,29 @@ export default {
     ...mapMutations("diaozhuang", {
       setTag: "setTag"
     }),
+    qdzwzlVerify (val) {
+      if (Number(val) >= 5) {
+        console.log(' parseFloat(val)',  parseFloat(val));
+        this.sendData.qdzwzl = parseFloat(val)+'';
+        this.value = this.sendData.qdzwzl;
+      } else {
+        this.sendData.qdzwzl = '';
+        this.$nextTick(() => {
+          this.sendData.qdzwzl = '5';
+          this.value = this.sendData.qdzwzl;
+        })
+      }
+    },
     initPage() {
-      console.log(666)
 	  if (this.$route.query.zypcode) {
           if (this.zypcode !== this.$route.query.zypcode) {
             this.zypcode = this.$route.query.zypcode || "0";
            this.getInfo()
-           console.log(2222222222222)
           }
 		}
       this.initChecked();
     },
     clearData() {
-      console.log(222222222222222222222222)
       this.$store.dispatch("diaozhuang/cleanState");
       this.sendData = {
         dznr: "", //吊装内容
@@ -755,9 +766,9 @@ export default {
           this.work_permit_3.name  = info.dzzhjtsgzzyzh;
 		      this.work_permit_3.id  = info.dzzhjtsgzzyzh;
 		      let dzryjtsgzzyzh =  info.dzryjtsgzzyzh.split(",");
-              this.work_permit_1.name  = dzryjtsgzzyzh[0];
-              this.work_permit_1.id  = dzryjtsgzzyzh[0] ;
-              this.work_permit_2.name  = dzryjtsgzzyzh[1] ;
+          this.work_permit_1.name  = dzryjtsgzzyzh[0];
+          this.work_permit_1.id  = dzryjtsgzzyzh[0] ;
+          this.work_permit_2.name  = dzryjtsgzzyzh[1] ;
 		      this.work_permit_2.id  = dzryjtsgzzyzh[1] ;
 		      this.sendData.zydw = [{name: info.zydw || '', id: info.zydw || ''}];
 		      this.sendData.id = info.id;
@@ -1099,6 +1110,10 @@ export default {
     },
     // 发送数据
     postData() {
+      if (this.httpStatus) {
+        return
+      }
+      this.httpStatus = true;
       let dzryjtsgzzyzh = [];
       dzryjtsgzzyzh.push(this.work_permit_1.id);
       dzryjtsgzzyzh.push(this.work_permit_2.id);
@@ -1145,6 +1160,7 @@ export default {
     saveChilderList(data, id) {
       this.$api.page_3.htHseDzzypSaveLit(data, id).then(res => {
         console.log("子表保存成功: ", res);
+        this.httpStatus = false;
         this.pageBack();
       });
     },

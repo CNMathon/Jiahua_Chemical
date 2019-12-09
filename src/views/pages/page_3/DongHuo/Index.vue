@@ -93,8 +93,8 @@
         </div>
         <div class="confirm_list">
           <Signature
-            :checked="checked[0] ? checked[0].checked : false"
-            :img="checked[0] ? checked[0].img : ''"
+            :checked="checked[0].checked"
+            :img="checked[0].checked ? checked[0].img : ''"
             @checked="showSignature(0)"
             @cancel="signatureCancel(0)"
           >
@@ -315,17 +315,23 @@ export default {
     dhzyRen: state => state.donghuo.dhzyRen
   }),
   created() {
+    console.log("创建 =============", this.$route.query.id);
     if (this.$route.query.id) {
       if (this.queryId !== this.$route.query.id) {
         this.queryId = this.$route.query.id;
-        this.donghuoInit = true;
+        console.log("????获取数据");
         this.getPageData();
       }
     }
     this.initChecked();
   },
-  activated() {
-    console.log(this.$userInfo);
+  activated () {
+    console.log('激活');
+  },
+  destroyed () {
+    console.log('清除');
+     this.queryId = '';
+     this.$store.dispatch("donghuo/cleanState");
   },
   methods: {
     initChecked() {
@@ -398,7 +404,10 @@ export default {
 
     // 主表保存
     postData() {
-      console.log(this.sendData);
+      this.$Toast.loading({
+        message: "加载中...",
+        forbidClick: true
+      });
       // 检测到输入不完整直接退出函数
       if (!this.isDataEdit()) {
         return;
@@ -513,12 +522,14 @@ export default {
           this.$Toast.success({
             message: "提交成功",
             onClose() {
+              sessionStorage.setItem('success','1')
               that.pageBack();
             }
           });
         });
     },
     saveCanvas(e) {
+      console.log(e)
       this.signatureShow = false;
       this.checked[this.selectSignatureShow].checked = true;
       this.checked[this.selectSignatureShow].img = e;
@@ -526,15 +537,15 @@ export default {
     cancelCanvas() {
       this.checked[this.selectSignatureShow].checked = false;
       this.checked[this.selectSignatureShow].img = "";
+      this.$set( this.checked, this.selectSignatureShow, this.checked[this.selectSignatureShow]);
       this.signatureShow = false;
+      console.log(this.checked)
     },
     // 显示签名
     showSignature(index) {
       //  如果未初始化 那么不需要展开
       this.selectSignatureShow = index;
-      if (!this.donghuoInit) {
-        this.signatureShow = true;
-      }
+      this.signatureShow = true;
     },
     // 取消签名
     signatureCancel(index) {
@@ -604,7 +615,6 @@ export default {
         })
         .catch(() => {
           this.$Toast.clear();
-          this.donghuoInit = false;
           console.log("报错了 getPageData");
         });
     },
@@ -622,7 +632,6 @@ export default {
         })
         .catch(() => {
           console.log("报错了");
-          this.donghuoInit = false;
           this.$Toast.clear();
         });
     },
@@ -637,9 +646,6 @@ export default {
       });
       console.log("this.checked", this.checked);
       this.$forceUpdate();
-      this.$nextTick(() => {
-        this.donghuoInit = false;
-      });
     },
     // 工作流提交
     Next() {
@@ -659,7 +665,7 @@ export default {
             __sid: localStorage.getItem("JiaHuaSessionId")
           })
           .then(res => {
-            this.$Toast.clear();
+            
             if (res.list[0].actRuTask) {
               console.log(1);
               let data = {
@@ -673,6 +679,7 @@ export default {
               this.$api.page_3
                 .approve(data)
                 .then(ress => {
+                  this.$Toast.clear();
                   console.log(ress);
                   if (ress.groups) {
                     this.$router.push({
@@ -699,6 +706,7 @@ export default {
               this.$api.page_3
                 .start("dhzyp/htHseDhzyp", data)
                 .then(ress => {
+                  this.$Toast.clear();
                   console.log(ress);
                   if (ress.groups) {
                     this.$router.push({

@@ -1,11 +1,13 @@
 // initial state
 const state = {
-  keepAliveComponents: ["gaochuindex"],
+  keepAliveComponents: ["gaochuList","gaochuindex"],
   specialWork: [],
   harmAnalise: [],
   guarder: [],
   workDeptLeader: [],
-  worker: []
+  worker: [],
+  sqbm:[],
+  dhzyRen:[]
 };
 
 // getters

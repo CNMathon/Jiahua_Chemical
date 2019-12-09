@@ -1,15 +1,15 @@
 <template>
   <div class="guolu">
     <div class="number">{{info.name}}</div>
-    <div class="value">
+    <div class="value" @click="jumpTo(`/page_1/tagsThistory?tagsNameShow=SO²&tagsName=${info.enName}&unit=mg/Nm³`)">
       {{info.so2}}
       <div class="unit">mg/Nm³</div>
     </div>
-    <div class="value">
+    <div class="value" @click="jumpTo(`/page_1/tagsThistory?tagsNameShow=NOx&tagsName=${info.enName}&unit=mg/Nm³`)">
       {{info.nox}}
       <div class="unit">mg/Nm³</div>
     </div>
-    <div class="value">
+    <div class="value" @click="jumpTo(`/page_1/tagsThistory?tagsNameShow=烟尘&tagsName=${info.enName}&unit=mg/Nm³`)">
       {{info.yanchen}}
       <div class="unit">mg/Nm³</div>
     </div>

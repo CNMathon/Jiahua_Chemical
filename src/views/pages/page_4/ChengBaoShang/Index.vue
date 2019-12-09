@@ -1,48 +1,27 @@
 <template>
   <div class="cheng-bao-shang">
     <van-sticky>
-      <van-nav-bar
-        title="承包商信息"
-        left-text="返回"
-        left-arrow
-        @click-left="pageBack"
-      />
-      <van-search
-        placeholder="搜索"
-        shape="round"
-        v-model="searchValue"
-        @search="getUserList(true)"
-      />
+      <van-nav-bar title="承包商信息" left-text="返回" left-arrow @click-left="pageBack" />
+      <van-search placeholder="搜索" shape="round" v-model="searchValue" @search="getUserList(true)" />
     </van-sticky>
     <div class="list">
-      <van-pull-refresh v-model="isLoading" @refresh="getUserList(true)">
-        <van-list
-          v-model="loading"
-          :finished="finished"
-          :error.sync="error"
-          error-text="请求失败，点击重新加载"
-          finished-text="没有更多了"
-          @load="getUserList()"
-        >
-          <div v-for="(item, index) in list" :key="index">
-            <div class="item">
-              <div class="left">
-                <div class="title">{{ item.cbsName }}</div>
-                <div class="sub-title">
-                  <div class="text">
-                    公司性质：{{ companyType[item.companyType] }}
-                  </div>
-                </div>
-                <div class="sub-title">
-                  <div class="text">公司电话：{{ item.companyTel }}</div>
-                </div>
+      <van-pull-refresh v-model="isLoading" @refresh="getUserList(true)" class="pull-refresh">
+        <div v-for="(item, index) in list" :key="index">
+          <div class="item">
+            <div class="left">
+              <div class="title">{{ item.cbsName }}</div>
+              <div class="sub-title">
+                <div class="text">公司性质：{{ companyType[item.companyType] }}</div>
               </div>
-              <div class="right">
-                <div class="btn" @click="toDetail(item.id)">查看详情</div>
+              <div class="sub-title">
+                <div class="text">公司电话：{{ item.companyTel }}</div>
               </div>
             </div>
+            <div class="right">
+              <div class="btn" @click="toDetail(item.id)">查看详情</div>
+            </div>
           </div>
-        </van-list>
+        </div>
       </van-pull-refresh>
     </div>
   </div>
@@ -75,7 +54,9 @@ export default {
       ]
     };
   },
-  created() {},
+  created() {
+    this.getUserList(true);
+  },
   methods: {
     // 获取承包商列表
     getUserList(refresh = false) {
@@ -176,5 +157,11 @@ export default {
       }
     }
   }
+}
+</style>
+
+<style lang="scss">
+.van-pull-refresh__track {
+  height: 555px;
 }
 </style>

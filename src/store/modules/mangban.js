@@ -1,11 +1,12 @@
 // initial state
 const state = {
-  keepAliveComponents: ["mangbanindex"],
+  keepAliveComponents: ["mangbanList","mangbanindex"],
   otherSpecial: [], // 涉及其他特殊作业
 
   scMan: null,
   zyMan: null,
-
+  sqbm:[],
+  dhzyRen:[],
   pipeBlockOperator0: [], // 堵作业人0
   pipePullOperator0: [], // 抽作业人0
   pipeBlockGuardian0: [], // 堵监护人0
@@ -38,6 +39,7 @@ const getters = {};
 // actions
 const actions = {
   changTag({ commit }, tags) {
+    console.log(tags)
     commit("setTag", { tags });
   },
   deleteTagItem({ commit, state }, tags) {

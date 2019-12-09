@@ -1,6 +1,6 @@
 <!-- 动火列表页 -->
 <template>
-  <van-list class="home">
+  <div class="home">
     <van-sticky>
       <van-nav-bar title="临时用电"
                    left-text="返回"
@@ -20,8 +20,24 @@
       <j-filter-item title="作业票状态"
                      :actions="zypztList"
                      @select="filterSelect_1"></j-filter-item>
-      <j-filter-cell title="申请部门"></j-filter-cell>
-      <j-filter-cell title="申请人"></j-filter-cell>
+       <select-department
+        title="申请部门"
+        radio
+        :storeModule="storeModule"
+        storeKey="sqbm"
+        v-model="sqbm"
+        no-padding
+      />
+      <!-- <j-filter-cell title="申请人" /> -->
+      <select-organization 
+        title="申请人"
+        max="9"
+        :storeModule="storeModule"
+        storeKey="dhzyRen"
+        v-model="dhzyRen"
+        no-padding
+      />
+      <div class="clear-button"  @click="clearfilter">清空条件</div>
     </j-filter>
     <van-pull-refresh v-model="isLoading"
                       @refresh="getListData(true)">
@@ -52,14 +68,17 @@
         </div>
       </van-skeleton>
     </van-pull-refresh>
-  </van-list>
+  </div>
 </template>
 
 <script>
+  import { mapState } from "vuex";
   import { mixin } from "@/mixin/mixin";
   export default {
+    name: 'linshiList',
     data () {
       return {
+        storeModule: 'linshi',
         isLoading: false, //页面是否正在下拉刷新
         error: false, //加载错误
         loading: false, //页面是否在加载中
@@ -75,7 +94,7 @@
         selectCbs: {}, //选择的承包商
         confirmSelectCbs: {},
         zypztList: [
-          { index: -1, name: "请选择" },
+          { index: '', name: "请选择" },
           { index: 1, name: "编辑" },
           { index: 2, name: "初审" },
           { index: 3, name: "有效" },
@@ -86,7 +105,32 @@
       };
     },
     mixins: [mixin],
+    created () {
+      this.getListData(true);
+      this.initLinShiPage();
+    },
+    activated () {
+    },
+    computed: mapState({
+      dhzyRen: state => state.linshi.dhzyRen,
+      sqbm: state => state.linshi.sqbm
+    }),
     methods: {
+      clearfilter () {
+      this.initLinShiPage();
+      this.searchValue = '';
+      this.searchStatus = '';
+      this.showFilter = false;
+      this.getListData(true);
+      },
+      initLinShiPage () {
+        this.$store.dispatch("linshi/cleanState");
+        this.$nextTick(() => {
+          this.$store.commit("linshi/add_KeepAlive", "linshiList");
+          this.$store.commit("linshi/add_KeepAlive", "linshiindex");
+          this.$store.commit("linshi/add_KeepAlive", "linshiindex2");
+        });
+      },
       pageBack () {
         this.$router.push({
           path: "/page_3/index"
@@ -94,6 +138,7 @@
       },
       // 编辑
       toIndex (index, item) {
+        this.initLinShiPage();
         let path = '';
         console.log('index', index);
         switch (Number(index)) {
@@ -134,6 +179,9 @@
         let sendData = {};
         sendData.__sid = this.$userInfo.sessionId;
         sendData.htStatus = this.searchStatus;
+        sendData.workContent = this.searchValue;
+        sendData.apprDept= this.sqbm.length>0?this.sqbm[0].id:'',
+        sendData.apprRen= this.dhzyRen.length>0?this.dhzyRen[0].userCode:'',
         this.$api.page_3
           .htHseLsydzypListData(sendData)
           .then(res => {
@@ -165,6 +213,7 @@
       },
       confirmFilter () { },
       onClickRight () {
+        this.initLinShiPage();
         sessionStorage.setItem('flag', '1')
         this.$router.push({
           path: "../linshi"
@@ -182,16 +231,7 @@
         });
       }
     },
-    created () {
-      this.getListData(true);
-      this.$store.dispatch("linshi/cleanState");
-      this.$store.commit("linshi/delete_KeepAlive", "linshiindex");
-      this.$store.commit("linshi/delete_KeepAlive", "linshiindex2");
-      this.$nextTick(() => {
-        this.$store.commit("linshi/add_KeepAlive", "linshiindex");
-        this.$store.commit("linshi/add_KeepAlive", "linshiindex2");
-      });
-    }
+    
   };
 </script>
 

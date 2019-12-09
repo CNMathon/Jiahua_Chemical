@@ -65,9 +65,10 @@ export default {
         __ajax: "json"
       };
 
-      this.$api.common.userLogin(sendData)
+      this.$api.common
+        .userLogin(sendData)
         .then(res => {
-          console.log(this.loading)
+          console.log(this.loading);
           console.log(res);
           localStorage.setItem("JiaHuaSessionId", res.sessionid);
           localStorage.setItem("JiaHuaUserName", res.user.userName);
@@ -94,8 +95,8 @@ export default {
             message: "登录成功",
             onClose() {
               switch (that.$route.query.to) {
-                case 'qd':
-                  console.log('qd')
+                case "qd":
+                  console.log("qd");
                   that.$router.replace({
                     path: "/page_5/qrcode_qd",
                     query: {
@@ -104,8 +105,8 @@ export default {
                   });
                   break;
 
-                case 'ks':
-                  console.log('ks')
+                case "ks":
+                  console.log("ks");
                   that.$router.replace({
                     path: "/page_5/qrcode_ks",
                     query: {
@@ -113,9 +114,9 @@ export default {
                     }
                   });
                   break;
-              
+
                 default:
-                  console.log('index')
+                  console.log("index");
                   that.$router.replace({
                     path: "/"
                   });
@@ -125,12 +126,12 @@ export default {
           });
         })
         .catch(err => {
-          setTimeout(() => this.loading = false, 3000)
-        })
+          setTimeout(() => (this.loading = false), 3000);
+        });
     }
   },
   created() {
-    console.log(this.$route)
+    console.log(this.$route);
     this.screenHeight = `${document.documentElement.clientHeight}px`;
     console.log(this.screenHeight);
   }
